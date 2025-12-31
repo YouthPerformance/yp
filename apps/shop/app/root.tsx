@@ -18,10 +18,9 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront, cart} = context;
+  const {storefront} = context;
 
   return {
-    cart: cart.get(),
     publicStoreDomain: context.env.PUBLIC_STORE_DOMAIN,
   };
 }
@@ -43,7 +42,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <Analytics.Provider cart={data.cart} shop={{}} consent={{}} />
+        <Analytics.Provider cart={null} shop={{}} consent={{}} />
       </body>
     </html>
   );

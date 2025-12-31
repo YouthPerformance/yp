@@ -5,6 +5,8 @@ import {
   type AppLoadContext,
 } from '@shopify/remix-oxygen';
 import {HydrogenSession} from './app/lib/session.server';
+// @ts-expect-error Virtual module provided by Vite/Remix
+import * as remixBuild from 'virtual:remix/server-build';
 
 export default {
   async fetch(
@@ -39,7 +41,7 @@ export default {
 
       // Create Remix request handler
       const handleRequest = createRequestHandler({
-        build: await import('./dist/server'),
+        build: remixBuild,
         mode: process.env.NODE_ENV,
         getLoadContext: () => loadContext,
       });
