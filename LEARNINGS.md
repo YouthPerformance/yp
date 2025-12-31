@@ -345,6 +345,37 @@ When picking up work on this repo:
 | 2024-12-31 | Nav Links Production | Updated all app nav links to production URLs |
 | 2024-12-31 | Shop Store Switch | Switched from ypathletes to youthperformance.myshopify.com |
 | 2024-12-31 | Chrome Debug Setup | Configured Claude Code + Chrome extension for browser debugging |
+| 2024-12-31 | Shop Neoball Alignment | Unified shop design with /neoball premium patterns - cyan fire loader, glass morphism, premium cards |
+
+---
+
+## Design System Reference
+
+### Unified Color Tokens (Neoball DNA)
+```css
+--c-bg: #050505;
+--c-wolf-black: #0a0a0a;
+--c-panel: rgba(12, 12, 14, 0.95);
+--c-surface: #141414;
+--c-cyan: #00f6e0;
+--c-cyan-glow: rgba(0, 246, 224, 0.4);
+--c-neon-green: #39ff14;
+--c-pink: #ff1693;
+```
+
+### Font Stack
+```css
+--font-display: 'Bebas Neue', sans-serif;
+--font-body: 'Inter', sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+```
+
+### Source Reference Folders
+| Folder | Purpose | Status |
+|--------|---------|--------|
+| `/neoball` | Premium static HTML (PDP, shop.html, physics balls) | Reference |
+| `/ypsupplyrip` | Shopify.supply reference (crawled Hydrogen patterns) | Reference |
+| `apps/shop` | Production Hydrogen store with Neoball design DNA | Active |
 
 ---
 
