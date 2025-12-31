@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "installCommand": "pnpm install",
-  "buildCommand": "pnpm build",
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@yp/neoball-lp",
   "outputDirectory": "dist"
 }
