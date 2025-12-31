@@ -118,8 +118,8 @@ export default function RootLayout({
                 logoHref="/"
                 links={[
                   { label: "ACADEMY", href: "/" },
-                  { label: "SHOP", href: "http://localhost:3001" },
-                  { label: "NEOBALL", href: "http://localhost:3002" },
+                  { label: "SHOP", href: "https://shop.youthperformance.com" },
+                  { label: "NEOBALL", href: "https://neoball.co" },
                 ]}
               />
               <main style={{ paddingTop: '64px' }}>

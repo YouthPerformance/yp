@@ -9,8 +9,8 @@ interface Props {
 const { title, description = "The world's best silent basketball - according to the kids. Play anytime, anywhere without the noise." } = Astro.props;
 
 const navLinks = [
-  { label: "ACADEMY", href: "http://localhost:3003" },
-  { label: "SHOP", href: "http://localhost:3001" },
+  { label: "ACADEMY", href: "https://app.youthperformance.com" },
+  { label: "SHOP", href: "https://shop.youthperformance.com" },
   { label: "NEOBALL", href: "/" },
 ];
 ---
@@ -30,7 +30,7 @@ const navLinks = [
     <title>{title}</title>
   </head>
   <body class="bg-wolf-black text-white antialiased overflow-x-hidden">
-    <Header client:load logoHref="/" links={navLinks} />
+    <Header client:idle logoHref="/" links={navLinks} />
     <main style="padding-top: 64px;">
       <slot />
     </main>

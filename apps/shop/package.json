@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "shopify hydrogen dev --codegen --port 3001",
-    "build": "shopify hydrogen build --codegen",
+    "build": "remix vite:build",
+    "build:oxygen": "shopify hydrogen build --codegen",
     "preview": "shopify hydrogen preview",
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen"

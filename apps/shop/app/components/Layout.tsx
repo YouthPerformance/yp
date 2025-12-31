@@ -14,9 +14,9 @@ export function Layout({children, cartCount = 0}: LayoutProps) {
         logoHref="/"
         cartCount={cartCount}
         links={[
-          { label: "ACADEMY", href: "http://localhost:3003" },
+          { label: "ACADEMY", href: "https://app.youthperformance.com" },
           { label: "SHOP", href: "/" },
-          { label: "NEOBALL", href: "http://localhost:3002" },
+          { label: "NEOBALL", href: "https://neoball.co" },
         ]}
       />
       <main style={{paddingTop: '64px'}}>{children}</main>

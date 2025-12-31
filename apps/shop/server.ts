@@ -4,7 +4,7 @@ import {
   getStorefrontHeaders,
   type AppLoadContext,
 } from '@shopify/remix-oxygen';
-import {HydrogenSession} from '~/lib/session.server';
+import {HydrogenSession} from './app/lib/session.server';
 
 export default {
   async fetch(
