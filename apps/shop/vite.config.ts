@@ -1,6 +1,7 @@
 import {defineConfig} from 'vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {vitePlugin as remix} from '@remix-run/dev';
+import {vercelPreset} from '@vercel/remix/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // Note: oxygen() plugin removed for Vercel deployment
@@ -10,7 +11,7 @@ export default defineConfig({
   plugins: [
     hydrogen(),
     remix({
-      presets: [hydrogen.preset()],
+      presets: [hydrogen.preset(), vercelPreset()],
       buildDirectory: 'build',
       future: {
         v3_fetcherPersist: true,
