@@ -3,5 +3,5 @@
   "framework": "remix",
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build",
-  "outputDirectory": "dist"
+  "outputDirectory": "build"
 }
