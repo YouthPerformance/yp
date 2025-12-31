@@ -39,7 +39,7 @@ export default {
 
       // Create Remix request handler
       const handleRequest = createRequestHandler({
-        build: await import('./build/server'),
+        build: await import('./dist/server'),
         mode: process.env.NODE_ENV,
         getLoadContext: () => loadContext,
       });
