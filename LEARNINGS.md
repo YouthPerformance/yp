@@ -2,8 +2,8 @@
 
 > **Purpose:** Context preservation for agent handoffs. Update this file after significant changes.
 >
-> **Last Updated:** 2024-12-30
-> **Phase:** 4 (Shopify Integration Complete)
+> **Last Updated:** 2024-12-31
+> **Phase:** 5 (Production Deployment)
 
 ---
 
@@ -166,19 +166,37 @@ CONVEX_DEPLOY_KEY=
 
 ### shop (check .env)
 ```bash
-# Shopify Store
+# Shopify Store - Connected to youthperformance.myshopify.com
 PUBLIC_STORE_DOMAIN=youthperformance.myshopify.com
-PUBLIC_STOREFRONT_API_VERSION=2024-10
+PUBLIC_STOREFRONT_API_VERSION=2025-10
 
-# ⚠️ NEED: Storefront API Token (for client-side queries)
+# Storefront API Token (for client-side queries)
 # Get from: Shopify Admin > Settings > Apps > Develop apps > [App] > Storefront API
-PUBLIC_STOREFRONT_API_TOKEN=
+PUBLIC_STOREFRONT_API_TOKEN=shpss_xxx  # starts with shpss_
 
 # Admin API Token (for server-side, keep secret)
-PRIVATE_ADMIN_API_TOKEN=shpat_xxx
+PRIVATE_ADMIN_API_TOKEN=shpat_xxx  # starts with shpat_
 
 SESSION_SECRET=yp-shop-session-secret-change-me
 ```
+
+### Shop Deployment (Shopify Oxygen)
+```bash
+# Link to Hydrogen storefront
+cd apps/shop
+npx shopify hydrogen link
+
+# Push environment variables to Oxygen
+npx shopify hydrogen env push
+
+# Deploy to edge (300+ cities, 0ms cold starts)
+npx shopify hydrogen deploy
+
+# Check logs
+npx shopify hydrogen logs
+```
+
+**IMPORTANT:** Oxygen ignores local `.env` - use `env push` to sync variables.
 
 ### Linear Agent (if using)
 ```bash
@@ -222,9 +240,16 @@ pnpm add <pkg> --filter @yp/ui -D
 - [x] web-academy Convex schema should move to shared package ✅ Phase 3
 - [x] Initialize git repo ✅ Phase 3
 
-### Phase 4 (Next)
-- [ ] Convert `/neoball` → `apps/neoball-lp` (Astro)
-- [ ] Build `apps/shop` (Hydrogen)
+### Phase 5 (Deployment) - IN PROGRESS
+- [x] Deploy Academy to Vercel ✅
+- [x] Deploy Marketing to Vercel ✅
+- [ ] Deploy Shop to Shopify Oxygen (in progress - linked to youthperformance.myshopify.com)
+- [ ] Deploy NeoBall LP to Vercel (build fixed, needs deployment)
+- [ ] Configure custom domains
+
+### Phase 4 (Complete)
+- [x] Convert `/neoball` → `apps/neoball-lp` (Astro) ✅
+- [x] Build `apps/shop` (Hydrogen) ✅
 - [ ] Move `/Linear-Coding-Agent-Harness` → `cloud-code/agents`
 - [x] Extract shared Convex schema to `@yp/alpha/convex` ✅ Phase 3
 
@@ -232,6 +257,34 @@ pnpm add <pkg> --filter @yp/ui -D
 - [ ] Archive 200+ scattered folders in `~/yp-archive/`
 - [ ] Consolidate duplicate agent harness copies
 - [ ] Remove old barefoot iterations
+
+---
+
+## Deployment Gotchas (Lessons Learned)
+
+### Vercel + Monorepo
+- Use **GitHub integration** (not CLI) for monorepo apps
+- CLI can't resolve `workspace:*` dependencies from subdirectories
+- Set **Root Directory** in Vercel dashboard to the app folder
+- For apps depending on `@yp/ui`, use turbo build command:
+  ```
+  cd ../.. && pnpm turbo run build --filter=@yp/neoball-lp
+  ```
+
+### Shopify Hydrogen + Oxygen
+- **Oxygen > Vercel** for Hydrogen (0ms cold starts, edge network)
+- Oxygen deployment needs **correct GitHub repo connected**
+- Local `.env` is ignored - use `npx shopify hydrogen env push`
+- **Two levels of access control:**
+  1. Shopify store password (Online Store > Preferences)
+  2. Oxygen deployment access (Staff only vs Anyone with link)
+- Storefront API tokens start with `shpss_`, Admin tokens with `shpat_`
+
+### Chrome Extension for Debugging
+- Install "Claude in Chrome" extension
+- Run `claude --chrome` to enable browser tools
+- Can read console logs, network requests, DOM state
+- Use `/chrome` command to check connection status
 
 ---
 
@@ -286,6 +339,12 @@ When picking up work on this repo:
 | 2024-12-30 | Phase 5 Wolf Skin | Unified Header in @yp/ui deployed to all 3 apps |
 | 2024-12-30 | Build Fixes | Fixed @yp/ui tsup config with "use client" banner, fixed TS errors in @yp/alpha |
 | 2024-12-30 | Marketing App | Added apps/marketing (Vite+React) from newpeterson for youthperformance.com |
+| 2024-12-31 | Phase 5 Deployment | Deployed Academy & Marketing to Vercel via GitHub integration |
+| 2024-12-31 | Shop Oxygen Config | Reverted Shop from Vercel to Shopify Oxygen for edge performance |
+| 2024-12-31 | NeoBall Vercel Fix | Fixed turbo build command to build @yp/ui dependency first |
+| 2024-12-31 | Nav Links Production | Updated all app nav links to production URLs |
+| 2024-12-31 | Shop Store Switch | Switched from ypathletes to youthperformance.myshopify.com |
+| 2024-12-31 | Chrome Debug Setup | Configured Claude Code + Chrome extension for browser debugging |
 
 ---
 
