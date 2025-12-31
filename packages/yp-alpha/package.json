@@ -20,20 +20,40 @@
       "types": "./dist/config/models.d.ts",
       "import": "./dist/config/models.mjs",
       "require": "./dist/config/models.js"
-    }
+    },
+    "./convex/_generated/api": {
+      "types": "./convex/_generated/api.d.ts",
+      "import": "./convex/_generated/api.js",
+      "require": "./convex/_generated/api.js"
+    },
+    "./convex/_generated/dataModel": {
+      "types": "./convex/_generated/dataModel.d.ts"
+    },
+    "./convex/_generated/server": {
+      "types": "./convex/_generated/server.d.ts",
+      "import": "./convex/_generated/server.js",
+      "require": "./convex/_generated/server.js"
+    },
+    "./convex/schema": "./convex/schema.ts",
+    "./convex/users": "./convex/users.ts",
+    "./convex/progress": "./convex/progress.ts",
+    "./convex/gamification": "./convex/gamification.ts",
+    "./convex/auth.config": "./convex/auth.config.ts"
   },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "convex:dev": "npx convex dev",
+    "convex:deploy": "npx convex deploy",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "convex": "^1.31.2"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
     "tsup": "^8.0.0",
     "typescript": "^5.3.0"
-  },
-  "peerDependencies": {
-    "convex": "^1.0.0"
   }
 }

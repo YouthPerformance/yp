@@ -8,8 +8,8 @@
 import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { useUser as useClerkUser, useAuth } from '@clerk/nextjs';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../convex/_generated/api';
-import { Id } from '../../convex/_generated/dataModel';
+import { api } from '@yp/alpha/convex/_generated/api';
+import { Id } from '@yp/alpha/convex/_generated/dataModel';
 
 // ─────────────────────────────────────────────────────────────
 // TYPES

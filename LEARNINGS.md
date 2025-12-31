@@ -3,7 +3,7 @@
 > **Purpose:** Context preservation for agent handoffs. Update this file after significant changes.
 >
 > **Last Updated:** 2024-12-30
-> **Phase:** 2 (Scaffold Complete)
+> **Phase:** 3 (Neural Link Complete)
 
 ---
 
@@ -26,16 +26,23 @@ YouthPerformance (YP) = Premium youth sports consumer tech platform
 yp-monorepo/
 ├── apps/
 │   └── web-academy/        # Next.js 16 - THE CORE PRODUCT
-│       ├── convex/         # Real-time DB (Convex)
-│       ├── src/            # App source
+│       ├── src/            # App source (imports from @yp/alpha)
+│       ├── .env.local      # Convex + Clerk credentials
 │       └── package.json    # @yp/web-academy
 │
 ├── packages/
-│   ├── yp-alpha/           # THE BRAIN - AI routing layer
-│   │   └── src/
-│   │       ├── config/     # Model configs
-│   │       ├── router/     # Wolf router, voice wrapper
-│   │       └── tools/      # Daily stack generator
+│   ├── yp-alpha/           # THE BRAIN - Central Intelligence
+│   │   ├── convex/         # ⚡ DATABASE LIVES HERE (Phase 3)
+│   │   │   ├── schema.ts   # Users, enrollments, cards, etc.
+│   │   │   ├── users.ts    # User queries/mutations
+│   │   │   ├── gamification.ts  # XP, crystals, ranks
+│   │   │   ├── progress.ts # Workout completion
+│   │   │   └── _generated/ # API + DataModel
+│   │   ├── src/
+│   │   │   ├── config/     # Model configs
+│   │   │   ├── router/     # Wolf router, voice wrapper
+│   │   │   └── tools/      # Daily stack generator
+│   │   └── convex.json     # Project: newyp
 │   │
 │   └── ui/                 # THE LOOK - Design system
 │       └── src/
@@ -50,6 +57,13 @@ yp-monorepo/
 └── package.json            # Root scripts
 ```
 
+### Neural Link (Phase 3)
+The app (`web-academy`) imports database functions from the brain (`@yp/alpha`):
+```typescript
+import { api } from '@yp/alpha/convex/_generated/api';
+import { Id } from '@yp/alpha/convex/_generated/dataModel';
+```
+
 ---
 
 ## Key Decisions Log
@@ -61,6 +75,7 @@ yp-monorepo/
 | 2024-12-30 | Brain package: `@yp/alpha` | Contains AI routing, model configs, voice wrapper |
 | 2024-12-30 | Academy from `/bfr/barefoot-app` | Most complete version of the training app |
 | 2024-12-30 | Design tokens in `@yp/ui` | Wolf Black (#0A0A0A), Neon Green (#39FF14) |
+| 2024-12-30 | Convex in `@yp/alpha` (Phase 3) | Brain controls the database, app is "headless" |
 
 ---
 
@@ -140,6 +155,11 @@ pnpm dev --filter @yp/web-academy # Run just academy
 pnpm build                        # Build all
 pnpm build --filter @yp/alpha     # Build just brain
 
+# Convex (run from packages/yp-alpha)
+cd packages/yp-alpha
+npx convex dev                    # Start Convex dev server
+npx convex deploy                 # Deploy to production
+
 # Adding dependencies
 pnpm add <pkg> --filter @yp/web-academy
 pnpm add <pkg> --filter @yp/ui -D
@@ -153,16 +173,16 @@ pnpm add <pkg> --filter @yp/ui -D
 ## Known Issues & TODOs
 
 ### Immediate
-- [ ] `@yp/alpha` needs Convex peer dep properly configured
+- [x] `@yp/alpha` needs Convex peer dep properly configured ✅ Phase 3
 - [ ] `@yp/ui` needs more components (Card, Input, Hero)
-- [ ] web-academy Convex schema should move to shared package
-- [ ] Initialize git repo
+- [x] web-academy Convex schema should move to shared package ✅ Phase 3
+- [x] Initialize git repo ✅ Phase 3
 
-### Phase 3 (Next)
+### Phase 4 (Next)
 - [ ] Convert `/neoball` → `apps/neoball-lp` (Astro)
 - [ ] Build `apps/shop` (Hydrogen)
 - [ ] Move `/Linear-Coding-Agent-Harness` → `cloud-code/agents`
-- [ ] Extract shared Convex schema to `@yp/alpha/convex`
+- [x] Extract shared Convex schema to `@yp/alpha/convex` ✅ Phase 3
 
 ### Cleanup (Eventually)
 - [ ] Archive 200+ scattered folders in `~/yp-archive/`
@@ -214,6 +234,7 @@ When picking up work on this repo:
 | Date | Agent/Session | Changes |
 |------|---------------|---------|
 | 2024-12-30 | Phase 2 Init | Scaffolded monorepo, migrated brain + academy, created UI package |
+| 2024-12-30 | Phase 3 Neural Link | Moved Convex to @yp/alpha, updated imports, git initialized |
 
 ---
 
