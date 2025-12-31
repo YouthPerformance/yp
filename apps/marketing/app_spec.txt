@@ -1,0 +1,690 @@
+# YP CONVERSION ENGINE — PRD + App Spec v2.0 (Parent-Focused)
+
+**Project:** YP Conversion Engine — Parent-First Funnel → Bulletproof Ankles → Quiz Identity → Barefoot Reset Tripwire ($88) → Academy App (Masterclass Mode)
+
+---
+
+## 1) Executive Decisions (Locked)
+
+### Pricing Model (Tripwire / SLO)
+- **Barefoot Reset = one-time $88** (premium positioning)
+- Positioning:
+  - "Normally included in the **$29/mo Academy**."
+  - "Get **lifetime access to this specific protocol** for a one-time **$88**."
+- Goal: Acquire customer + card with minimal friction; upsell in-app.
+- Parent focus: Parents are the primary decision-makers and purchasers
+
+### Lead Magnet Delivery Format (No PDF-first)
+- **Bulletproof Ankles delivered as:**
+  - a clean mobile web page (AEO-friendly, SEO-capable)
+  - with a **Start Stack** button that runs in the **Stack Runner (mobile web)**
+- Email is still valuable—but the asset itself lives on web.
+
+### Teen Email Gate (Soft Gate)
+- Teens (13+) can:
+  - start the stack
+  - complete the quiz
+  - see their **Identity name**
+- But to get:
+  - the **7-day fix plan**
+  - the **protocol details**
+  - and to **save streak / progress**
+- They hit: **"Where should we send your fix?"** (email capture)
+
+---
+
+## 2) Product Summary
+
+We are shifting YP from a brochure to an **active conversion engine**:
+
+**Landing → 5-step "Build my kid's plan" → Bulletproof Ankles page (instant value) → Start Stack → Completion → Save + Meet your Wolf (email + kid nickname) → Ask Wolf → Offer Barefoot Reset ($88)**
+
+---
+
+## 3) Goals
+
+### Business Goals
+- Capture emails at scale without killing teen conversion (soft gate)
+- Convert leads into **Barefoot Reset $37** purchases
+- Drive post-purchase activation: **start Day 1 + complete Week 1**
+
+### User Goals (Sage + Hero)
+- **Parents:** safe, clear, simple plan with "what to do next"
+- **Athletes:** fast win + identity + mission
+- **Coaches:** warmup plug-in + share to parents
+
+---
+
+## 4) Non-goals (v1)
+- Computer vision feedback
+- Social leaderboards/friends
+- Multi-sport subscriptions
+- Full coach dashboard/teams (we do virality code instead)
+- Deep personalization beyond role/age/sport/space/pain flag
+
+---
+
+## 5) Core Personas
+
+### Parent / Guardian
+- Wants safety and structure
+- Compliance needs (under-13)
+
+### Athlete (13+)
+- Wants instant value
+- Low patience; hates gates
+
+### Coach (volunteer/club)
+- Needs practice-ready warmup
+- Can drive multi-lead growth via team challenge code
+
+---
+
+## 6) Funnel Flow (Detailed)
+
+### Step A — Landing Page (Astro)
+
+**Hero:**
+- Headline: THE PRO SPORTS ACADEMY IN YOUR POCKET.
+- Subhead: Elite training, democratized. Master the 15-minute daily habits used by pros to build speed and prevent injuries. Enroll now.
+- **Primary CTA:** Join the Pack
+- **Secondary CTA:** Get Bulletproof Ankles (Free)
+
+**Acceptance criteria:**
+- [ ] CTA opens Start Here modal (or `/start` fallback)
+- [ ] UTM parameters persist through funnel
+
+---
+
+### Step B — Start Here (Modal or /start)
+
+**Purpose:** segment + safety + constraints
+
+**Inputs (5 taps):**
+1. Role: Parent / Athlete / Coach
+2. Age: athlete confirms **13+** yes/no; parent selects child age band
+3. Sport: Basketball / Barefoot / Both / Other
+4. Where train: Apartment / Driveway / Gym / Field
+5. Pain now: No / Foot-ankle / Knee-hip-back / Not sure
+
+**Output:** "Your starter plan is ready" → Continue to Bulletproof Ankles page
+*(No email required at this step for 13+ athletes.)*
+
+**Acceptance criteria:**
+- [ ] Under-13 athletes are routed to parent flow messaging
+- [ ] Pain flag adjusts default plan intensity and surfaces extra stop rules
+
+---
+
+### Step C — Bulletproof Ankles Web Page (Astro)
+
+This is the **asset**, not a PDF.
+
+**Page must include:**
+- Answer-first (2–3 sentences)
+- Key takeaways
+- Safety / stop rules (accordion)
+- Age band toggles
+- **Start Stack** button (deep links to Stack Runner)
+- "Save streak" lock (greyed until profile created)
+
+**Key growth mechanic:**
+At the bottom / after stack:
+- "Complete" button appears, but:
+  - **saving completion** requires profile/email
+  - completion UI can be "locked" (grey) until login/profile
+
+**Acceptance criteria:**
+- [ ] Page loads fast on mobile
+- [ ] Stack Runner launches with no login
+- [ ] Save progress requires profile
+
+---
+
+### Step D — Stack Runner (Next.js, mobile web)
+
+**Goal:** first win
+
+After stack completion:
+- CTA: "Take the 2-minute Athlete Type Quiz"
+- CTA: "Save your streak" (gated)
+
+**Acceptance criteria:**
+- [ ] Anonymous users can complete the stack
+- [ ] Completion can display celebration, but saving requires account
+
+---
+
+### Step E — Quiz (Web)
+
+**Teens:** can complete without email
+**Parents/coaches:** can complete without email (email already captured or optional)
+
+Quiz output:
+- Identity name (Force Leaker / Elasticity Block / Absorption Deficit / Control Gap)
+- Short "What it means"
+- **Fix plan is locked** until email capture (soft gate for 13+ athletes)
+
+**Acceptance criteria:**
+- [ ] Identity name always visible
+- [ ] "Fix plan" section is blurred/locked until email captured
+- [ ] Email capture copy: "Where should we send your fix?"
+
+---
+
+### Step F — Offer: Barefoot Reset ($88 one-time)
+
+**Offer positioning:**
+- "Normally part of the $29/mo Academy"
+- "Lifetime access to this protocol for $88"
+
+**Acceptance criteria:**
+- [ ] Price + anchor clearly displayed
+- [ ] Checkout completion routes into app
+- [ ] Purchase creates entitlement
+
+---
+
+### Step G — Post-Purchase "Velvet Rope" Entry (App)
+
+One-time initiation sequence:
+1. Building your Athlete Profile...
+2. Locking in Week 1 Protocol...
+3. Calibrating your Barefoot Reset plan...
+4. Welcome to the Pack.
+
+**Acceptance criteria:**
+- [ ] Shown once per user/program
+- [ ] Skippable after 2 seconds (accessibility)
+- [ ] Lands on Barefoot Reset program home
+
+---
+
+### Step H — Academy App (Masterclass Mode)
+
+**Core experience = Barefoot Reset program**
+- Program home (WeekGrid)
+- Lesson player (video + simple steps)
+- Mark complete
+- Progress tracking
+
+**Upsell (P1 inside app)**
+After Day 3 or Week 1 completion:
+- "Upgrade to Academy $29/mo" (unlock all modules)
+
+---
+
+### Step I — Coach Virality Loop (Trojan Horse)
+
+After coach gets Bulletproof Ankles:
+- generates a unique code: `COACH-MIKE-2025`
+- share prompt: "Send to parents"
+- if 5 quiz completions attributed → unlock durability pack
+
+---
+
+## 7) Data Model (Convex)
+
+### Tables (v1)
+
+```
+leadProfiles
+- role, ageBand/13plusFlag, sport, space, painFlag
+- utm, refCode, email (nullable for soft gate)
+
+stackRuns
+- anonId/userId, stackId, completedAt, saved(bool)
+
+quizResults
+- leadProfileId, identityType, createdAt
+
+emailCaptures
+- email, source(step), leadProfileId, createdAt
+
+purchases
+- userId, offerId, status, stripeSessionId
+
+entitlements
+- userId, productId ("barefoot_reset"), access(lifetime)
+
+programProgress
+- userId/childProfileId, programId, completedLessons, currentDay
+
+referrals
+- coachRefCode, leadProfileId, quizCompleted(bool)
+```
+
+---
+
+## 8) Analytics Events (Minimum)
+
+```
+cta_click_bulletproof_ankles
+onboarding_complete
+bulletproof_page_view
+stack_start / stack_complete
+save_streak_prompt_shown / account_created
+quiz_start / quiz_complete / identity_viewed
+fix_plan_unlock_email_submitted
+offer_viewed / checkout_start / purchase_complete
+velvet_rope_shown
+lesson_start / lesson_complete / week1_complete
+coach: coach_code_generated / referral_quiz_complete / coach_reward_unlocked
+```
+
+---
+
+## 9) Routes + Screens
+
+### Public (Astro)
+- `/` Landing (Hero + CTAs)
+- `/start` (fallback if modal blocked)
+- `/bulletproof-ankles` (canonical lead magnet web page)
+- `/quiz/athlete-type`
+- `/quiz/results`
+- `/offer/barefoot-reset`
+- `/policy/*` (editorial, medical, privacy/COPPA)
+
+### App / Mobile Web (Next.js)
+- `/app/stacks/:id/run` (Stack Runner — works anonymous)
+- `/app/create-profile` (email capture + profile creation)
+- `/app/programs/barefoot-reset` (Program home)
+- `/app/lessons/:id` (Lesson player)
+- `/app` (simple home: continue / programs)
+- `/app/upgrade` (P1 upsell screen)
+
+### Critical Gate Logic
+- **Stack Runner:** free to run
+- **Save streak + unlock fix plan:** requires email/profile
+- **Under-13:** parent email + child profile required
+
+---
+
+## 10) Technology Stack
+
+### Frontend (Marketing)
+- **Framework:** Astro (static pages, SEO/AEO optimized)
+- **Styling:** Tailwind CSS
+- **Animations:** Minimal, performance-first
+
+### Frontend (App)
+- **Framework:** Next.js (React)
+- **State:** React hooks + context
+- **Video:** Custom player with progress tracking
+
+### Backend
+- **Database:** Convex (real-time, serverless)
+- **Auth:** Clerk (13+ compliance built-in)
+- **Payments:** Stripe (checkout + webhooks)
+- **Analytics:** PostHog or Mixpanel
+
+---
+
+## 11) Design System
+
+### Colors
+- **Primary:** Cyan (#00D4FF) - CTAs, accents
+- **Secondary:** Gold (#D4A853) - premium accents
+- **Background:** Near black (#0A0A0A, #0D0D0D)
+- **Surface:** Dark gray (#1A1A1A)
+- **Text Primary:** Off-white (#F5F5F5)
+- **Text Secondary:** Gray (#9CA3AF)
+- **Success:** Green (#10B981)
+
+### Typography
+- **Display:** Custom YP display font (uppercase, tracking-wide)
+- **Body:** System sans-serif (Inter)
+
+### Components
+- Dark cards with subtle borders
+- Cyan glow on primary CTAs
+- Locked/greyed states for gated content
+- Progress indicators (rings, bars)
+
+---
+
+## 12) Identity Types (Quiz Results)
+
+### 1) FORCE LEAKER
+**Cold reading:** "You look explosive in the first 10 minutes... then something weird happens. Your first step feels half a beat slower. Cuts feel a little sloppy. You're not gassed—your stabilizers are."
+
+**Sage explanation:** "When the foot/ankle system can't hold a clean position under speed, force leaks on every plant."
+
+**Outcomes when fixed:**
+- Cuts feel sharper
+- Stops feel cleaner
+- Landings get quieter
+- Confidence goes up
+
+### 2) ELASTICITY BLOCK
+**Cold reading:** "You do the work. You grind. But you don't feel bouncy. You feel... stuck to the floor. Like your legs are strong, but your movement doesn't 'snap.'"
+
+**Sage:** "Elasticity is the ability to load and return force smoothly. If the foot/ankle chain is stiff or mistimed, you lose spring."
+
+### 3) ABSORPTION DEFICIT
+**Cold reading:** "Loud. Heavy. Sometimes your knees or shins feel 'worked' even when the session wasn't insane."
+
+**Sage:** "Absorption is controlled deceleration. If the foot/ankle chain isn't absorbing force, impact travels upward."
+
+### 4) CONTROL GAP
+**Cold reading:** "You have days where you feel smooth... and days where you feel clunky for no reason. Same body. Same effort. Different result."
+
+**Sage:** "Control is repeatability. If your base position changes rep to rep, your whole chain changes."
+
+---
+
+## 13) Microcopy Reference
+
+### Landing Hero
+- **Primary CTA:** Join the Pack
+- **Secondary CTA:** Get Bulletproof Ankles (Free)
+- **Under-button:** "8 minutes. Simple steps. Build stability + quiet landings."
+
+### Start Here Modal
+- **Title:** Let's build your starter plan.
+- **Sub:** "A few quick questions so we match your sport, your space, and keep it safe."
+
+### Bulletproof Ankles Page
+- **H1:** Bulletproof Ankles
+- **Answer-first:** "This is a short starter protocol to improve ankle stability, balance, and landing control. Strong feet don't just prevent problems—they unlock better cuts, stops, and first steps."
+- **Primary CTA:** Start the 8-Minute Stack
+- **Secondary (locked):** Save your streak (Create Profile)
+
+### Quiz Results (Soft Gate)
+- **Lock prompt:** "Where should we send your fix?"
+- **Sub:** "Because if you're seeing this pattern... You need the right sequence."
+
+### Offer Page
+- **Headline:** Barefoot Reset — Lifetime access to the protocol
+- **Price:** $88 one-time
+- **Anchor:** "Normally included in the $29/mo Academy"
+- **CTA:** Unlock Barefoot Reset
+
+### Velvet Rope Entry
+1. Building your Athlete Profile...
+2. Locking in Week 1 Protocol...
+3. Calibrating your Barefoot Reset plan...
+4. Welcome to the Pack.
+
+---
+
+## 14) Optimizations & Recommendations
+
+### Performance
+- [ ] Lazy load images below fold
+- [ ] Preload Stack Runner on bulletproof-ankles page hover
+- [ ] Use Astro islands for interactive components only
+- [ ] Video thumbnails as WebP with blur placeholder
+
+### Conversion
+- [ ] Add urgency/scarcity to offer page (optional: "X athletes started today")
+- [ ] Exit-intent popup on quiz results if no email captured
+- [ ] Progress indicator during onboarding (Step 1 of 5)
+- [ ] Social proof on landing ("Join 2,400+ athletes")
+
+### Retention
+- [ ] Push notifications for streak reminders (PWA)
+- [ ] Email drip sequence post-purchase (Day 1, 3, 7)
+- [ ] Celebration animations on lesson complete
+- [ ] Week 1 completion unlocks badge/reward
+
+### Technical Debt Prevention
+- [ ] Use Convex validators for all mutations
+- [ ] Centralize analytics events in single module
+- [ ] Component library for shared UI (buttons, cards, modals)
+- [ ] E2E tests for critical funnel path
+
+---
+
+## 15) Ticket Breakdown (Epic Summary)
+
+### E1 — Landing Page Conversion Wiring (P0)
+- Update hero with new copy + CTAs
+- Wire "Join the Pack" to pricing/signup
+- Wire "Get Bulletproof Ankles" to Start Here modal
+
+### E2 — Start Here Onboarding (P0)
+- Build 5-step modal (role, age, sport, space, pain)
+- Route to bulletproof-ankles on complete
+- Handle under-13 → parent flow
+
+### E3 — Bulletproof Ankles Web Page (P0)
+- Build AEO-optimized page
+- Start Stack CTA → Stack Runner
+- "Save streak" locked state
+
+### E4 — Quiz + Soft Gate (P0)
+- Build 6-8 tap quiz
+- Compute identity type
+- Gate fix plan behind email
+
+### E5 — Barefoot Reset Offer + Checkout (P0)
+- Offer page with $37 pricing
+- Stripe checkout integration
+- Create entitlement on purchase
+
+### E6 — Velvet Rope Entry (P0)
+- One-time initiation overlay
+- Profile building animation
+- Route to program home
+
+### E7 — Academy App Core (P0)
+- Program home (WeekGrid)
+- Lesson player + mark complete
+- Progress persistence
+
+### E8 — Coach Virality Loop (P1)
+- Generate coach challenge code
+- Track quiz completions
+- Unlock reward at 5
+
+### E9 — Analytics (P0)
+- Instrument all funnel events
+- Attach role/age/sport/space props
+
+---
+
+## 16) Parent-Only Funnel (Hormozi x Apple)
+
+### Hormozi Rule
+**Don't ask for trust. Earn it.**
+Let them see the plan + start the stack before email. Email becomes the "save + personalize + send it to me" unlock.
+
+### Parent funnel in one line
+**Landing → 5-step "Build my kid's plan" → Bulletproof Ankles page (instant value) → Start Stack → Completion → Save + Meet your Wolf (email + kid nickname) → Ask Wolf → Offer Barefoot Reset ($88)**
+
+---
+
+## 17) Parent User Journey (Screen-by-Screen)
+
+### Screen 0 — Landing CTA (Parents)
+**CTA button:** Get Bulletproof Ankles (Free)
+**Supporting line:** "8 minutes. Age-adjusted. Safe progressions."
+
+### Screen 1-5 — Onboarding Stepper
+
+**Step 1 — Role**
+- Title: "Let's build your child's starter plan"
+- Sub: "Fast, safe, age-adjusted. No guesswork."
+- Options: Parent/Guardian (preselected), Athlete, Coach
+
+**Step 2 — Child Age Band**
+- Under 8: "Play-first balance + coordination"
+- 8–12: "Foundations + stability"
+- 13+: "Performance + durability"
+
+**Step 3 — Sport + Goals (Curio Pills)**
+- Title: "What are we building for?"
+- Sport choice (single select): Basketball, Barefoot Reset, Both, Other
+- Goals (multi-select pills, max 3)
+
+**Step 4 — Training Location**
+- Apartment, Driveway/Backyard, Gym/Court, Field
+
+**Step 5 — Safety/Pain**
+- No pain, Foot/Ankle, Knee/Hip/Back, Not sure
+
+---
+
+## 18) Interest Pills Taxonomy (Outcomes for Parents)
+
+### Durability & Control
+- Bulletproof ankles
+- Better balance
+- Quieter landings
+- Stop rolling ankles
+
+### Game Speed
+- Faster first step
+- Quicker cuts
+- Better stopping
+
+### Strength & Power
+- Stronger feet + calves
+- Jump higher (safe)
+- Core strength
+
+### Basketball Skills (conditional)
+- Better footwork
+- Better handles
+- More consistent shooting
+
+**Rules:** Max 3 selections. Show "Recommended" default picks based on sport.
+
+---
+
+## 19) AI Wolf Coach Profile Generator
+
+### Data Captured (Parent MVP)
+**Required:**
+- parent_email
+- child_nickname
+- child_age_band
+- sport_focus
+- training_location
+- pain_flag
+- goals[] (pills)
+
+### Generated Wolf Prompt Template
+```
+You are "Wolf," the YouthPerformance training buddy for {child_nickname}.
+
+About the athlete:
+- Age band: {age_band}
+- Sport focus: {sport_focus}
+- Training location: {training_location}
+- Parent's current focus: {goals_top3}
+- Safety flags: {pain_flag}
+
+How to coach (voice + format):
+- Speak to the parent in calm, confident, practical language
+- Keep sessions short and doable (8–12 minutes)
+- Always give a "Do this today" plan first
+- Use clear coaching cues. Avoid medical diagnosis
+- Include a simple stop rule: sharp pain or limping = stop and reset
+
+What to generate:
+- 7-day plan options for busy families
+- At-home modifications for the selected space
+- Safety explanations in plain English
+- If asked, recommend the next step: Barefoot Reset progression
+```
+
+---
+
+## 20) Copy Sheet (Parent Funnel)
+
+### Global Voice Rules
+- Calm authority, safety-first, "real schedule" friendly
+- No shame language
+- No medical diagnosis claims
+- Short sentences. Clear verbs.
+- "Plan / protocol / routine" > "workout"
+
+### Landing Hero
+**H1:** Bulletproof Ankles for Youth Athletes
+**Subhead:** A short starter protocol to improve balance, landing control, and ankle-foot stability — adjusted by age and training space.
+**Primary CTA:** Get Bulletproof Ankles (Free)
+**Helper:** 8 minutes. Simple steps. Built for busy families.
+
+### Onboarding Modal
+**Title:** LET'S BUILD YOUR STARTER PLAN
+**Progress:** Step {step} of 5
+
+### Stack Completion
+**Title:** Session complete.
+**Body:** That was a real rep. The fastest progress comes from short sessions you can repeat.
+**Primary CTA:** Save Streak + Unlock the 7-Day Plan
+**Tiny line:** Saving takes 20 seconds. No spam.
+
+### Save/Profile Creation
+**Title:** Save your plan for {childName}
+**Sub:** We'll email the protocol link and save your progress.
+
+### Barefoot Reset Offer
+**Title:** Barefoot Reset (Lifetime Protocol)
+**Sub:** The full progression after Bulletproof Ankles — built for lasting results.
+**Price:** $88 one-time
+**Anchor:** Normally included in the $29/mo Academy.
+**CTA:** Unlock Barefoot Reset
+
+---
+
+## 21) i18n JSON Structure
+
+```json
+{
+  "landing": {
+    "h1": "Bulletproof Ankles for Youth Athletes",
+    "subhead": "A short starter protocol to improve balance, landing control, and ankle-foot stability — adjusted by age and training space.",
+    "cta_primary": "Get Bulletproof Ankles (Free)",
+    "cta_primary_helper": "8 minutes. Simple steps. Built for busy families.",
+    "cta_secondary": "Explore the Library"
+  },
+  "onboarding": {
+    "title": "LET'S BUILD YOUR STARTER PLAN",
+    "step_label": "Step {step} of 5",
+    "back": "Back",
+    "step1": {
+      "title": "Who are you?",
+      "sub": "This helps us personalize your experience.",
+      "parent": { "label": "Parent / Guardian", "helper": "Setting up for my child" }
+    },
+    "step2": {
+      "title": "Athlete's age?",
+      "sub": "This helps us adjust the training intensity."
+    },
+    "step3": {
+      "title": "What are we building for?",
+      "sub": "Select your primary focus.",
+      "goals_label": "What do you want most right now? (Pick up to 3)"
+    },
+    "step4": {
+      "title": "Where will you train?",
+      "sub": "We'll adjust exercises for your space."
+    },
+    "step5": {
+      "title": "Any pain right now?",
+      "sub": "This helps us keep training safe.",
+      "safety_note_title": "Safety note",
+      "safety_note_body": "If anything feels sharp, swelling increases, or your child changes how they move—stop and reset. When in doubt, check with a professional."
+    }
+  },
+  "stack_complete": {
+    "title": "Session complete.",
+    "body": "That was a real rep. The fastest progress comes from short sessions you can repeat.",
+    "cta_primary": "Save Streak + Unlock the 7-Day Plan",
+    "helper": "Saving takes 20 seconds. No spam."
+  },
+  "offer": {
+    "title": "Barefoot Reset (Lifetime Protocol)",
+    "price": "$88",
+    "anchor": "Normally included in the $29/mo Academy.",
+    "cta": "Unlock Barefoot Reset"
+  }
+}
+```
+
+---
+
+*Last updated: December 2024 (v2.0 — Parent-Focused)*

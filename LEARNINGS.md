@@ -285,6 +285,7 @@ When picking up work on this repo:
 | 2024-12-30 | Grand Unification | All 3 apps running: Shop:3001, NeoBall:3002, Academy:3003 |
 | 2024-12-30 | Phase 5 Wolf Skin | Unified Header in @yp/ui deployed to all 3 apps |
 | 2024-12-30 | Build Fixes | Fixed @yp/ui tsup config with "use client" banner, fixed TS errors in @yp/alpha |
+| 2024-12-30 | Marketing App | Added apps/marketing (Vite+React) from newpeterson for youthperformance.com |
 
 ---
 
@@ -292,7 +293,8 @@ When picking up work on this repo:
 
 | App | Platform | URL |
 |-----|----------|-----|
-| Academy | Vercel | youthperformance.com |
+| Marketing | Vercel | youthperformance.com |
+| Academy | Vercel | app.youthperformance.com |
 | Shop | Shopify Oxygen / Cloudflare | shop.youthperformance.com |
 | NeoBall LP | Cloudflare Pages | neoball.co |
 

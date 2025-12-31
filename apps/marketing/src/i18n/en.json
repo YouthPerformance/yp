@@ -1,0 +1,346 @@
+{
+  "common": {
+    "back": "Back",
+    "continue": "Continue",
+    "skip": "Skip",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "success": "Success!",
+    "stepOf": "Step {{current}} of {{total}}"
+  },
+  "nav": {
+    "home": "Home",
+    "library": "Library",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "home": {
+    "hero": {
+      "title": "The Pro Sports Academy",
+      "titleAccent": "in Your Pocket.",
+      "subtitle": "A short starter protocol to improve balance, landing control, and ankle-foot stability — adjusted by age and training space.",
+      "cta": "Get Bulletproof Ankles (Free)",
+      "secondaryCta": "Join the Pack",
+      "helperText": "8 minutes. Age-adjusted. Safe progressions. Built for busy families.",
+      "trustLine": "Short sessions • Clear coaching • Built for youth athletes • Train at home or on court"
+    },
+    "problem": {
+      "title": "Modern athletes train more — but often miss the foundation.",
+      "subtitle": "Long practice hours don't build strong feet and safe landing habits. YouthPerformance focuses on the basics first.",
+      "stat1": "Release tension",
+      "stat1Helper": "Feel looser fast",
+      "stat2": "Build the base",
+      "stat2Helper": "Feet + balance + control",
+      "stat3": "Move with confidence",
+      "stat3Helper": "Safe progressions",
+      "cta": "Explore the Alternative"
+    },
+    "r3": {
+      "title": "The R3 Method: simple steps that build real athletes.",
+      "subtitle": "We don't guess. We build your base first—then we add speed and power.",
+      "release": {
+        "title": "Release",
+        "blurb": "Short routines to loosen tight muscles and restore range of motion. Athletes feel the difference right away."
+      },
+      "restore": {
+        "title": "Restore",
+        "blurb": "Build the base: feet, balance, posture, and control. This is where confidence starts."
+      },
+      "reengineer": {
+        "title": "Re-Engineer",
+        "blurb": "Turn clean movement into game speed: sprint, cut, jump, land—with control and confidence."
+      },
+      "cta": "Start R3",
+      "secondaryCta": "See a Sample Week"
+    },
+    "library": {
+      "title": "Train or learn. Anywhere, anytime.",
+      "subtitle": "Programs, playbooks, and coaching tools—organized so you always know what to do next.",
+      "categories": ["Movement", "Speed", "Strength", "Jump & Landing", "Footwork", "Recovery"],
+      "cta": "Explore Library"
+    },
+    "features": {
+      "title": "Everything you need—without the noise.",
+      "subtitle": "Premium training built for busy families.",
+      "shortSessions": {
+        "title": "Short sessions that work",
+        "text": "Quick training blocks you can finish before school, after practice, or on weekends."
+      },
+      "bands": {
+        "title": "Bands + isometrics (kid-friendly)",
+        "text": "Build strength and tendon health without heavy lifting. Safer progressions, better movement."
+      },
+      "progress": {
+        "title": "Progress you can see",
+        "text": "Simple tracking so parents know it's working—and athletes know what to do next."
+      },
+      "cues": {
+        "title": "Coaching cues that click",
+        "text": "We explain the 'why' in plain English, then coach the 'how' with clear steps."
+      },
+      "anywhere": {
+        "title": "Train anywhere",
+        "text": "Home, gym, or court. No complicated setup."
+      }
+    },
+    "testimonials": {
+      "title": "What parents are saying",
+      "subtitle": "Safe, clear, and confidence-building. That's the goal."
+    },
+    "pricing": {
+      "title": "Join YouthPerformance today.",
+      "subtitle": "Full access to programs, playbooks, and new drops as we release them.",
+      "membershipTitle": "Campus Membership",
+      "membershipSubtitle": "Get access to all current and future modules, plus parent tools and progress tracking.",
+      "cta": "Join the Campus",
+      "comparePlans": "Compare Plans"
+    }
+  },
+  "onboarding": {
+    "modalTitle": "Let's build your starter plan",
+    "role": {
+      "title": "Who are you?",
+      "subtitle": "This helps us personalize your experience.",
+      "parent": "Parent / Guardian",
+      "parentHelper": "Setting up for my child",
+      "athlete": "Athlete",
+      "athleteHelper": "I'm training myself",
+      "coach": "Coach",
+      "coachHelper": "Looking for team resources"
+    },
+    "age": {
+      "title": "Athlete's age?",
+      "subtitle": "This helps us adjust the training intensity.",
+      "under8": "Under 8",
+      "under8Helper": "Focus on play and movement",
+      "8to12": "8-12 years",
+      "8to12Helper": "Building foundations",
+      "13plus": "13+ years",
+      "13plusHelper": "Performance training",
+      "athleteTitle": "Are you 13 or older?",
+      "athleteSubtitle": "We need to verify your age for account setup.",
+      "yes13": "Yes, I'm 13+",
+      "no13": "No, I'm under 13",
+      "parentHelp": "Ask a parent to help!",
+      "parentHelpText": "Have a parent or guardian set this up so we can save your plan safely."
+    },
+    "sport": {
+      "title": "What are we building for?",
+      "subtitle": "Select sport and what you want most right now.",
+      "sportFocus": "Sport Focus",
+      "basketball": "Basketball",
+      "barefoot": "Barefoot",
+      "both": "Both",
+      "other": "Other"
+    },
+    "space": {
+      "title": "Where will you train?",
+      "subtitle": "We'll adjust exercises for your space.",
+      "apartment": "Apartment",
+      "apartmentHelper": "Quiet, low-impact options",
+      "driveway": "Driveway / Backyard",
+      "drivewayHelper": "Outdoor home training",
+      "gym": "Gym / Court",
+      "gymHelper": "Full facility access",
+      "field": "Field",
+      "fieldHelper": "Open outdoor space"
+    },
+    "pain": {
+      "title": "Any pain right now?",
+      "subtitle": "This helps us keep training safe.",
+      "none": "No pain",
+      "noneHelper": "Ready to go",
+      "footAnkle": "Foot / Ankle",
+      "footAnkleHelper": "We'll adjust intensity",
+      "kneeHipBack": "Knee / Hip / Back",
+      "kneeHipBackHelper": "We'll flag modifications",
+      "notSure": "Not sure",
+      "notSureHelper": "We'll start easy",
+      "safetyNote": "If anything feels sharp or painful—stop the exercise and rest. This is not medical advice."
+    }
+  },
+  "planReady": {
+    "badge": "Plan Ready",
+    "title": "Your starter plan is ready",
+    "subtitle": "Built for your specific goals and constraints",
+    "summaryTitle": "Your Plan Summary",
+    "ageGroup": "Age Group",
+    "sportFocus": "Sport Focus",
+    "trainingSpace": "Training Space",
+    "yourGoals": "Your Goals",
+    "trackLabel": "Track",
+    "primaryCta": "View the Bulletproof Ankles Protocol",
+    "secondaryCta": "Start the 8-minute stack now",
+    "trustLine": "You'll be able to save your plan after you try the first session."
+  },
+  "bulletproofAnkles": {
+    "badge": "Free Protocol",
+    "title": "Bulletproof Ankles",
+    "subtitle": "A short starter protocol to improve ankle stability, balance, and landing control. Strong feet unlock better cuts, stops, and first steps. Start here. Build the base.",
+    "whatYouBuild": "What You'll Build",
+    "benefits": [
+      "Stronger foot-ankle connection",
+      "Better balance under load",
+      "Quieter, more controlled landings",
+      "Foundation for speed and cutting"
+    ],
+    "intensityAdjusted": "Intensity adjusted for this age group",
+    "safetyTitle": "Safety & Stop Rules",
+    "stopIf": "Stop immediately if:",
+    "stopReasons": [
+      "You feel sharp or sudden pain (not just muscle work)",
+      "Pain increases during or after an exercise",
+      "You feel numbness, tingling, or weakness",
+      "Your form breaks down and you can't maintain control"
+    ],
+    "disclaimer": "This protocol is for general athletic development. It is not medical advice. Consult a healthcare provider for injuries.",
+    "startCta": "Start the 8-Minute Stack",
+    "saveCta": "Save Your Streak (Create Profile)",
+    "saveHelper": "Create a free profile to save progress and unlock your 7-day plan",
+    "whatsInStack": "What's in the Stack",
+    "nextSteps": "After completing the stack, take our 2-minute quiz to discover your athlete type.",
+    "quizCta": "Take the Athlete Type Quiz"
+  },
+  "stackRunner": {
+    "left": "left",
+    "exercises": "Exercises",
+    "time": "Time",
+    "complete": {
+      "title": "Session complete.",
+      "subtitle": "That was a real rep. The fastest progress comes from short sessions you can repeat.",
+      "saveCta": "Save Streak + Unlock the 7-Day Plan",
+      "wolfCta": "Ask Wolf a question",
+      "trustLine": "Saving takes 20 seconds. No spam.",
+      "backLink": "Back to Protocol"
+    },
+    "controls": {
+      "skipToNext": "Skip to next"
+    }
+  },
+  "saveProfile": {
+    "title": "Save your plan",
+    "titleWithName": "Save your plan for {{name}}",
+    "subtitle": "We'll email the protocol link and save your progress.",
+    "emailLabel": "Parent email",
+    "nicknameLabel": "Child nickname",
+    "nicknameOptional": "(optional)",
+    "nicknameHelper": "Makes the Wolf coach feel more personal",
+    "guardianCheckbox": "I'm a parent/guardian setting this up for my child.",
+    "submitCta": "Send + Create Profile",
+    "whatYouGet": "What you'll get",
+    "benefits": [
+      "7-day plan based on your goals",
+      "Wolf coach personalized for your child",
+      "Progress saved across devices"
+    ],
+    "skipLink": "Not now (view only)",
+    "success": {
+      "title": "Saved!",
+      "subtitle": "Your plan is in your inbox. Check your email for the 7-day plan.",
+      "redirecting": "Redirecting to your next step..."
+    },
+    "errors": {
+      "emailRequired": "Please enter your email.",
+      "emailInvalid": "Please enter a valid email.",
+      "guardianRequired": "Please confirm you are a parent/guardian."
+    }
+  },
+  "offer": {
+    "badge": "Lifetime Protocol",
+    "title": "Barefoot Reset",
+    "subtitle": "The full progression after Bulletproof Ankles — built for lasting results.",
+    "priceAnchor": "$29/month Academy",
+    "price": "$88",
+    "priceLabel": "one-time",
+    "lifetimeAccess": "Lifetime access",
+    "cta": "Unlock Barefoot Reset",
+    "secureCheckout": "Secure checkout",
+    "guarantee": "30-day guarantee",
+    "whatsIncluded": "What's Included",
+    "includes": [
+      { "title": "4-Week Program", "desc": "Complete video-guided protocol" },
+      { "title": "Daily Sessions", "desc": "10-15 minute focused training" },
+      { "title": "Progress Tracking", "desc": "See your improvement over time" },
+      { "title": "Coaching Cues", "desc": "Clear explanations for every move" },
+      { "title": "Lifetime Access", "desc": "Return anytime, forever" },
+      { "title": "Future Updates", "desc": "New content as we add it" }
+    ],
+    "socialProof": {
+      "count": "2,400+ athletes",
+      "label": "started this month"
+    },
+    "faq": {
+      "title": "Common Questions",
+      "items": [
+        {
+          "q": "How long are the sessions?",
+          "a": "Most sessions are 10-15 minutes. Designed to fit before school, after practice, or on weekends."
+        },
+        {
+          "q": "What equipment do I need?",
+          "a": "Just resistance bands and a flat surface. No heavy equipment or gym required."
+        },
+        {
+          "q": "Is this safe for kids?",
+          "a": "Yes. The protocol uses bands and bodyweight only. It's designed for youth athletes 8+."
+        },
+        {
+          "q": "What if it doesn't work for me?",
+          "a": "Full refund within 30 days, no questions asked."
+        }
+      ]
+    },
+    "finalCta": {
+      "title": "Build your foundation today",
+      "subtitle": "One-time payment. Lifetime access. 30-day guarantee."
+    }
+  },
+  "quiz": {
+    "title": "Movement Check",
+    "subtitle": "6 quick questions to understand how your athlete moves — and what to focus on first.",
+    "progressLabel": "Question {{current}} of {{total}}",
+    "time": "~2 min",
+    "accuracyNote": "Answer all questions for the most accurate result"
+  },
+  "quizResults": {
+    "badge": "Your Athlete Type",
+    "whatThisMeans": "What This Means",
+    "whatChanges": "What Changes",
+    "planTitle": "Your 7-Day Starter Plan",
+    "gateTitle": "Get your personalized plan",
+    "gateSubtitle": "A simple sequence designed for this movement pattern. Safe progressions.",
+    "emailPlaceholder": "Enter your email",
+    "sendPlanCta": "Send My Plan",
+    "planUnlocked": "Plan unlocked! Check your email.",
+    "upsellTitle": "Ready to build the foundation?",
+    "upsellSubtitle": "Get the complete Barefoot Reset protocol — video-guided, safe progressions.",
+    "upsellCta": "Unlock Barefoot Reset — $88",
+    "upsellAnchor": "Normally included in the $29/mo Academy",
+    "sharePrompt": "Know someone who needs this?",
+    "shareCta": "Share Your Result"
+  },
+  "wolf": {
+    "meetTitle": "Meet Your Wolf Coach",
+    "meetSubtitle": "Wolf is your AI training assistant. Here's what Wolf knows about your athlete:",
+    "profileTitle": "Quick Profile",
+    "promptTitle": "Wolf's Instructions",
+    "promptHelper": "This is what Wolf knows. Edit anytime in Settings.",
+    "startChatCta": "Start Chat with Wolf",
+    "editLaterCta": "Edit later in Settings",
+    "suggestedQuestions": "Suggested Questions",
+    "typeMessage": "Type a message..."
+  },
+  "safety": {
+    "stopRule": {
+      "title": "Stop Rule",
+      "content": "If you feel sharp pain, stop the exercise. Rest for 24 hours. If pain persists, consult a professional."
+    },
+    "returnCarefully": {
+      "title": "Return Carefully",
+      "content": "Start at 50% intensity. Progress slowly. Your body needs time to adapt."
+    },
+    "disclaimer": "This is general fitness information, not medical advice. Consult a healthcare provider for injuries or medical conditions."
+  }
+}

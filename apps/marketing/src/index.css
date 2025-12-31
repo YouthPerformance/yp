@@ -1,0 +1,703 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Peterson Academy + YouthPerformance Design System
+ * Combined CSS v2.0
+ */
+
+/* ================================
+   CSS CUSTOM PROPERTIES
+   ================================ */
+:root {
+  /* Peterson Academy Colors */
+  --pa-background: #071520;
+  --pa-background-dark: #040c0e;
+  --pa-background-secondary: #262626;
+  --pa-brand: #2C3957;
+  --pa-gold: #C9A227;
+  --pa-text-primary: #E8E8E8;
+  --pa-text-secondary: #A3A3A3;
+
+  /* YP Design System - Dark Mode (default) */
+  --yp-bg-primary: #000000;
+  --yp-bg-secondary: #0A0A0A;
+  --yp-bg-tertiary: #141414;
+  --yp-bg-elevated: #1A1A1A;
+  --yp-bg-subtle: #222222;
+
+  --yp-text-primary: #FFFFFF;
+  --yp-text-secondary: #A0A0A0;
+  --yp-text-tertiary: #666666;
+  --yp-text-muted: #444444;
+
+  --yp-border-default: #2A2A2A;
+  --yp-border-subtle: #1A1A1A;
+  --yp-border-strong: #3A3A3A;
+
+  /* Brand Colors */
+  --yp-cyan-500: #00F6E0;
+  --yp-cyan-600: #00DCCE;
+  --yp-cyan-700: #00BFB0;
+  --yp-cyan-800: #009F8E;
+  --yp-cyan-900: #007F72;
+
+  --yp-gold-400: #FCD34D;
+  --yp-gold-500: #FBBF24;
+  --yp-gold-600: #F59E0B;
+  --yp-gold-700: #D97706;
+
+  /* State Colors */
+  --color-success: #10B981;
+  --color-warning: #FBBF24;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Shadows - Dark Mode */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.8);
+  --shadow-glow-cyan: 0 0 24px rgba(0, 246, 224, 0.5);
+  --shadow-glow-gold: 0 0 24px rgba(251, 191, 36, 0.5);
+  --shadow-focus: 0 0 0 3px rgba(0, 246, 224, 0.4);
+
+  /* Animation */
+  --duration-micro: 100ms;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-moderate: 300ms;
+  --duration-slow: 400ms;
+  --duration-achievement: 800ms;
+
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Component Sizes */
+  --btn-height-sm: 36px;
+  --btn-height-md: 44px;
+  --btn-height-lg: 48px;
+  --btn-height-xl: 56px;
+  --input-height: 48px;
+  --input-height-lg: 56px;
+  --navbar-height: 64px;
+  --tabbar-height: 49px;
+  --safe-area: 34px;
+
+  /* Top Navigation Heights */
+  --top-nav-height-mobile: 59px;
+  --top-nav-height: 69px;
+}
+
+/* Light Mode Overrides */
+.light {
+  --yp-bg-primary: #FFFFFF;
+  --yp-bg-secondary: #F8F8F8;
+  --yp-bg-tertiary: #F0F0F0;
+  --yp-bg-elevated: #E8E8E8;
+  --yp-bg-subtle: #E0E0E0;
+
+  --yp-text-primary: #000000;
+  --yp-text-secondary: #555555;
+  --yp-text-tertiary: #888888;
+  --yp-text-muted: #AAAAAA;
+
+  --yp-border-default: #E0E0E0;
+  --yp-border-subtle: #EEEEEE;
+  --yp-border-strong: #CCCCCC;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --shadow-glow-cyan: 0 0 24px rgba(0, 191, 176, 0.25);
+  --shadow-glow-gold: 0 0 24px rgba(245, 158, 11, 0.25);
+  --shadow-focus: 0 0 0 3px rgba(0, 191, 176, 0.3);
+}
+
+/* ================================
+   BASE STYLES
+   ================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--pa-background);
+    color: var(--pa-text-primary);
+    @apply font-sans antialiased;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--pa-background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--yp-border-default);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--yp-border-strong);
+  }
+
+  /* Focus visible styles */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+}
+
+/* ================================
+   COMPONENT CLASSES
+   ================================ */
+@layer components {
+  /* ----------------
+     BUTTONS
+     ---------------- */
+
+  /* Primary CTA Button - JOIN THE ACADEMY style */
+  .btn-primary {
+    background-color: #C9A227;
+    color: #071520;
+    height: var(--btn-height-lg);
+    @apply font-sans font-semibold
+           px-8 rounded-full
+           inline-flex items-center justify-center
+           uppercase tracking-wider text-sm
+           transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary:hover {
+    background-color: #D4A853;
+  }
+
+  /* YP Primary Button - Cyan */
+  .btn-yp-primary {
+    background-color: var(--yp-cyan-500);
+    color: #000000;
+    height: var(--btn-height-md);
+    @apply font-yp-body font-semibold
+           px-6 rounded-lg
+           inline-flex items-center justify-center
+           text-label-lg
+           transition-all duration-fast;
+    box-shadow: var(--shadow-glow-cyan);
+  }
+
+  .btn-yp-primary:hover {
+    background-color: var(--yp-cyan-600);
+    transform: translateY(-1px);
+  }
+
+  .btn-yp-primary:active {
+    background-color: var(--yp-cyan-900);
+    transform: translateY(0);
+  }
+
+  /* Secondary/Outline Button */
+  .btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #FFFFFF;
+    height: var(--btn-height-md);
+    @apply font-sans font-normal
+           px-7 rounded-full
+           inline-flex items-center justify-center
+           uppercase tracking-wider text-sm
+           transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Ghost/Link Button */
+  .btn-ghost {
+    color: var(--pa-text-primary);
+    @apply transition-colors duration-200
+           focus:outline-none underline underline-offset-4;
+  }
+
+  .btn-ghost:hover {
+    color: #FFFFFF;
+  }
+
+  /* ----------------
+     NAVIGATION
+     ---------------- */
+
+  /* Sign In Link style */
+  .link-nav {
+    color: var(--pa-text-primary);
+    @apply font-serif text-[20px] font-normal
+           tracking-[-0.5px] underline underline-offset-4
+           transition-colors duration-200;
+  }
+
+  .link-nav:hover {
+    color: #FFFFFF;
+  }
+
+  /* ----------------
+     CARDS
+     ---------------- */
+
+  /* Course Card */
+  .card {
+    background-color: var(--pa-background-secondary);
+    border: 1px solid var(--yp-border-default);
+    @apply relative rounded-lg overflow-hidden
+           transition-all duration-300;
+  }
+
+  .card:hover {
+    border-color: var(--yp-border-strong);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card-overlay {
+    @apply absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80;
+  }
+
+  /* YP Card - Pure Black */
+  .card-yp {
+    background-color: var(--yp-bg-secondary);
+    border: 1px solid var(--yp-border-subtle);
+    @apply relative rounded-xl overflow-hidden
+           transition-all duration-normal;
+  }
+
+  .card-yp:hover {
+    background-color: var(--yp-bg-tertiary);
+    border-color: var(--yp-border-default);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* ----------------
+     INPUTS
+     ---------------- */
+
+  /* Input Fields - Peterson Academy style */
+  .input {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--yp-border-default);
+    color: var(--pa-text-primary);
+    height: var(--input-height);
+    @apply font-sans text-[22px] font-light
+           w-full
+           transition-colors duration-200;
+  }
+
+  .input::placeholder {
+    color: var(--yp-text-muted);
+  }
+
+  .input:focus {
+    outline: none;
+    border-bottom-color: var(--pa-text-primary);
+  }
+
+  /* YP Input - Dark */
+  .input-yp {
+    background-color: var(--yp-bg-subtle);
+    border: 1px solid var(--yp-border-default);
+    color: var(--yp-text-primary);
+    height: var(--input-height);
+    @apply font-yp-body text-yp-body-md
+           px-4 rounded-lg w-full
+           transition-all duration-fast;
+  }
+
+  .input-yp::placeholder {
+    color: var(--yp-text-tertiary);
+  }
+
+  .input-yp:focus {
+    outline: none;
+    border-color: var(--yp-cyan-500);
+    box-shadow: var(--shadow-focus);
+  }
+
+  /* ----------------
+     TYPOGRAPHY
+     ---------------- */
+
+  /* Heading styles */
+  .heading-hero {
+    color: var(--pa-text-primary);
+    @apply font-serif text-hero font-normal;
+  }
+
+  .heading-h1 {
+    color: var(--pa-text-primary);
+    @apply font-serif text-h1 font-normal;
+  }
+
+  .heading-h2 {
+    color: var(--pa-text-primary);
+    @apply font-serif text-h2 font-normal;
+  }
+
+  .heading-h3 {
+    color: var(--pa-text-primary);
+    @apply font-serif text-h3 font-normal;
+  }
+
+  /* YP Display Headings */
+  .heading-yp-hero {
+    color: var(--yp-text-primary);
+    @apply font-yp-display text-display-hero uppercase tracking-wide;
+  }
+
+  .heading-yp-xl {
+    color: var(--yp-text-primary);
+    @apply font-yp-display text-display-xl uppercase tracking-wide;
+  }
+
+  .heading-yp-lg {
+    color: var(--yp-text-primary);
+    @apply font-yp-display text-display-lg uppercase tracking-wide;
+  }
+
+  /* Body text styles */
+  .text-body-lg {
+    color: var(--pa-text-secondary);
+    @apply font-sans text-body-lg font-light;
+  }
+
+  .text-body {
+    color: var(--pa-text-secondary);
+    @apply font-sans text-body font-light;
+  }
+
+  /* YP Body text */
+  .text-yp-body {
+    color: var(--yp-text-secondary);
+    @apply font-yp-body text-yp-body-md;
+  }
+
+  .text-yp-body-lg {
+    color: var(--yp-text-secondary);
+    @apply font-yp-body text-yp-body-lg;
+  }
+
+  /* ----------------
+     DISCIPLINE TABS
+     ---------------- */
+
+  .discipline-tab {
+    color: var(--yp-text-muted);
+    border-bottom: 2px solid transparent;
+    @apply font-serif text-h3 font-normal
+           py-3 px-6
+           transition-colors duration-200;
+  }
+
+  .discipline-tab:hover {
+    color: var(--pa-text-primary);
+  }
+
+  .discipline-tab.active {
+    color: var(--pa-text-primary);
+    border-bottom-color: var(--pa-text-primary);
+  }
+
+  /* ----------------
+     STATS
+     ---------------- */
+
+  .stat-item {
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    @apply text-center px-6 py-3 last:border-r-0;
+  }
+
+  .stat-value {
+    color: var(--pa-text-primary);
+    @apply font-serif text-[24px] font-normal leading-[1.3] tracking-[-0.72px];
+  }
+
+  /* YP Stats with Glow */
+  .stat-yp {
+    @apply text-center p-4;
+  }
+
+  .stat-yp-value {
+    color: var(--yp-cyan-500);
+    @apply font-yp-display text-display-lg;
+    text-shadow: 0 0 20px rgba(0, 246, 224, 0.3);
+  }
+
+  .stat-yp-label {
+    color: var(--yp-text-tertiary);
+    @apply font-yp-body text-label-md uppercase tracking-caps mt-1;
+  }
+
+  /* ----------------
+     INSTRUCTOR
+     ---------------- */
+
+  .instructor-image {
+    @apply w-[200px] h-[200px] rounded-full object-cover
+           grayscale transition-all duration-300;
+  }
+
+  .instructor-image:hover {
+    @apply grayscale-0;
+  }
+
+  /* ----------------
+     FAQ ACCORDION
+     ---------------- */
+
+  .faq-item {
+    border-bottom: 1px solid var(--yp-border-default);
+    @apply py-6;
+  }
+
+  .faq-question {
+    color: var(--pa-text-primary);
+    @apply font-serif text-h3 font-normal cursor-pointer
+           flex justify-between items-center;
+  }
+
+  .faq-answer {
+    color: var(--pa-text-secondary);
+    @apply font-sans text-body font-light pt-4 leading-relaxed;
+  }
+
+  /* ----------------
+     BADGES & CHIPS
+     ---------------- */
+
+  .badge {
+    background-color: var(--yp-bg-tertiary);
+    color: var(--yp-text-secondary);
+    @apply inline-flex items-center px-3 py-1 rounded-full
+           text-label-md font-medium;
+  }
+
+  .badge-cyan {
+    background-color: rgba(0, 246, 224, 0.15);
+    color: var(--yp-cyan-500);
+  }
+
+  .badge-gold {
+    background-color: rgba(251, 191, 36, 0.15);
+    color: var(--yp-gold-500);
+  }
+
+  .badge-success {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--color-success);
+  }
+
+  /* ----------------
+     PROGRESS
+     ---------------- */
+
+  .progress-bar {
+    background-color: var(--yp-bg-subtle);
+    @apply h-2 rounded-full overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--yp-cyan-700), var(--yp-cyan-500));
+    @apply h-full rounded-full transition-all duration-slow;
+  }
+
+  /* ----------------
+     DIVIDERS
+     ---------------- */
+
+  .divider {
+    background-color: var(--yp-border-default);
+    @apply h-px w-full;
+  }
+
+  .divider-vertical {
+    background-color: var(--yp-border-default);
+    @apply w-px h-full;
+  }
+
+  /* ----------------
+     LOADING STATES
+     ---------------- */
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--yp-bg-secondary) 25%,
+      var(--yp-bg-tertiary) 50%,
+      var(--yp-bg-secondary) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    @apply rounded;
+  }
+}
+
+/* ================================
+   UTILITY ANIMATIONS
+   ================================ */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Gradient text */
+  .text-gradient-cyan {
+    background: linear-gradient(135deg, var(--yp-cyan-500), var(--yp-cyan-700));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, var(--yp-gold-400), var(--yp-gold-600));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass effect */
+  .glass {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--yp-border-subtle);
+  }
+
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area padding */
+  .pb-safe {
+    padding-bottom: max(var(--safe-area), env(safe-area-inset-bottom));
+  }
+
+  .pt-navbar {
+    padding-top: var(--navbar-height);
+  }
+
+  .pb-tabbar {
+    padding-bottom: calc(var(--tabbar-height) + var(--safe-area));
+  }
+}
+
+/* ================================
+   KEYFRAME ANIMATIONS
+   ================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 24px rgba(0, 246, 224, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(0, 246, 224, 0.7);
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ================================
+   RESPONSIVE UTILITIES
+   ================================ */
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 56px;
+    --tabbar-height: 56px;
+  }
+
+  .heading-hero {
+    @apply text-h1;
+  }
+
+  .heading-h1 {
+    @apply text-h2;
+  }
+
+  .heading-yp-hero {
+    @apply text-display-xl;
+  }
+}
