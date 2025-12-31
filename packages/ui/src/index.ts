@@ -9,5 +9,8 @@
 export { Button } from "./components/Button";
 export type { ButtonProps } from "./components/Button";
 
+export { Header } from "./components/Header";
+export type { HeaderProps, NavLink } from "./components/Header";
+
 // Tokens
 export * from "./tokens";

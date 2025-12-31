@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="NeoBall - World's Best Silent Basketball">
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background -->
+    <div class="absolute inset-0 bg-gradient-to-b from-wolf-black via-wolf-black/90 to-wolf-black">
+      <div class="absolute inset-0 bg-[url('/images/court.webp')] bg-cover bg-center opacity-30"></div>
+    </div>
+
+    <!-- Floating Ball Visual -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+      <div id="ball-container" class="w-[300px] h-[300px] md:w-[400px] md:h-[400px] relative">
+        <!-- Placeholder for 3D ball or image -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-orange-500 via-orange-600 to-orange-800 shadow-2xl animate-pulse opacity-80"></div>
+      </div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 text-center px-6 max-w-3xl">
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl tracking-wider leading-none">
+        <span class="text-shimmer block">WORLD'S BEST</span>
+        <span class="text-shimmer block">SILENT BASKETBALL</span>
+      </h1>
+
+      <p class="mt-6 text-lg md:text-xl text-gray-400 font-mono tracking-wider">
+        — ACCORDING TO THE KIDS
+      </p>
+
+      <p class="mt-8 text-lg text-gray-300 max-w-xl mx-auto">
+        Train anytime, anywhere without the noise. Perfect your game in your bedroom, living room, or anywhere you want.
+      </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="https://shop.youthperformance.com/products/neoball"
+          class="inline-block px-10 py-4 bg-pink text-white font-bold text-lg rounded-lg glow-pink hover:bg-cyan hover:text-wolf-black transition-all duration-300 transform hover:scale-105"
+        >
+          BUY NOW — $29.99
+        </a>
+        <a
+          href="#features"
+          class="inline-block px-10 py-4 border-2 border-cyan text-cyan font-bold text-lg rounded-lg hover:bg-cyan hover:text-wolf-black transition-all duration-300"
+        >
+          LEARN MORE
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <svg class="w-6 h-6 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-24 px-6 bg-surface">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="font-display text-4xl md:text-5xl text-center tracking-wider mb-16">
+        WHY <span class="text-cyan">NEOBALL</span>?
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="p-8 bg-wolf-black rounded-xl border border-white/5 hover:border-cyan/30 transition-all">
+          <div class="w-14 h-14 bg-cyan/10 rounded-lg flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path>
+            </svg>
+          </div>
+          <h3 class="font-display text-2xl tracking-wide mb-3">TRULY SILENT</h3>
+          <p class="text-gray-400">
+            Our foam technology absorbs all impact noise. Dribble at midnight without waking anyone up.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="p-8 bg-wolf-black rounded-xl border border-white/5 hover:border-cyan/30 transition-all">
+          <div class="w-14 h-14 bg-cyan/10 rounded-lg flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="font-display text-2xl tracking-wide mb-3">REAL GAME FEEL</h3>
+          <p class="text-gray-400">
+            Weighted and sized just like a real basketball. Perfect for handles, finishing, and form shooting.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="p-8 bg-wolf-black rounded-xl border border-white/5 hover:border-cyan/30 transition-all">
+          <div class="w-14 h-14 bg-cyan/10 rounded-lg flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="font-display text-2xl tracking-wide mb-3">TRAIN ANYWHERE</h3>
+          <p class="text-gray-400">
+            Your bedroom. The living room. A hotel room. Get your reps in wherever you are.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="py-24 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="font-display text-4xl md:text-5xl tracking-wider mb-12">
+        WHAT KIDS ARE SAYING
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <blockquote class="p-6 bg-surface rounded-xl border border-white/5">
+          <p class="text-lg text-gray-300 mb-4">
+            "I can finally practice my handles in my room without my mom yelling at me!"
+          </p>
+          <cite class="text-cyan font-mono text-sm">— Tyler, 12</cite>
+        </blockquote>
+
+        <blockquote class="p-6 bg-surface rounded-xl border border-white/5">
+          <p class="text-lg text-gray-300 mb-4">
+            "Way better than any other silent ball I've tried. This one actually feels real."
+          </p>
+          <cite class="text-cyan font-mono text-sm">— Marcus, 14</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 px-6 bg-surface">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-display text-4xl md:text-6xl tracking-wider mb-6">
+        GET YOUR <span class="text-neon-green">NEOBALL</span>
+      </h2>
+      <p class="text-xl text-gray-400 mb-10">
+        Join thousands of young athletes training smarter.
+      </p>
+      <a
+        href="https://shop.youthperformance.com/products/neoball"
+        class="inline-block px-12 py-5 bg-neon-green text-wolf-black font-bold text-xl rounded-lg shadow-lg hover:scale-105 transition-transform"
+        style="box-shadow: 0 0 30px rgba(57, 255, 20, 0.4);"
+      >
+        BUY NOW — $29.99
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-white/5">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="font-display text-2xl">
+        <span class="text-cyan">NEO</span>BALL
+      </div>
+      <div class="flex gap-6 text-sm text-gray-400">
+        <a href="https://youthperformance.com" class="hover:text-white">YP Academy</a>
+        <a href="https://shop.youthperformance.com" class="hover:text-white">YP Shop</a>
+        <a href="mailto:hello@neoball.co" class="hover:text-white">Contact</a>
+      </div>
+      <div class="text-sm text-gray-500">
+        © {new Date().getFullYear()} Youth Performance
+      </div>
+    </div>
+  </footer>
+</Layout>

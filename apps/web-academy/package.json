@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbo --port 3003",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@yp/alpha": "workspace:*",
+    "@yp/ui": "workspace:*",
     "@clerk/nextjs": "^6.36.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -7,9 +7,9 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { MODEL_CONFIG, ModelTier, RouteDecision } from "../config/models.js";
-import { voiceWrapper } from "./voice-wrapper.js";
-import { logger } from "../utils/logger.js";
+import { MODEL_CONFIG, ModelTier, RouteDecision } from "../config/models";
+import { voiceWrapper } from "./voice-wrapper";
+import { logger } from "../utils/logger";
 
 export interface ExecutionResult {
   response: string;

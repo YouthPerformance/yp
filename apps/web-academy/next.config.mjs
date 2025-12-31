@@ -1,16 +1,28 @@
 // ═══════════════════════════════════════════════════════════
 // NEXT.JS CONFIG
-// Barefoot Reset PWA
+// YP Academy PWA
 // ═══════════════════════════════════════════════════════════
+
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const monorepoRoot = resolve(__dirname, '../..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ─────────────────────────────────────────────────────────
-  // TURBOPACK CONFIG (Next.js 16 default)
+  // OUTPUT MODE - Standalone for monorepo deployments
+  // ─────────────────────────────────────────────────────────
+  output: 'standalone',
+
+  // ─────────────────────────────────────────────────────────
+  // MONOREPO SUPPORT
   // ─────────────────────────────────────────────────────────
   turbopack: {
-    // Enable Turbopack with empty config to silence webpack warning
+    root: monorepoRoot,
   },
+  outputFileTracingRoot: monorepoRoot,
 
   // ─────────────────────────────────────────────────────────
   // EXPERIMENTAL FEATURES

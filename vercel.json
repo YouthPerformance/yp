@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm turbo run build --filter=@yp/web-academy",
+  "outputDirectory": "apps/web-academy/.next",
+  "framework": "nextjs",
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- apps/web-academy packages/"
+}

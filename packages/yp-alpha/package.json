@@ -38,7 +38,12 @@
     "./convex/users": "./convex/users.ts",
     "./convex/progress": "./convex/progress.ts",
     "./convex/gamification": "./convex/gamification.ts",
-    "./convex/auth.config": "./convex/auth.config.ts"
+    "./convex/auth.config": "./convex/auth.config.ts",
+    "./shopify": {
+      "types": "./dist/shopify/index.d.ts",
+      "import": "./dist/shopify/index.mjs",
+      "require": "./dist/shopify/index.js"
+    }
   },
   "scripts": {
     "build": "tsup",
@@ -49,7 +54,9 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "convex": "^1.31.2"
+    "@anthropic-ai/sdk": "^0.33.0",
+    "convex": "^1.31.2",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

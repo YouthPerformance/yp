@@ -19,8 +19,8 @@ import {
   RouteDecision,
   COMPLEXITY_THRESHOLDS,
   SENTIMENT_ESCALATION,
-} from "../config/models.js";
-import { logger } from "../utils/logger.js";
+} from "../config/models";
+import { logger } from "../utils/logger";
 
 /**
  * Classification Schema - What the router outputs

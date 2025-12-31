@@ -11,5 +11,8 @@ export * from "./router";
 // Config exports
 export * from "./config/models";
 
+// Shopify exports
+export * from "./shopify";
+
 // Re-export types
-export type { ModelConfig, ModelProvider } from "./config/models";
+export type { ModelTier, RouteDecision } from "./config/models";

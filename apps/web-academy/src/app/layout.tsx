@@ -9,6 +9,7 @@ import localFont from 'next/font/local';
 import { ConvexClientProvider } from '@/components/providers';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UserProvider } from '@/contexts/UserContext';
+import { Header } from '@yp/ui';
 import './globals.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -113,7 +114,17 @@ export default function RootLayout({
         <ConvexClientProvider>
           <UserProvider>
             <ThemeProvider>
-              {children}
+              <Header
+                logoHref="/"
+                links={[
+                  { label: "ACADEMY", href: "/" },
+                  { label: "SHOP", href: "http://localhost:3001" },
+                  { label: "NEOBALL", href: "http://localhost:3002" },
+                ]}
+              />
+              <main style={{ paddingTop: '64px' }}>
+                {children}
+              </main>
             </ThemeProvider>
           </UserProvider>
         </ConvexClientProvider>

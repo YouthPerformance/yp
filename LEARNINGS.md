@@ -3,7 +3,7 @@
 > **Purpose:** Context preservation for agent handoffs. Update this file after significant changes.
 >
 > **Last Updated:** 2024-12-30
-> **Phase:** 3 (Neural Link Complete)
+> **Phase:** 4 (Shopify Integration Complete)
 
 ---
 
@@ -25,10 +25,28 @@ YouthPerformance (YP) = Premium youth sports consumer tech platform
 ```
 yp-monorepo/
 ├── apps/
-│   └── web-academy/        # Next.js 16 - THE CORE PRODUCT
-│       ├── src/            # App source (imports from @yp/alpha)
-│       ├── .env.local      # Convex + Clerk credentials
-│       └── package.json    # @yp/web-academy
+│   ├── web-academy/        # Next.js 16 - THE CORE PRODUCT
+│   │   ├── src/            # App source (imports from @yp/alpha)
+│   │   ├── .env.local      # Convex + Clerk credentials
+│   │   └── package.json    # @yp/web-academy
+│   │
+│   ├── shop/               # Hydrogen - COMMERCE (Phase 4)
+│   │   ├── app/            # Remix routes + components
+│   │   │   ├── routes/     # _index, products.$handle, collections.$handle, cart
+│   │   │   ├── components/ # Layout, shared components
+│   │   │   ├── lib/        # session.server.ts
+│   │   │   └── styles/     # app.css (YP design tokens)
+│   │   ├── server.ts       # Hydrogen server entry
+│   │   ├── .env            # Shopify credentials (NEEDS STOREFRONT TOKEN)
+│   │   └── package.json    # @yp/shop
+│   │
+│   └── neoball-lp/         # Astro - NEOBALL LANDING (Phase 4)
+│       ├── src/
+│       │   ├── pages/      # index.astro
+│       │   ├── layouts/    # Layout.astro
+│       │   └── components/ # Reusable Astro components
+│       ├── public/         # Static assets (images, favicon)
+│       └── package.json    # @yp/neoball-lp (deploys to Cloudflare)
 │
 ├── packages/
 │   ├── yp-alpha/           # THE BRAIN - Central Intelligence
@@ -62,6 +80,16 @@ The app (`web-academy`) imports database functions from the brain (`@yp/alpha`):
 ```typescript
 import { api } from '@yp/alpha/convex/_generated/api';
 import { Id } from '@yp/alpha/convex/_generated/dataModel';
+```
+
+### Shopify Integration (Phase 4)
+The brain provides a Shopify client for fetching product data:
+```typescript
+import { createYPShopClient } from '@yp/alpha/shopify';
+
+const shopify = createYPShopClient(process.env.STOREFRONT_TOKEN);
+const products = await shopify.getFeaturedProducts(6);
+const neoball = await shopify.getProduct('neoball');
 ```
 
 ---
@@ -134,6 +162,22 @@ CLERK_SECRET_KEY=
 # Convex
 NEXT_PUBLIC_CONVEX_URL=
 CONVEX_DEPLOY_KEY=
+```
+
+### shop (check .env)
+```bash
+# Shopify Store
+PUBLIC_STORE_DOMAIN=youthperformance.myshopify.com
+PUBLIC_STOREFRONT_API_VERSION=2024-10
+
+# ⚠️ NEED: Storefront API Token (for client-side queries)
+# Get from: Shopify Admin > Settings > Apps > Develop apps > [App] > Storefront API
+PUBLIC_STOREFRONT_API_TOKEN=
+
+# Admin API Token (for server-side, keep secret)
+PRIVATE_ADMIN_API_TOKEN=shpat_xxx
+
+SESSION_SECRET=yp-shop-session-secret-change-me
 ```
 
 ### Linear Agent (if using)
@@ -235,6 +279,22 @@ When picking up work on this repo:
 |------|---------------|---------|
 | 2024-12-30 | Phase 2 Init | Scaffolded monorepo, migrated brain + academy, created UI package |
 | 2024-12-30 | Phase 3 Neural Link | Moved Convex to @yp/alpha, updated imports, git initialized |
+| 2024-12-30 | Phase 4 Shopify | Created apps/shop Hydrogen storefront for shop.youthperformance.com |
+| 2024-12-30 | Phase 4 NeoBall | Created apps/neoball-lp Astro landing page for neoball.co |
+| 2024-12-30 | Phase 4 Brain | Added @yp/alpha/shopify - Shopify Storefront API client in brain package |
+| 2024-12-30 | Grand Unification | All 3 apps running: Shop:3001, NeoBall:3002, Academy:3003 |
+| 2024-12-30 | Phase 5 Wolf Skin | Unified Header in @yp/ui deployed to all 3 apps |
+| 2024-12-30 | Build Fixes | Fixed @yp/ui tsup config with "use client" banner, fixed TS errors in @yp/alpha |
+
+---
+
+## Deployment Targets
+
+| App | Platform | URL |
+|-----|----------|-----|
+| Academy | Vercel | youthperformance.com |
+| Shop | Shopify Oxygen / Cloudflare | shop.youthperformance.com |
+| NeoBall LP | Cloudflare Pages | neoball.co |
 
 ---
 
