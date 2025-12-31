@@ -129,7 +129,6 @@ export default function PlaybookPage() {
       <UpsellModal
         isOpen={showUpsell}
         onClose={() => setShowUpsell(false)}
-        onPurchase={() => setShowUpsell(false)}
       />
     </main>
   );

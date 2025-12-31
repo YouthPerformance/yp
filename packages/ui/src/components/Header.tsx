@@ -30,6 +30,10 @@ export interface HeaderProps {
   activePath?: string;
   /** Custom logo component (optional) */
   logoHref?: string;
+  /** Cart page URL - defaults to Shopify shop cart */
+  cartHref?: string;
+  /** Login page URL - defaults to Shopify account */
+  loginHref?: string;
 }
 
 const defaultLinks: NavLink[] = [
@@ -44,6 +48,8 @@ export function Header({
   links = defaultLinks,
   activePath,
   logoHref = "/",
+  cartHref = "https://shop.youthperformance.com/cart",
+  loginHref = "https://shop.youthperformance.com/account/login",
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -150,7 +156,7 @@ export function Header({
         >
           {/* Cart Icon */}
           <a
-            href="/cart"
+            href={cartHref}
             style={{
               position: "relative",
               display: "flex",
@@ -224,7 +230,7 @@ export function Header({
             />
           ) : (
             <a
-              href="/login"
+              href={loginHref}
               style={{
                 padding: "8px 16px",
                 borderRadius: "6px",

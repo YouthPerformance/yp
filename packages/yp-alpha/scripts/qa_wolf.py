@@ -305,17 +305,24 @@ def extract_links_from_header(root: Path) -> List[str]:
     links = []
     href_pattern = re.compile(r'href=["\']([^"\']+)["\']')
 
-    # Find Header files
+    # Find Header files (only in apps/ and packages/, excluding node_modules)
     header_patterns = ["Header.tsx", "header.tsx", "Nav.tsx", "nav.tsx", "Navigation.tsx"]
+    search_dirs = [root / "apps", root / "packages"]
 
-    for pattern in header_patterns:
-        for header_file in root.rglob(pattern):
-            try:
-                content = header_file.read_text(encoding='utf-8')
-                matches = href_pattern.findall(content)
-                links.extend(matches)
-            except Exception:
-                pass
+    for search_dir in search_dirs:
+        if not search_dir.exists():
+            continue
+        for pattern in header_patterns:
+            for header_file in search_dir.rglob(pattern):
+                # Skip node_modules
+                if "node_modules" in str(header_file):
+                    continue
+                try:
+                    content = header_file.read_text(encoding='utf-8')
+                    matches = href_pattern.findall(content)
+                    links.extend(matches)
+                except Exception:
+                    pass
 
     # Deduplicate and filter
     unique_links = list(set(links))

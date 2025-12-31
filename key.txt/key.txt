@@ -1,0 +1,240 @@
+Claude’s assessment is the right kind of “production reality check.” A 91/100 code-quality score is meaningless if the **money path + auth path + tracking path** are still TODOs. Based on what you pasted, **this is a NO‑GO for a real revenue launch** until the blockers are eliminated.
+
+Gemini’s “Hell Week / fix critical path first” instinct is also correct — with one adjustment: **make it a gated launch protocol, not a calendar plan.** You ship the moment the gates are green, not after some arbitrary monitoring window.
+
+This fits your agentic workflow architecture: orchestrator → subagents → feedback loops, and it’s exactly how you keep speed *and* safety. 
+
+---
+
+## Verdict (as PM): NO‑GO for full launch, GO for “gated” ship
+
+### Release‑blocking issues (must be green to call it “production”)
+
+1. **TODOs in critical flows** = feature completeness is not there (signup/auth, payment, workout tracking).
+2. **Shop + neoball‑lp not audited** = unknown risk.
+3. **No monitoring** = you can’t see fires.
+4. **No legal pages** (and you’re in youth athletics) = unacceptable risk.
+5. **Placeholder session secret** in shop = security fail.
+
+Claude’s severity labels (Critical/High/Medium) are properly calibrated. The score “36% readiness” feels directionally right.
+
+---
+
+## What I’d change vs Gemini’s plan (important additions)
+
+Gemini’s ordering (“kill TODOs first, then infra, then deploy”) is correct, but two items need to be promoted to **Step 0** because they can burn you even if features work:
+
+### Step 0A — Secrets & env hygiene (immediate)
+
+* **Delete/replace any placeholder secrets** (shop `SESSION_SECRET=change-me` is a hard fail).
+* Ensure `.env` files are **not shipped** and not committed; use `.env.example`.
+* Add **env schema validation** (Zod) so deploys fail fast if keys are missing.
+
+This is consistent with your stack and agentic runtime expectations. 
+
+### Step 0B — Kill-switch / maintenance mode
+
+Before you ship anything, add a global toggle:
+
+* `MAINTENANCE_MODE=true` shows a controlled “We’re updating” screen for web-academy and shop
+* lets you “turn off” broken flows without redeploy
+
+This is a lightweight safety net that prevents public chaos.
+
+---
+
+## Define the launch gates (binary, non-negotiable)
+
+Instead of “Phase 6A/B/C over weeks,” define **gates**. When a gate passes, you can ship that surface.
+
+### Gate 1 — Marketing surfaces (neoball‑lp, www)
+
+Green when:
+
+* builds clean
+* no placeholder secrets
+* legal footer links exist
+* basic analytics present (or explicitly deferred)
+* monitoring for build/runtime where applicable (Cloudflare logs at minimum)
+
+### Gate 2 — Academy “core loop”
+
+Green when these are implemented and tested end‑to‑end:
+
+* **Sign in / Sign up works**
+* **Onboarding writes a user profile to Convex** (or your chosen data layer)
+* **Workout playback works**
+* **Workout completion records to Convex**
+* **Offer/paywall has a working Stripe path** (even if it’s the simplest Checkout Session)
+
+This matches your architecture: Convex real-time layer + Stripe integration (often via MCP later, but direct Stripe SDK is fine for v1 as long as it’s centralized).
+
+### Gate 3 — Shop “revenue loop”
+
+Green when:
+
+* `SESSION_SECRET` is real and rotated
+* Storefront token setup verified
+* Checkout flow tested end‑to‑end (at least one SKU)
+* Error monitoring wired
+
+---
+
+## Critical path triage: how to resolve each TODO without overbuilding
+
+Claude’s TODO list is basically the “launch blockers list.” The key is to convert each TODO into either:
+
+* **(A) working MVP implementation**, or
+* **(B) a feature flag that removes it from the production path**
+
+Here’s the practical mapping:
+
+### 1) Auth / onboarding (Supabase TODOs vs Clerk envs)
+
+Your audit mentions Supabase TODOs *and* Clerk env vars. That’s a red flag: **pick one auth path and delete the other.**
+
+**Recommendation for speed:** If web‑academy already expects Clerk env vars, standardize on Clerk for auth in the app, and use Convex for your user record/profile writes.
+
+Acceptance criteria:
+
+* Given a user signs up, when they complete onboarding, then a Convex mutation writes:
+
+  * `userId` (auth provider id)
+  * role (athlete/parent)
+  * age/sport/etc
+  * onboardingComplete=true
+
+(That aligns with your “Convex as memory” model. )
+
+### 2) Workout completion → Convex
+
+This is a retention feature and a data integrity feature. MVP:
+
+* When a workout ends, write `{ workoutId, userId, completedAt, duration }`
+* If write fails: queue locally (or at minimum log + show non-blocking toast)
+
+### 3) Parent flow TODOs
+
+You have two choices:
+
+* **Implement real parent flow** (adds scope), or
+* **Remove it from production path** (recommended for speed)
+
+MVP approach:
+
+* If “Parent” is selected, route to a page that clearly states “Parent onboarding is in progress; continue as athlete for now” OR block parent signup behind invite code.
+* Important: if you collect data from minors, you may eventually need parental consent. Don’t pretend parent flow exists if it doesn’t.
+
+### 4) Stripe checkout TODO
+
+Do not build custom billing UI. MVP:
+
+* Server route creates a Stripe Checkout Session (or uses a Checkout Link)
+* client redirects to Stripe hosted checkout
+* webhook (or return URL) updates entitlement in Convex
+
+This matches your tech stack assumptions (Stripe in stack; MCP later; library wrapper in `yp-alpha` now is fine).
+
+---
+
+## Monitoring is a release blocker (because you’re running an agentic factory)
+
+Claude is right: without monitoring you won’t know when agents (or real users) hit errors.
+
+Minimum bar:
+
+* Sentry in **web‑academy** (Next.js)
+* Sentry (or equivalent) in **shop** (Remix/Hydrogen)
+* For Cloudflare Pages sites: at least ensure build logs + error logs are accessible; add client-side error capture if there’s JS logic
+
+This supports your “feedback loops” requirement — feedback loops are impossible with no signals. 
+
+---
+
+## Legal pages: don’t ship without *something*
+
+You’re touching youth athletics; likely minors; you want baseline Terms + Privacy live.
+
+**PM framing (not legal advice):**
+
+* You need Terms + Privacy pages present and linked in the footer.
+* You should route them through counsel later, but “not found” is a worst-case posture.
+
+Also: ensure copy tone is consistent with your brand standards (no hype, honest, direct). 
+
+---
+
+## CI/CD gap is real, but you can minimize friction
+
+Claude is correct: only shop has workflow. You need:
+
+* Vercel deploy for web‑academy
+* Cloudflare Pages deploy for neoball‑lp (and www if separate)
+
+Agentic efficiency angle:
+
+* Make CI produce a **single artifact: Launch Readiness Report** (pass/fail + deltas).
+* Use path filters so only impacted apps deploy.
+
+This aligns to your “CI/CD pipelines” being foundational, not optional. 
+
+---
+
+## The most “agentic” improvement you can make immediately: automate the audit
+
+Instead of running the Wolf manually, codify it as a workflow inside `claude-code`.
+
+### Add `claude-code/workflows/launch_readiness.yaml`
+
+It should run:
+
+* TODO scan in production paths
+* secret scan (gitleaks or similar)
+* env schema validation checks
+* build + basic smoke tests for each app
+* legal page existence check (routes and footer links)
+* monitoring presence check (Sentry config present)
+
+Then it opens PRs or blocks merges if red.
+
+This is directly in line with your orchestrator + feedback loop architecture. 
+
+---
+
+## My recommended order (clear directive)
+
+If you’re asking “what’s the order, CEO?” — here’s the PM order that maximizes speed *and* reduces catastrophic risk:
+
+1. **Create `LAUNCH_CHECKLIST.md`** (single source of truth for gates + owners)
+2. **Fix security placeholder(s)** + env validation
+3. **Kill TODOs in money/auth/tracking path** (implement or feature-flag out)
+4. **Add monitoring (Sentry) + basic alerts**
+5. **Add legal pages + footer links**
+6. **Run the Wolf / readiness workflow against shop + neoball‑lp**
+7. **Wire CI/CD for web‑academy + neoball‑lp**
+8. **Ship in gated order**: marketing → academy → shop (or ship all three but keep incomplete paths hard-disabled)
+
+---
+
+## Answer to the multiple-choice in the audit
+
+If I had to pick from Claude’s options:
+
+* **A) Launch checklist** — YES, do it (it becomes the “gates” artifact)
+* **B) Run the Wolf on shop + neoball‑lp** — YES, same day (unknown risk)
+* **C) Scaffold missing pieces** — YES, but do it in the order above (secrets/TODOs/monitoring/legal first)
+* **D) YOLO deploy scripts** — NO (scripts don’t fix broken flows)
+
+---
+
+### Key deliverables (so nobody debates what “done” means)
+
+* `LAUNCH_CHECKLIST.md` with Gate 1/2/3 pass criteria
+* `claude-code/workflows/launch_readiness.yaml` (automated audit) 
+* Zero TODOs in production paths (or feature-flagged out)
+* Sentry added to web‑academy + shop
+* `/legal/terms` + `/legal/privacy` live + linked (brand tone aligned) 
+* Shop `SESSION_SECRET` rotated and stored only in secrets manager
+* CI/CD configured for web‑academy + neoball‑lp (path filtered)
+
+If you want, I can write the exact **Gate checklist format** (the markdown template) and the **“launch_readiness” workflow manifest** structure so `claude-code` can run it as a standard job.

@@ -34,7 +34,6 @@ interface AthleteDashboardProps {
   bossName?: string;
   recentCards: { id: string; name: string; rarity: string }[];
   onStartWorkout?: () => void;
-  onPurchase?: () => void; // Called when user purchases from upsell modal
   onViewCollection?: () => void;
   onViewLeaderboard?: () => void;
   onViewProfile?: () => void;
@@ -63,7 +62,6 @@ export function AthleteDashboard({
   bossName,
   recentCards,
   onStartWorkout,
-  onPurchase,
   onViewCollection,
   onViewLeaderboard,
   onViewProfile,
@@ -91,14 +89,6 @@ export function AthleteDashboard({
       setShowUpsellModal(true);
     } else if (onStartWorkout) {
       onStartWorkout();
-    }
-  };
-
-  // Handle purchase from upsell modal
-  const handlePurchase = () => {
-    setShowUpsellModal(false);
-    if (onPurchase) {
-      onPurchase();
     }
   };
 
@@ -474,7 +464,6 @@ export function AthleteDashboard({
       <UpsellModal
         isOpen={showUpsellModal}
         onClose={() => setShowUpsellModal(false)}
-        onPurchase={handlePurchase}
         athleteName={athleteName}
       />
     </>

@@ -153,17 +153,25 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- Footer -->
   <footer class="py-12 px-6 border-t border-white/5">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="font-display text-2xl">
-        <span class="text-cyan">NEO</span>BALL
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+        <div class="font-display text-2xl">
+          <span class="text-cyan">NEO</span>BALL
+        </div>
+        <div class="flex gap-6 text-sm text-gray-400">
+          <a href="https://youthperformance.com" class="hover:text-white">YP Academy</a>
+          <a href="https://shop.youthperformance.com" class="hover:text-white">YP Shop</a>
+          <a href="mailto:hello@neoball.co" class="hover:text-white">Contact</a>
+        </div>
       </div>
-      <div class="flex gap-6 text-sm text-gray-400">
-        <a href="https://youthperformance.com" class="hover:text-white">YP Academy</a>
-        <a href="https://shop.youthperformance.com" class="hover:text-white">YP Shop</a>
-        <a href="mailto:hello@neoball.co" class="hover:text-white">Contact</a>
-      </div>
-      <div class="text-sm text-gray-500">
-        © {new Date().getFullYear()} Youth Performance
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-white/5">
+        <div class="flex gap-6 text-sm text-gray-500">
+          <a href="/terms" class="hover:text-cyan transition-colors">Terms</a>
+          <a href="/privacy" class="hover:text-cyan transition-colors">Privacy</a>
+        </div>
+        <div class="text-sm text-gray-500">
+          &copy; {new Date().getFullYear()} Youth Performance
+        </div>
       </div>
     </div>
   </footer>

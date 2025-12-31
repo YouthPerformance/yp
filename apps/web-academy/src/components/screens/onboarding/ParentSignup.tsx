@@ -7,9 +7,9 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useOnboarding, PARENT_FLOW_ENABLED } from '@/contexts/OnboardingContext';
 
 interface ParentSignupProps {
   onContinue: () => void;
@@ -27,6 +27,47 @@ export function ParentSignup({ onContinue, onBack }: ParentSignupProps) {
     confirm?: string;
   }>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  // Feature flag guard - redirect back if parent flow is disabled
+  useEffect(() => {
+    if (!PARENT_FLOW_ENABLED) {
+      // If someone navigates here directly, send them back
+      onBack();
+    }
+  }, [onBack]);
+
+  // Show nothing while redirecting if flow is disabled
+  if (!PARENT_FLOW_ENABLED) {
+    return (
+      <motion.div
+        className="min-h-screen flex flex-col items-center justify-center px-6"
+        style={{ backgroundColor: '#F6F7F9' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <div className="text-4xl mb-4">👤</div>
+        <h1
+          className="font-bebas text-2xl tracking-wider mb-2"
+          style={{ color: '#1A1A1A' }}
+        >
+          COMING SOON
+        </h1>
+        <p className="text-sm text-center mb-6" style={{ color: '#666' }}>
+          The parent portal is not yet available.
+        </p>
+        <button
+          onClick={onBack}
+          className="px-6 py-3 rounded-xl font-bebas text-lg tracking-wider"
+          style={{
+            backgroundColor: '#00BFB0',
+            color: 'white',
+          }}
+        >
+          GO BACK
+        </button>
+      </motion.div>
+    );
+  }
 
   const validate = () => {
     const newErrors: typeof errors = {};
@@ -68,9 +109,8 @@ export function ParentSignup({ onContinue, onBack }: ParentSignupProps) {
     onContinue();
   };
 
-  const handleOAuth = async (provider: 'google' | 'apple') => {
-    // TODO: Implement OAuth
-    console.log(`OAuth with ${provider}`);
+  const handleOAuth = async (_provider: 'google' | 'apple') => {
+    // TODO: Implement OAuth when parent flow is enabled
     onContinue();
   };
 

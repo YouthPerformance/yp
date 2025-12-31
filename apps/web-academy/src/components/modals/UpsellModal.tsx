@@ -7,13 +7,13 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface UpsellModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onPurchase: () => void;
+  onPurchase?: () => void;
   athleteName?: string;
 }
 
@@ -33,6 +33,44 @@ const PRICE = {
 };
 
 export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: UpsellModalProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handlePurchase = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+
+      // Call optional onPurchase callback
+      onPurchase?.();
+    } catch (err) {
+      console.error('[UpsellModal] Checkout error:', err);
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -170,23 +208,54 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
 
               {/* CTA Buttons */}
               <div className="px-6 pb-6 space-y-3">
+                {error && (
+                  <div
+                    className="p-3 rounded-lg text-sm text-center mb-2"
+                    style={{
+                      backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                      color: '#ef4444',
+                      border: '1px solid rgba(220, 38, 38, 0.3)',
+                    }}
+                  >
+                    {error}
+                  </div>
+                )}
+
                 <motion.button
-                  onClick={onPurchase}
-                  className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider"
+                  onClick={handlePurchase}
+                  disabled={isLoading}
+                  className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider relative overflow-hidden"
                   style={{
-                    backgroundColor: 'var(--accent-primary)',
-                    color: 'var(--bg-primary)',
+                    backgroundColor: isLoading ? 'var(--bg-tertiary)' : 'var(--accent-primary)',
+                    color: isLoading ? 'var(--text-tertiary)' : 'var(--bg-primary)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
                   }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={isLoading ? {} : { scale: 1.02 }}
+                  whileTap={isLoading ? {} : { scale: 0.98 }}
                 >
-                  START MY TRANSFORMATION
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <motion.span
+                        className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                      />
+                      REDIRECTING TO CHECKOUT...
+                    </span>
+                  ) : (
+                    'START MY TRANSFORMATION'
+                  )}
                 </motion.button>
 
                 <button
                   onClick={onClose}
+                  disabled={isLoading}
                   className="w-full py-3 text-sm"
-                  style={{ color: 'var(--text-tertiary)' }}
+                  style={{
+                    color: 'var(--text-tertiary)',
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    opacity: isLoading ? 0.5 : 1,
+                  }}
                 >
                   Maybe Later
                 </button>

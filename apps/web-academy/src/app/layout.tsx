@@ -10,6 +10,8 @@ import { ConvexClientProvider } from '@/components/providers';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UserProvider } from '@/contexts/UserContext';
 import { Header } from '@yp/ui';
+import { MaintenanceMode } from '@/components/MaintenanceMode';
+import { isMaintenanceMode } from '@/lib/env';
 import './globals.css';
 
 // ─────────────────────────────────────────────────────────────
@@ -94,6 +96,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Check maintenance mode at render time
+  const maintenanceEnabled = isMaintenanceMode();
+
   return (
     <html
       lang="en"
@@ -111,23 +116,29 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className="font-inter antialiased">
-        <ConvexClientProvider>
-          <UserProvider>
-            <ThemeProvider>
-              <Header
-                logoHref="/"
-                links={[
-                  { label: "ACADEMY", href: "/" },
-                  { label: "SHOP", href: "https://shop.youthperformance.com" },
-                  { label: "NEOBALL", href: "https://neoball.co" },
-                ]}
-              />
-              <main style={{ paddingTop: '64px' }}>
-                {children}
-              </main>
-            </ThemeProvider>
-          </UserProvider>
-        </ConvexClientProvider>
+        {maintenanceEnabled ? (
+          <MaintenanceMode />
+        ) : (
+          <ConvexClientProvider>
+            <UserProvider>
+              <ThemeProvider>
+                <Header
+                  logoHref="/"
+                  links={[
+                    { label: "ACADEMY", href: "/" },
+                    { label: "SHOP", href: "https://shop.youthperformance.com" },
+                    { label: "NEOBALL", href: "https://neoball.co" },
+                  ]}
+                  cartHref="https://shop.youthperformance.com/cart"
+                  loginHref="https://shop.youthperformance.com/account/login"
+                />
+                <main style={{ paddingTop: '64px' }}>
+                  {children}
+                </main>
+              </ThemeProvider>
+            </UserProvider>
+          </ConvexClientProvider>
+        )}
       </body>
     </html>
   );

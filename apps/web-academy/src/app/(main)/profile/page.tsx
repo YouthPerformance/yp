@@ -19,7 +19,10 @@ import {
   Calendar,
   Sun,
   Moon,
+  FileText,
+  Shield,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useUserContext } from '@/contexts/UserContext';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -77,6 +80,11 @@ export default function ProfilePage() {
     { icon: Bell, label: 'Notifications', href: '#' },
     { icon: CreditCard, label: 'Subscription', href: '#' },
     { icon: Settings, label: 'Settings', href: '#' },
+  ];
+
+  const legalLinks = [
+    { icon: FileText, label: 'Terms of Service', href: '/legal/terms' },
+    { icon: Shield, label: 'Privacy Policy', href: '/legal/privacy' },
   ];
 
   return (
@@ -239,7 +247,7 @@ export default function ProfilePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="space-y-2 mb-8"
+        className="space-y-2 mb-6"
       >
         {menuItems.map((item, i) => (
           <motion.button
@@ -258,6 +266,43 @@ export default function ProfilePage() {
             </div>
             <ChevronRight className="w-5 h-5" style={{ color: 'var(--text-tertiary)' }} />
           </motion.button>
+        ))}
+      </motion.div>
+
+      {/* Legal Links */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35 }}
+        className="space-y-2 mb-8"
+      >
+        <p
+          className="text-xs uppercase tracking-wider mb-2 px-1"
+          style={{ color: 'var(--text-tertiary)' }}
+        >
+          Legal
+        </p>
+        {legalLinks.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+          >
+            <motion.div
+              className="w-full p-4 rounded-xl flex items-center justify-between"
+              style={{
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-default)',
+              }}
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="flex items-center gap-3">
+                <item.icon className="w-5 h-5" style={{ color: 'var(--text-tertiary)' }} />
+                <span style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
+              </div>
+              <ChevronRight className="w-5 h-5" style={{ color: 'var(--text-tertiary)' }} />
+            </motion.div>
+          </Link>
         ))}
       </motion.div>
 

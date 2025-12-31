@@ -229,6 +229,31 @@ export default function Homepage() {
           </a>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 border-t border-glow bg-wolf-black">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+            <div className="font-display text-2xl">
+              <span className="text-cyan">YP</span> SHOP
+            </div>
+            <div className="flex gap-6 text-sm text-muted">
+              <a href="https://app.youthperformance.com" className="hover:text-white transition-colors">YP Academy</a>
+              <a href="https://neoball.co" className="hover:text-white transition-colors">NeoBall</a>
+              <a href="mailto:shop@youthperformance.com" className="hover:text-white transition-colors">Contact</a>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-glow">
+            <div className="flex gap-6 text-sm text-dim">
+              <Link to="/legal/terms" className="hover:text-cyan transition-colors">Terms</Link>
+              <Link to="/legal/privacy" className="hover:text-cyan transition-colors">Privacy</Link>
+            </div>
+            <div className="text-sm text-dim">
+              &copy; {new Date().getFullYear()} Youth Performance
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

@@ -7,9 +7,9 @@
 
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useOnboarding, UserRole } from '@/contexts/OnboardingContext';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useOnboarding, UserRole, PARENT_FLOW_ENABLED } from '@/contexts/OnboardingContext';
 
 interface RoleSelectionProps {
   onSelectRole: (role: UserRole) => void;
@@ -18,8 +18,14 @@ interface RoleSelectionProps {
 
 export function RoleSelection({ onSelectRole, onSignIn }: RoleSelectionProps) {
   const { setRole } = useOnboarding();
+  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
 
   const handleSelect = (role: 'athlete' | 'parent') => {
+    // Guard parent flow with feature flag
+    if (role === 'parent' && !PARENT_FLOW_ENABLED) {
+      setShowComingSoonModal(true);
+      return;
+    }
     setRole(role);
     onSelectRole(role);
   };
@@ -70,13 +76,69 @@ export function RoleSelection({ onSelectRole, onSignIn }: RoleSelectionProps) {
         <RoleCard
           emoji="👤"
           title="I'M A PARENT"
-          subtitle="Manage my athlete"
+          subtitle={PARENT_FLOW_ENABLED ? "Manage my athlete" : "Coming Soon"}
           color="var(--text-secondary)"
           delay={0.3}
           onClick={() => handleSelect('parent')}
           variant="secondary"
+          disabled={!PARENT_FLOW_ENABLED}
+          badge={!PARENT_FLOW_ENABLED ? "COMING SOON" : undefined}
         />
       </div>
+
+      {/* Coming Soon Modal */}
+      <AnimatePresence>
+        {showComingSoonModal && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center px-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* Backdrop */}
+            <motion.div
+              className="absolute inset-0 bg-black/60"
+              onClick={() => setShowComingSoonModal(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            {/* Modal */}
+            <motion.div
+              className="relative z-10 w-full max-w-sm rounded-2xl p-6 text-center"
+              style={{ backgroundColor: 'var(--bg-secondary)' }}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            >
+              <div className="text-4xl mb-4">👤</div>
+              <h2
+                className="font-bebas text-2xl tracking-wider mb-2"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                PARENT PORTAL
+              </h2>
+              <p
+                className="text-sm mb-6"
+                style={{ color: 'var(--text-tertiary)' }}
+              >
+                The parent dashboard is coming soon! For now, athletes can start their journey independently.
+              </p>
+              <button
+                onClick={() => setShowComingSoonModal(false)}
+                className="w-full py-3 rounded-xl font-bebas text-lg tracking-wider"
+                style={{
+                  backgroundColor: 'var(--accent-primary)',
+                  color: 'var(--bg-primary)',
+                }}
+              >
+                GOT IT
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Sign In Link */}
       <motion.button
@@ -103,6 +165,8 @@ interface RoleCardProps {
   delay: number;
   onClick: () => void;
   variant?: 'primary' | 'secondary';
+  disabled?: boolean;
+  badge?: string;
 }
 
 function RoleCard({
@@ -113,31 +177,48 @@ function RoleCard({
   delay,
   onClick,
   variant = 'primary',
+  disabled = false,
+  badge,
 }: RoleCardProps) {
   const isPrimary = variant === 'primary';
 
   return (
     <motion.button
       onClick={onClick}
-      className="w-full text-left rounded-2xl p-6 transition-all"
+      className="w-full text-left rounded-2xl p-6 transition-all relative"
       style={{
         backgroundColor: isPrimary ? 'var(--bg-secondary)' : 'var(--bg-tertiary)',
         border: `1px solid ${isPrimary ? color : 'var(--border-default)'}`,
+        opacity: disabled ? 0.7 : 1,
       }}
       initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
+      animate={{ opacity: disabled ? 0.7 : 1, x: 0 }}
       transition={{ delay }}
-      whileHover={{
+      whileHover={disabled ? {} : {
         scale: 1.02,
         borderColor: color,
       }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={disabled ? {} : { scale: 0.98 }}
     >
+      {/* Coming Soon Badge */}
+      {badge && (
+        <div
+          className="absolute top-3 right-3 px-2 py-1 rounded-full text-[10px] font-bold tracking-wider"
+          style={{
+            backgroundColor: 'var(--accent-primary)',
+            color: 'var(--bg-primary)',
+          }}
+        >
+          {badge}
+        </div>
+      )}
+
       <div className="flex items-center gap-4">
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
           style={{
             backgroundColor: isPrimary ? `${color}20` : 'var(--bg-secondary)',
+            opacity: disabled ? 0.6 : 1,
           }}
         >
           {emoji}
@@ -151,7 +232,7 @@ function RoleCard({
           </h2>
           <p
             className="text-sm"
-            style={{ color: 'var(--text-tertiary)' }}
+            style={{ color: disabled ? 'var(--text-tertiary)' : 'var(--text-tertiary)' }}
           >
             {subtitle}
           </p>

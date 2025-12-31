@@ -140,7 +140,6 @@ export default function AskWolfPage() {
       <UpsellModal
         isOpen={showUpsell}
         onClose={() => setShowUpsell(false)}
-        onPurchase={() => setShowUpsell(false)}
       />
     </main>
   );

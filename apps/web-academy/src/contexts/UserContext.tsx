@@ -137,35 +137,26 @@ export function UserProvider({ children }: UserProviderProps) {
   useEffect(() => {
     if (!clerkLoaded) {
       setAuthState('loading');
-      console.log('[UserContext] Auth state: loading (Clerk not loaded)');
       return;
     }
 
     if (!isSignedIn) {
       setAuthState('signed-out');
-      console.log('[UserContext] Auth state: signed-out');
       return;
     }
 
     if (convexUser === undefined) {
       // Query still loading
       setAuthState('loading');
-      console.log('[UserContext] Auth state: loading (Convex query pending)');
       return;
     }
 
     if (convexUser === null) {
       setAuthState('signed-in-no-user');
-      console.log('[UserContext] Auth state: signed-in-no-user (needs onboarding)');
       return;
     }
 
     setAuthState('signed-in-with-user');
-    console.log('[UserContext] Auth state: signed-in-with-user', {
-      userId: convexUser._id,
-      name: convexUser.name,
-      role: convexUser.role,
-    });
   }, [clerkLoaded, isSignedIn, convexUser]);
 
   // ─────────────────────────────────────────────────────────
@@ -174,13 +165,10 @@ export function UserProvider({ children }: UserProviderProps) {
 
   const createUser = async (data: CreateUserData): Promise<Id<'users'> | null> => {
     if (!clerkId || !clerkUser?.primaryEmailAddress?.emailAddress) {
-      console.error('[UserContext] Cannot create user: no Clerk ID or email');
       return null;
     }
 
     try {
-      console.log('[UserContext] Creating user:', data);
-
       const userId = await createUserMutation({
         clerkId,
         email: clerkUser.primaryEmailAddress.emailAddress,
@@ -192,10 +180,9 @@ export function UserProvider({ children }: UserProviderProps) {
         parentCode: data.parentCode,
       });
 
-      console.log('[UserContext] User created:', userId);
       return userId;
     } catch (error) {
-      console.error('[UserContext] Error creating user:', error);
+      // Silently fail - the UI will handle the error state
       return null;
     }
   };
@@ -227,7 +214,7 @@ export function UserProvider({ children }: UserProviderProps) {
     createUser,
     refetch: () => {
       // Convex queries auto-refetch on data changes
-      console.log('[UserContext] Manual refetch triggered');
+      // This is a no-op placeholder for future use
     },
     authState,
   };

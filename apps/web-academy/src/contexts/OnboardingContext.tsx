@@ -9,6 +9,19 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 // ─────────────────────────────────────────────────────────────
+// FEATURE FLAGS
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Parent flow is incomplete and not ready for launch.
+ * Set to true when parent flow is fully implemented with:
+ * - Real Supabase signup
+ * - Real parent code validation
+ * - Subscription integration
+ */
+export const PARENT_FLOW_ENABLED = false;
+
+// ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
 
@@ -221,16 +234,14 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   // ─────────────────────────────────────────────────────────────
 
   const completeOnboarding = useCallback(async () => {
-    // TODO: Submit to Supabase
-    console.log('Onboarding Complete:', data);
-
+    // TODO: Submit to Supabase when backend is ready
     setData(prev => ({ ...prev, onboardingComplete: true }));
 
     // Clear localStorage
     if (typeof window !== 'undefined') {
       localStorage.removeItem(STORAGE_KEY);
     }
-  }, [data]);
+  }, []);
 
   const resetOnboarding = useCallback(() => {
     setData(DEFAULT_DATA);

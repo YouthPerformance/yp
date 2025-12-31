@@ -282,10 +282,7 @@ export default function HomePage() {
       <UpsellModal
         isOpen={showUpsellModal}
         onClose={() => setShowUpsellModal(false)}
-        onPurchase={() => {
-          console.log('Purchase initiated');
-          setShowUpsellModal(false);
-        }}
+        athleteName={userData.name}
       />
     </main>
   );

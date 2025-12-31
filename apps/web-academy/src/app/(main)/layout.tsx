@@ -35,10 +35,6 @@ export default function MainLayout({
       <UpsellModal
         isOpen={showUpsellModal}
         onClose={() => setShowUpsellModal(false)}
-        onPurchase={() => {
-          console.log('Purchase initiated');
-          setShowUpsellModal(false);
-        }}
       />
     </div>
   );

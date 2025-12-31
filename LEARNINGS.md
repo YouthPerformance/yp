@@ -168,7 +168,7 @@ CONVEX_DEPLOY_KEY=
 ```bash
 # Shopify Store - Connected to youthperformance.myshopify.com
 PUBLIC_STORE_DOMAIN=youthperformance.myshopify.com
-PUBLIC_STOREFRONT_API_VERSION=2025-10
+PUBLIC_STOREFRONT_API_VERSION=2024-10
 
 # Storefront API Token (for client-side queries)
 # Get from: Shopify Admin > Settings > Apps > Develop apps > [App] > Storefront API
@@ -346,6 +346,51 @@ When picking up work on this repo:
 | 2024-12-31 | Shop Store Switch | Switched from ypathletes to youthperformance.myshopify.com |
 | 2024-12-31 | Chrome Debug Setup | Configured Claude Code + Chrome extension for browser debugging |
 | 2024-12-31 | Shop Neoball Alignment | Unified shop design with /neoball premium patterns - cyan fire loader, glass morphism, premium cards |
+| 2024-12-31 | Shop Oxygen Deploy Fix | Fixed API version 2025-10→2024-10, pushed env to Oxygen, deployed successfully (needs access toggle) |
+| 2024-12-31 | Phase 0 Security | Replaced placeholder SESSION_SECRET with secure value, added Zod env validation, .env.example files, MAINTENANCE_MODE toggle |
+
+---
+
+## Launch Readiness Phases
+
+```
+Phase 0 ✅ SECURITY FOUNDATION (Complete)
+├── SESSION_SECRET replaced with cryptographically secure value
+├── Zod env schema validation (shop + academy)
+├── .env.example files created
+└── MAINTENANCE_MODE toggle with branded fallback UI
+
+Phase 1 ✅ DISCOVERY & AUDIT (Complete)
+├── 1A: Audit web-academy - 6 critical, 5 high
+├── 1B: Audit shop - 5 critical, 7 high
+├── 1C: Audit neoball-lp - 0 critical, 2 high
+├── 1D: Audit marketing - 4 critical, 4 high
+└── 1E: Created AUDIT_REPORT.md
+
+Phase 2 ⏳ INFRASTRUCTURE (Deferred)
+├── 2A: Sentry for web-academy
+├── 2B: Sentry for shop
+└── 2C: CI/CD workflows
+
+Phase 3 ✅ ACADEMY CORE LOOP (Complete)
+├── 3A: Stripe checkout implemented (UpsellModal + API routes + webhook)
+├── 3B: Workout completion wired to Convex (with offline resilience)
+└── 3C: Parent flow feature-flagged (PARENT_FLOW_ENABLED = false)
+
+Phase 4 ✅ SHOP REVENUE LOOP (Complete)
+├── 4A: Cart implemented with Hydrogen API (add/remove/update/discount)
+└── 4B: Variant selection + checkout redirect working
+
+Phase 5 ✅ LEGAL & COMPLIANCE (Complete)
+├── 5A: Terms of Service pages (all 4 apps)
+├── 5B: Privacy Policy pages (all 4 apps)
+└── 5C: Footer links added
+
+Phase 6 ✅ TESTING & VALIDATION (Complete)
+└── All 6 builds pass (alpha, ui, academy, shop, neoball, marketing)
+
+Phase 7 🚀 LAUNCH (Ready)
+```
 
 ---
 
