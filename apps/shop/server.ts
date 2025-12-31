@@ -19,9 +19,9 @@ export default {
         waitUntil: (p) => executionContext.waitUntil(p),
         i18n: {language: 'EN', country: 'US'},
         publicStorefrontToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-        privateStorefrontToken: env.PRIVATE_STOREFRONT_TOKEN,
+        privateStorefrontToken: env.PRIVATE_STOREFRONT_API_TOKEN,
         storeDomain: env.PUBLIC_STORE_DOMAIN,
-        storefrontId: env.SHOPIFY_STOREFRONT_ID,
+        storefrontId: env.PUBLIC_STOREFRONT_ID,
         storefrontHeaders: getStorefrontHeaders(request),
         storefrontApiVersion: env.PUBLIC_STOREFRONT_API_VERSION || '2024-10',
       });
@@ -58,13 +58,13 @@ export default {
   },
 };
 
-// Environment variables interface
+// Environment variables interface (matches Oxygen auto-provided vars)
 interface Env {
   PUBLIC_STORE_DOMAIN: string;
   PUBLIC_STOREFRONT_API_TOKEN: string;
   PUBLIC_STOREFRONT_API_VERSION: string;
-  PRIVATE_STOREFRONT_TOKEN?: string;
+  PRIVATE_STOREFRONT_API_TOKEN?: string;
   PRIVATE_ADMIN_API_TOKEN?: string;
   SESSION_SECRET: string;
-  SHOPIFY_STOREFRONT_ID?: string;
+  PUBLIC_STOREFRONT_ID?: string;
 }
