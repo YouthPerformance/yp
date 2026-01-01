@@ -3,7 +3,7 @@
 > **Purpose:** Context preservation for agent handoffs. Update this file after significant changes.
 >
 > **Last Updated:** 2024-12-31
-> **Phase:** 5 (Production Deployment)
+> **Phase:** 8 (Governance & IP Protection Complete)
 
 ---
 
@@ -389,7 +389,16 @@ Phase 5 ✅ LEGAL & COMPLIANCE (Complete)
 Phase 6 ✅ TESTING & VALIDATION (Complete)
 └── All 6 builds pass (alpha, ui, academy, shop, neoball, marketing)
 
-Phase 7 🚀 LAUNCH (Ready)
+Phase 7 ✅ LAUNCH (Complete)
+├── 7.1: All changes committed (50 files, 4481 insertions)
+├── 7.2: Pushed to GitHub remote
+└── 7.3: CI/CD workflows triggered
+
+Phase 8 ✅ GOVERNANCE & IP PROTECTION (Complete)
+├── 8.1: Repo transferred to YouthPerformance org
+├── 8.2: Git remote updated to YouthPerformance/yp
+├── 8.3: Branch protection on master (require PR, no bypass)
+└── 8.4: YP-Wolf-Pack GitHub App installed for agent access
 ```
 
 ---
@@ -432,6 +441,38 @@ Phase 7 🚀 LAUNCH (Ready)
 | Academy | Vercel | app.youthperformance.com |
 | Shop | Shopify Oxygen / Cloudflare | shop.youthperformance.com |
 | NeoBall LP | Cloudflare Pages | neoball.co |
+
+---
+
+## GitHub Organization & Governance
+
+### Repository Location
+```
+Organization: YouthPerformance
+Repository:   yp (formerly yp-monorepo)
+URL:          https://github.com/YouthPerformance/yp
+```
+
+### Branch Protection (master)
+- ✅ Require pull request before merging (1 approval)
+- ✅ Dismiss stale reviews on new commits
+- ✅ Enforce for admins (no cowboy coding)
+- ✅ Block force pushes
+- ✅ Block branch deletion
+
+### Agent Authorization
+| App | Purpose | Permissions |
+|-----|---------|-------------|
+| YP-Wolf-Pack | AI agent access | Contents (R/W), Pull Requests (R/W), Metadata (R) |
+
+### Local Setup
+```bash
+# Clone (new machine)
+git clone https://github.com/YouthPerformance/yp.git
+
+# Update existing remote (if migrating)
+git remote set-url origin https://github.com/YouthPerformance/yp.git
+```
 
 ---
 
