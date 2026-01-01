@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm turbo run typecheck
+
+      - name: Lint
+        run: pnpm turbo run lint
+        continue-on-error: true  # Don't fail on lint for now
+
+      - name: Build
+        run: pnpm turbo run build
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan for secrets in client code
+        run: |
+          echo "Scanning for exposed secrets..."
+
+          # Check for common secret patterns in client-side code
+          if grep -rn "SHOPIFY_ADMIN_TOKEN\|PRIVATE_.*_TOKEN\|SECRET_KEY" \
+            --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
+            apps/*/src/components/ apps/*/src/app/ apps/*/app/components/ 2>/dev/null; then
+            echo "::error::Potential secrets found in client-side code!"
+            exit 1
+          fi
+
+          # Check for hardcoded API keys (basic pattern)
+          if grep -rn "sk-[a-zA-Z0-9]\{20,\}\|shpat_[a-zA-Z0-9]\{20,\}" \
+            --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
+            apps/ packages/ 2>/dev/null | grep -v ".env" | grep -v "node_modules"; then
+            echo "::error::Potential hardcoded API keys found!"
+            exit 1
+          fi
+
+          echo "✅ No secrets found in client-side code"
+
+  # Uncomment when tests are added
+  # test:
+  #   name: Test
+  #   runs-on: ubuntu-latest
+  #   needs: validate
+  #
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 9
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: 'pnpm'
+  #
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Run tests
+  #       run: pnpm turbo run test
