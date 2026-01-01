@@ -24,19 +24,83 @@ export default function Homepage() {
 
   return (
     <main className="min-h-screen relative z-10">
-      {/* Hero Section - Clean Single Image (Shopify Supply Style) */}
+      {/* Scroll Progress Bar */}
+      <div className="scroll-progress" />
+
+      {/* Grid Overlay */}
+      <div className="grid-overlay" />
+
+      {/* Hero Section - Layered Images with Blend Effects */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Single Background Image - Full Opacity, No Blend Modes */}
+        {/* Layered Background Images - Cinematic Stack */}
         <div className="absolute inset-0">
+          {/* Layer 1: 4.jpg - Dark base */}
           <img
-            src="/images/shopbg6.jpeg"
+            src="/images/4.jpg"
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: 1 }}
+          />
+          {/* Layer 2: 9.jpg - Lighten blend */}
+          <img
+            src="/images/9.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-lighten"
+            style={{ opacity: 0.8 }}
+          />
+          {/* Layer 3: 11.png - Screen for glow */}
+          <img
+            src="/images/11.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-screen"
+            style={{ opacity: 0.5 }}
+          />
+          {/* Layer 4: 13.png - Screen */}
+          <img
+            src="/images/13.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-screen"
+            style={{ opacity: 0.4 }}
+          />
+          {/* Layer 5: 18.png - Lighten */}
+          <img
+            src="/images/18.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-lighten"
+            style={{ opacity: 0.6 }}
+          />
+          {/* Layer 6: 14.png - Screen */}
+          <img
+            src="/images/14.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-screen"
+            style={{ opacity: 0.35 }}
+          />
+          {/* Layer 7: 12.png - Lighten */}
+          <img
+            src="/images/12.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-lighten"
+            style={{ opacity: 0.5 }}
+          />
+          {/* Layer 8: 6.jpg - Screen highlight */}
+          <img
+            src="/images/6.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-screen"
+            style={{ opacity: 0.3 }}
+          />
+          {/* Layer 9: 16.png - Top glow */}
+          <img
+            src="/images/16.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover mix-blend-screen"
+            style={{ opacity: 0.25 }}
           />
         </div>
 
-        {/* Subtle dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-5xl" style={{zIndex: 10}}>
@@ -56,7 +120,7 @@ export default function Homepage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up" style={{animationDelay: '0.3s'}}>
-            <Link to="/collections/all" className="btn-primary">
+            <Link to="/products" className="btn-primary">
               SHOP NOW
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -98,16 +162,16 @@ export default function Homepage() {
       </section>
 
       {/* Featured Products - Premium Cards */}
-      <section className="py-24 px-6">
+      <section className="py-24 px-6 scroll-fade-in">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <p className="hero-subtitle mb-4">Featured Drop</p>
-            <h2 className="font-display text-5xl tracking-wider">
+            <h2 className="performance-title text-center">
               GEAR THAT <span className="text-cyan">PERFORMS</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-cards">
             {products.map((product: any, index: number) => (
               <Link
                 key={product.id}
@@ -137,7 +201,7 @@ export default function Homepage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link to="/collections/all" className="btn-secondary">
+            <Link to="/products" className="btn-secondary">
               View All Products
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -148,7 +212,7 @@ export default function Homepage() {
       </section>
 
       {/* NeoBall Feature Section */}
-      <section className="py-24 px-6 bg-surface relative overflow-hidden">
+      <section className="py-24 px-6 bg-surface relative overflow-hidden scroll-fade-in">
         {/* Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan/5 to-transparent" />
 
@@ -173,7 +237,7 @@ export default function Homepage() {
             {/* Product Info */}
             <div>
               <p className="hero-subtitle mb-4">The World's Best</p>
-              <h2 className="font-display text-6xl mb-2">
+              <h2 className="performance-title mb-2">
                 <span className="text-cyan">NEOBALL</span>
               </h2>
               <p className="font-display text-3xl text-dim mb-6">SILENT BASKETBALL</p>
@@ -217,10 +281,10 @@ export default function Homepage() {
       </section>
 
       {/* YP Academy CTA */}
-      <section className="py-24 px-6">
+      <section className="py-24 px-6 scroll-fade-in">
         <div className="max-w-4xl mx-auto text-center">
           <p className="hero-subtitle mb-4">Complete The System</p>
-          <h2 className="font-display text-5xl mb-6">
+          <h2 className="performance-title text-center">
             TRAIN WITH <span className="text-neon-green">YP ACADEMY</span>
           </h2>
           <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
