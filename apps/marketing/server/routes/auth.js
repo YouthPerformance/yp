@@ -4,7 +4,12 @@ import jwt from 'jsonwebtoken'
 import db from '../db/schema.js'
 
 const router = Router()
-const JWT_SECRET = process.env.JWT_SECRET || 'peterson-academy-secret'
+
+// Require JWT_SECRET - fail early if not set
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required')
+}
+const JWT_SECRET = process.env.JWT_SECRET
 
 // Register
 router.post('/register', async (req, res) => {
