@@ -40,6 +40,6 @@ jobs:
 
       - name: Deploy to Oxygen
         working-directory: apps/shop
-        run: npx shopify hydrogen deploy --env production --token ${{ secrets.SHOPIFY_HYDROGEN_DEPLOY_TOKEN }} --no-lockfile-check
+        run: npx shopify hydrogen deploy --token ${{ secrets.SHOPIFY_HYDROGEN_DEPLOY_TOKEN }} --no-lockfile-check
         env:
           SHOPIFY_HYDROGEN_DEPLOY_TOKEN: ${{ secrets.SHOPIFY_HYDROGEN_DEPLOY_TOKEN }}
