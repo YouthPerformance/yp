@@ -24,9 +24,14 @@ export default defineConfig({
   build: {
     assetsInlineLimit: 0,
   },
+  resolve: {
+    dedupe: ['react', 'react-dom', 'three'],
+  },
+  optimizeDeps: {
+    include: ['three'],
+  },
   ssr: {
-    optimizeDeps: {
-      include: ['typographic-base'],
-    },
+    // Externalize Three.js - it doesn't work in SSR
+    external: ['three'],
   },
 });

@@ -13,6 +13,10 @@ export async function loader({params, context}: LoaderFunctionArgs) {
   const {handle} = params;
   const {storefront} = context;
 
+  if (!handle) {
+    throw new Response('Collection handle is required', {status: 400});
+  }
+
   const {collection} = await storefront.query(COLLECTION_QUERY, {
     variables: {handle},
   });

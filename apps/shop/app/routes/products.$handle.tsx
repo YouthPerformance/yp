@@ -20,6 +20,10 @@ export async function loader({params, context}: LoaderFunctionArgs) {
   const {handle} = params;
   const {storefront} = context;
 
+  if (!handle) {
+    throw new Response('Product handle is required', {status: 400});
+  }
+
   const {product} = await storefront.query(PRODUCT_QUERY, {
     variables: {handle},
   });

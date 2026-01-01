@@ -42,7 +42,7 @@ function Footer() {
           <h4 className="font-semibold mb-4">Shop</h4>
           <ul className="space-y-2 text-sm text-gray-400">
             <li>
-              <Link to="/collections/all" className="hover:text-white">
+              <Link to="/products" className="hover:text-white">
                 All Products
               </Link>
             </li>

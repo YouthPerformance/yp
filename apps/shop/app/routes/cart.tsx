@@ -153,7 +153,7 @@ export default function Cart() {
           </h1>
           <p className="text-gray-400 text-lg mb-8">Your cart is empty</p>
           <Link
-            to="/collections/all"
+            to="/products"
             className="inline-block px-8 py-4 bg-neon-green text-wolf-black font-bold text-lg rounded-lg glow-green hover:scale-105 transition-transform"
           >
             CONTINUE SHOPPING
@@ -226,7 +226,7 @@ export default function Cart() {
           </a>
 
           <Link
-            to="/collections/all"
+            to="/products"
             className="block w-full py-4 mt-4 border border-white/20 text-white font-bold text-lg rounded-lg text-center hover:border-cyan transition-colors"
           >
             CONTINUE SHOPPING

@@ -42,7 +42,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <Analytics.Provider cart={null} shop={{}} consent={{}} />
+        <Analytics.Provider cart={null} shop={null} consent={{}} />
       </body>
     </html>
   );
