@@ -19,16 +19,15 @@ if (typeof window !== 'undefined') {
 const NOISE_PNG = 'https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/assets/noise-Q6CzNatq.png';
 
 // Hero images - stacked cards (top to bottom layering)
-// Order: 4.jpg (top/front) → 16.png (bottom/back)
+// Order: 14.png (top/front) → 17.png (bottom/back) - 4.jpg moved to wolfpack section
 const HERO_IMAGES = [
-  '/images/4.jpg',   // 1. Top (front) - highest z-index
+  '/images/14.png',  // 1. Top (front) - highest z-index
   '/images/9.jpg',   // 2.
   '/images/11.png',  // 3.
   '/images/12.png',  // 4.
   '/images/13.png',  // 5.
-  '/images/14.png',  // 6.
-  '/images/18.png',  // 7.
-  '/images/16.png',  // 8. Bottom (back) - lowest z-index
+  '/images/18.png',  // 6.
+  '/images/17.png',  // 7. Bottom (back) - lowest z-index
 ];
 
 // Colors from Supply
@@ -59,16 +58,15 @@ const DURATIONS = {
 };
 
 // Card scatter configuration - spiral vortex (REVERSED z-index: first image = TOP)
-// 8 images with z-index: 8 (top/front) → 1 (bottom/back)
+// 7 images with z-index: 7 (top/front) → 1 (bottom/back)
 const CARD_CONFIG = [
-  { x: -220, y: -70,  r: -25, scale: 0.72, z: 8 },  // Image 1 - TOP (front)
-  { x: -200, y: 90,   r: 35,  scale: 0.82, z: 7 },  // Image 2
-  { x: -180, y: -110, r: -45, scale: 0.62, z: 6 },  // Image 3
-  { x: -160, y: 50,   r: 15,  scale: 0.78, z: 5 },  // Image 4
-  { x: -140, y: -40,  r: -10, scale: 0.72, z: 4 },  // Image 5
-  { x: -130, y: 80,   r: 55,  scale: 0.68, z: 3 },  // Image 6
-  { x: -120, y: -60,  r: -30, scale: 0.62, z: 2 },  // Image 7
-  { x: -105, y: 25,   r: -15, scale: 0.55, z: 1 },  // Image 8 - BOTTOM (back)
+  { x: -220, y: -70,  r: -25, scale: 0.75, z: 7 },  // Image 1 - TOP (front)
+  { x: -200, y: 90,   r: 35,  scale: 0.82, z: 6 },  // Image 2
+  { x: -180, y: -110, r: -45, scale: 0.65, z: 5 },  // Image 3
+  { x: -160, y: 50,   r: 15,  scale: 0.78, z: 4 },  // Image 4
+  { x: -140, y: -40,  r: -10, scale: 0.72, z: 3 },  // Image 5
+  { x: -125, y: 70,   r: 40,  scale: 0.65, z: 2 },  // Image 6
+  { x: -110, y: -30,  r: -20, scale: 0.58, z: 1 },  // Image 7 - BOTTOM (back)
 ];
 
 // Wheel config - Lenis-like smooth scroll
@@ -121,12 +119,14 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
   const titleLine1Ref = useRef<HTMLDivElement>(null);
   const titleLine2Ref = useRef<HTMLDivElement>(null);
   const heroCopyRef = useRef<HTMLDivElement>(null);
+  const heroContainerRef = useRef<HTMLDivElement>(null);
+  const laserBeamRef = useRef<HTMLDivElement>(null);
 
   // Wheel scroll target
   const wheelTargetRef = useRef(0);
 
-  const title1 = useMemo(() => splitLetters('LOCK IN.'), []);
-  const title2 = useMemo(() => splitLetters('LEVEL UP.'), []);
+  const title1 = useMemo(() => splitLetters('WINTER ARC'), []);
+  const title2 = useMemo(() => splitLetters('PERFORMANCE'), []);
 
   // Reduced motion listener
   useEffect(() => {
@@ -148,6 +148,40 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       document.body.style.overflow = prev;
     };
   }, []);
+
+  // Laser beam sweep animation (runs once on load)
+  useEffect(() => {
+    if (reduceMotion || !laserBeamRef.current) return;
+
+    const beam = laserBeamRef.current;
+
+    // Initial state - start from left, invisible
+    gsap.set(beam, {
+      xPercent: -100,
+      opacity: 0,
+    });
+
+    // Animate the laser sweep after a short delay
+    const tl = gsap.timeline({ delay: 0.3 });
+
+    tl.to(beam, {
+      opacity: 1,
+      duration: 0.1,
+    })
+    .to(beam, {
+      xPercent: 200,
+      duration: 1.2,
+      ease: 'power2.inOut',
+    }, '<')
+    .to(beam, {
+      opacity: 0,
+      duration: 0.3,
+    }, '-=0.3');
+
+    return () => {
+      tl.kill();
+    };
+  }, [reduceMotion]);
 
   // GSAP-powered wheel handler (Lenis-like smooth scroll)
   useEffect(() => {
@@ -238,6 +272,13 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       const max = Math.max(1, el.scrollWidth - el.clientWidth);
       setProgress(gsap.utils.clamp(0, 1, el.scrollLeft / max));
       wheelTargetRef.current = el.scrollLeft;
+
+      // Hide hero container after scrolling past hero section (1.2x viewport)
+      const heroContainer = heroContainerRef.current;
+      if (heroContainer) {
+        const hideThreshold = el.clientWidth * 1.2;
+        heroContainer.style.visibility = el.scrollLeft > hideThreshold ? 'hidden' : 'visible';
+      }
     };
 
     // Decay impulse when not scrolling
@@ -445,8 +486,21 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         }}
       />
 
-      {/* Fixed hero layer */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-20 pointer-events-none">
+      {/* Fixed hero layer - hidden after scroll animation completes */}
+      <div
+        ref={heroContainerRef}
+        className="fixed top-0 left-0 w-full h-full overflow-hidden z-20 pointer-events-none"
+      >
+        {/* Laser beam sweep effect */}
+        <div
+          ref={laserBeamRef}
+          className="absolute top-0 left-0 w-full h-full z-[100] pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(0,246,224,0) 35%, rgba(0,246,224,0.2) 45%, rgba(0,246,224,0.5) 50%, rgba(0,246,224,0.2) 55%, rgba(0,246,224,0) 65%, transparent 100%)',
+            opacity: 0,
+          }}
+        />
+
         {/* Hero images - GSAP controlled */}
         <div className="absolute w-full h-full top-0 left-0 overflow-visible">
           {HERO_IMAGES.map((img, idx) => {
@@ -513,6 +567,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
             <div
               ref={titleLine1Ref}
               className="text-[12vw] md:text-[10vw] xl:text-[140px] text-nowrap text-center leading-[0.9] tracking-wider"
+              style={{ color: '#eeece2' }}
             >
               {title1.map(({ ch, key }) => (
                 <span key={key} className="relative inline-block">
@@ -524,7 +579,8 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <div className="overflow-hidden" style={{ lineHeight: 1.0 }}>
             <div
               ref={titleLine2Ref}
-              className="text-[10vw] md:text-[8vw] xl:text-[105px] text-nowrap text-center leading-[0.9] tracking-[0.2em] text-cyan"
+              className="text-[10vw] md:text-[8vw] xl:text-[105px] text-nowrap text-center leading-[0.9] tracking-[0.2em]"
+              style={{ color: '#eeece2' }}
             >
               {title2.map(({ ch, key }) => (
                 <span key={key} className="relative inline-block">
@@ -620,7 +676,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <section className="relative h-full w-[100vw] md:w-[90vw] flex items-center justify-center border-l border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: 'url(/images/3.jpg)' }}
+              style={{ backgroundImage: 'url(/images/13.png)' }}
             />
             <div className="absolute inset-0 bg-black/50" />
             <div className="relative z-10 text-center px-6 max-w-2xl">
@@ -629,14 +685,16 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
               </div>
               <h3 className="font-display text-[10vw] md:text-[6vw] xl:text-[80px] leading-[0.9] uppercase mb-6">
                 TRAIN LIKE<br />
-                <span className="text-cyan">A WOLF</span>
+                <span className="text-cyan">A PRO</span>
               </h3>
               <p className="text-lg text-gray-300 mb-8">
                 Join thousands of athletes who refuse to settle for average.
               </p>
               <a
-                href="https://app.youthperformance.com"
+                href="https://youthperformance.com"
                 className="inline-flex items-center gap-2 px-6 py-3 border border-white/30 text-white font-medium rounded-lg hover:bg-white/10 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Join YP Academy
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -647,16 +705,21 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           </section>
 
           {/* Section 4: Newsletter Signup */}
-          <section className="relative h-full w-[100vw] md:w-[80vw] flex items-center justify-center border-l border-white/10 bg-surface">
+          <section className="relative h-full w-[100vw] md:w-[80vw] flex items-center justify-center border-l border-white/10">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: 'url(/images/4.jpg)' }}
+            />
+            <div className="absolute inset-0 bg-black/60" />
             <div className="relative z-10 text-center px-6 max-w-lg">
-              <div className="uppercase tracking-[0.3em] text-sm text-gray-400 mb-4">
+              <div className="uppercase tracking-[0.3em] text-sm text-gray-300 mb-4">
                 Stay Connected
               </div>
               <h3 className="font-display text-[8vw] md:text-[4vw] xl:text-[56px] leading-[0.95] uppercase mb-6">
                 JOIN THE<br />
                 <span className="text-cyan">WOLFPACK</span>
               </h3>
-              <p className="text-gray-400 mb-8">
+              <p className="text-gray-300 mb-8">
                 Get early access to drops, exclusive content, and training tips.
               </p>
               <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">

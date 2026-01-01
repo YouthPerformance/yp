@@ -75,13 +75,12 @@ export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
 
             {/* Center: Logo */}
             <div className="absolute left-1/2 -translate-x-1/2">
-              <Link to="/" aria-label="YP Shop" className="flex items-center gap-2">
-                <span className="text-xl md:text-2xl font-display font-bold tracking-tight">
-                  <span className="text-lime">YP</span>
-                </span>
-                <span className="hidden sm:block text-[10px] uppercase tracking-[0.2em] text-gray-400 font-medium">
-                  Wolf Pack
-                </span>
+              <Link to="/" aria-label="YP Shop">
+                <img
+                  src="/images/yp-logo.png"
+                  alt="YP"
+                  className="h-8 md:h-10 w-auto"
+                />
               </Link>
             </div>
 
