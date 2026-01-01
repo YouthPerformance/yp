@@ -348,6 +348,7 @@ When picking up work on this repo:
 | 2024-12-31 | Shop Neoball Alignment | Unified shop design with /neoball premium patterns - cyan fire loader, glass morphism, premium cards |
 | 2024-12-31 | Shop Oxygen Deploy Fix | Fixed API version 2025-10→2024-10, pushed env to Oxygen, deployed successfully (needs access toggle) |
 | 2024-12-31 | Phase 0 Security | Replaced placeholder SESSION_SECRET with secure value, added Zod env validation, .env.example files, MAINTENANCE_MODE toggle |
+| 2024-12-31 | Shop Hero Update | Replaced 8 layered opacity/blend images with single shopbg6.jpeg, added Shopify Supply-style CSS animations |
 
 ---
 
@@ -423,6 +424,33 @@ Phase 8 ✅ GOVERNANCE & IP PROTECTION (Complete)
 --font-body: 'Inter', sans-serif;
 --font-mono: 'JetBrains Mono', monospace;
 ```
+
+### Animation System (Shopify Supply Style)
+
+**Key Finding:** Shopify Supply uses NO opacity/blend modes. All images are full opacity.
+
+```css
+/* Easing Variables */
+--ease-in: cubic-bezier(.4, 0, 1, 1);
+--ease-out: cubic-bezier(0, 0, .2, 1);
+--ease-in-out: cubic-bezier(.4, 0, .2, 1);
+--duration-default: 0.15s;
+--duration-hero: 0.6s;
+
+/* Hero Slide-Up Pattern */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Staggered delays: 0s, 0.1s, 0.2s, 0.3s, 0.4s */
+```
+
+**Implementation:**
+- NO GSAP on Shopify Supply - pure CSS transforms
+- Native `scroll-behavior: smooth`
+- Single background image, no layered blend modes
+- Matrix transforms for scroll parallax effects
 
 ### Source Reference Folders
 | Folder | Purpose | Status |

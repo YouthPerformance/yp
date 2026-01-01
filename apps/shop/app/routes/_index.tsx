@@ -24,41 +24,38 @@ export default function Homepage() {
 
   return (
     <main className="min-h-screen relative z-10">
-      {/* Hero Section - Premium with Layered Images */}
+      {/* Hero Section - Clean Single Image (Shopify Supply Style) */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Layered Background Images - Z-index from top (8) to bottom (1) */}
+        {/* Single Background Image - Full Opacity, No Blend Modes */}
         <div className="absolute inset-0">
-          <img src="/images/4.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" style={{zIndex: 8}} />
-          <img src="/images/6.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-overlay" style={{zIndex: 7}} />
-          <img src="/images/9.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-soft-light" style={{zIndex: 6}} />
-          <img src="/images/3.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay" style={{zIndex: 5}} />
-          <img src="/images/10.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen" style={{zIndex: 4}} />
-          <img src="/images/1.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay" style={{zIndex: 3}} />
-          <img src="/images/8.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-soft-light" style={{zIndex: 2}} />
-          <img src="/images/7.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-10" style={{zIndex: 1}} />
+          <img
+            src="/images/shopbg6.jpeg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </div>
 
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" style={{zIndex: 9}} />
+        {/* Subtle dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-5xl" style={{zIndex: 10}}>
           {/* Status Badge */}
-          <div className="nav-status justify-center mb-8">
+          <div className="nav-status justify-center mb-8 animate-slide-up" style={{animationDelay: '0s'}}>
             <div className="nav-dot" />
             <span>Drop 001: Live Now</span>
           </div>
 
-          <h1 className="hero-title mb-6">
+          <h1 className="hero-title mb-6 animate-slide-up" style={{animationDelay: '0.1s'}}>
             <span className="block">LOCK IN.</span>
             <span className="block text-cyan">LEVEL UP.</span>
           </h1>
 
-          <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-muted mb-8 max-w-2xl mx-auto animate-slide-up" style={{animationDelay: '0.2s'}}>
             High-performance gear built for athletes who train while others sleep.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up" style={{animationDelay: '0.3s'}}>
             <Link to="/collections/all" className="btn-primary">
               SHOP NOW
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,7 +68,7 @@ export default function Homepage() {
           </div>
 
           {/* Trust Badges */}
-          <div className="trust-badges justify-center flex-wrap">
+          <div className="trust-badges justify-center flex-wrap animate-slide-up" style={{animationDelay: '0.4s'}}>
             <span>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
