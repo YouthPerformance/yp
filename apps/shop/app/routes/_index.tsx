@@ -24,13 +24,25 @@ export default function Homepage() {
 
   return (
     <main className="min-h-screen relative z-10">
-      {/* Hero Section - Premium */}
+      {/* Hero Section - Premium with Layered Images */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Gradient Background */}
-        <div className="hero-gradient" />
+        {/* Layered Background Images - Z-index from top (8) to bottom (1) */}
+        <div className="absolute inset-0">
+          <img src="/images/4.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" style={{zIndex: 8}} />
+          <img src="/images/6.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-overlay" style={{zIndex: 7}} />
+          <img src="/images/9.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-soft-light" style={{zIndex: 6}} />
+          <img src="/images/3.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay" style={{zIndex: 5}} />
+          <img src="/images/10.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen" style={{zIndex: 4}} />
+          <img src="/images/1.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay" style={{zIndex: 3}} />
+          <img src="/images/8.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-soft-light" style={{zIndex: 2}} />
+          <img src="/images/7.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-10" style={{zIndex: 1}} />
+        </div>
+
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" style={{zIndex: 9}} />
 
         {/* Content */}
-        <div className="relative z-10 text-center px-6 max-w-5xl">
+        <div className="relative z-10 text-center px-6 max-w-5xl" style={{zIndex: 10}}>
           {/* Status Badge */}
           <div className="nav-status justify-center mb-8">
             <div className="nav-dot" />
@@ -38,8 +50,8 @@ export default function Homepage() {
           </div>
 
           <h1 className="hero-title mb-6">
-            <span className="block">2026 WOLFPACK</span>
-            <span className="block text-cyan">PERFORMANCE</span>
+            <span className="block">LOCK IN.</span>
+            <span className="block text-cyan">LEVEL UP.</span>
           </h1>
 
           <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
