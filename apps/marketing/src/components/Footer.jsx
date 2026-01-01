@@ -14,7 +14,7 @@ function Footer() {
           {/* Left: YP Logo + Tagline */}
           <div className="flex flex-col w-40 md:w-48">
             <img
-              src="/wolffront.png"
+              src="/logo/yp-logo.png"
               alt="YouthPerformance"
               className="w-full h-auto mb-2"
             />
@@ -36,16 +36,16 @@ function Footer() {
                 Mission
               </Link>
               <Link
-                to="/science"
+                to="/start"
                 className="text-neutral-400 hover:text-white text-sm transition-colors duration-300"
               >
-                Science
+                Get Started
               </Link>
               <Link
-                to="/stories"
+                to="/library"
                 className="text-neutral-400 hover:text-white text-sm transition-colors duration-300"
               >
-                Stories
+                Library
               </Link>
             </nav>
           </div>

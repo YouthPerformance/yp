@@ -15,7 +15,7 @@ const ROOMS = [
     key: 'performance',
     title: 'Performance Center',
     subtitle: 'Academy + Barefoot Reset',
-    href: '/programs',
+    href: '/start',
     thumb: '/images/thumb-gym.webp',
     icon: '/images/performanceicon.webp',
     state: 'trial',
@@ -25,7 +25,8 @@ const ROOMS = [
     key: 'courts',
     title: 'Courts',
     subtitle: 'NeoBall + Spotify Unlocked',
-    href: '/courts',
+    href: 'https://neoball.co',
+    external: true,
     thumb: '/images/thumb-court.webp',
     icon: '/images/courticon.webp',
     state: 'redeem',
@@ -70,6 +71,20 @@ const accentStyles = {
 function RoomCard({ room, index, onClose }) {
   const styles = accentStyles[room.accent]
 
+  const cardClasses = `
+    group block relative overflow-hidden rounded-2xl
+    bg-gradient-to-b from-[#141414]/95 to-[#0a0a0a]/90
+    border border-white/8
+    transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+    hover:-translate-y-0.5 active:scale-[0.99]
+    ${styles.glow}
+  `
+
+  const CardWrapper = room.external ? 'a' : Link
+  const cardProps = room.external
+    ? { href: room.href, target: '_blank', rel: 'noopener noreferrer', onClick: onClose }
+    : { to: room.href, onClick: onClose }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -77,17 +92,9 @@ function RoomCard({ room, index, onClose }) {
       exit={{ opacity: 0, y: 10 }}
       transition={{ delay: index * 0.08, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
     >
-      <Link
-        to={room.href}
-        onClick={onClose}
-        className={`
-          group block relative overflow-hidden rounded-2xl
-          bg-gradient-to-b from-[#141414]/95 to-[#0a0a0a]/90
-          border border-white/8
-          transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-          hover:-translate-y-0.5 active:scale-[0.99]
-          ${styles.glow}
-        `}
+      <CardWrapper
+        {...cardProps}
+        className={cardClasses}
         style={{ padding: '12px' }}
       >
         {/* Thumbnail */}
@@ -151,7 +158,7 @@ function RoomCard({ room, index, onClose }) {
             </span>
           </div>
         </div>
-      </Link>
+      </CardWrapper>
     </motion.div>
   )
 }
