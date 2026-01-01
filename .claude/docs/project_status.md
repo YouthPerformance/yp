@@ -37,7 +37,7 @@
 
 ### P0 - Critical (Before Launch)
 - [ ] Rotate exposed Shopify tokens (`packages/yp-alpha/.env`) ⚠️
-- [ ] Remove hardcoded JWT fallback in `apps/marketing/server/routes/auth.js`
+- [x] ~~Remove hardcoded JWT fallback~~ - Fixed: now requires JWT_SECRET env var
 
 ### P1 - High Priority
 - [ ] Add pre-commit hooks (Husky + lint-staged)
@@ -86,26 +86,26 @@
 ## Git Status
 
 **Branch:** `feat/shop-hero-images`
-**Commits ahead of origin:** 6
+**Commits ahead of origin:** 0 (synced)
 
 ```
+039b9e8 fix(security): remove hardcoded JWT secret fallback
+fbf4d70 docs: update project status after retro
 502bf36 ci: add validation and security scan workflow
 61460db chore: misc updates across shop and academy
-c14e8dd feat(marketing): add Mission page and fix navigation
-daa5a56 docs: implement Wolf Pack Protocol v1.0
 ```
 
-**Ready to push/merge**
+**Up to date with origin**
 
 ---
 
 ## Notes for Next Session
 
-1. **First:** Rotate Shopify tokens (security P0)
-2. **Second:** Push commits and consider PR to main
+1. **First:** Rotate Shopify tokens (security P0) - only remaining P0 blocker
+2. **Second:** Create PR for shop-hero-images → main
 3. **Third:** Add Husky + lint-staged for pre-commit
 4. **Fourth:** Set up Linear MCP (user has API key ready)
-5. **Consider:** Creating PR for shop-hero-images branch
+5. ~~JWT fallback fixed~~ ✅
 
 ---
 
