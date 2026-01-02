@@ -23,7 +23,7 @@ export async function loader({context}: LoaderFunctionArgs) {
 export default function Homepage() {
   const {products} = useLoaderData<typeof loader>();
 
-  return <HorizontalScrollPage products={products} />;
+return <HorizontalScrollPage products={products} />;
 }
 
 const FEATURED_PRODUCTS_QUERY = `#graphql
