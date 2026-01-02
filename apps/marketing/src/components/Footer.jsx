@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import BetaBadge from './BetaBadge'
 
 /**
  * Wolf Sign-Off Footer
@@ -11,14 +12,17 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
 
-          {/* Left: YP Logo + Tagline */}
+          {/* Left: YP Logo + Beta Badge + Tagline */}
           <div className="flex flex-col w-40 md:w-48">
-            <img
-              src="/logo/yp-logo.png"
-              alt="YouthPerformance"
-              className="w-full h-auto mb-2"
-            />
-            <p className="font-bebas text-white text-sm md:text-base tracking-[0.15em] uppercase text-center">
+            <div className="flex items-center gap-2 mb-2">
+              <img
+                src="/logo/yp-logo.png"
+                alt="YouthPerformance"
+                className="h-10 md:h-12 w-auto"
+              />
+              <BetaBadge variant="glow" />
+            </div>
+            <p className="font-bebas text-white text-sm md:text-base tracking-[0.15em] uppercase">
               Lock In. Level Up.
             </p>
           </div>

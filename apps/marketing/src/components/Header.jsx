@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { UserButton, useUser } from '@clerk/clerk-react'
 import { useUI } from '../context/UIContext'
 import CardNav from './CardNav'
+import BetaBadge from './BetaBadge'
 
 export default function Header() {
   const { isSignedIn } = useUser()
@@ -81,8 +82,8 @@ export default function Header() {
                 </button>
               </div>
 
-              {/* Center: Logo */}
-              <div className="absolute left-1/2 -translate-x-1/2">
+              {/* Center: Logo + Beta Badge */}
+              <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
                 <Link to="/" aria-label="YouthPerformance" className="flex items-center">
                   {/* Mobile: authyp.webp (optimized) */}
                   <img
@@ -100,6 +101,7 @@ export default function Header() {
                     className="hidden md:block h-7 w-auto"
                   />
                 </Link>
+                <BetaBadge variant="glow" />
               </div>
 
               {/* Right cluster */}
