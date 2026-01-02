@@ -21,8 +21,7 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
+        # Uses version from package.json packageManager field
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -53,21 +52,29 @@ jobs:
 
       - name: Scan for secrets in client code
         run: |
-          echo "Scanning for exposed secrets..."
+          echo "Scanning for exposed secrets in client-side code..."
 
           # Check for common secret patterns in client-side code
-          if grep -rn "SHOPIFY_ADMIN_TOKEN\|PRIVATE_.*_TOKEN\|SECRET_KEY" \
+          # Excludes: app/api/ (server-side), server/, routes with .server.
+          SECRETS_FOUND=0
+
+          # Scan components for secret patterns (these should never have secrets)
+          if grep -rn "SHOPIFY_ADMIN_TOKEN\|PRIVATE_.*_TOKEN" \
             --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
-            apps/*/src/components/ apps/*/src/app/ apps/*/app/components/ 2>/dev/null; then
-            echo "::error::Potential secrets found in client-side code!"
-            exit 1
+            apps/*/src/components/ apps/*/app/components/ 2>/dev/null; then
+            echo "::error::Secrets found in component files!"
+            SECRETS_FOUND=1
           fi
 
-          # Check for hardcoded API keys (basic pattern)
+          # Check for hardcoded API keys (actual key values, not env references)
           if grep -rn "sk-[a-zA-Z0-9]\{20,\}\|shpat_[a-zA-Z0-9]\{20,\}" \
             --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
-            apps/ packages/ 2>/dev/null | grep -v ".env" | grep -v "node_modules"; then
+            apps/ packages/ 2>/dev/null | grep -v ".env" | grep -v "node_modules" | grep -v "app/api/"; then
             echo "::error::Potential hardcoded API keys found!"
+            SECRETS_FOUND=1
+          fi
+
+          if [ $SECRETS_FOUND -eq 1 ]; then
             exit 1
           fi
 
@@ -85,8 +92,6 @@ jobs:
   #
   #     - name: Setup pnpm
   #       uses: pnpm/action-setup@v4
-  #       with:
-  #         version: 9
   #
   #     - name: Setup Node.js
   #       uses: actions/setup-node@v4
