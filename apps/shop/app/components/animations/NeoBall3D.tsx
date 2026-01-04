@@ -51,8 +51,8 @@ export function NeoBall3D({ progress = 0, impulse = 0, className = '' }: NeoBall
       return;
     }
 
-    // Dynamic import the canvas component
-    import('./NeoBall3DCanvas')
+    // Dynamic import the canvas component (client-only)
+    import('./NeoBall3DCanvas.client')
       .then((mod) => {
         if (mounted) {
           setComponent(() => mod.NeoBall3DCanvas);
