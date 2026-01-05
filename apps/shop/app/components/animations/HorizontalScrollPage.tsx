@@ -211,6 +211,13 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
     let startScrollLeft = 0;
 
     const onDown = (e: PointerEvent) => {
+      // Don't capture pointer events when clicking on links or buttons
+      // This allows the Link component to handle clicks properly
+      const target = e.target as HTMLElement;
+      if (target.closest('a') || target.closest('button') || target.closest('input')) {
+        return;
+      }
+
       isDown = true;
       el.setPointerCapture?.(e.pointerId);
       startX = e.clientX;
