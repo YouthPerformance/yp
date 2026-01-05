@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════
 // CONVEX SCHEMA
-// Barefoot Reset - 42-Day Training Program
+// YouthPerformance - Wolf Pack Protocol v2.0
+// Memory-First Architecture for Long-Term Athlete Development
 // ═══════════════════════════════════════════════════════════
 
 import { defineSchema, defineTable } from "convex/server";
@@ -204,4 +205,206 @@ export default defineSchema({
   })
     .index("by_code", ["code"])
     .index("by_parent", ["parentId"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // WOLF PACK PROTOCOL v2.0 - MEMORY KERNEL
+  // The $100M Moat: Long-term athlete memory and context
+  // ═══════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────
+  // CONVERSATIONS TABLE
+  // Chat session tracking for AskYP
+  // ─────────────────────────────────────────────────────────────
+  conversations: defineTable({
+    userId: v.string(), // Clerk ID
+    title: v.string(),
+    lastMessageAt: v.number(),
+    modelUsed: v.string(), // "claude-sonnet-4-5-..."
+    messageCount: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_recent", ["userId", "lastMessageAt"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // MESSAGES TABLE
+  // Individual chat messages within conversations
+  // ─────────────────────────────────────────────────────────────
+  messages: defineTable({
+    conversationId: v.id("conversations"),
+    userId: v.string(),
+    role: v.union(v.literal("user"), v.literal("assistant")),
+    content: v.string(),
+    // Metadata for the Router to learn from
+    intent: v.optional(v.string()), // "COACHING", "PLANNING"
+    sentiment: v.optional(v.string()), // "FRUSTRATED"
+    voiceScore: v.optional(v.number()), // Audit score (0-100)
+    modelUsed: v.optional(v.string()),
+    latencyMs: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_conversation", ["conversationId"])
+    .index("by_user", ["userId"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // ATHLETE NODES TABLE (The Graph Nodes)
+  // Body parts, metrics, mental states - anything we track
+  // e.g., "left_knee", "vertical_jump", "shooting_confidence"
+  // ─────────────────────────────────────────────────────────────
+  athlete_nodes: defineTable({
+    userId: v.string(),
+    key: v.string(), // "left_knee", "shooting_confidence", "sleep_quality"
+    category: v.union(
+      v.literal("body_part"),      // Physical: ankle, knee, hip
+      v.literal("metric"),         // Measurable: vertical, sprint_time
+      v.literal("mental"),         // Psychological: confidence, focus
+      v.literal("recovery")        // Sleep, nutrition, fatigue
+    ),
+    status: v.string(), // "Healthy", "Sore", "Injured", "Improving", "Plateaued"
+    score: v.number(), // 1-10 (1=Critical, 10=Elite)
+    notes: v.optional(v.string()), // Context: "Rolled ankle at practice 12/28"
+    lastUpdated: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_key", ["userId", "key"])
+    .index("by_user_category", ["userId", "category"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // CORRELATIONS TABLE (The Graph Edges)
+  // Relationships: "high_volume_plyos" CAUSES "knee_pain"
+  // ─────────────────────────────────────────────────────────────
+  correlations: defineTable({
+    userId: v.string(),
+    fromNode: v.string(), // "high_volume_plyos"
+    toNode: v.string(), // "knee_pain"
+    relationship: v.union(
+      v.literal("CAUSES"),     // A leads to B
+      v.literal("IMPROVES"),   // A makes B better
+      v.literal("BLOCKS"),     // A prevents B
+      v.literal("CORRELATES")  // A and B move together
+    ),
+    strength: v.number(), // 0-1 confidence score
+    observedAt: v.number(),
+    observedCount: v.optional(v.number()), // How many times we've seen this
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_from", ["userId", "fromNode"])
+    .index("by_user_to", ["userId", "toNode"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // MEMORIES TABLE (Raw Extraction Buffer)
+  // Before distilling into nodes, we capture raw insights
+  // ─────────────────────────────────────────────────────────────
+  memories: defineTable({
+    userId: v.string(),
+    conversationId: v.optional(v.id("conversations")),
+    content: v.string(), // "Athlete mentioned left knee pain after dunking"
+    memoryType: v.union(
+      v.literal("injury"),     // Pain/injury reports
+      v.literal("goal"),       // Goals mentioned
+      v.literal("progress"),   // Progress updates
+      v.literal("emotion"),    // Emotional state
+      v.literal("preference"), // Training preferences
+      v.literal("context")     // General context
+    ),
+    extractedAt: v.number(),
+    processed: v.boolean(), // Has it been distilled into athlete_nodes?
+    sourceMessage: v.optional(v.string()), // Original user message
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_type", ["userId", "memoryType"])
+    .index("by_unprocessed", ["userId", "processed"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // TRAINING CONTENT TABLE (RAG Knowledge Base)
+  // Drills, articles, protocols with vector embeddings
+  // ─────────────────────────────────────────────────────────────
+  training_content: defineTable({
+    title: v.string(),
+    slug: v.optional(v.string()),
+    category: v.union(
+      v.literal("drill"),
+      v.literal("article"),
+      v.literal("protocol"),
+      v.literal("faq")
+    ),
+    text: v.string(),
+    tags: v.optional(v.array(v.string())),
+    difficulty: v.optional(v.string()),
+    duration: v.optional(v.string()),
+    equipment: v.optional(v.array(v.string())),
+    bodyParts: v.optional(v.array(v.string())), // What body parts it targets
+    embedding: v.optional(v.array(v.float64())), // Vector for semantic search
+    createdAt: v.number(),
+  })
+    .index("by_category", ["category"])
+    .index("by_slug", ["slug"]),
+    // Note: Vector index added separately when embeddings are ready
+    // .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 })
+
+  // ═══════════════════════════════════════════════════════════
+  // GPT UPLINK - CONTENT MULTIPLEXER
+  // Voice-to-content pipeline for Adam & James
+  // ═══════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────
+  // CAMPAIGNS TABLE
+  // Parent container for multi-platform content bundles
+  // ─────────────────────────────────────────────────────────────
+  campaigns: defineTable({
+    // Author identity
+    author: v.union(v.literal("ADAM"), v.literal("JAMES")),
+
+    // Content
+    title: v.string(), // Derived from blog title
+    rawInput: v.string(), // Original voice transcript
+
+    // Workflow status
+    status: v.union(
+      v.literal("DRAFT"),      // Just created, awaiting review
+      v.literal("READY"),      // Reviewed, ready to publish
+      v.literal("PUBLISHED"),  // Sent to Make.com
+      v.literal("FAILED")      // Generation or distribution failed
+    ),
+
+    // Error tracking
+    errorMessage: v.optional(v.string()),
+
+    // Distribution tracking
+    publishedAt: v.optional(v.number()),
+    makeWebhookResponse: v.optional(v.any()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_author", ["author"])
+    .index("by_status", ["status"])
+    .index("by_author_status", ["author", "status"])
+    .index("by_created", ["createdAt"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // CONTENT ASSETS TABLE
+  // Platform-specific content versions within a campaign
+  // ─────────────────────────────────────────────────────────────
+  content_assets: defineTable({
+    campaignId: v.id("campaigns"),
+
+    // Platform targeting
+    platform: v.union(
+      v.literal("BLOG"),
+      v.literal("LINKEDIN"),
+      v.literal("TWITTER"),
+      v.literal("INSTAGRAM")
+    ),
+
+    // Content
+    title: v.optional(v.string()), // For blog/linkedin
+    body: v.string(), // Platform-formatted content
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_campaign", ["campaignId"])
+    .index("by_platform", ["platform"]),
 });
