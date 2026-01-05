@@ -21,7 +21,7 @@ function FallbackImage() {
       <img
         src="/images/neoball-hero.png"
         alt="NeoBall"
-        className="w-64 h-64 md:w-80 md:h-80 object-contain animate-pulse"
+        className="w-full h-full max-w-[90%] max-h-[90%] object-contain"
       />
     </div>
   );

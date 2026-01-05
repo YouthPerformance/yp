@@ -616,18 +616,18 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <div className="w-[150vw] sm:w-[120vw] lg:w-[130vw] xl:w-[120vw] h-full" />
 
           {/* Section 2: Product - NeoBall 3D */}
-          <section className="relative h-full w-[100vw] md:w-[90vw] flex items-center justify-center border-l border-white/10">
+          <section className="relative h-full w-[100vw] flex items-center justify-center border-l border-white/10">
             {/* Radial gradient background */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at center, rgba(0,235,247,0.08) 0%, transparent 60%)',
+                background: 'radial-gradient(ellipse at center, rgba(0,235,247,0.12) 0%, transparent 70%)',
               }}
             />
 
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-6 w-full max-w-6xl">
-              {/* 3D Ball */}
-              <div className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] pointer-events-auto">
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 px-4 sm:px-8 w-full max-w-7xl">
+              {/* 3D Ball - Responsive sizing that fills frame better */}
+              <div className="w-[min(70vw,400px)] h-[min(70vw,400px)] sm:w-[min(50vw,450px)] sm:h-[min(50vw,450px)] lg:w-[min(45vw,550px)] lg:h-[min(45vw,550px)] pointer-events-auto flex-shrink-0">
                 <NeoBall3D
                   progress={progress}
                   impulse={impulse}
@@ -636,25 +636,25 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
               </div>
 
               {/* Product Info */}
-              <div className="text-center md:text-left">
-                <div className="uppercase tracking-[0.2em] text-xs md:text-sm text-gray-400 mb-4">
+              <div className="text-center lg:text-left max-w-xl">
+                <div className="uppercase tracking-[0.2em] text-xs sm:text-sm text-gray-400 mb-2 sm:mb-4">
                   YP Academy Gear
                 </div>
-                <h2 className="font-display text-[12vw] md:text-[8vw] xl:text-[100px] leading-[0.85] uppercase tracking-tight">
+                <h2 className="font-display text-[10vw] sm:text-[7vw] lg:text-[5vw] xl:text-[72px] leading-[0.9] uppercase tracking-tight">
                   {featuredProduct?.title || 'NeoBall'}
                 </h2>
-                <p className="mt-2 text-gray-400 text-sm md:text-base max-w-[36ch]">
+                <p className="mt-2 sm:mt-3 text-gray-400 text-sm sm:text-base max-w-[36ch] mx-auto lg:mx-0">
                   The world's first regulation-weight silent basketball. Train at midnight.
                 </p>
-                <p className="mt-4 text-3xl md:text-4xl font-display text-cyan">
+                <p className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-display text-cyan">
                   ${featuredProduct ? parseFloat(featuredProduct.priceRange.minVariantPrice.amount).toFixed(0) : '168'}
                 </p>
                 <Link
-                  to={`/products/${featuredProduct?.handle || 'neoball'}`}
-                  className="mt-6 inline-flex items-center gap-2 px-8 py-4 bg-cyan text-wolf-black font-bold text-lg rounded-lg hover:scale-105 transition-transform"
+                  to={`/products/${featuredProduct?.handle || 'n'}`}
+                  className="mt-4 sm:mt-6 inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-cyan text-wolf-black font-bold text-base sm:text-lg rounded-lg hover:scale-105 transition-transform"
                 >
                   SHOP NOW
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </Link>
