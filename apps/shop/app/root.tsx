@@ -1,4 +1,3 @@
-import {useEffect} from 'react';
 import {
   Links,
   Meta,
@@ -9,9 +8,8 @@ import {
   PrefetchPageLinks,
 } from '@remix-run/react';
 import type {LinksFunction, LoaderFunctionArgs, HeadersFunction} from '@shopify/remix-oxygen';
-import {Analytics, useNonce, getSeoMeta} from '@shopify/hydrogen';
+import {Analytics, useNonce} from '@shopify/hydrogen';
 import styles from './styles/app.css?url';
-import {CACHE_HEADERS} from '~/lib/cache.server';
 
 /**
  * Performance-optimized links
@@ -34,10 +32,9 @@ export const links: LinksFunction = () => [
 
 /**
  * Response headers for edge caching
- * Root layout is cached for 10 min with SWR
  */
 export const headers: HeadersFunction = () => ({
-  ...CACHE_HEADERS.standard,
+  'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
 });
 
 export async function loader({context}: LoaderFunctionArgs) {
@@ -55,19 +52,6 @@ export async function loader({context}: LoaderFunctionArgs) {
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
-
-  // Initialize analytics and performance monitoring on client
-  useEffect(() => {
-    // Initialize PostHog analytics
-    import('~/lib/analytics.client').then(({ analytics }) => {
-      analytics.init();
-    });
-
-    // Initialize performance monitoring
-    import('~/lib/performance.client').then(({ initPerformanceMonitoring }) => {
-      initPerformanceMonitoring();
-    });
-  }, []);
 
   return (
     <html lang="en">
