@@ -643,7 +643,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
               </div>
 
               {/* Product Info */}
-              <div className="text-center lg:text-left max-w-xl">
+              <div className="text-center lg:text-left max-w-xl pointer-events-auto">
                 <div className="uppercase tracking-[0.2em] text-xs sm:text-sm text-gray-400 mb-2 sm:mb-4">
                   YP Academy Gear
                 </div>
