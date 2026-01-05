@@ -27,6 +27,7 @@ import WolfGrow from './pages/WolfGrow'
 import AuthPage from './pages/AuthPage'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
+import Mission from './pages/Mission'
 import OilSpill from './pages/test/OilSpill'
 import FogNoise from './pages/test/FogNoise'
 import PortalFrameTest from './pages/test/PortalFrameTest'
@@ -42,6 +43,7 @@ function App() {
         <Route path="/login" element={<AuthPage />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/mission" element={<Mission />} />
 
         {/* Test pages for Iridescence backgrounds */}
         <Route path="/test/oil-spill" element={<OilSpill />} />

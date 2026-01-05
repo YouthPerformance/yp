@@ -74,7 +74,7 @@ export default function MascotReveal() {
             >
               {/* Using YP logo until wolf mascot is ready */}
               <img
-                src="/wolffront.png"
+                src="/logo/wolffront.png"
                 alt="YP - Your Pack Leader"
                 className="w-40 h-40 md:w-48 md:h-48 object-contain drop-shadow-[0_0_30px_rgba(0,255,255,0.3)]"
               />
