@@ -27,7 +27,7 @@ export const links: LinksFunction = () => [
   // DNS prefetch for image CDN
   {rel: 'dns-prefetch', href: 'https://cdn.shopify.com'},
   // Fonts with display=swap for faster text rendering
-  {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap'},
+  {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap'},
 ];
 
 /**

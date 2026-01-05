@@ -5,11 +5,19 @@ import { useState, useEffect } from 'react';
 // Client-only component to avoid SSR issues with Three.js
 // ===========================================================================
 
-// Loading fallback
+// Loading fallback - Space Grotesk font for all loaders
 function LoadingSpinner() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="w-16 h-16 border-4 border-cyan/20 border-t-cyan rounded-full animate-spin" />
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+      {/* Spinner */}
+      <div className="relative w-12 h-12">
+        <div className="absolute inset-0 border-2 border-cyan/20 rounded-full" />
+        <div className="absolute inset-0 border-2 border-transparent border-t-cyan rounded-full animate-spin" />
+      </div>
+      {/* Loading text */}
+      <span className="font-loading text-xs tracking-[0.2em] uppercase text-cyan/70">
+        Loading
+      </span>
     </div>
   );
 }

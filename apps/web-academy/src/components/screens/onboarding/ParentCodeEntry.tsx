@@ -190,25 +190,37 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
           )}
         </AnimatePresence>
 
-        {/* Loading indicator */}
+        {/* Loading indicator - Space Grotesk font */}
         {isValidating && !showSuccess && (
           <motion.div
-            className="flex items-center gap-2"
+            className="flex items-center gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <div
-              className="w-5 h-5 border-2 rounded-full animate-spin"
-              style={{
-                borderColor: 'var(--accent-primary)',
-                borderTopColor: 'transparent',
-              }}
-            />
+            <div className="relative w-5 h-5">
+              <div
+                className="absolute inset-0 border-2 rounded-full"
+                style={{
+                  borderColor: 'var(--accent-primary)',
+                  opacity: 0.2,
+                }}
+              />
+              <div
+                className="absolute inset-0 border-2 rounded-full animate-spin"
+                style={{
+                  borderColor: 'transparent',
+                  borderTopColor: 'var(--accent-primary)',
+                }}
+              />
+            </div>
             <span
-              className="text-sm"
-              style={{ color: 'var(--text-tertiary)' }}
+              className="text-xs tracking-[0.15em] uppercase"
+              style={{
+                fontFamily: 'var(--font-loading)',
+                color: 'var(--text-tertiary)'
+              }}
             >
-              Checking code...
+              Checking
             </span>
           </motion.div>
         )}

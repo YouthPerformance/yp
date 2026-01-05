@@ -83,33 +83,37 @@ export function ParentReady({ onStart }: ParentReadyProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          {/* Loading animation */}
-          <div className="flex justify-center mb-4">
-            <motion.div
-              className="flex gap-1"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
+          {/* Loading animation - Space Grotesk font */}
+          <div className="flex flex-col items-center gap-3 mb-4">
+            {/* Dots */}
+            <div className="flex gap-1.5">
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-2 h-2 rounded-full"
+                  className="w-1.5 h-1.5 rounded-full"
                   style={{ backgroundColor: '#00BFB0' }}
                   animate={{
-                    y: [0, -5, 0],
+                    opacity: [0.3, 1, 0.3],
+                    scale: [0.8, 1, 0.8],
                   }}
                   transition={{
-                    duration: 0.6,
+                    duration: 1,
                     repeat: Infinity,
                     delay: i * 0.15,
                   }}
                 />
               ))}
-            </motion.div>
+            </div>
           </div>
 
-          <p className="text-sm" style={{ color: '#666' }}>
-            Waiting for athlete to join...
+          <p
+            className="text-xs tracking-[0.15em] uppercase"
+            style={{
+              fontFamily: 'var(--font-loading)',
+              color: '#666'
+            }}
+          >
+            Waiting for athlete
           </p>
 
           {/* Code reminder */}

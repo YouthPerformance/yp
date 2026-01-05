@@ -58,14 +58,31 @@ export default function HomePage() {
   const [showUpsellModal, setShowUpsellModal] = useState(false);
   const [parentModeActive, setParentModeActive] = useState(false);
 
-  // Show loading state while user data loads
+  // Show loading state while user data loads - Space Grotesk font
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <span className="text-4xl block mb-4">🐺</span>
-          <p style={{ color: 'var(--text-tertiary)' }}>Loading...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <span className="text-4xl block">🐺</span>
+        {/* Spinner */}
+        <div className="relative w-10 h-10">
+          <div
+            className="absolute inset-0 border-2 rounded-full"
+            style={{ borderColor: 'var(--accent-primary)', opacity: 0.2 }}
+          />
+          <div
+            className="absolute inset-0 border-2 border-transparent rounded-full animate-spin"
+            style={{ borderTopColor: 'var(--accent-primary)' }}
+          />
         </div>
+        <span
+          className="text-xs tracking-[0.2em] uppercase"
+          style={{
+            fontFamily: 'var(--font-loading)',
+            color: 'var(--text-tertiary)'
+          }}
+        >
+          Loading
+        </span>
       </div>
     );
   }

@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import localFont from 'next/font/local';
 import { ConvexClientProvider } from '@/components/providers';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -29,6 +29,12 @@ const bebasNeue = localFont({
   display: 'swap',
   variable: '--font-bebas',
   fallback: ['Bebas Neue', 'Impact', 'sans-serif'],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -102,7 +108,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${bebasNeue.variable}`}
+      className={`${inter.variable} ${bebasNeue.variable} ${spaceGrotesk.variable}`}
       suppressHydrationWarning
     >
       <head>

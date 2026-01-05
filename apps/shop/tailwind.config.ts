@@ -15,6 +15,8 @@ export default {
       fontFamily: {
         display: ['Bebas Neue', 'sans-serif'],
         body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        loading: ['Space Grotesk', 'Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Menlo', 'monospace'],
       },
       boxShadow: {
         'glow-cyan': '0 0 20px rgba(0, 246, 224, 0.3), 0 0 40px rgba(0, 246, 224, 0.1)',

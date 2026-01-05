@@ -30,6 +30,7 @@
   /* Typography */
   --font-bebas: 'Bebas Neue', sans-serif;
   --font-inter: 'Inter', sans-serif;
+  --font-loading: 'Space Grotesk', var(--font-inter), sans-serif;
 }
 
 /* Athlete Light Mode (Same energy, white background) */

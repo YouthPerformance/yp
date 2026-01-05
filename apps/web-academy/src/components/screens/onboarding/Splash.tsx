@@ -96,23 +96,36 @@ export function Splash({ onComplete, minDuration = 2500 }: SplashProps) {
 
 function LoadingDots() {
   return (
-    <div className="flex gap-1">
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={i}
-          className="w-2 h-2 rounded-full"
-          style={{ backgroundColor: 'var(--accent-primary)' }}
-          animate={{
-            opacity: [0.3, 1, 0.3],
-            scale: [0.8, 1, 0.8],
-          }}
-          transition={{
-            duration: 1,
-            repeat: Infinity,
-            delay: i * 0.2,
-          }}
-        />
-      ))}
+    <div className="flex flex-col items-center gap-3">
+      {/* Dots */}
+      <div className="flex gap-1.5">
+        {[0, 1, 2].map((i) => (
+          <motion.div
+            key={i}
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: 'var(--accent-primary)' }}
+            animate={{
+              opacity: [0.3, 1, 0.3],
+              scale: [0.8, 1, 0.8],
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              delay: i * 0.15,
+            }}
+          />
+        ))}
+      </div>
+      {/* Loading text - Space Grotesk */}
+      <span
+        className="text-[10px] tracking-[0.2em] uppercase"
+        style={{
+          fontFamily: 'var(--font-loading)',
+          color: 'var(--text-tertiary)'
+        }}
+      >
+        Loading
+      </span>
     </div>
   );
 }

@@ -15,16 +15,33 @@ interface SessionStatus {
   customerEmail: string | null;
 }
 
-// Loading fallback for Suspense
+// Loading fallback for Suspense - Space Grotesk font
 function LoadingSpinner() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <motion.div
-        className="w-12 h-12 border-4 border-current border-t-transparent rounded-full"
-        style={{ color: 'var(--accent-primary)' }}
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-      />
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      {/* Spinner */}
+      <div className="relative w-12 h-12">
+        <div
+          className="absolute inset-0 border-2 rounded-full"
+          style={{ borderColor: 'var(--accent-primary)', opacity: 0.2 }}
+        />
+        <motion.div
+          className="absolute inset-0 border-2 border-transparent rounded-full"
+          style={{ borderTopColor: 'var(--accent-primary)' }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        />
+      </div>
+      {/* Loading text - Space Grotesk */}
+      <span
+        className="text-xs tracking-[0.2em] uppercase"
+        style={{
+          fontFamily: 'var(--font-loading)',
+          color: 'var(--text-tertiary)'
+        }}
+      >
+        Loading
+      </span>
     </div>
   );
 }
