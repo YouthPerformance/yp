@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '@remix-run/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -29,16 +29,6 @@ const HERO_IMAGES = [
   '/images/18.png',  // 6.
   '/images/17.png',  // 7. Bottom (back) - lowest z-index
 ];
-
-// Colors from Supply
-const COLORS = {
-  darkThemeWhite: '#eeece2',
-  darkGray: '#2a2a2a',
-  aloe: '#6FC992',
-  middleGray: '#B3B2AA',
-  offWhite: '#eeece2',
-  cyan: '#00EBF7',
-};
 
 // Scroll physics - EXACT Supply settings
 const SCATTER_EASE = 'power3.out';

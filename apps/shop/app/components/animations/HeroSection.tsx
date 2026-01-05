@@ -48,14 +48,6 @@ const CARD_CONFIG = [
   { x: -120, y: 10, r: -10, scale: 0.65, z: 3 },
 ];
 
-// Wheel config for smooth scroll
-const WHEEL_CONFIG = {
-  maxDelta: 200,
-  multiplier: 1.5,
-  duration: 0.35,
-  ease: 'power3.out',
-};
-
 function prefersReducedMotion() {
   if (typeof window === 'undefined') return false;
   return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
