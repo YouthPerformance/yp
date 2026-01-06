@@ -20,6 +20,9 @@ const isPublicRoute = createRouteMatcher([
   '/avatar',              // Onboarding: avatar selection
   '/ready',               // Onboarding: final screen
   '/api/uplink(.*)',      // GPT Uplink webhooks (custom auth)
+  '/bulletproof-ankles',  // Lead magnet landing page
+  '/legal(.*)',           // Legal pages
+  '/adam',                // Adam Harrington profile page
 ]);
 
 // Onboarding routes (auth required, but no user in Convex yet)
