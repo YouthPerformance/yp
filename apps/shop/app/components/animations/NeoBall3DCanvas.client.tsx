@@ -127,16 +127,16 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
         const baseSpinY = 0.6;  // ~35°/sec on Y axis
         const baseSpinX = 0.15; // ~9°/sec on X axis (slower tilt)
 
-        // Scroll-driven boost
-        const boostMultiplier = 1 + currentImpulse * 6;
+        // Scroll-driven boost (reduced for smoother feel)
+        const boostMultiplier = 1 + currentImpulse * 2.5;
 
-        // Apply momentum from scroll
-        velocityRef.current.x += currentImpulse * 0.2;
-        velocityRef.current.y += currentImpulse * 0.4;
+        // Apply momentum from scroll (reduced sensitivity)
+        velocityRef.current.x += currentImpulse * 0.08;
+        velocityRef.current.y += currentImpulse * 0.15;
 
-        // Damping
-        velocityRef.current.x *= 0.96;
-        velocityRef.current.y *= 0.96;
+        // Damping (increased friction for quicker settling)
+        velocityRef.current.x *= 0.92;
+        velocityRef.current.y *= 0.92;
 
         // Apply rotation (delta-normalized for consistent speed)
         mesh.rotation.y += baseSpinY * delta * boostMultiplier + velocityRef.current.y * delta;
