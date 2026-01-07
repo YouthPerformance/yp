@@ -1,116 +1,158 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { Play } from "lucide-react";
+import Link from "next/link";
+import { HERO } from "../constants";
 
 export function Hero() {
-  const scrollToContent = () => {
-    const element = document.getElementById("philosophy");
-    element?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
-      {/* Video Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black z-10" />
-        {/* Placeholder gradient until video is added */}
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-900" />
-        {/* Uncomment when video is ready:
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover grayscale"
-          poster="/images/adam/hero-poster.jpg"
+    <section
+      className="min-h-screen bg-[#FAF8F5] relative"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "60px",
+        padding: "100px 60px 60px",
+        alignItems: "center",
+      }}
+    >
+      {/* Left Column - Content */}
+      <div className="max-w-[560px]">
+        {/* Label */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0 }}
+          className="text-[11px] tracking-[4px] text-[#C5A47E] uppercase mb-5"
         >
-          <source src="/videos/adam-hero.mp4" type="video/mp4" />
-        </video>
-        */}
-      </div>
+          {HERO.label}
+        </motion.p>
 
-      {/* Grain overlay */}
-      <div
-        className="absolute inset-0 z-20 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-        }}
-      />
+        {/* Name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-[#1C2B3A] mb-0 leading-[1.1]"
+          style={{
+            fontFamily: "var(--font-display), Georgia, serif",
+            fontSize: "clamp(48px, 5vw, 68px)",
+            fontWeight: 400,
+          }}
+        >
+          {HERO.firstName}
+          <br />
+          <span className="italic text-[#C5A47E]">{HERO.lastName}</span>
+        </motion.h1>
 
-      {/* Content */}
-      <div className="relative z-30 flex flex-col items-center justify-center h-full px-6 text-center">
-        {/* Pre-headline */}
+        {/* Description */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-[#1a4a6e] font-mono text-xs tracking-[0.4em] uppercase mb-6"
+          className="text-[19px] leading-[1.8] text-[#5A5A5A] max-w-[460px] mt-8"
+          style={{ fontFamily: "var(--font-body), Georgia, serif" }}
         >
-          Youth Performance Presents
+          {HERO.description}
         </motion.p>
 
-        {/* Main headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-bebas text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem] leading-[0.85] tracking-tight text-white"
-        >
-          THE
-          <br />
-          <span className="text-[#c9a962]">ARCHITECT</span>
-        </motion.h1>
-
-        {/* Subheadline */}
-        <motion.p
+        {/* CTAs */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-8 max-w-xl text-lg md:text-xl text-zinc-400 font-light leading-relaxed"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex items-center gap-4 mt-10"
         >
-          From the hardwood to the front office.
-          <br />
-          <span className="text-white">Building people, not just players.</span>
-        </motion.p>
-
-        {/* CTA Button */}
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          onClick={scrollToContent}
-          className="mt-12 group flex items-center gap-2 px-8 py-3 border border-zinc-700 rounded-full text-sm tracking-wider uppercase text-zinc-300 hover:border-[#c9a962] hover:text-[#c9a962] transition-all duration-300"
-        >
-          Explore the Resume
-          <motion.span
-            animate={{ y: [0, 4, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+          <Link
+            href={HERO.primaryCTA.href}
+            className="bg-[#1C2B3A] text-[#FAF8F5] px-8 py-4 text-[14px] tracking-[1.5px] font-semibold no-underline hover:bg-[#2a3d4f] transition-colors"
           >
-            <ChevronDown className="w-4 h-4" />
-          </motion.span>
-        </motion.button>
+            {HERO.primaryCTA.label}
+          </Link>
+          <button className="flex items-center gap-2 text-[#5A5A5A] text-[14px] hover:text-[#1C2B3A] transition-colors bg-transparent border-none cursor-pointer">
+            <span className="w-10 h-10 rounded-full border border-[#C5A47E] flex items-center justify-center">
+              <Play className="w-4 h-4 text-[#C5A47E] ml-0.5" />
+            </span>
+            {HERO.secondaryCTA.label}
+          </button>
+        </motion.div>
+
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex items-center gap-8 mt-12 pt-8 border-t border-[rgba(197,164,126,0.15)]"
+        >
+          {HERO.stats.map((stat, i) => (
+            <div key={i} className="text-center">
+              <p
+                className="text-[32px] text-[#1C2B3A] leading-none"
+                style={{ fontFamily: "var(--font-accent), sans-serif" }}
+              >
+                {stat.number}
+              </p>
+              <p className="text-[11px] tracking-[1px] text-[#6B7280] uppercase mt-1">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Right Column - Image */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30"
+        initial={{ opacity: 0, x: 30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="relative h-[85vh] max-h-[700px] hidden lg:block"
       >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border border-zinc-700 rounded-full flex justify-center pt-2"
-        >
-          <motion.div
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1 h-2 bg-zinc-500 rounded-full"
+        {/* Decorative Frame */}
+        <div
+          className="absolute opacity-40"
+          style={{
+            top: "20px",
+            left: "20px",
+            right: "-20px",
+            bottom: "-20px",
+            border: "1px solid #C5A47E",
+          }}
+        />
+
+        {/* Image Container */}
+        <div className="relative w-full h-full bg-[#E8E4DF] overflow-hidden">
+          {/* Placeholder - replace with actual image */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-24 h-24 rounded-full bg-[#C5A47E]/20 mx-auto mb-4 flex items-center justify-center">
+                <span className="text-[#C5A47E] text-4xl font-bold">AH</span>
+              </div>
+              <p className="text-[#6B7280] text-sm">Hero Image</p>
+              <p className="text-[#9CA3AF] text-xs mt-1">adam-hero.jpg</p>
+            </div>
+          </div>
+          {/* Uncomment when image is ready:
+          <Image
+            src="/images/adam/adam-hero.jpg"
+            alt="Adam Harrington"
+            fill
+            className="object-cover object-top"
+            priority
           />
-        </motion.div>
+          */}
+        </div>
       </motion.div>
+
+      {/* Mobile: Single column */}
+      <style jsx>{`
+        @media (max-width: 1023px) {
+          section {
+            grid-template-columns: 1fr !important;
+            padding: 120px 24px 60px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

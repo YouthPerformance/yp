@@ -1,38 +1,52 @@
 "use client";
 
 import {
+  Navigation,
   Hero,
+  CredentialsBar,
+  JourneyTimeline,
+  AthletesSection,
+  TestimonialCarousel,
   Philosophy,
-  Giants,
-  Testimonials,
-  Timeline,
+  VenturesGrid,
   Family,
-  CTA,
+  FinalCTA,
 } from "./components";
 
 export default function AdamPage() {
   return (
-    <main className="h-screen overflow-y-scroll scroll-smooth scrollbar-hide">
-      {/* Section 1: The Hook */}
-      <Hero />
+    <>
+      {/* Fixed Navigation */}
+      <Navigation />
 
-      {/* Section 2: The Philosophy */}
-      <Philosophy />
+      <main className="overflow-x-hidden">
+        {/* Section 1: Hero with Stats */}
+        <Hero />
 
-      {/* Section 3: Wall of Giants */}
-      <Giants />
+        {/* Section 2: Credentials Bar */}
+        <CredentialsBar />
 
-      {/* Section 4: Testimonials */}
-      <Testimonials />
+        {/* Section 3: Journey Timeline */}
+        <JourneyTimeline />
 
-      {/* Section 5: The Timeline */}
-      <Timeline />
+        {/* Section 4: Athletes Developed */}
+        <AthletesSection />
 
-      {/* Section 6: Family & Values */}
-      <Family />
+        {/* Section 5: Testimonials Carousel */}
+        <TestimonialCarousel />
 
-      {/* Section 7: The Ask */}
-      <CTA />
-    </main>
+        {/* Section 6: Philosophy + NeoBall */}
+        <Philosophy />
+
+        {/* Section 7: Ventures Grid */}
+        <VenturesGrid />
+
+        {/* Section 8: Family / Beyond the Court */}
+        <Family />
+
+        {/* Section 9: Final CTA + Footer */}
+        <FinalCTA />
+      </main>
+    </>
   );
 }

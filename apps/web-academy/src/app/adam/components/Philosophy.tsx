@@ -1,104 +1,110 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import { PHILOSOPHY } from "../constants";
 
 export function Philosophy() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-
   return (
     <section
       id="philosophy"
-      ref={ref}
-      className="relative min-h-screen bg-black py-32 overflow-hidden"
+      className="py-24 px-[60px]"
+      style={{ background: "#E8E4DF" }}
     >
-      {/* Grid background */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(26, 74, 110, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(26, 74, 110, 0.5) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: 3D Ball Placeholder */}
-          <motion.div style={{ y }} className="relative">
-            <div className="aspect-square max-w-md mx-auto relative">
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-[#1a4a6e]/20 rounded-full blur-3xl" />
-
-              {/* Ball placeholder - replace with 3D component */}
-              <div className="relative w-full h-full flex items-center justify-center">
-                <div className="w-3/4 h-3/4 rounded-full bg-gradient-to-br from-zinc-800 via-zinc-900 to-black border border-zinc-800 shadow-2xl flex items-center justify-center">
-                  <div className="text-center">
-                    <p className="font-bebas text-4xl text-[#c9a962]">NEOBALL</p>
-                    <p className="text-xs text-zinc-500 tracking-widest mt-1">FOUNDERS EDITION</p>
-                  </div>
+        className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
+      >
+        {/* Left: NeoBall Image */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="relative"
+        >
+          <div className="aspect-square bg-[#FAF8F5] rounded-lg overflow-hidden flex items-center justify-center">
+            {/* Placeholder for NeoBall image */}
+            <div className="text-center">
+              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] mx-auto flex items-center justify-center shadow-2xl">
+                <div className="text-center">
+                  <p
+                    className="text-[28px] text-[#C5A47E]"
+                    style={{ fontFamily: "var(--font-accent), sans-serif" }}
+                  >
+                    NEOBALL
+                  </p>
+                  <p className="text-[10px] text-zinc-400 tracking-[2px] mt-1">
+                    FOUNDERS EDITION
+                  </p>
                 </div>
               </div>
+              <p className="text-[#6B7280] text-sm mt-6">NeoBall Product Image</p>
             </div>
-          </motion.div>
+            {/* Uncomment when image is ready:
+            <Image
+              src="/images/adam/neoball-product.jpg"
+              alt="NeoBall Founders Edition"
+              fill
+              className="object-cover"
+            />
+            */}
+          </div>
+        </motion.div>
 
-          {/* Right: Philosophy Text */}
-          <motion.div style={{ opacity }}>
-            <motion.p
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-[#1a4a6e] font-mono text-xs tracking-[0.4em] uppercase mb-4"
-            >
-              The Philosophy
-            </motion.p>
+        {/* Right: Philosophy Text */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-[11px] tracking-[4px] text-[#C5A47E] uppercase mb-4">
+            {PHILOSOPHY.label}
+          </p>
 
-            <motion.h2
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="font-bebas text-5xl md:text-6xl text-white mb-8"
-            >
-              {PHILOSOPHY.headline}
-            </motion.h2>
+          <h2
+            className="text-[#1C2B3A] text-[38px] leading-[1.2] mb-6"
+            style={{
+              fontFamily: "var(--font-display), Georgia, serif",
+              fontWeight: 400,
+            }}
+          >
+            {PHILOSOPHY.title}
+            <br />
+            <span className="italic">{PHILOSOPHY.titleAccent}</span>
+          </h2>
 
-            <div className="space-y-6">
-              {PHILOSOPHY.paragraphs.map((paragraph, i) => (
-                <motion.p
-                  key={i}
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-lg text-zinc-400 leading-relaxed"
-                >
-                  {paragraph}
-                </motion.p>
-              ))}
+          <p
+            className="text-[20px] italic leading-[1.7] text-[#5A5A5A] mb-6"
+            style={{ fontFamily: "var(--font-display), Georgia, serif" }}
+          >
+            &ldquo;{PHILOSOPHY.quote}&rdquo;
+          </p>
 
-              <motion.p
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                viewport={{ once: true }}
-                className="text-xl text-[#c9a962] italic mt-8 font-light"
-              >
-                "{PHILOSOPHY.tagline}"
-              </motion.p>
-            </div>
-          </motion.div>
-        </div>
+          <p
+            className="text-[16px] leading-[1.8] text-[#5A5A5A] mb-10"
+            style={{ fontFamily: "var(--font-body), Georgia, serif" }}
+          >
+            {PHILOSOPHY.body}
+          </p>
+
+          <Link
+            href={PHILOSOPHY.cta.href}
+            className="inline-block bg-[#C5A47E] text-[#1C2B3A] px-10 py-4 text-[14px] tracking-[1.5px] font-semibold no-underline hover:bg-[#b89468] transition-colors"
+          >
+            {PHILOSOPHY.cta.label}
+          </Link>
+        </motion.div>
       </div>
+
+      {/* Mobile: Single column */}
+      <style jsx>{`
+        @media (max-width: 1023px) {
+          section {
+            padding: 80px 24px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
