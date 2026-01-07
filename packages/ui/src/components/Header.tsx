@@ -3,15 +3,19 @@
 import React, { useState } from "react";
 
 /**
- * YP Unified Header - "The Wolf Skin"
+ * YP Unified Header - "Wolf Pack Glass"
  * ====================================
- * Pure presentational component that works across:
- * - Next.js (Academy)
- * - Hydrogen/Remix (Shop)
- * - Astro (NeoBall LP)
+ * Glass morphism header matching YP design system
+ * Works across: Next.js (Academy), Hydrogen/Remix (Shop), Astro (NeoBall)
  *
- * Design: Wolf Black (#0f0f0f) + Neon Green (#ccff00)
+ * Design: Floating glass container + Cyan (#00F6E0) accents
  */
+
+// YP Design Tokens
+const YP_CYAN = "#00F6E0";
+const YP_CYAN_HOVER = "rgba(0, 246, 224, 0.1)";
+const YP_CYAN_BORDER = "rgba(0, 246, 224, 0.2)";
+const YP_CYAN_GLOW = "rgba(0, 246, 224, 0.4)";
 
 export interface NavLink {
   label: string;
@@ -28,16 +32,20 @@ export interface HeaderProps {
   links?: NavLink[];
   /** Current active path for highlighting */
   activePath?: string;
-  /** Custom logo component (optional) */
+  /** Logo link destination */
   logoHref?: string;
-  /** Cart page URL - defaults to Shopify shop cart */
+  /** Logo image source (optional - falls back to text if not provided) */
+  logoSrc?: string;
+  /** Cart page URL */
   cartHref?: string;
-  /** Login page URL - defaults to Shopify account */
+  /** Login page URL */
   loginHref?: string;
+  /** Show login button */
+  showLogin?: boolean;
 }
 
 const defaultLinks: NavLink[] = [
-  { label: "ACADEMY", href: "https://youthperformance.com" },
+  { label: "ACADEMY", href: "https://academy.youthperformance.com" },
   { label: "SHOP", href: "https://shop.youthperformance.com" },
   { label: "NEOBALL", href: "https://neoball.co" },
 ];
@@ -48,8 +56,10 @@ export function Header({
   links = defaultLinks,
   activePath,
   logoHref = "/",
+  logoSrc,
   cartHref = "https://shop.youthperformance.com/cart",
   loginHref = "https://shop.youthperformance.com/account/login",
+  showLogin = false,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -61,257 +71,304 @@ export function Header({
         left: 0,
         right: 0,
         zIndex: 9999,
-        backgroundColor: "#0f0f0f",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+        padding: "12px 16px",
       }}
     >
-      <nav
+      {/* Floating Glass Container */}
+      <div
         style={{
+          height: "56px",
+          background:
+            "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(100,150,255,0.04) 50%, rgba(0,0,0,0.4) 100%)",
+          backdropFilter: "blur(24px) saturate(180%)",
+          WebkitBackdropFilter: "blur(24px) saturate(180%)",
+          borderRadius: "16px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow:
+            "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "0 24px",
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
         }}
       >
-        {/* Logo */}
-        <a
-          href={logoHref}
+        <nav
           style={{
+            height: "100%",
+            padding: "0 20px",
             display: "flex",
             alignItems: "center",
-            textDecoration: "none",
-            gap: "8px",
+            justifyContent: "space-between",
           }}
         >
-          <span
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "32px",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              color: "#ccff00",
-            }}
-          >
-            YP
-          </span>
-          <span
-            style={{
-              fontFamily: "system-ui, sans-serif",
-              fontSize: "10px",
-              fontWeight: 600,
-              letterSpacing: "0.15em",
-              color: "rgba(255, 255, 255, 0.5)",
-              textTransform: "uppercase",
-            }}
-          >
-            WOLF PACK
-          </span>
-        </a>
-
-        {/* Desktop Navigation */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "32px",
-          }}
-          className="yp-header-desktop"
-        >
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              target={link.isExternal ? "_blank" : undefined}
-              rel={link.isExternal ? "noopener noreferrer" : undefined}
-              style={{
-                fontFamily: "system-ui, sans-serif",
-                fontSize: "13px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                textDecoration: "none",
-                color: activePath === link.href ? "#ccff00" : "rgba(255, 255, 255, 0.7)",
-                transition: "color 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#ccff00")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color =
-                  activePath === link.href ? "#ccff00" : "rgba(255, 255, 255, 0.7)")
-              }
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        {/* Right Side Actions */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
-          {/* Cart Icon */}
+          {/* Left: Logo + Brand */}
           <a
-            href={cartHref}
+            href={logoHref}
             style={{
-              position: "relative",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              width: "40px",
-              height: "40px",
-              borderRadius: "8px",
-              backgroundColor: "rgba(255, 255, 255, 0.05)",
-              transition: "background-color 0.2s ease",
               textDecoration: "none",
+              gap: "12px",
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(204, 255, 0, 0.1)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.05)")
-            }
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(255, 255, 255, 0.8)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            {cartCount > 0 && (
+            {logoSrc ? (
+              <img
+                src={logoSrc}
+                alt="YP"
+                style={{
+                  height: "32px",
+                  width: "auto",
+                }}
+              />
+            ) : (
               <span
                 style={{
-                  position: "absolute",
-                  top: "-4px",
-                  right: "-4px",
-                  minWidth: "18px",
-                  height: "18px",
-                  padding: "0 5px",
-                  borderRadius: "9px",
-                  backgroundColor: "#ccff00",
-                  color: "#0f0f0f",
-                  fontSize: "11px",
+                  fontFamily: "'Bebas Neue', Impact, sans-serif",
+                  fontSize: "36px",
                   fontWeight: 700,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "system-ui, sans-serif",
+                  letterSpacing: "-0.02em",
+                  color: YP_CYAN,
+                  lineHeight: 1,
                 }}
               >
-                {cartCount > 99 ? "99+" : cartCount}
+                YP
               </span>
             )}
+            <span
+              style={{
+                fontFamily: "system-ui, -apple-system, sans-serif",
+                fontSize: "11px",
+                fontWeight: 600,
+                letterSpacing: "0.2em",
+                color: "rgba(255, 255, 255, 0.5)",
+                textTransform: "uppercase",
+              }}
+            >
+              WOLF PACK
+            </span>
           </a>
 
-          {/* User Avatar / Login */}
-          {userAvatar ? (
-            <img
-              src={userAvatar}
-              alt="Profile"
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                border: "2px solid rgba(204, 255, 0, 0.3)",
-                objectFit: "cover",
-              }}
-            />
-          ) : (
+          {/* Center: Desktop Navigation */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "32px",
+            }}
+            className="yp-header-desktop"
+          >
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target={link.isExternal ? "_blank" : undefined}
+                rel={link.isExternal ? "noopener noreferrer" : undefined}
+                style={{
+                  fontFamily: "system-ui, -apple-system, sans-serif",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  letterSpacing: "0.15em",
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  color:
+                    activePath === link.href
+                      ? YP_CYAN
+                      : "rgba(255, 255, 255, 0.7)",
+                  transition: "color 0.2s ease",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = YP_CYAN)}
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color =
+                    activePath === link.href
+                      ? YP_CYAN
+                      : "rgba(255, 255, 255, 0.7)")
+                }
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          {/* Right: Actions */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            {/* Cart Icon */}
             <a
-              href={loginHref}
+              href={cartHref}
               style={{
-                padding: "8px 16px",
-                borderRadius: "6px",
-                backgroundColor: "#ccff00",
-                color: "#0f0f0f",
-                fontSize: "13px",
-                fontWeight: 700,
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "44px",
+                height: "44px",
+                borderRadius: "12px",
+                backgroundColor: "rgba(255, 255, 255, 0.06)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                transition: "all 0.2s ease",
                 textDecoration: "none",
-                fontFamily: "system-ui, sans-serif",
-                letterSpacing: "0.02em",
-                transition: "transform 0.2s ease, box-shadow 0.2s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-1px)";
-                e.currentTarget.style.boxShadow = "0 4px 12px rgba(204, 255, 0, 0.3)";
+                e.currentTarget.style.backgroundColor = YP_CYAN_HOVER;
+                e.currentTarget.style.borderColor = YP_CYAN_BORDER;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.backgroundColor =
+                  "rgba(255, 255, 255, 0.06)";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
               }}
-              className="yp-header-login"
             >
-              LOGIN
-            </a>
-          )}
-
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{
-              display: "none",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "40px",
-              height: "40px",
-              borderRadius: "8px",
-              backgroundColor: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
-            className="yp-header-mobile-toggle"
-            aria-label="Toggle menu"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(255, 255, 255, 0.8)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              {mobileMenuOpen ? (
-                <>
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.8)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <path d="M3 6h18" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-4px",
+                    right: "-4px",
+                    minWidth: "18px",
+                    height: "18px",
+                    padding: "0 5px",
+                    borderRadius: "9px",
+                    backgroundColor: YP_CYAN,
+                    color: "#0f0f0f",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "system-ui, sans-serif",
+                  }}
+                >
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
               )}
-            </svg>
-          </button>
-        </div>
-      </nav>
+            </a>
+
+            {/* User Avatar / Login Button */}
+            {userAvatar ? (
+              <img
+                src={userAvatar}
+                alt="Profile"
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  border: `2px solid ${YP_CYAN_BORDER}`,
+                  objectFit: "cover",
+                }}
+              />
+            ) : showLogin ? (
+              <a
+                href={loginHref}
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: "10px",
+                  backgroundColor: YP_CYAN,
+                  color: "#0f0f0f",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  textDecoration: "none",
+                  fontFamily: "system-ui, sans-serif",
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = `0 4px 16px ${YP_CYAN_GLOW}`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+                className="yp-header-login"
+              >
+                LOGIN
+              </a>
+            ) : null}
+
+            {/* Mobile Menu Toggle (Hamburger) */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                display: "none",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "44px",
+                height: "44px",
+                borderRadius: "12px",
+                backgroundColor: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
+              className="yp-header-mobile-toggle"
+              aria-label="Toggle menu"
+            >
+              <svg
+                width="22"
+                height="14"
+                viewBox="0 0 22 14"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.8)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              >
+                {mobileMenuOpen ? (
+                  <>
+                    <line x1="18" y1="2" x2="4" y2="12" />
+                    <line x1="4" y1="2" x2="18" y2="12" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="1" y1="1" x2="21" y2="1" />
+                    <line x1="1" y1="7" x2="21" y2="7" />
+                    <line x1="1" y1="13" x2="21" y2="13" />
+                  </>
+                )}
+              </svg>
+            </button>
+          </div>
+        </nav>
+      </div>
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div
           style={{
-            position: "absolute",
-            top: "64px",
-            left: 0,
-            right: 0,
-            backgroundColor: "#0f0f0f",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-            padding: "16px 24px",
+            position: "fixed",
+            top: "80px",
+            left: "16px",
+            right: "16px",
+            bottom: "16px",
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            borderRadius: "16px",
+            border: "1px solid rgba(255,255,255,0.1)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "24px",
+            zIndex: 9998,
           }}
           className="yp-header-mobile-menu"
         >
@@ -322,21 +379,52 @@ export function Header({
               target={link.isExternal ? "_blank" : undefined}
               rel={link.isExternal ? "noopener noreferrer" : undefined}
               style={{
-                display: "block",
-                padding: "12px 0",
-                fontFamily: "system-ui, sans-serif",
-                fontSize: "15px",
-                fontWeight: 600,
-                letterSpacing: "0.05em",
+                fontFamily: "'Bebas Neue', Impact, sans-serif",
+                fontSize: "28px",
+                letterSpacing: "0.15em",
                 textDecoration: "none",
-                color: activePath === link.href ? "#ccff00" : "rgba(255, 255, 255, 0.8)",
-                borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+                textTransform: "uppercase",
+                color:
+                  activePath === link.href
+                    ? YP_CYAN
+                    : "rgba(255, 255, 255, 0.8)",
+                transition: "color 0.2s ease",
               }}
               onClick={() => setMobileMenuOpen(false)}
+              onMouseEnter={(e) => (e.currentTarget.style.color = YP_CYAN)}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color =
+                  activePath === link.href
+                    ? YP_CYAN
+                    : "rgba(255, 255, 255, 0.8)")
+              }
             >
               {link.label}
             </a>
           ))}
+
+          {/* Mobile Login */}
+          {!userAvatar && (
+            <a
+              href={loginHref}
+              style={{
+                marginTop: "16px",
+                padding: "14px 32px",
+                borderRadius: "12px",
+                backgroundColor: YP_CYAN,
+                color: "#0f0f0f",
+                fontSize: "14px",
+                fontWeight: 700,
+                textDecoration: "none",
+                fontFamily: "system-ui, sans-serif",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+              }}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              LOGIN
+            </a>
+          )}
         </div>
       )}
 
