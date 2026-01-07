@@ -21,7 +21,7 @@ function XIcon({ className }: { className?: string }) {
 
 export function FinalCTA() {
   return (
-    <section className="py-24 px-[60px] bg-[#FAF8F5]">
+    <section className="py-24 px-[60px] bg-[var(--bg-primary)]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -30,26 +30,17 @@ export function FinalCTA() {
         className="max-w-[700px] mx-auto text-center"
       >
         {/* Section Label */}
-        <p className="text-[11px] tracking-[4px] text-[#C5A47E] uppercase mb-4">
+        <p className="text-[11px] tracking-[4px] text-[var(--accent-primary)] uppercase mb-4">
           {FINAL_CTA.label}
         </p>
 
         {/* Title */}
-        <h2
-          className="text-[#1C2B3A] text-[42px] mb-6"
-          style={{
-            fontFamily: "var(--font-display), Georgia, serif",
-            fontWeight: 400,
-          }}
-        >
+        <h2 className="font-bebas text-[var(--text-primary)] text-[42px] mb-6">
           {FINAL_CTA.title}
         </h2>
 
         {/* Body */}
-        <p
-          className="text-[17px] leading-[1.8] text-[#5A5A5A] mb-10 max-w-[560px] mx-auto"
-          style={{ fontFamily: "var(--font-body), Georgia, serif" }}
-        >
+        <p className="text-[17px] leading-[1.8] text-[var(--text-secondary)] mb-10 max-w-[560px] mx-auto">
           {FINAL_CTA.body}
         </p>
 
@@ -57,13 +48,13 @@ export function FinalCTA() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
           <Link
             href={FINAL_CTA.primaryCTA.href}
-            className="bg-[#C5A47E] text-[#1C2B3A] px-10 py-4 text-[14px] tracking-[1.5px] font-semibold no-underline hover:bg-[#b89468] transition-colors"
+            className="btn-primary text-sm tracking-wider"
           >
             {FINAL_CTA.primaryCTA.label}
           </Link>
           <Link
             href={FINAL_CTA.secondaryCTA.href}
-            className="bg-transparent text-[#1C2B3A] px-10 py-4 text-[14px] tracking-[1.5px] border border-[#1C2B3A] no-underline hover:bg-[#1C2B3A] hover:text-[#FAF8F5] transition-colors"
+            className="btn-secondary text-sm tracking-wider"
           >
             {FINAL_CTA.secondaryCTA.label}
           </Link>
@@ -75,16 +66,16 @@ export function FinalCTA() {
             href={FINAL_CTA.social.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#5A5A5A] hover:text-[#C5A47E] transition-colors"
+            className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
           >
             <Instagram className="w-5 h-5" />
           </a>
-          <span className="text-[#E8E4DF]">|</span>
+          <span className="text-[var(--border-default)]">|</span>
           <a
             href={FINAL_CTA.social.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#5A5A5A] hover:text-[#C5A47E] transition-colors"
+            className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
           >
             <XIcon className="w-5 h-5" />
           </a>
@@ -92,19 +83,18 @@ export function FinalCTA() {
       </motion.div>
 
       {/* Footer */}
-      <footer className="mt-20 pt-8 border-t border-[rgba(197,164,126,0.15)]">
+      <footer className="mt-20 pt-8 border-t border-[var(--border-default)]">
         <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Logo */}
           <Link
             href="/"
-            className="text-[14px] tracking-[2px] text-[#1C2B3A] no-underline"
-            style={{ fontFamily: "var(--font-display), Georgia, serif" }}
+            className="font-bebas text-[14px] tracking-[2px] text-[var(--text-primary)] no-underline"
           >
-            YOUTH<span className="text-[#C5A47E]">PERFORMANCE</span>
+            YOUTH<span className="text-[var(--accent-primary)]">PERFORMANCE</span>
           </Link>
 
           {/* Copyright */}
-          <p className="text-[12px] text-[#6B7280]">
+          <p className="text-[12px] text-[var(--text-tertiary)]">
             &copy; {new Date().getFullYear()} YouthPerformance. All rights
             reserved.
           </p>
@@ -115,7 +105,7 @@ export function FinalCTA() {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-[12px] text-[#6B7280] hover:text-[#C5A47E] no-underline transition-colors"
+                className="text-[12px] text-[var(--text-tertiary)] hover:text-[var(--accent-primary)] no-underline transition-colors"
               >
                 {link.label}
               </a>
@@ -123,15 +113,6 @@ export function FinalCTA() {
           </div>
         </div>
       </footer>
-
-      {/* Mobile */}
-      <style jsx>{`
-        @media (max-width: 767px) {
-          section {
-            padding: 60px 24px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

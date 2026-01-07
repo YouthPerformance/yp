@@ -5,7 +5,7 @@ import { ATHLETES } from "../constants";
 
 export function AthletesSection() {
   return (
-    <section id="athletes" className="bg-[#1C2B3A] py-24 px-[60px]">
+    <section id="athletes" className="bg-[var(--bg-secondary)] py-24 px-[60px] border-y border-[var(--border-default)]">
       <div className="max-w-[1000px] mx-auto">
         {/* Header */}
         <motion.div
@@ -15,13 +15,10 @@ export function AthletesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-[11px] tracking-[4px] text-[#C5A47E] uppercase mb-4">
+          <p className="text-[11px] tracking-[4px] text-[var(--accent-primary)] uppercase mb-4">
             {ATHLETES.label}
           </p>
-          <h2
-            className="text-[#FAF8F5] text-[38px]"
-            style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 400 }}
-          >
+          <h2 className="font-bebas text-[var(--text-primary)] text-[38px]">
             {ATHLETES.title}
           </h2>
         </motion.div>
@@ -36,16 +33,10 @@ export function AthletesSection() {
               transition={{ duration: 0.4, delay: i * 0.1 }}
               viewport={{ once: true }}
             >
-              <h3
-                className="text-[18px] text-[#FAF8F5] pb-3 mb-3 border-b-2 border-[#C5A47E]"
-                style={{ fontFamily: "var(--font-display), Georgia, serif" }}
-              >
+              <h3 className="font-bebas text-[18px] text-[var(--text-primary)] pb-3 mb-3 border-b-2 border-[var(--accent-primary)]">
                 {group.level}
               </h3>
-              <p
-                className="text-[14px] leading-[1.8] text-[rgba(250,248,245,0.7)]"
-                style={{ fontFamily: "var(--font-body), Georgia, serif" }}
-              >
+              <p className="text-[14px] leading-[1.8] text-[var(--text-secondary)]">
                 {group.athletes}
               </p>
             </motion.div>

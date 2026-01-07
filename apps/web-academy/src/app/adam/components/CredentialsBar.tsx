@@ -5,7 +5,7 @@ import { CREDENTIALS } from "../constants";
 
 export function CredentialsBar() {
   return (
-    <section className="bg-[#1C2B3A] py-12 px-[60px]">
+    <section className="py-12 px-[60px] bg-[var(--bg-secondary)] border-y border-[var(--border-default)]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -15,13 +15,10 @@ export function CredentialsBar() {
       >
         {CREDENTIALS.map((cred, i) => (
           <div key={i} className="text-center">
-            <p
-              className="text-[14px] tracking-[1px] text-[#FAF8F5]"
-              style={{ fontFamily: "var(--font-display), Georgia, serif" }}
-            >
+            <p className="font-bebas text-[14px] tracking-[1px] text-[var(--text-primary)]">
               {cred.org}
             </p>
-            <p className="text-[11px] text-[#C5A47E] mt-1 tracking-[1px]">
+            <p className="text-[11px] text-[var(--accent-primary)] mt-1 tracking-[1px]">
               {cred.role}
             </p>
           </div>

@@ -1,29 +1,4 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Crimson_Pro } from "next/font/google";
-import localFont from "next/font/local";
-
-// ─────────────────────────────────────────────────────────────
-// FONTS - Coach's Study Design System
-// ─────────────────────────────────────────────────────────────
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-});
-
-const crimson = Crimson_Pro({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-body",
-});
-
-const bebasNeue = localFont({
-  src: "../../fonts/BebasNeue-Regular.ttf",
-  display: "swap",
-  variable: "--font-accent",
-  fallback: ["Bebas Neue", "Impact", "sans-serif"],
-});
 
 // ─────────────────────────────────────────────────────────────
 // METADATA
@@ -72,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 // ─────────────────────────────────────────────────────────────
-// LAYOUT
+// LAYOUT - Uses global YP design tokens
 // ─────────────────────────────────────────────────────────────
 
 export default function AdamLayout({
@@ -82,10 +57,9 @@ export default function AdamLayout({
 }) {
   return (
     <div
-      className={`${playfair.variable} ${crimson.variable} ${bebasNeue.variable}`}
       style={{
-        // Override global styles for this page
-        marginTop: "-80px", // Counter the global header padding
+        // Counter the global header padding
+        marginTop: "-80px",
         position: "relative",
       }}
     >
@@ -157,30 +131,8 @@ export default function AdamLayout({
         }}
       />
 
-      {/* Page content with Coach's Study styling */}
-      <div
-        className="adam-page"
-        style={{
-          // CSS Variables for Coach's Study Design
-          // @ts-expect-error CSS custom properties
-          "--color-navy": "#1C2B3A",
-          "--color-gold": "#C5A47E",
-          "--color-cream": "#FAF8F5",
-          "--color-warm-gray": "#F5F3F0",
-          "--color-charcoal": "#141414",
-          "--color-burnt-orange": "#D35400",
-          "--text-primary": "#1C2B3A",
-          "--text-secondary": "#5A5A5A",
-          "--text-muted": "#6B7280",
-          "--text-light": "#9CA3AF",
-          "--text-inverse": "#FAF8F5",
-          "--border-light": "rgba(197, 164, 126, 0.15)",
-          "--border-medium": "rgba(197, 164, 126, 0.3)",
-          "--border-gold": "#C5A47E",
-        }}
-      >
-        {children}
-      </div>
+      {/* Page content uses global YP design tokens */}
+      {children}
     </div>
   );
 }

@@ -8,12 +8,9 @@ export function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="py-24 px-[60px]"
-      style={{ background: "#E8E4DF" }}
+      className="py-24 px-[60px] bg-[var(--bg-secondary)] border-y border-[var(--border-default)]"
     >
-      <div
-        className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
-      >
+      <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
         {/* Left: NeoBall Image */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -22,32 +19,21 @@ export function Philosophy() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="aspect-square bg-[#FAF8F5] rounded-lg overflow-hidden flex items-center justify-center">
+          <div className="aspect-square bg-[var(--bg-tertiary)] rounded-lg overflow-hidden flex items-center justify-center border border-[var(--border-default)]">
             {/* Placeholder for NeoBall image */}
             <div className="text-center">
-              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] mx-auto flex items-center justify-center shadow-2xl">
+              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-[#2a2a2a] to-[#0a0a0a] mx-auto flex items-center justify-center shadow-2xl glow">
                 <div className="text-center">
-                  <p
-                    className="text-[28px] text-[#C5A47E]"
-                    style={{ fontFamily: "var(--font-accent), sans-serif" }}
-                  >
+                  <p className="font-bebas text-[28px] text-[var(--accent-primary)]">
                     NEOBALL
                   </p>
-                  <p className="text-[10px] text-zinc-400 tracking-[2px] mt-1">
+                  <p className="text-[10px] text-[var(--text-tertiary)] tracking-[2px] mt-1">
                     FOUNDERS EDITION
                   </p>
                 </div>
               </div>
-              <p className="text-[#6B7280] text-sm mt-6">NeoBall Product Image</p>
+              <p className="text-[var(--text-tertiary)] text-sm mt-6">NeoBall Product Image</p>
             </div>
-            {/* Uncomment when image is ready:
-            <Image
-              src="/images/adam/neoball-product.jpg"
-              alt="NeoBall Founders Edition"
-              fill
-              className="object-cover"
-            />
-            */}
           </div>
         </motion.div>
 
@@ -58,53 +44,32 @@ export function Philosophy() {
           transition={{ duration: 0.7, delay: 0.1 }}
           viewport={{ once: true }}
         >
-          <p className="text-[11px] tracking-[4px] text-[#C5A47E] uppercase mb-4">
+          <p className="text-[11px] tracking-[4px] text-[var(--accent-primary)] uppercase mb-4">
             {PHILOSOPHY.label}
           </p>
 
-          <h2
-            className="text-[#1C2B3A] text-[38px] leading-[1.2] mb-6"
-            style={{
-              fontFamily: "var(--font-display), Georgia, serif",
-              fontWeight: 400,
-            }}
-          >
+          <h2 className="font-bebas text-[var(--text-primary)] text-[38px] leading-[1.2] mb-6">
             {PHILOSOPHY.title}
             <br />
-            <span className="italic">{PHILOSOPHY.titleAccent}</span>
+            <span className="text-[var(--accent-primary)]">{PHILOSOPHY.titleAccent}</span>
           </h2>
 
-          <p
-            className="text-[20px] italic leading-[1.7] text-[#5A5A5A] mb-6"
-            style={{ fontFamily: "var(--font-display), Georgia, serif" }}
-          >
+          <p className="text-[18px] italic leading-[1.7] text-[var(--text-secondary)] mb-6">
             &ldquo;{PHILOSOPHY.quote}&rdquo;
           </p>
 
-          <p
-            className="text-[16px] leading-[1.8] text-[#5A5A5A] mb-10"
-            style={{ fontFamily: "var(--font-body), Georgia, serif" }}
-          >
+          <p className="text-[16px] leading-[1.8] text-[var(--text-secondary)] mb-10">
             {PHILOSOPHY.body}
           </p>
 
           <Link
             href={PHILOSOPHY.cta.href}
-            className="inline-block bg-[#C5A47E] text-[#1C2B3A] px-10 py-4 text-[14px] tracking-[1.5px] font-semibold no-underline hover:bg-[#b89468] transition-colors"
+            className="btn-primary text-sm tracking-wider"
           >
             {PHILOSOPHY.cta.label}
           </Link>
         </motion.div>
       </div>
-
-      {/* Mobile: Single column */}
-      <style jsx>{`
-        @media (max-width: 1023px) {
-          section {
-            padding: 80px 24px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

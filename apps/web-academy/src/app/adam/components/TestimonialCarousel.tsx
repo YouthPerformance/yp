@@ -16,11 +16,10 @@ export function TestimonialCarousel() {
   }, []);
 
   return (
-    <section className="py-24 px-[60px] bg-[#FAF8F5] relative">
+    <section className="py-24 px-[60px] bg-[var(--bg-primary)] relative">
       {/* Large quote mark background */}
       <div
-        className="absolute top-20 left-1/2 -translate-x-1/2 text-[180px] text-[rgba(197,164,126,0.1)] leading-none pointer-events-none select-none"
-        style={{ fontFamily: "var(--font-display), Georgia, serif" }}
+        className="absolute top-20 left-1/2 -translate-x-1/2 text-[180px] text-[var(--accent-primary)] opacity-10 leading-none pointer-events-none select-none font-bebas"
       >
         &ldquo;
       </div>
@@ -32,7 +31,7 @@ export function TestimonialCarousel() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-[11px] tracking-[4px] text-[#C5A47E] uppercase text-center mb-12"
+          className="text-[11px] tracking-[4px] text-[var(--accent-primary)] uppercase text-center mb-12"
         >
           What They Say
         </motion.p>
@@ -49,21 +48,15 @@ export function TestimonialCarousel() {
               className="text-center px-10"
             >
               {/* Quote */}
-              <p
-                className="text-[26px] italic leading-[1.6] text-[#1C2B3A] mb-10"
-                style={{ fontFamily: "var(--font-display), Georgia, serif" }}
-              >
+              <p className="text-[22px] italic leading-[1.6] text-[var(--text-primary)] mb-10">
                 &ldquo;{TESTIMONIALS[activeIndex].quote}&rdquo;
               </p>
 
               {/* Author */}
               <div className="flex items-center justify-center gap-4">
                 {/* Avatar with initials */}
-                <div className="w-12 h-12 rounded-full bg-[#E8E4DF] flex items-center justify-center">
-                  <span
-                    className="text-[14px] text-[#1C2B3A]"
-                    style={{ fontFamily: "var(--font-display), Georgia, serif" }}
-                  >
+                <div className="w-12 h-12 rounded-full bg-[var(--bg-secondary)] border border-[var(--accent-primary)] flex items-center justify-center glow">
+                  <span className="font-bebas text-[14px] text-[var(--accent-primary)]">
                     {TESTIMONIALS[activeIndex].author
                       .split(" ")
                       .map((n) => n[0])
@@ -71,10 +64,10 @@ export function TestimonialCarousel() {
                   </span>
                 </div>
                 <div className="text-left">
-                  <p className="text-[14px] tracking-wide text-[#1C2B3A] font-medium">
+                  <p className="text-[14px] tracking-wide text-[var(--text-primary)] font-medium">
                     {TESTIMONIALS[activeIndex].author}
                   </p>
-                  <p className="text-[12px] text-[#6B7280]">
+                  <p className="text-[12px] text-[var(--text-tertiary)]">
                     {TESTIMONIALS[activeIndex].title}
                   </p>
                 </div>
@@ -91,8 +84,8 @@ export function TestimonialCarousel() {
               onClick={() => setActiveIndex(i)}
               className={`h-2 rounded-full border-none cursor-pointer transition-all duration-300 ${
                 i === activeIndex
-                  ? "w-8 bg-[#C5A47E]"
-                  : "w-2 bg-[rgba(197,164,126,0.3)] hover:bg-[rgba(197,164,126,0.5)]"
+                  ? "w-8 bg-[var(--accent-primary)]"
+                  : "w-2 bg-[var(--accent-primary)] opacity-30 hover:opacity-50"
               }`}
               aria-label={`Go to testimonial ${i + 1}`}
             />
