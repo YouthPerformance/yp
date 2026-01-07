@@ -14,9 +14,9 @@ const NOISE_PNG = 'https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/a
 
 // Hero images - stacked cards
 const HERO_IMAGES = [
-  '/images/4.jpg',
-  '/images/9.jpg',
-  '/images/6.jpg',
+  '/images/4.webp',
+  '/images/9.webp',
+  '/images/6.webp',
 ];
 
 // ===========================================================================

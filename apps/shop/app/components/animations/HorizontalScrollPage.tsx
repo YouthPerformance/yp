@@ -19,15 +19,15 @@ if (typeof window !== 'undefined') {
 const NOISE_PNG = 'https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/assets/noise-Q6CzNatq.png';
 
 // Hero images - stacked cards (top to bottom layering)
-// Order: 14.png (top/front) → 17.png (bottom/back) - 4.jpg moved to wolfpack section
+// Order: 14.webp (top/front) → 17.webp (bottom/back) - 4.webp moved to wolfpack section
 const HERO_IMAGES = [
-  '/images/14.png',  // 1. Top (front) - highest z-index
-  '/images/9.jpg',   // 2.
-  '/images/11.png',  // 3.
-  '/images/12.png',  // 4.
-  '/images/13.png',  // 5.
-  '/images/18.png',  // 6.
-  '/images/17.png',  // 7. Bottom (back) - lowest z-index
+  '/images/14.webp',  // 1. Top (front) - highest z-index
+  '/images/9.webp',   // 2.
+  '/images/11.webp',  // 3.
+  '/images/12.webp',  // 4.
+  '/images/13.webp',  // 5.
+  '/images/18.webp',  // 6.
+  '/images/17.webp',  // 7. Bottom (back) - lowest z-index
 ];
 
 // Scroll physics - EXACT Supply settings
@@ -462,7 +462,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
     <div
       className="relative text-white w-screen h-screen overflow-hidden"
       style={{
-        backgroundImage: 'url(/images/shopbg6.jpeg)',
+        backgroundImage: 'url(/images/shopbg6.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -673,7 +673,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <section className="relative h-full w-[100vw] md:w-[90vw] flex items-center justify-center border-l border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: 'url(/images/13.png)' }}
+              style={{ backgroundImage: 'url(/images/13.webp)' }}
             />
             <div className="absolute inset-0 bg-black/50" />
             <div className="relative z-10 text-center px-6 max-w-2xl">
@@ -705,7 +705,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <section className="relative h-full w-[100vw] md:w-[80vw] flex items-center justify-center border-l border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: 'url(/images/4.jpg)' }}
+              style={{ backgroundImage: 'url(/images/4.webp)' }}
             />
             <div className="absolute inset-0 bg-black/60" />
             <div className="relative z-10 text-center px-6 max-w-lg">

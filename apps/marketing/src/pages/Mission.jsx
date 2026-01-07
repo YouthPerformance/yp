@@ -202,7 +202,7 @@ export default function Mission() {
       </ManifestoSection>
 
       {/* Image 1 */}
-      <ManifestoImage src="/images/academy/1.jpeg" alt="Athletes training" />
+      <ManifestoImage src="/images/academy/1.webp" alt="Athletes training" />
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-neutral-800 to-transparent" />
@@ -256,7 +256,7 @@ export default function Mission() {
       </ManifestoSection>
 
       {/* Image 2 */}
-      <ManifestoImage src="/images/academy/2.jpeg" alt="Ground connection" />
+      <ManifestoImage src="/images/academy/2.webp" alt="Ground connection" />
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-neutral-800 to-transparent" />
@@ -292,7 +292,7 @@ export default function Mission() {
       </ManifestoSection>
 
       {/* Image 3 */}
-      <ManifestoImage src="/images/academy/3.jpeg" alt="Foundation training" />
+      <ManifestoImage src="/images/academy/3.webp" alt="Foundation training" />
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-neutral-800 to-transparent" />
@@ -328,7 +328,7 @@ export default function Mission() {
       </ManifestoSection>
 
       {/* Image 4 */}
-      <ManifestoImage src="/images/academy/4.jpeg" alt="Spring power" />
+      <ManifestoImage src="/images/academy/4.webp" alt="Spring power" />
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-neutral-800 to-transparent" />

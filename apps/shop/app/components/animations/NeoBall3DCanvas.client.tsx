@@ -77,7 +77,7 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
     // Load texture and create ball
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
-      '/images/neoball-texture.png',
+      '/images/neoball-texture.webp',
       (texture) => {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.colorSpace = THREE.SRGBColorSpace;

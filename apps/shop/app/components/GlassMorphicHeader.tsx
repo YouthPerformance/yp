@@ -77,7 +77,7 @@ export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
             <div className="absolute left-1/2 -translate-x-1/2">
               <Link to="/" aria-label="YP Shop">
                 <img
-                  src="/images/yp-logo.png"
+                  src="/images/yp-logo.webp"
                   alt="YP"
                   className="h-8 md:h-10 w-auto"
                 />

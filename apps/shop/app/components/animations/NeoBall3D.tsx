@@ -27,7 +27,7 @@ function FallbackImage() {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
       <img
-        src="/images/neoball-hero.png"
+        src="/images/neoball-hero.webp"
         alt="NeoBall"
         className="w-full h-full max-w-[90%] max-h-[90%] object-contain"
       />

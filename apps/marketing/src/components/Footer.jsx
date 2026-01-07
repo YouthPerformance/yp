@@ -16,7 +16,7 @@ function Footer() {
           <div className="flex flex-col w-40 md:w-48">
             <div className="flex items-center gap-2 mb-2">
               <img
-                src="/logo/yp-logo.png"
+                src="/logo/yp-logo.webp"
                 alt="YouthPerformance"
                 className="h-10 md:h-12 w-auto"
               />
