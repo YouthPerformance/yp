@@ -15,6 +15,11 @@ function Home() {
   const [loading, setLoading] = useState(true)
   const { openModal } = useOnboarding()
 
+  // Newsletter form state
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(null) // 'success' | 'error' | null
+
   useEffect(() => {
     fetchCourses()
   }, [])
@@ -29,6 +34,36 @@ function Home() {
       console.error('Failed to fetch courses:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault()
+
+    // Basic email validation
+    if (!email || !email.includes('@')) {
+      setSubmitStatus('error')
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitStatus(null)
+
+    try {
+      // Store email for later integration with email service
+      // For now, just log and show success (backend not yet implemented)
+      console.log('[Newsletter] Email captured:', email)
+
+      // Simulate brief delay for UX
+      await new Promise(resolve => setTimeout(resolve, 300))
+
+      setSubmitStatus('success')
+      setEmail('')
+    } catch (error) {
+      console.error('[Newsletter] Submission failed:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -188,21 +223,39 @@ function Home() {
           </p>
 
           {/* Email Input */}
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <div className="relative flex-1">
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="enter@youremail.com"
-                className="w-full bg-neutral-900/80 border border-neutral-800 rounded-lg px-4 py-3 text-white font-mono text-sm placeholder:text-neutral-600 focus:outline-none focus:border-cyan-500/50 focus:shadow-[0_0_20px_rgba(0,255,255,0.1)] transition-all"
+                disabled={isSubmitting || submitStatus === 'success'}
+                className="w-full bg-neutral-900/80 border border-neutral-800 rounded-lg px-4 py-3 text-white font-mono text-sm placeholder:text-neutral-600 focus:outline-none focus:border-cyan-500/50 focus:shadow-[0_0_20px_rgba(0,255,255,0.1)] transition-all disabled:opacity-50"
               />
             </div>
             <button
               type="submit"
-              className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded-lg text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,255,255,0.2)] hover:shadow-[0_0_30px_rgba(0,255,255,0.4)]"
+              disabled={isSubmitting || submitStatus === 'success'}
+              className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded-lg text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,255,255,0.2)] hover:shadow-[0_0_30px_rgba(0,255,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span className="font-bebas tracking-wider">Subscribe</span>
+              <span className="font-bebas tracking-wider">
+                {isSubmitting ? 'Sending...' : submitStatus === 'success' ? 'Subscribed!' : 'Subscribe'}
+              </span>
             </button>
           </form>
+
+          {/* Status Messages */}
+          {submitStatus === 'success' && (
+            <p className="text-cyan-400 text-sm mt-3 font-mono">
+              ✓ Welcome to the Pack! Check your inbox.
+            </p>
+          )}
+          {submitStatus === 'error' && (
+            <p className="text-red-400 text-sm mt-3 font-mono">
+              Please enter a valid email address.
+            </p>
+          )}
 
           {/* Privacy note */}
           <p className="text-neutral-700 text-[10px] mt-4 font-mono">
