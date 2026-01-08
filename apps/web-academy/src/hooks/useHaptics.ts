@@ -6,28 +6,28 @@
 // Web: Navigator.vibrate()
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useCallback, useEffect, useState } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
-import type { HapticIntensity } from '@/types/ticker';
+import { useCallback, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { HapticIntensity } from "@/types/ticker";
 
 type HapticPattern =
-  | 'impact_light'
-  | 'impact_medium'
-  | 'impact_heavy'
-  | 'success_pattern'
-  | 'rank_up_pattern'
-  | 'selection';
+  | "impact_light"
+  | "impact_medium"
+  | "impact_heavy"
+  | "success_pattern"
+  | "rank_up_pattern"
+  | "selection";
 
 // iOS haptic patterns (Capacitor/Cordova/React Native)
 const IOS_PATTERNS: Record<HapticPattern, string> = {
-  impact_light: 'impactLight',
-  impact_medium: 'impactMedium',
-  impact_heavy: 'impactHeavy',
-  success_pattern: 'notificationSuccess',
-  rank_up_pattern: 'notificationSuccess', // iOS doesn't have complex patterns
-  selection: 'selectionChanged',
+  impact_light: "impactLight",
+  impact_medium: "impactMedium",
+  impact_heavy: "impactHeavy",
+  success_pattern: "notificationSuccess",
+  rank_up_pattern: "notificationSuccess", // iOS doesn't have complex patterns
+  selection: "selectionChanged",
 };
 
 // Android vibration durations (ms)
@@ -51,26 +51,26 @@ const WEB_PATTERNS: Record<HapticPattern, number | number[]> = {
 };
 
 // Detect platform
-function detectPlatform(): 'ios' | 'android' | 'web' {
-  if (typeof window === 'undefined') return 'web';
+function detectPlatform(): "ios" | "android" | "web" {
+  if (typeof window === "undefined") return "web";
 
   const ua = navigator.userAgent.toLowerCase();
 
   if (/iphone|ipad|ipod/.test(ua)) {
-    return 'ios';
+    return "ios";
   }
   if (/android/.test(ua)) {
-    return 'android';
+    return "android";
   }
-  return 'web';
+  return "web";
 }
 
 // Check if haptics are supported
 function isHapticsSupported(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
 
   // Check for Navigator.vibrate (web/android)
-  if ('vibrate' in navigator) return true;
+  if ("vibrate" in navigator) return true;
 
   // Check for iOS haptic (would be exposed via native bridge)
   if ((window as any).Capacitor?.Plugins?.Haptics) return true;
@@ -84,6 +84,61 @@ export function useHaptics() {
   const [isSupported] = useState(() => isHapticsSupported());
   const [isEnabled, setIsEnabled] = useState(true);
 
+  // Web haptic trigger - defined first since iOS uses it as fallback
+  const triggerWebHaptic = useCallback((pattern: HapticPattern) => {
+    const vibrationPattern = WEB_PATTERNS[pattern];
+
+    if ("vibrate" in navigator) {
+      navigator.vibrate(vibrationPattern);
+    }
+  }, []);
+
+  // Android haptic trigger (vibration)
+  const triggerAndroidHaptic = useCallback((pattern: HapticPattern) => {
+    const vibrationPattern = ANDROID_PATTERNS[pattern];
+
+    if ("vibrate" in navigator) {
+      navigator.vibrate(vibrationPattern);
+    }
+  }, []);
+
+  // iOS haptic trigger
+  const triggerIOSHaptic = useCallback(
+    (pattern: HapticPattern, _intensity?: HapticIntensity) => {
+      const hapticType = IOS_PATTERNS[pattern];
+
+      // Try Capacitor Haptics plugin
+      if ((window as any).Capacitor?.Plugins?.Haptics) {
+        const Haptics = (window as any).Capacitor.Plugins.Haptics;
+
+        switch (hapticType) {
+          case "impactLight":
+            Haptics.impact({ style: "light" });
+            break;
+          case "impactMedium":
+            Haptics.impact({ style: "medium" });
+            break;
+          case "impactHeavy":
+            Haptics.impact({ style: "heavy" });
+            break;
+          case "notificationSuccess":
+            Haptics.notification({ type: "success" });
+            break;
+          case "selectionChanged":
+            Haptics.selectionStart();
+            Haptics.selectionChanged();
+            Haptics.selectionEnd();
+            break;
+        }
+        return;
+      }
+
+      // Fallback to web vibration
+      triggerWebHaptic(pattern);
+    },
+    [triggerWebHaptic],
+  );
+
   // Trigger haptic feedback
   const trigger = useCallback(
     (pattern: HapticPattern, intensity?: HapticIntensity) => {
@@ -94,74 +149,30 @@ export function useHaptics() {
 
       try {
         switch (platform) {
-          case 'ios':
+          case "ios":
             triggerIOSHaptic(pattern, intensity);
             break;
-          case 'android':
+          case "android":
             triggerAndroidHaptic(pattern);
             break;
-          case 'web':
+          case "web":
             triggerWebHaptic(pattern);
             break;
         }
       } catch (error) {
-        console.warn('Haptic feedback failed:', error);
+        console.warn("Haptic feedback failed:", error);
       }
     },
-    [theme.features.haptics, isEnabled, isSupported, platform]
+    [
+      theme.features.haptics,
+      isEnabled,
+      isSupported,
+      platform,
+      triggerAndroidHaptic,
+      triggerIOSHaptic,
+      triggerWebHaptic,
+    ],
   );
-
-  // iOS haptic trigger
-  const triggerIOSHaptic = (pattern: HapticPattern, intensity?: HapticIntensity) => {
-    const hapticType = IOS_PATTERNS[pattern];
-
-    // Try Capacitor Haptics plugin
-    if ((window as any).Capacitor?.Plugins?.Haptics) {
-      const Haptics = (window as any).Capacitor.Plugins.Haptics;
-
-      switch (hapticType) {
-        case 'impactLight':
-          Haptics.impact({ style: 'light' });
-          break;
-        case 'impactMedium':
-          Haptics.impact({ style: 'medium' });
-          break;
-        case 'impactHeavy':
-          Haptics.impact({ style: 'heavy' });
-          break;
-        case 'notificationSuccess':
-          Haptics.notification({ type: 'success' });
-          break;
-        case 'selectionChanged':
-          Haptics.selectionStart();
-          Haptics.selectionChanged();
-          Haptics.selectionEnd();
-          break;
-      }
-      return;
-    }
-
-    // Fallback to web vibration
-    triggerWebHaptic(pattern);
-  };
-
-  // Android haptic trigger (vibration)
-  const triggerAndroidHaptic = (pattern: HapticPattern) => {
-    const vibrationPattern = ANDROID_PATTERNS[pattern];
-
-    if ('vibrate' in navigator) {
-      navigator.vibrate(vibrationPattern);
-    }
-  };
-
-  // Web haptic trigger
-  const triggerWebHaptic = (pattern: HapticPattern) => {
-    const vibrationPattern = WEB_PATTERNS[pattern];
-
-    if ('vibrate' in navigator) {
-      navigator.vibrate(vibrationPattern);
-    }
-  };
 
   // Enable/disable haptics
   const setHapticsEnabled = useCallback((enabled: boolean) => {

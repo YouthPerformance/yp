@@ -3,10 +3,10 @@
 // Sends approved campaigns to Make.com for social distribution
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
 import { api } from "@yp/alpha/convex/_generated/api";
-import { Id } from "@yp/alpha/convex/_generated/dataModel";
+import type { Id } from "@yp/alpha/convex/_generated/dataModel";
+import { ConvexHttpClient } from "convex/browser";
+import { type NextRequest, NextResponse } from "next/server";
 
 // Lazy Convex client initialization to prevent build errors
 let convex: ConvexHttpClient | null = null;
@@ -14,7 +14,7 @@ function getConvexClient(): ConvexHttpClient {
   if (!convex) {
     const url = process.env.NEXT_PUBLIC_CONVEX_URL;
     if (!url) {
-      throw new Error('NEXT_PUBLIC_CONVEX_URL environment variable is not set');
+      throw new Error("NEXT_PUBLIC_CONVEX_URL environment variable is not set");
     }
     convex = new ConvexHttpClient(url);
   }
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     if (!campaignId) {
       return NextResponse.json(
         { error: "Bad Request", message: "Missing campaignId" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     if (!campaign) {
       return NextResponse.json(
         { error: "Not Found", message: "Campaign not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     if (campaign.status === "PUBLISHED") {
       return NextResponse.json(
         { error: "Conflict", message: "Campaign already published" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       console.error("[Distribute] MAKE_WEBHOOK_URL not configured");
       return NextResponse.json(
         { error: "Configuration Error", message: "Distribution not configured" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
           error: "Distribution Failed",
           message: `Make.com returned ${makeResponse.status}`,
         },
-        { status: 502 }
+        { status: 502 },
       );
     }
   } catch (error) {
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { error: "Internal Server Error", message: "Distribution failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

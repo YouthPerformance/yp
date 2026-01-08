@@ -1,35 +1,46 @@
 // ═══════════════════════════════════════════════════════════
 // ADMIN LAYOUT - CLIENT COMPONENT
 // Client-side logic for admin pages
+// Includes all providers (Clerk, Convex, Theme)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ConvexClientProvider } from "@/components/providers";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { UserProvider } from "@/contexts/UserContext";
 
-const NAV_ITEMS = [
-  { href: '/admin/campaigns', label: 'Campaigns', icon: '📝' },
-];
+const NAV_ITEMS = [{ href: "/admin/campaigns", label: "Campaigns", icon: "📝" }];
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
 }
 
 export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
+  return (
+    <ConvexClientProvider>
+      <UserProvider>
+        <ThemeProvider>
+          <AdminLayoutInner>{children}</AdminLayoutInner>
+        </ThemeProvider>
+      </UserProvider>
+    </ConvexClientProvider>
+  );
+}
+
+function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: "var(--bg-primary)" }}>
       {/* Admin Header */}
       <header
         className="sticky top-0 z-50 px-4 py-3 border-b"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          borderColor: 'var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          borderColor: "var(--border-default)",
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between">
@@ -38,7 +49,7 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
               <span className="text-2xl">🐺</span>
               <span
                 className="font-bebas text-xl tracking-wider"
-                style={{ color: 'var(--text-primary)' }}
+                style={{ color: "var(--text-primary)" }}
               >
                 YP ADMIN
               </span>
@@ -53,11 +64,11 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
                   className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
                   style={{
                     backgroundColor: pathname.startsWith(item.href)
-                      ? 'var(--accent-primary)'
-                      : 'transparent',
+                      ? "var(--accent-primary)"
+                      : "transparent",
                     color: pathname.startsWith(item.href)
-                      ? 'var(--bg-primary)'
-                      : 'var(--text-secondary)',
+                      ? "var(--bg-primary)"
+                      : "var(--text-secondary)",
                   }}
                 >
                   {item.icon} {item.label}
@@ -66,20 +77,14 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
             </nav>
           </div>
 
-          <Link
-            href="/home"
-            className="text-sm"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <Link href="/home" className="text-sm" style={{ color: "var(--text-tertiary)" }}>
             ← Back to App
           </Link>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto p-4">
-        {children}
-      </main>
+      <main className="max-w-6xl mx-auto p-4">{children}</main>
     </div>
   );
 }

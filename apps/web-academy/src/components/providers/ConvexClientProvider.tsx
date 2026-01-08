@@ -3,12 +3,12 @@
 // Wraps app with Clerk + Convex authentication
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { ClerkProvider, useAuth } from '@clerk/nextjs';
-import { ConvexProviderWithClerk } from 'convex/react-clerk';
-import { ConvexReactClient } from 'convex/react';
-import { ReactNode } from 'react';
+import { ClerkProvider, useAuth } from "@clerk/nextjs";
+import { ConvexReactClient } from "convex/react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
+import type { ReactNode } from "react";
 
 // Initialize Convex client - guard against undefined URL during build
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
@@ -33,27 +33,27 @@ export function ConvexClientProvider({ children }: ConvexClientProviderProps) {
   const clerkAppearance = {
     // Match our dark theme
     variables: {
-      colorPrimary: '#00F6E0',
-      colorBackground: '#0A0A0A',
-      colorInputBackground: '#1A1A1A',
-      colorInputText: '#FFFFFF',
-      colorText: '#FFFFFF',
-      colorTextSecondary: '#A0A0A0',
-      borderRadius: '12px',
+      colorPrimary: "#00F6E0",
+      colorBackground: "#0A0A0A",
+      colorInputBackground: "#1A1A1A",
+      colorInputText: "#FFFFFF",
+      colorText: "#FFFFFF",
+      colorTextSecondary: "#A0A0A0",
+      borderRadius: "12px",
     },
     elements: {
       formButtonPrimary: {
-        backgroundColor: '#00F6E0',
-        color: '#000000',
-        fontFamily: 'var(--font-bebas)',
-        letterSpacing: '0.1em',
-        '&:hover': {
-          backgroundColor: '#00D4C4',
+        backgroundColor: "#00F6E0",
+        color: "#000000",
+        fontFamily: "var(--font-bebas)",
+        letterSpacing: "0.1em",
+        "&:hover": {
+          backgroundColor: "#00D4C4",
         },
       },
       card: {
-        backgroundColor: '#0A0A0A',
-        border: '1px solid #2A2A2A',
+        backgroundColor: "#0A0A0A",
+        border: "1px solid #2A2A2A",
       },
     },
   };

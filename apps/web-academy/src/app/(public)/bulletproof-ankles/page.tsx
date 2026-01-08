@@ -3,10 +3,11 @@
 // Vibe: Cyberpunk 2077 × Nike Pro Training
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, CheckCircle, Shield, Activity, Lock, Zap, Target, Timer } from 'lucide-react';
+import { Activity, ArrowRight, CheckCircle, Lock, Shield, Target, Timer, Zap } from "lucide-react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
@@ -24,10 +25,10 @@ interface StatCardProps {
 // ─────────────────────────────────────────────────────────────
 
 export default function BulletproofAnklesLP() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,29 +36,32 @@ export default function BulletproofAnklesLP() {
     if (!email || isSubmitting) return;
 
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     try {
       // ConvertKit Form ID - Replace with your actual form ID
-      const CONVERTKIT_FORM_ID = process.env.NEXT_PUBLIC_CONVERTKIT_FORM_ID || 'YOUR_FORM_ID';
+      const CONVERTKIT_FORM_ID = process.env.NEXT_PUBLIC_CONVERTKIT_FORM_ID || "YOUR_FORM_ID";
 
-      const response = await fetch(`https://api.convertkit.com/v3/forms/${CONVERTKIT_FORM_ID}/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          api_key: process.env.NEXT_PUBLIC_CONVERTKIT_API_KEY,
-          email: email,
-          tags: ['bulletproof-ankles', 'lead-magnet'],
-        }),
-      });
+      const response = await fetch(
+        `https://api.convertkit.com/v3/forms/${CONVERTKIT_FORM_ID}/subscribe`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            api_key: process.env.NEXT_PUBLIC_CONVERTKIT_API_KEY,
+            email: email,
+            tags: ["bulletproof-ankles", "lead-magnet"],
+          }),
+        },
+      );
 
       if (response.ok) {
         setIsSuccess(true);
       } else {
-        setError('Something went wrong. Try again.');
+        setError("Something went wrong. Try again.");
       }
     } catch {
-      setError('Network error. Check your connection.');
+      setError("Network error. Check your connection.");
     } finally {
       setIsSubmitting(false);
     }
@@ -70,7 +74,6 @@ export default function BulletproofAnklesLP() {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-accent-primary selection:text-black font-inter noise-overlay">
-
       {/* ════════════════════════════════════════════════════════════
           HERO SECTION: THE "HOOK"
           ════════════════════════════════════════════════════════════ */}
@@ -101,8 +104,8 @@ export default function BulletproofAnklesLP() {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-text-secondary mb-10 max-w-[50ch] mx-auto leading-relaxed">
-            The definitive biomechanical protocol to eliminate sprains,
-            increase vertical force, and build explosive durability.
+            The definitive biomechanical protocol to eliminate sprains, increase vertical force, and
+            build explosive durability.
           </p>
 
           {/* ──────────────────────────────────────────────────────
@@ -121,13 +124,13 @@ export default function BulletproofAnklesLP() {
                          focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary
                          transition-all duration-200 placeholder:text-text-tertiary"
               />
-              <div className="absolute inset-0 border border-accent-primary/0 rounded-lg
-                            group-hover:border-accent-primary/20 pointer-events-none transition-colors duration-300" />
+              <div
+                className="absolute inset-0 border border-accent-primary/0 rounded-lg
+                            group-hover:border-accent-primary/20 pointer-events-none transition-colors duration-300"
+              />
             </div>
 
-            {error && (
-              <p className="text-accent-error text-sm text-left">{error}</p>
-            )}
+            {error && <p className="text-accent-error text-sm text-left">{error}</p>}
 
             <button
               type="submit"
@@ -197,26 +200,27 @@ export default function BulletproofAnklesLP() {
             Inside the <span className="text-accent-primary">System</span>
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-2xl mx-auto">
-            Everything you need to build unbreakable lower limbs and unlock explosive athletic potential.
+            Everything you need to build unbreakable lower limbs and unlock explosive athletic
+            potential.
           </p>
 
           <div className="grid gap-4">
             {[
               {
                 icon: <Target className="w-6 h-6" />,
-                text: "The 'Iso-Hold' framework for tendon stiffness"
+                text: "The 'Iso-Hold' framework for tendon stiffness",
               },
               {
                 icon: <Zap className="w-6 h-6" />,
-                text: "3-Stage Plyometric progression guide"
+                text: "3-Stage Plyometric progression guide",
               },
               {
                 icon: <Timer className="w-6 h-6" />,
-                text: "Pre-game activation routine (5 minutes)"
+                text: "Pre-game activation routine (5 minutes)",
               },
               {
                 icon: <Activity className="w-6 h-6" />,
-                text: "Video library of correct biomechanics"
+                text: "Video library of correct biomechanics",
               },
             ].map((item, i) => (
               <div
@@ -224,8 +228,10 @@ export default function BulletproofAnklesLP() {
                 className="flex items-center gap-4 p-6 bg-bg-tertiary border border-border-subtle rounded-xl
                          hover:border-accent-primary/30 transition-all duration-300 group cursor-default"
               >
-                <div className="p-3 bg-accent-primary/10 rounded-lg text-accent-primary
-                              group-hover:bg-accent-primary/20 transition-colors shrink-0">
+                <div
+                  className="p-3 bg-accent-primary/10 rounded-lg text-accent-primary
+                              group-hover:bg-accent-primary/20 transition-colors shrink-0"
+                >
                   {item.icon}
                 </div>
                 <span className="text-lg text-white font-medium group-hover:text-accent-primary transition-colors">
@@ -250,7 +256,7 @@ export default function BulletproofAnklesLP() {
             Get the protocol now. Zero cost. Maximum results.
           </p>
           <button
-            onClick={() => formRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })}
             className="inline-flex items-center gap-2 px-8 py-4 bg-accent-primary hover:bg-accent-primary-hover
                      text-black font-bold uppercase tracking-wide text-lg rounded-lg transition-all duration-200
                      shadow-[0_0_20px_rgba(0,246,224,0.3)] hover:shadow-[0_0_30px_rgba(0,246,224,0.5)]"
@@ -280,7 +286,9 @@ function StatCard({ icon, label, value, sub }: StatCardProps) {
       <div className="mb-4 p-3 bg-white/5 w-fit rounded-lg group-hover:bg-accent-primary/10 transition-colors">
         {icon}
       </div>
-      <div className="text-4xl md:text-5xl font-bebas text-white mb-1 leading-none tracking-wide">{value}</div>
+      <div className="text-4xl md:text-5xl font-bebas text-white mb-1 leading-none tracking-wide">
+        {value}
+      </div>
       <div className="text-lg font-semibold text-white/80 mb-1">{label}</div>
       <div className="text-sm text-text-tertiary">{sub}</div>
     </div>
@@ -327,8 +335,22 @@ function AnkleWireframe() {
 
             {/* Connection points */}
             <circle cx="50" cy="45" r="3" fill="currentColor" className="animate-pulse" />
-            <circle cx="50" cy="55" r="3" fill="currentColor" className="animate-pulse" style={{ animationDelay: '0.2s' }} />
-            <circle cx="40" cy="70" r="2" fill="currentColor" className="animate-pulse" style={{ animationDelay: '0.4s' }} />
+            <circle
+              cx="50"
+              cy="55"
+              r="3"
+              fill="currentColor"
+              className="animate-pulse"
+              style={{ animationDelay: "0.2s" }}
+            />
+            <circle
+              cx="40"
+              cy="70"
+              r="2"
+              fill="currentColor"
+              className="animate-pulse"
+              style={{ animationDelay: "0.4s" }}
+            />
           </g>
 
           {/* Scan lines */}
@@ -360,8 +382,20 @@ function AnkleWireframe() {
 function LoadingSpinner() {
   return (
     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+        fill="none"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
     </svg>
   );
 }
@@ -376,25 +410,25 @@ function SuccessScreen() {
   const [complete, setComplete] = useState(false);
 
   const terminalLines = [
-    '> Initializing Protocol Transfer...',
-    '> Verifying credentials: ████████ OK',
-    '> Decrypting biomechanical data...',
-    '> Downloading: iso-hold-framework.pdf',
-    '> Downloading: plyometric-progression.mp4',
-    '> Downloading: activation-routine.pdf',
-    '> Syncing video library...',
-    '',
-    '═══════════════════════════════════════',
-    '  ✓ SYSTEM UNLOCKED',
-    '  ✓ CHECK YOUR EMAIL',
-    '═══════════════════════════════════════',
+    "> Initializing Protocol Transfer...",
+    "> Verifying credentials: ████████ OK",
+    "> Decrypting biomechanical data...",
+    "> Downloading: iso-hold-framework.pdf",
+    "> Downloading: plyometric-progression.mp4",
+    "> Downloading: activation-routine.pdf",
+    "> Syncing video library...",
+    "",
+    "═══════════════════════════════════════",
+    "  ✓ SYSTEM UNLOCKED",
+    "  ✓ CHECK YOUR EMAIL",
+    "═══════════════════════════════════════",
   ];
 
   useEffect(() => {
     let currentLine = 0;
     const interval = setInterval(() => {
       if (currentLine < terminalLines.length) {
-        setLines(prev => [...prev, terminalLines[currentLine]]);
+        setLines((prev) => [...prev, terminalLines[currentLine]]);
         currentLine++;
       } else {
         clearInterval(interval);
@@ -422,7 +456,9 @@ function SuccessScreen() {
             <div className="w-3 h-3 rounded-full bg-red-500" />
             <div className="w-3 h-3 rounded-full bg-yellow-500" />
             <div className="w-3 h-3 rounded-full bg-green-500" />
-            <span className="ml-2 text-xs font-mono text-text-tertiary">yp-protocol-transfer.exe</span>
+            <span className="ml-2 text-xs font-mono text-text-tertiary">
+              yp-protocol-transfer.exe
+            </span>
           </div>
 
           {/* Terminal content */}
@@ -431,15 +467,15 @@ function SuccessScreen() {
               <div
                 key={i}
                 className={`${
-                  line.includes('✓')
-                    ? 'text-accent-primary font-bold'
-                    : line.includes('═')
-                      ? 'text-accent-gold'
-                      : 'text-text-secondary'
+                  line.includes("✓")
+                    ? "text-accent-primary font-bold"
+                    : line.includes("═")
+                      ? "text-accent-gold"
+                      : "text-text-secondary"
                 } animate-fadeIn`}
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
-                {line || '\u00A0'}
+                {line || "\u00A0"}
               </div>
             ))}
             {!complete && <span className="inline-block w-2 h-4 bg-accent-primary animate-pulse" />}
@@ -452,9 +488,7 @@ function SuccessScreen() {
             <h2 className="text-3xl font-bebas uppercase text-accent-primary mb-2 tracking-wide">
               Protocol Unlocked
             </h2>
-            <p className="text-text-secondary mb-6">
-              Check your inbox. The upgrade is waiting.
-            </p>
+            <p className="text-text-secondary mb-6">Check your inbox. The upgrade is waiting.</p>
             <a
               href="/"
               className="inline-flex items-center gap-2 px-6 py-3 border border-accent-primary/30 rounded-lg
@@ -490,11 +524,11 @@ function ConfettiExplosion() {
           className="absolute animate-confetti"
           style={{
             left: `${p.x}%`,
-            top: '-10px',
+            top: "-10px",
             width: `${p.size}px`,
             height: `${p.size}px`,
-            backgroundColor: Math.random() > 0.5 ? 'var(--accent-gold)' : 'var(--accent-primary)',
-            borderRadius: Math.random() > 0.5 ? '50%' : '0',
+            backgroundColor: Math.random() > 0.5 ? "var(--accent-gold)" : "var(--accent-primary)",
+            borderRadius: Math.random() > 0.5 ? "50%" : "0",
             animationDelay: `${p.delay}s`,
             animationDuration: `${p.duration}s`,
           }}

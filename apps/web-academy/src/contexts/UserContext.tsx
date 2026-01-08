@@ -3,25 +3,25 @@
 // Provides user data from Convex throughout the app
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
-import { useUser as useClerkUser, useAuth } from '@clerk/nextjs';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '@yp/alpha/convex/_generated/api';
-import { Id } from '@yp/alpha/convex/_generated/dataModel';
+import { useAuth, useUser as useClerkUser } from "@clerk/nextjs";
+import { api } from "@yp/alpha/convex/_generated/api";
+import type { Id } from "@yp/alpha/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
 
-export type Role = 'athlete' | 'parent';
-export type Rank = 'pup' | 'hunter' | 'alpha' | 'apex';
-export type WolfColor = 'cyan' | 'gold' | 'purple' | 'green' | 'red';
-export type SubscriptionStatus = 'free' | 'pro';
+export type Role = "athlete" | "parent";
+export type Rank = "pup" | "hunter" | "alpha" | "apex";
+export type WolfColor = "cyan" | "gold" | "purple" | "green" | "red";
+export type SubscriptionStatus = "free" | "pro";
 
 export interface ConvexUser {
-  _id: Id<'users'>;
+  _id: Id<"users">;
   clerkId: string;
   email: string;
   name: string;
@@ -38,16 +38,16 @@ export interface ConvexUser {
   subscriptionStatus: SubscriptionStatus;
   subscriptionExpiresAt?: number;
   parentCode?: string;
-  linkedParentId?: Id<'users'>;
-  linkedAthleteIds?: Id<'users'>[];
+  linkedParentId?: Id<"users">;
+  linkedAthleteIds?: Id<"users">[];
   onboardingCompletedAt?: number;
   createdAt: number;
   updatedAt: number;
 }
 
 export interface Enrollment {
-  _id: Id<'enrollments'>;
-  userId: Id<'users'>;
+  _id: Id<"enrollments">;
+  userId: Id<"users">;
   programSlug: string;
   currentDay: number;
   isActive: boolean;
@@ -72,7 +72,7 @@ export interface UserContextValue {
   xpToNextLevel: number;
 
   // Actions
-  createUser: (data: CreateUserData) => Promise<Id<'users'> | null>;
+  createUser: (data: CreateUserData) => Promise<Id<"users"> | null>;
   refetch: () => void;
 
   // Debug
@@ -89,11 +89,11 @@ export interface CreateUserData {
 }
 
 export type AuthState =
-  | 'loading'
-  | 'signed-out'
-  | 'signed-in-no-user'
-  | 'signed-in-with-user'
-  | 'error';
+  | "loading"
+  | "signed-out"
+  | "signed-in-no-user"
+  | "signed-in-with-user"
+  | "error";
 
 // ─────────────────────────────────────────────────────────────
 // CONTEXT
@@ -120,7 +120,7 @@ const defaultContextValue: UserContextValue = {
   xpToNextLevel: 1000,
   createUser: async () => null,
   refetch: () => {},
-  authState: 'loading',
+  authState: "loading",
 };
 
 export function UserProvider({ children }: UserProviderProps) {
@@ -133,11 +133,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // During SSR/SSG, render with default context
   if (!mounted) {
-    return (
-      <UserContext.Provider value={defaultContextValue}>
-        {children}
-      </UserContext.Provider>
-    );
+    return <UserContext.Provider value={defaultContextValue}>{children}</UserContext.Provider>;
   }
 
   // Client-side rendering with actual Clerk hooks
@@ -146,20 +142,17 @@ export function UserProvider({ children }: UserProviderProps) {
 
 // Separate component that uses Clerk hooks - only rendered on client
 function UserProviderClient({ children }: UserProviderProps) {
-  const [authState, setAuthState] = useState<AuthState>('loading');
+  const [authState, setAuthState] = useState<AuthState>("loading");
   const { isLoaded: clerkLoaded, isSignedIn, user: clerkUser } = useClerkUser();
   const { userId: clerkId } = useAuth();
 
   // Fetch user from Convex
-  const convexUser = useQuery(
-    api.users.getByClerkId,
-    clerkId ? { clerkId } : 'skip'
-  );
+  const convexUser = useQuery(api.users.getByClerkId, clerkId ? { clerkId } : "skip");
 
   // Fetch current enrollment
   const enrollment = useQuery(
     api.users.getCurrentEnrollment,
-    convexUser?._id ? { userId: convexUser._id } : 'skip'
+    convexUser?._id ? { userId: convexUser._id } : "skip",
   );
 
   // Create user mutation
@@ -171,34 +164,34 @@ function UserProviderClient({ children }: UserProviderProps) {
 
   useEffect(() => {
     if (!clerkLoaded) {
-      setAuthState('loading');
+      setAuthState("loading");
       return;
     }
 
     if (!isSignedIn) {
-      setAuthState('signed-out');
+      setAuthState("signed-out");
       return;
     }
 
     if (convexUser === undefined) {
       // Query still loading
-      setAuthState('loading');
+      setAuthState("loading");
       return;
     }
 
     if (convexUser === null) {
-      setAuthState('signed-in-no-user');
+      setAuthState("signed-in-no-user");
       return;
     }
 
-    setAuthState('signed-in-with-user');
+    setAuthState("signed-in-with-user");
   }, [clerkLoaded, isSignedIn, convexUser]);
 
   // ─────────────────────────────────────────────────────────
   // CREATE USER
   // ─────────────────────────────────────────────────────────
 
-  const createUser = async (data: CreateUserData): Promise<Id<'users'> | null> => {
+  const createUser = async (data: CreateUserData): Promise<Id<"users"> | null> => {
     if (!clerkId || !clerkUser?.primaryEmailAddress?.emailAddress) {
       return null;
     }
@@ -216,7 +209,7 @@ function UserProviderClient({ children }: UserProviderProps) {
       });
 
       return userId;
-    } catch (error) {
+    } catch (_error) {
       // Silently fail - the UI will handle the error state
       return null;
     }
@@ -231,7 +224,7 @@ function UserProviderClient({ children }: UserProviderProps) {
   // Level calculation (1000 XP per level)
   const xp = convexUser?.xpTotal ?? 0;
   const level = Math.floor(xp / 1000) + 1;
-  const xpInLevel = xp % 1000;
+  const _xpInLevel = xp % 1000;
   const xpToNextLevel = 1000;
 
   // ─────────────────────────────────────────────────────────
@@ -254,11 +247,7 @@ function UserProviderClient({ children }: UserProviderProps) {
     authState,
   };
 
-  return (
-    <UserContext.Provider value={value}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -269,7 +258,7 @@ export function useUserContext() {
   const context = useContext(UserContext);
 
   if (!context) {
-    throw new Error('useUserContext must be used within a UserProvider');
+    throw new Error("useUserContext must be used within a UserProvider");
   }
 
   return context;
@@ -283,12 +272,12 @@ export function useCurrentUser() {
 
 export function useSubscriptionStatus() {
   const { user } = useUserContext();
-  return user?.subscriptionStatus ?? 'free';
+  return user?.subscriptionStatus ?? "free";
 }
 
 export function useIsProUser() {
   const status = useSubscriptionStatus();
-  return status === 'pro';
+  return status === "pro";
 }
 
 export default UserContext;

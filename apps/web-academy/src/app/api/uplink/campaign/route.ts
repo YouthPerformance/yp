@@ -3,10 +3,10 @@
 // Receives content campaigns from ChatGPT Custom GPTs
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
 import { api } from "@yp/alpha/convex/_generated/api";
-import { verifyUplinkToken, validateAuthor } from "@/lib/uplink-auth";
+import { ConvexHttpClient } from "convex/browser";
+import { type NextRequest, NextResponse } from "next/server";
+import { validateAuthor, verifyUplinkToken } from "@/lib/uplink-auth";
 
 // Lazy Convex client initialization to prevent build errors
 let convex: ConvexHttpClient | null = null;
@@ -14,7 +14,7 @@ function getConvexClient(): ConvexHttpClient {
   if (!convex) {
     const url = process.env.NEXT_PUBLIC_CONVEX_URL;
     if (!url) {
-      throw new Error('NEXT_PUBLIC_CONVEX_URL environment variable is not set');
+      throw new Error("NEXT_PUBLIC_CONVEX_URL environment variable is not set");
     }
     convex = new ConvexHttpClient(url);
   }
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     if (!verifyUplinkToken(request)) {
       return NextResponse.json(
         { error: "Unauthorized", message: "Invalid or missing Bearer token" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     } catch {
       return NextResponse.json(
         { error: "Bad Request", message: "Invalid JSON payload" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
           error: "Bad Request",
           message: "Invalid author. Must be 'ADAM' or 'JAMES'",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -86,31 +86,28 @@ export async function POST(request: NextRequest) {
     if (!payload.content?.blog?.title || !payload.content?.blog?.body) {
       return NextResponse.json(
         { error: "Bad Request", message: "Missing blog title or body" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!payload.content?.linkedin?.body) {
       return NextResponse.json(
         { error: "Bad Request", message: "Missing LinkedIn content" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    if (
-      !payload.content?.twitter?.thread ||
-      !Array.isArray(payload.content.twitter.thread)
-    ) {
+    if (!payload.content?.twitter?.thread || !Array.isArray(payload.content.twitter.thread)) {
       return NextResponse.json(
         { error: "Bad Request", message: "Missing or invalid Twitter thread" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!payload.content?.instagram?.caption) {
       return NextResponse.json(
         { error: "Bad Request", message: "Missing Instagram caption" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -153,7 +150,7 @@ export async function POST(request: NextRequest) {
         error: "Internal Server Error",
         message: "Failed to create campaign",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
