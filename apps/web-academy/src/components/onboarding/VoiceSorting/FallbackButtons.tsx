@@ -3,10 +3,10 @@
 // Tap alternatives when voice isn't working
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import type { SortingStep, WolfIdentity } from '@/hooks/useVoiceSorting';
+import { motion } from "framer-motion";
+import type { SortingStep, WolfIdentity } from "@/hooks/useVoiceSorting";
 
 interface FallbackButtonsProps {
   step: SortingStep;
@@ -21,17 +21,15 @@ export function FallbackButtons({
   onVolumeAnswer,
   onAmbitionAnswer,
 }: FallbackButtonsProps) {
-  if (step === 'pain') {
+  if (step === "pain") {
     return (
       <motion.div
         className="flex flex-col gap-3 w-full max-w-xs"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3 }}
+        transition={{ delay: 0.3 }}
       >
-        <p className="text-gray-500 text-sm text-center mb-2">
-          Or tap to answer:
-        </p>
+        <p className="text-gray-500 text-sm text-center mb-2">Or tap to answer:</p>
         <button
           onClick={() => onPainAnswer(true)}
           className="w-full py-4 px-6 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-medium hover:bg-red-500/30 transition-colors"
@@ -48,17 +46,15 @@ export function FallbackButtons({
     );
   }
 
-  if (step === 'volume') {
+  if (step === "volume") {
     return (
       <motion.div
         className="flex flex-col gap-3 w-full max-w-xs"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3 }}
+        transition={{ delay: 0.3 }}
       >
-        <p className="text-gray-500 text-sm text-center mb-2">
-          Or tap to answer:
-        </p>
+        <p className="text-gray-500 text-sm text-center mb-2">Or tap to answer:</p>
         <button
           onClick={() => onVolumeAnswer(true)}
           className="w-full py-4 px-6 rounded-xl bg-orange-500/20 border border-orange-500/30 text-orange-400 font-medium hover:bg-orange-500/30 transition-colors"
@@ -75,31 +71,29 @@ export function FallbackButtons({
     );
   }
 
-  if (step === 'ambition') {
+  if (step === "ambition") {
     return (
       <motion.div
         className="flex flex-col gap-3 w-full max-w-xs"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3 }}
+        transition={{ delay: 0.3 }}
       >
-        <p className="text-gray-500 text-sm text-center mb-2">
-          What do you want most?
-        </p>
+        <p className="text-gray-500 text-sm text-center mb-2">What do you want most?</p>
         <button
-          onClick={() => onAmbitionAnswer('speed')}
+          onClick={() => onAmbitionAnswer("speed")}
           className="w-full py-4 px-6 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 transition-colors flex items-center justify-center gap-2"
         >
           <span>⚡</span> Speed
         </button>
         <button
-          onClick={() => onAmbitionAnswer('air')}
+          onClick={() => onAmbitionAnswer("air")}
           className="w-full py-4 px-6 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 font-medium hover:bg-yellow-500/30 transition-colors flex items-center justify-center gap-2"
         >
           <span>🦅</span> Bounce / Dunking
         </button>
         <button
-          onClick={() => onAmbitionAnswer('tank')}
+          onClick={() => onAmbitionAnswer("tank")}
           className="w-full py-4 px-6 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 font-medium hover:bg-purple-500/30 transition-colors flex items-center justify-center gap-2"
         >
           <span>🛡️</span> Strength / Power
