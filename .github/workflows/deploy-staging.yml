@@ -1,0 +1,243 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: false
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+jobs:
+  # ============================================
+  # DETECT: Which apps changed and need deploy
+  # ============================================
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      web-academy: ${{ steps.changes.outputs.web-academy }}
+      marketing: ${{ steps.changes.outputs.marketing }}
+      shop: ${{ steps.changes.outputs.shop }}
+      convex: ${{ steps.changes.outputs.convex }}
+      packages: ${{ steps.changes.outputs.packages }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect file changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            web-academy:
+              - 'apps/web-academy/**'
+              - 'packages/**'
+            marketing:
+              - 'apps/marketing/**'
+              - 'packages/**'
+            shop:
+              - 'apps/shop/**'
+              - 'packages/**'
+            convex:
+              - 'packages/yp-alpha/convex/**'
+            packages:
+              - 'packages/**'
+
+  # ============================================
+  # DEPLOY CONVEX: Schema and functions
+  # ============================================
+  deploy-convex:
+    name: Deploy Convex (Staging)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.convex == 'true' || needs.detect-changes.outputs.packages == 'true'
+    environment:
+      name: staging
+      url: https://dashboard.convex.dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build yp-alpha
+        run: pnpm turbo run build --filter=@yp/alpha
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Deploy Convex Functions
+        working-directory: packages/yp-alpha
+        run: npx convex deploy --cmd 'echo "Deploying to staging..."'
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_STAGING }}
+
+      - name: Notify deployment
+        run: |
+          echo "::notice::✅ Convex deployed to staging"
+          echo "📦 Convex functions updated"
+
+  # ============================================
+  # DEPLOY WEB ACADEMY: Vercel (auto-handled)
+  # ============================================
+  deploy-web-academy:
+    name: Deploy Web Academy (Staging)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.web-academy == 'true'
+    environment:
+      name: staging
+      url: https://staging.academy.youthperformance.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web-academy
+        run: pnpm turbo run build --filter=@yp/web-academy
+        env:
+          NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL_STAGING }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Deploy to Vercel (Preview)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_WEB_ACADEMY }}
+          working-directory: ./apps/web-academy
+          alias-domains: staging.academy.youthperformance.com
+
+  # ============================================
+  # DEPLOY MARKETING: Cloudflare Pages
+  # ============================================
+  deploy-marketing:
+    name: Deploy Marketing (Staging)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.marketing == 'true'
+    environment:
+      name: staging
+      url: https://staging.youthperformance.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build marketing
+        run: pnpm turbo run build --filter=@yp/marketing
+        env:
+          VITE_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL_STAGING }}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/marketing/dist --project-name=yp-landing-staging
+
+  # ============================================
+  # DEPLOY SHOP: Shopify Oxygen (Preview)
+  # ============================================
+  deploy-shop:
+    name: Deploy Shop (Staging)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shop == 'true'
+    environment:
+      name: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shop
+        run: pnpm turbo run build --filter=@yp/shop
+        env:
+          PUBLIC_STORE_DOMAIN: ${{ vars.PUBLIC_STORE_DOMAIN }}
+          PUBLIC_STOREFRONT_API_TOKEN: ${{ secrets.PUBLIC_STOREFRONT_API_TOKEN }}
+          PUBLIC_STOREFRONT_API_VERSION: '2024-10'
+
+      - name: Deploy to Oxygen (Preview)
+        working-directory: apps/shop
+        run: npx shopify hydrogen deploy --env preview --no-lockfile-check
+        env:
+          SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000078410 }}
+
+  # ============================================
+  # SUMMARY: Deployment status
+  # ============================================
+  staging-summary:
+    name: Staging Summary
+    runs-on: ubuntu-latest
+    needs: [detect-changes, deploy-convex, deploy-web-academy, deploy-marketing, deploy-shop]
+    if: always()
+
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "## 🚀 Staging Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| App | Changed | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Convex | ${{ needs.detect-changes.outputs.convex }} | ${{ needs.deploy-convex.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Web Academy | ${{ needs.detect-changes.outputs.web-academy }} | ${{ needs.deploy-web-academy.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Marketing | ${{ needs.detect-changes.outputs.marketing }} | ${{ needs.deploy-marketing.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Shop | ${{ needs.detect-changes.outputs.shop }} | ${{ needs.deploy-shop.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY

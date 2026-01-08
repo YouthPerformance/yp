@@ -1,0 +1,311 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_convex:
+        description: 'Deploy Convex functions'
+        type: boolean
+        default: true
+      deploy_web_academy:
+        description: 'Deploy Web Academy'
+        type: boolean
+        default: true
+      deploy_marketing:
+        description: 'Deploy Marketing'
+        type: boolean
+        default: true
+      deploy_shop:
+        description: 'Deploy Shop'
+        type: boolean
+        default: true
+      skip_tests:
+        description: 'Skip pre-flight tests (emergency only)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+jobs:
+  # ============================================
+  # PRE-FLIGHT: Validate before production deploy
+  # ============================================
+  pre-flight:
+    name: Pre-flight Checks
+    runs-on: ubuntu-latest
+    if: inputs.skip_tests == false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm turbo run typecheck
+        env:
+          NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+      - name: Lint
+        run: pnpm turbo run lint
+
+      - name: Run tests
+        run: pnpm turbo run test
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+
+      - name: Security scan
+        run: |
+          echo "🔍 Running security scan..."
+          SECRETS_FOUND=0
+
+          if grep -rn "sk-ant-[a-zA-Z0-9]\{20,\}\|sk-[a-zA-Z0-9]\{40,\}\|shpat_[a-zA-Z0-9]\{20,\}" \
+            --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
+            apps/ packages/ 2>/dev/null | grep -v ".env" | grep -v "node_modules"; then
+            echo "::error::Hardcoded API keys detected!"
+            SECRETS_FOUND=1
+          fi
+
+          if [ $SECRETS_FOUND -eq 1 ]; then
+            exit 1
+          fi
+
+          echo "✅ Security scan passed"
+
+      - name: Build all apps
+        run: pnpm turbo run build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          PUBLIC_STORE_DOMAIN: ${{ vars.PUBLIC_STORE_DOMAIN }}
+          PUBLIC_STOREFRONT_API_TOKEN: ${{ secrets.PUBLIC_STOREFRONT_API_TOKEN }}
+          PUBLIC_STOREFRONT_API_VERSION: '2024-10'
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+  # ============================================
+  # DEPLOY CONVEX: Production functions
+  # ============================================
+  deploy-convex:
+    name: Deploy Convex (Production)
+    runs-on: ubuntu-latest
+    needs: pre-flight
+    if: always() && (needs.pre-flight.result == 'success' || inputs.skip_tests == true) && inputs.deploy_convex == true
+    environment:
+      name: production
+      url: https://dashboard.convex.dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build yp-alpha
+        run: pnpm turbo run build --filter=@yp/alpha
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Deploy Convex Functions (Production)
+        working-directory: packages/yp-alpha
+        run: npx convex deploy --cmd 'echo "Deploying to production..."'
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PROD }}
+
+      - name: Notify deployment
+        run: |
+          echo "::notice::✅ Convex deployed to PRODUCTION"
+
+  # ============================================
+  # DEPLOY WEB ACADEMY: Vercel Production
+  # ============================================
+  deploy-web-academy:
+    name: Deploy Web Academy (Production)
+    runs-on: ubuntu-latest
+    needs: [pre-flight, deploy-convex]
+    if: always() && (needs.pre-flight.result == 'success' || inputs.skip_tests == true) && inputs.deploy_web_academy == true
+    environment:
+      name: production
+      url: https://academy.youthperformance.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web-academy
+        run: pnpm turbo run build --filter=@yp/web-academy
+        env:
+          NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_WEB_ACADEMY }}
+          vercel-args: '--prod'
+          working-directory: ./apps/web-academy
+
+  # ============================================
+  # DEPLOY MARKETING: Cloudflare Pages Production
+  # ============================================
+  deploy-marketing:
+    name: Deploy Marketing (Production)
+    runs-on: ubuntu-latest
+    needs: pre-flight
+    if: always() && (needs.pre-flight.result == 'success' || inputs.skip_tests == true) && inputs.deploy_marketing == true
+    environment:
+      name: production
+      url: https://youthperformance.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build marketing
+        run: pnpm turbo run build --filter=@yp/marketing
+        env:
+          VITE_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+      - name: Deploy to Cloudflare Pages (Production)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/marketing/dist --project-name=yp-landing --branch=main
+
+  # ============================================
+  # DEPLOY SHOP: Shopify Oxygen Production
+  # ============================================
+  deploy-shop:
+    name: Deploy Shop (Production)
+    runs-on: ubuntu-latest
+    needs: pre-flight
+    if: always() && (needs.pre-flight.result == 'success' || inputs.skip_tests == true) && inputs.deploy_shop == true
+    environment:
+      name: production
+      url: https://shop.youthperformance.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shop
+        run: pnpm turbo run build --filter=@yp/shop
+        env:
+          PUBLIC_STORE_DOMAIN: ${{ vars.PUBLIC_STORE_DOMAIN }}
+          PUBLIC_STOREFRONT_API_TOKEN: ${{ secrets.PUBLIC_STOREFRONT_API_TOKEN }}
+          PUBLIC_STOREFRONT_API_VERSION: '2024-10'
+
+      - name: Deploy to Oxygen (Production)
+        working-directory: apps/shop
+        run: npx shopify hydrogen deploy --no-lockfile-check
+        env:
+          SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000078410 }}
+
+  # ============================================
+  # SUMMARY: Production deployment status
+  # ============================================
+  production-summary:
+    name: Production Summary
+    runs-on: ubuntu-latest
+    needs: [pre-flight, deploy-convex, deploy-web-academy, deploy-marketing, deploy-shop]
+    if: always()
+
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "## 🚀 PRODUCTION Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| App | Requested | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Pre-flight | - | ${{ needs.pre-flight.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Convex | ${{ inputs.deploy_convex }} | ${{ needs.deploy-convex.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Web Academy | ${{ inputs.deploy_web_academy }} | ${{ needs.deploy-web-academy.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Marketing | ${{ inputs.deploy_marketing }} | ${{ needs.deploy-marketing.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Shop | ${{ inputs.deploy_shop }} | ${{ needs.deploy-shop.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check for failures
+          if [[ "${{ needs.deploy-convex.result }}" == "failure" ]] || \
+             [[ "${{ needs.deploy-web-academy.result }}" == "failure" ]] || \
+             [[ "${{ needs.deploy-marketing.result }}" == "failure" ]] || \
+             [[ "${{ needs.deploy-shop.result }}" == "failure" ]]; then
+            echo "⚠️ **Some deployments failed. Check logs above.**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **All requested deployments completed successfully!**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Production deployment had failures. Review logs immediately."
