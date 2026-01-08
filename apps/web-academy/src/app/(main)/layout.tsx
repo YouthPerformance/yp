@@ -1,41 +1,18 @@
 // ═══════════════════════════════════════════════════════════
 // MAIN APP LAYOUT
 // Wraps all authenticated routes with BottomNav
-// Includes UserProvider for state management
+// Force dynamic to avoid SSG issues with Clerk hooks
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+import { MainLayoutClient } from './layout-client';
 
-import { useState } from 'react';
-import { BottomNav } from '@/components/navigation';
-import { UpsellModal } from '@/components/modals';
-import { useUserContext } from '@/contexts/UserContext';
+// Force dynamic rendering - Clerk hooks don't work during SSG
+export const dynamic = 'force-dynamic';
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useUserContext();
-  const subscriptionStatus = user?.subscriptionStatus || 'free';
-  const [showUpsellModal, setShowUpsellModal] = useState(false);
-
-  return (
-    <div
-      className="min-h-screen pb-20"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
-    >
-      {children}
-
-      <BottomNav
-        subscriptionStatus={subscriptionStatus}
-        onLockedClick={() => setShowUpsellModal(true)}
-      />
-
-      <UpsellModal
-        isOpen={showUpsellModal}
-        onClose={() => setShowUpsellModal(false)}
-      />
-    </div>
-  );
+  return <MainLayoutClient>{children}</MainLayoutClient>;
 }

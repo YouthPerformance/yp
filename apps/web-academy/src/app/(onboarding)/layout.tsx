@@ -4,20 +4,15 @@
 // No bottom navigation - focused flow
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+import { OnboardingLayoutClient } from './layout-client';
 
-import { OnboardingProvider } from '@/contexts/OnboardingContext';
+// Force dynamic rendering - Clerk hooks don't work during SSG
+export const dynamic = 'force-dynamic';
 
 export default function OnboardingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <OnboardingProvider>
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
-        {children}
-      </div>
-    </OnboardingProvider>
-  );
+  return <OnboardingLayoutClient>{children}</OnboardingLayoutClient>;
 }

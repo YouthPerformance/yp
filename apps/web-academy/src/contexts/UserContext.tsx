@@ -109,11 +109,46 @@ interface UserProviderProps {
   children: ReactNode;
 }
 
+// SSR-safe default context value
+const defaultContextValue: UserContextValue = {
+  isLoaded: false,
+  isSignedIn: false,
+  user: null,
+  enrollment: null,
+  currentDay: 1,
+  level: 1,
+  xpToNextLevel: 1000,
+  createUser: async () => null,
+  refetch: () => {},
+  authState: 'loading',
+};
+
 export function UserProvider({ children }: UserProviderProps) {
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted on client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // During SSR/SSG, render with default context
+  if (!mounted) {
+    return (
+      <UserContext.Provider value={defaultContextValue}>
+        {children}
+      </UserContext.Provider>
+    );
+  }
+
+  // Client-side rendering with actual Clerk hooks
+  return <UserProviderClient>{children}</UserProviderClient>;
+}
+
+// Separate component that uses Clerk hooks - only rendered on client
+function UserProviderClient({ children }: UserProviderProps) {
+  const [authState, setAuthState] = useState<AuthState>('loading');
   const { isLoaded: clerkLoaded, isSignedIn, user: clerkUser } = useClerkUser();
   const { userId: clerkId } = useAuth();
-
-  const [authState, setAuthState] = useState<AuthState>('loading');
 
   // Fetch user from Convex
   const convexUser = useQuery(

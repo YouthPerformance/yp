@@ -8,8 +8,18 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "@yp/alpha/convex/_generated/api";
 import { verifyUplinkToken, validateAuthor } from "@/lib/uplink-auth";
 
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+// Lazy Convex client initialization to prevent build errors
+let convex: ConvexHttpClient | null = null;
+function getConvexClient(): ConvexHttpClient {
+  if (!convex) {
+    const url = process.env.NEXT_PUBLIC_CONVEX_URL;
+    if (!url) {
+      throw new Error('NEXT_PUBLIC_CONVEX_URL environment variable is not set');
+    }
+    convex = new ConvexHttpClient(url);
+  }
+  return convex;
+}
 
 // ─────────────────────────────────────────────────────────────
 // TYPE DEFINITIONS
@@ -105,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 5. Create campaign in Convex
-    const result = await convex.mutation(api.campaigns.createCampaign, {
+    const result = await getConvexClient().mutation(api.campaigns.createCampaign, {
       author,
       rawInput: payload.rawInput || "",
       content: {

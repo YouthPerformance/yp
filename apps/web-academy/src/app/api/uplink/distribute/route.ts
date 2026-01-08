@@ -8,8 +8,18 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "@yp/alpha/convex/_generated/api";
 import { Id } from "@yp/alpha/convex/_generated/dataModel";
 
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+// Lazy Convex client initialization to prevent build errors
+let convex: ConvexHttpClient | null = null;
+function getConvexClient(): ConvexHttpClient {
+  if (!convex) {
+    const url = process.env.NEXT_PUBLIC_CONVEX_URL;
+    if (!url) {
+      throw new Error('NEXT_PUBLIC_CONVEX_URL environment variable is not set');
+    }
+    convex = new ConvexHttpClient(url);
+  }
+  return convex;
+}
 
 // ─────────────────────────────────────────────────────────────
 // POST: Distribute campaign to Make.com
@@ -28,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Fetch campaign with assets
-    const campaign = await convex.query(api.campaigns.getCampaign, {
+    const campaign = await getConvexClient().query(api.campaigns.getCampaign, {
       campaignId: campaignId as Id<"campaigns">,
     });
 
@@ -94,7 +104,7 @@ export async function POST(request: NextRequest) {
     if (makeResponse.ok) {
       const responseData = await makeResponse.json().catch(() => ({}));
 
-      await convex.mutation(api.campaigns.recordDistribution, {
+      await getConvexClient().mutation(api.campaigns.recordDistribution, {
         campaignId: campaignId as Id<"campaigns">,
         success: true,
         response: responseData,
@@ -108,7 +118,7 @@ export async function POST(request: NextRequest) {
     } else {
       const errorText = await makeResponse.text().catch(() => "Unknown error");
 
-      await convex.mutation(api.campaigns.recordDistribution, {
+      await getConvexClient().mutation(api.campaigns.recordDistribution, {
         campaignId: campaignId as Id<"campaigns">,
         success: false,
         errorMessage: `Make.com error: ${makeResponse.status} - ${errorText}`,

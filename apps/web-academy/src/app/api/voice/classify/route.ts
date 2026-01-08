@@ -7,9 +7,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+// Lazy initialization to prevent build errors when env var is missing
+let groq: Groq | null = null;
+function getGroqClient(): Groq {
+  if (!groq) {
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error('GROQ_API_KEY environment variable is not set');
+    }
+    groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
+  }
+  return groq;
+}
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
@@ -235,7 +245,7 @@ Respond with JSON only:
 
   const startTime = Date.now();
 
-  const completion = await groq.chat.completions.create({
+  const completion = await getGroqClient().chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [
       {
