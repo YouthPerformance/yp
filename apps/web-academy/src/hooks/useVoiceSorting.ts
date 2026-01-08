@@ -212,6 +212,7 @@ export function useVoiceSorting() {
         deepgramSocketRef.current = socket;
 
         let finalTranscript = "";
+        let lastInterimTranscript = ""; // Track interim results as fallback
         let silenceTimeout: NodeJS.Timeout;
         let hardTimeout: NodeJS.Timeout;
 
@@ -257,6 +258,7 @@ export function useVoiceSorting() {
 
             if (data.is_final) {
               finalTranscript += `${transcript} `;
+              lastInterimTranscript = ""; // Clear interim since we got final
               setState((s) => ({ ...s, transcript: finalTranscript.trim() }));
 
               // Reset silence timeout on speech
@@ -267,7 +269,8 @@ export function useVoiceSorting() {
                 resolve(finalTranscript.trim());
               }, 2000);
             } else {
-              // Interim result - update UI but don't save
+              // Interim result - update UI and track as fallback
+              lastInterimTranscript = transcript;
               setState((s) => ({ ...s, transcript: finalTranscript + transcript }));
             }
           }
@@ -275,13 +278,17 @@ export function useVoiceSorting() {
 
         socket.onerror = () => {
           cleanup();
-          resolve(finalTranscript.trim() || "");
+          // Use interim transcript as fallback if no final results
+          resolve(finalTranscript.trim() || lastInterimTranscript.trim());
         };
 
         // Hard timeout
         hardTimeout = setTimeout(() => {
           cleanup();
-          resolve(finalTranscript.trim() || "");
+          // Use interim transcript as fallback if no final results
+          const result = finalTranscript.trim() || lastInterimTranscript.trim();
+          console.log(`[VoiceSorting] Hard timeout - final: "${finalTranscript}", interim: "${lastInterimTranscript}", using: "${result}"`);
+          resolve(result);
         }, timeoutMs);
       } catch (error) {
         setState((s) => ({ ...s, isListening: false, error: String(error) }));
