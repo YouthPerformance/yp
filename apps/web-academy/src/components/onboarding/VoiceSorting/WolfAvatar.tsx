@@ -102,7 +102,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         }}
       >
         <Image
-          src="/images/wolffront_nobg.png"
+          src="/images/wolffront.webp"
           alt="YP Wolf"
           width={288}
           height={288}
@@ -133,7 +133,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
       {/* Speaking indicator - sound waves */}
       {isSpeaking && (
         <motion.div
-          className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1"
+          className="absolute -bottom-8 left-0 right-0 flex items-end justify-center gap-1"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -161,7 +161,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
       {/* Listening indicator - pulsing mic waves */}
       {isListening && !isSpeaking && (
         <motion.div
-          className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1"
+          className="absolute -bottom-8 left-0 right-0 flex items-end justify-center gap-1"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
