@@ -99,7 +99,7 @@ export default function AuthPage() {
         <SignIn
           appearance={clerkAppearance}
           routing="path"
-          path="/auth"
+          path="/login"
           afterSignInUrl="/dashboard"
           afterSignUpUrl="/dashboard"
         />

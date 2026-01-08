@@ -1,96 +1,37 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+/**
+ * AuthContext - Clerk-based Authentication
+ *
+ * This context wraps Clerk's hooks for convenience and
+ * maintains backward compatibility with existing components.
+ */
 
-const API_URL = 'http://localhost:3010/api'
+import { createContext, useContext } from 'react'
+import { useUser, useAuth as useClerkAuth } from '@clerk/clerk-react'
+
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [token, setToken] = useState(localStorage.getItem('token'))
-
-  useEffect(() => {
-    // Check for existing token and validate
-    const checkAuth = async () => {
-      const storedToken = localStorage.getItem('token')
-      if (storedToken) {
-        try {
-          const response = await fetch(`${API_URL}/auth/me`, {
-            headers: {
-              'Authorization': `Bearer ${storedToken}`
-            }
-          })
-          if (response.ok) {
-            const userData = await response.json()
-            setUser(userData)
-            setToken(storedToken)
-          } else {
-            localStorage.removeItem('token')
-            setToken(null)
-          }
-        } catch (error) {
-          console.error('Auth check failed:', error)
-          localStorage.removeItem('token')
-          setToken(null)
-        }
-      }
-      setLoading(false)
-    }
-
-    checkAuth()
-  }, [])
-
-  const login = async (email, password) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.message || 'Login failed')
-    }
-
-    const data = await response.json()
-    localStorage.setItem('token', data.token)
-    setToken(data.token)
-    setUser(data.user)
-    return data
-  }
-
-  const register = async (name, email, password) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.message || 'Registration failed')
-    }
-
-    const data = await response.json()
-    localStorage.setItem('token', data.token)
-    setToken(data.token)
-    setUser(data.user)
-    return data
-  }
-
-  const logout = () => {
-    localStorage.removeItem('token')
-    setToken(null)
-    setUser(null)
-  }
+  const { user, isLoaded, isSignedIn } = useUser()
+  const { signOut } = useClerkAuth()
 
   const value = {
-    user,
-    token,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    register,
-    logout
+    // User data
+    user: user ? {
+      id: user.id,
+      email: user.primaryEmailAddress?.emailAddress,
+      name: user.fullName || user.firstName,
+      imageUrl: user.imageUrl,
+    } : null,
+
+    // State
+    loading: !isLoaded,
+    isAuthenticated: isSignedIn,
+
+    // Actions
+    logout: signOut,
+
+    // Clerk raw access
+    clerkUser: user,
   }
 
   return (
