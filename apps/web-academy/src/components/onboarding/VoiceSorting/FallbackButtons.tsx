@@ -29,18 +29,18 @@ export function FallbackButtons({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <p className="text-gray-500 text-sm text-center mb-2">Or tap to answer:</p>
+        <p className="text-gray-500 text-xs text-center mb-3 uppercase tracking-wider">Tap to answer</p>
         <button
           onClick={() => onPainAnswer(true)}
-          className="w-full py-4 px-6 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 font-medium hover:bg-red-500/30 transition-colors"
+          className="w-full py-4 px-6 rounded-xl bg-red-500/10 border border-red-500/40 text-red-400 font-semibold hover:bg-red-500/20 active:scale-95 transition-all"
         >
           Yeah, something hurts
         </button>
         <button
           onClick={() => onPainAnswer(false)}
-          className="w-full py-4 px-6 rounded-xl bg-green-500/20 border border-green-500/30 text-green-400 font-medium hover:bg-green-500/30 transition-colors"
+          className="w-full py-4 px-6 rounded-xl bg-green-500/10 border border-green-500/40 text-green-400 font-semibold hover:bg-green-500/20 active:scale-95 transition-all"
         >
-          Nah, I'm good
+          Nah, I&apos;m good
         </button>
       </motion.div>
     );
@@ -54,16 +54,16 @@ export function FallbackButtons({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <p className="text-gray-500 text-sm text-center mb-2">Or tap to answer:</p>
+        <p className="text-gray-500 text-xs text-center mb-3 uppercase tracking-wider">Tap to answer</p>
         <button
           onClick={() => onVolumeAnswer(true)}
-          className="w-full py-4 px-6 rounded-xl bg-orange-500/20 border border-orange-500/30 text-orange-400 font-medium hover:bg-orange-500/30 transition-colors"
+          className="w-full py-4 px-6 rounded-xl bg-orange-500/10 border border-orange-500/40 text-orange-400 font-semibold hover:bg-orange-500/20 active:scale-95 transition-all"
         >
           Multiple teams / Feeling heavy
         </button>
         <button
           onClick={() => onVolumeAnswer(false)}
-          className="w-full py-4 px-6 rounded-xl bg-green-500/20 border border-green-500/30 text-green-400 font-medium hover:bg-green-500/30 transition-colors"
+          className="w-full py-4 px-6 rounded-xl bg-green-500/10 border border-green-500/40 text-green-400 font-semibold hover:bg-green-500/20 active:scale-95 transition-all"
         >
           One team / Feeling fresh
         </button>
@@ -79,22 +79,22 @@ export function FallbackButtons({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <p className="text-gray-500 text-sm text-center mb-2">What do you want most?</p>
+        <p className="text-gray-500 text-xs text-center mb-3 uppercase tracking-wider">What do you want to build?</p>
         <button
           onClick={() => onAmbitionAnswer("speed")}
-          className="w-full py-4 px-6 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 transition-colors flex items-center justify-center gap-2"
+          className="w-full py-4 px-6 rounded-xl bg-cyan-500/10 border border-cyan-500/40 text-cyan-400 font-semibold hover:bg-cyan-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           <span>⚡</span> Speed
         </button>
         <button
           onClick={() => onAmbitionAnswer("air")}
-          className="w-full py-4 px-6 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 font-medium hover:bg-yellow-500/30 transition-colors flex items-center justify-center gap-2"
+          className="w-full py-4 px-6 rounded-xl bg-yellow-500/10 border border-yellow-500/40 text-yellow-400 font-semibold hover:bg-yellow-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
         >
-          <span>🦅</span> Bounce / Dunking
+          <span>🦅</span> Bounce / Vertical
         </button>
         <button
           onClick={() => onAmbitionAnswer("tank")}
-          className="w-full py-4 px-6 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 font-medium hover:bg-purple-500/30 transition-colors flex items-center justify-center gap-2"
+          className="w-full py-4 px-6 rounded-xl bg-purple-500/10 border border-purple-500/40 text-purple-400 font-semibold hover:bg-purple-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           <span>🛡️</span> Strength / Power
         </button>

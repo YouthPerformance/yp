@@ -23,12 +23,12 @@ interface VoiceSortingProps {
 }
 
 const STEP_PROMPTS: Record<string, string> = {
-  idle: "Tap to begin",
-  intro: "Calibrating...",
+  idle: "Ready to find your wolf identity?",
+  intro: "Preparing your session...",
   pain: "Does anything hurt when you play?",
   volume: "How many teams are you on?",
-  ambition: "Speed, bounce, or strength?",
-  reveal: "Analyzing...",
+  ambition: "What do you want to build?",
+  reveal: "Analyzing your profile...",
   complete: "Welcome to the Pack",
 };
 
@@ -85,21 +85,35 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6">
-      {/* Progress indicator */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Progress indicator - always visible */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-3">
         {["pain", "volume", "ambition"].map((s, i) => {
-          const stepIndex = ["pain", "volume", "ambition"].indexOf(step);
+          const questionSteps = ["pain", "volume", "ambition"];
+          const stepIndex = questionSteps.indexOf(step);
           const isComplete = stepIndex > i || step === "reveal" || step === "complete";
           const isCurrent = step === s;
+          const isUpcoming = step === "idle" || step === "intro";
 
           return (
             <motion.div
               key={s}
-              className={`w-3 h-3 rounded-full ${
-                isComplete ? "bg-cyan-400" : isCurrent ? "bg-cyan-400/50" : "bg-gray-700"
+              className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                isComplete
+                  ? "bg-cyan-400"
+                  : isCurrent
+                    ? "bg-cyan-400"
+                    : isUpcoming
+                      ? "bg-gray-600"
+                      : "bg-gray-700"
               }`}
-              animate={isCurrent ? { scale: [1, 1.2, 1] } : {}}
-              transition={{ duration: 1, repeat: Infinity }}
+              animate={
+                isCurrent
+                  ? { scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }
+                  : isUpcoming
+                    ? { opacity: [0.4, 0.6, 0.4] }
+                    : {}
+              }
+              transition={{ duration: isCurrent ? 0.8 : 2, repeat: Infinity }}
             />
           );
         })}

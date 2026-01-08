@@ -4,11 +4,11 @@
 // Uses the YP Wolf mascot image with dynamic effects
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import type { WolfIdentity } from '@/hooks/useVoiceSorting';
+import { motion } from "framer-motion";
+import Image from "next/image";
+import type { WolfIdentity } from "@/hooks/useVoiceSorting";
 
 interface WolfAvatarProps {
   isSpeaking: boolean;
@@ -19,26 +19,29 @@ interface WolfAvatarProps {
 
 const IDENTITY_COLORS: Record<WolfIdentity, { primary: string; glow: string; filter: string }> = {
   speed: {
-    primary: 'rgb(6, 182, 212)', // cyan-500
-    glow: 'rgba(6, 182, 212, 0.6)',
-    filter: 'drop-shadow(0 0 30px rgba(6, 182, 212, 0.8)) drop-shadow(0 0 60px rgba(6, 182, 212, 0.4))',
+    primary: "rgb(6, 182, 212)", // cyan-500
+    glow: "rgba(6, 182, 212, 0.6)",
+    filter:
+      "drop-shadow(0 0 30px rgba(6, 182, 212, 0.8)) drop-shadow(0 0 60px rgba(6, 182, 212, 0.4))",
   },
   tank: {
-    primary: 'rgb(168, 85, 247)', // purple-500
-    glow: 'rgba(168, 85, 247, 0.6)',
-    filter: 'drop-shadow(0 0 30px rgba(168, 85, 247, 0.8)) drop-shadow(0 0 60px rgba(168, 85, 247, 0.4))',
+    primary: "rgb(168, 85, 247)", // purple-500
+    glow: "rgba(168, 85, 247, 0.6)",
+    filter:
+      "drop-shadow(0 0 30px rgba(168, 85, 247, 0.8)) drop-shadow(0 0 60px rgba(168, 85, 247, 0.4))",
   },
   air: {
-    primary: 'rgb(234, 179, 8)', // yellow-500
-    glow: 'rgba(234, 179, 8, 0.6)',
-    filter: 'drop-shadow(0 0 30px rgba(234, 179, 8, 0.8)) drop-shadow(0 0 60px rgba(234, 179, 8, 0.4))',
+    primary: "rgb(234, 179, 8)", // yellow-500
+    glow: "rgba(234, 179, 8, 0.6)",
+    filter:
+      "drop-shadow(0 0 30px rgba(234, 179, 8, 0.8)) drop-shadow(0 0 60px rgba(234, 179, 8, 0.4))",
   },
 };
 
 const DEFAULT_COLORS = {
-  primary: 'rgb(0, 246, 224)', // cyan brand
-  glow: 'rgba(0, 246, 224, 0.4)',
-  filter: 'drop-shadow(0 0 20px rgba(0, 246, 224, 0.5))',
+  primary: "rgb(0, 246, 224)", // cyan brand
+  glow: "rgba(0, 246, 224, 0.4)",
+  filter: "drop-shadow(0 0 20px rgba(0, 246, 224, 0.5))",
 };
 
 export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: WolfAvatarProps) {
@@ -56,7 +59,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         transition={{
           duration: isSpeaking ? 0.3 : isListening ? 0.6 : 2,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         }}
         style={{
           background: `radial-gradient(circle, ${colors.glow} 0%, transparent 70%)`,
@@ -73,7 +76,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         transition={{
           duration: isSpeaking ? 0.2 : 1.5,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         }}
         style={{ backgroundColor: colors.glow }}
       />
@@ -91,19 +94,22 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         transition={{
           scale: { duration: revealed ? 0.6 : 0.3, repeat: isSpeaking ? Infinity : 0 },
           opacity: { duration: 0.5 },
-          y: { duration: isSpeaking ? 0.25 : 0.8, repeat: isSpeaking || isListening ? Infinity : 0 },
+          y: {
+            duration: isSpeaking ? 0.25 : 0.8,
+            repeat: isSpeaking || isListening ? Infinity : 0,
+          },
           rotate: { duration: 0.5, repeat: isListening ? Infinity : 0 },
         }}
       >
         <Image
-          src="/images/wolffront.png"
+          src="/images/wolffront_optimized.jpg"
           alt="YP Wolf"
           width={288}
           height={288}
-          className="object-contain"
+          className="object-contain rounded-full"
           style={{
             filter: revealed ? colors.filter : DEFAULT_COLORS.filter,
-            transition: 'filter 0.5s ease-out',
+            transition: "filter 0.5s ease-out",
           }}
           priority
         />
@@ -119,7 +125,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         transition={{
           duration: 2,
           repeat: Infinity,
-          ease: 'easeOut',
+          ease: "easeOut",
         }}
       />
 
@@ -182,7 +188,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
           className="absolute inset-0 rounded-full"
           initial={{ scale: 0.5, opacity: 1 }}
           animate={{ scale: 2, opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           style={{
             background: `radial-gradient(circle, ${colors.primary} 0%, transparent 70%)`,
           }}

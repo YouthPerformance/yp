@@ -3,11 +3,11 @@
 // Dramatic full-screen reveal animation
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef } from 'react';
-import type { WolfIdentity, TrainingPath } from '@/hooks/useVoiceSorting';
+import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import type { TrainingPath, WolfIdentity } from "@/hooks/useVoiceSorting";
 
 interface IdentityRevealProps {
   identity: WolfIdentity;
@@ -16,36 +16,39 @@ interface IdentityRevealProps {
   onComplete: () => void;
 }
 
-const IDENTITY_CONFIG: Record<WolfIdentity, {
-  title: string;
-  color: string;
-  bgGradient: string;
-  icon: string;
-}> = {
+const IDENTITY_CONFIG: Record<
+  WolfIdentity,
+  {
+    title: string;
+    color: string;
+    bgGradient: string;
+    icon: string;
+  }
+> = {
   speed: {
-    title: 'SPEED WOLF',
-    color: 'text-cyan-400',
-    bgGradient: 'from-cyan-900/50 via-black to-black',
-    icon: '⚡',
+    title: "SPEED WOLF",
+    color: "text-cyan-400",
+    bgGradient: "from-cyan-900/50 via-black to-black",
+    icon: "⚡",
   },
   tank: {
-    title: 'TANK WOLF',
-    color: 'text-purple-400',
-    bgGradient: 'from-purple-900/50 via-black to-black',
-    icon: '🛡️',
+    title: "TANK WOLF",
+    color: "text-purple-400",
+    bgGradient: "from-purple-900/50 via-black to-black",
+    icon: "🛡️",
   },
   air: {
-    title: 'AIR WOLF',
-    color: 'text-yellow-400',
-    bgGradient: 'from-yellow-900/50 via-black to-black',
-    icon: '🦅',
+    title: "AIR WOLF",
+    color: "text-yellow-400",
+    bgGradient: "from-yellow-900/50 via-black to-black",
+    icon: "🦅",
   },
 };
 
 const PATH_NAMES: Record<TrainingPath, string> = {
-  glass: 'RELEASE Path',
-  grinder: 'RESTORE Path',
-  prospect: 'RE-ENGINEER Path',
+  glass: "RELEASE Path",
+  grinder: "RESTORE Path",
+  prospect: "RE-ENGINEER Path",
 };
 
 export function IdentityReveal({
@@ -57,24 +60,14 @@ export function IdentityReveal({
   const config = IDENTITY_CONFIG[identity];
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Play wolf howl on mount
+  // Trigger haptic feedback on reveal
   useEffect(() => {
-    const playHowl = async () => {
-      try {
-        audioRef.current = new Audio('/sounds/wolf_howl_distant.mp3');
-        audioRef.current.volume = 0.5;
-        await audioRef.current.play();
-      } catch (e) {
-        console.log('Audio autoplay blocked:', e);
-      }
-    };
-
-    playHowl();
-
-    // Trigger haptic if available
-    if ('vibrate' in navigator) {
+    if ("vibrate" in navigator) {
       navigator.vibrate([100, 50, 200]);
     }
+
+    // TODO: Add wolf howl sound when audio file is available
+    // audioRef.current = new Audio("/sounds/wolf_howl.mp3");
 
     return () => {
       if (audioRef.current) {
@@ -99,12 +92,12 @@ export function IdentityReveal({
         transition={{ duration: 1, times: [0, 0.3, 1] }}
       >
         <motion.div
-          className={`w-4 h-4 rounded-full bg-${identity === 'speed' ? 'cyan' : identity === 'tank' ? 'purple' : 'yellow'}-400 blur-sm`}
+          className={`w-4 h-4 rounded-full bg-${identity === "speed" ? "cyan" : identity === "tank" ? "purple" : "yellow"}-400 blur-sm`}
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 1, repeat: Infinity }}
         />
         <motion.div
-          className={`w-4 h-4 rounded-full bg-${identity === 'speed' ? 'cyan' : identity === 'tank' ? 'purple' : 'yellow'}-400 blur-sm`}
+          className={`w-4 h-4 rounded-full bg-${identity === "speed" ? "cyan" : identity === "tank" ? "purple" : "yellow"}-400 blur-sm`}
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 1, repeat: Infinity, delay: 0.1 }}
         />
@@ -115,7 +108,7 @@ export function IdentityReveal({
         className="text-6xl mb-4"
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
       >
         {config.icon}
       </motion.div>
@@ -153,9 +146,11 @@ export function IdentityReveal({
       {/* CTA Button */}
       <motion.button
         className={`px-8 py-4 rounded-full font-bold text-lg text-black ${
-          identity === 'speed' ? 'bg-cyan-400 hover:bg-cyan-300' :
-          identity === 'tank' ? 'bg-purple-400 hover:bg-purple-300' :
-          'bg-yellow-400 hover:bg-yellow-300'
+          identity === "speed"
+            ? "bg-cyan-400 hover:bg-cyan-300"
+            : identity === "tank"
+              ? "bg-purple-400 hover:bg-purple-300"
+              : "bg-yellow-400 hover:bg-yellow-300"
         } transition-colors`}
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -173,13 +168,15 @@ export function IdentityReveal({
           <motion.div
             key={i}
             className={`absolute w-1 h-1 rounded-full ${
-              identity === 'speed' ? 'bg-cyan-400' :
-              identity === 'tank' ? 'bg-purple-400' :
-              'bg-yellow-400'
+              identity === "speed"
+                ? "bg-cyan-400"
+                : identity === "tank"
+                  ? "bg-purple-400"
+                  : "bg-yellow-400"
             }`}
             initial={{
-              x: '50%',
-              y: '50%',
+              x: "50%",
+              y: "50%",
               opacity: 0,
             }}
             animate={{
