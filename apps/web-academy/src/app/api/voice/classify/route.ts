@@ -4,15 +4,15 @@
 // Target: <200ms response time
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from 'next/server';
-import Groq from 'groq-sdk';
+import Groq from "groq-sdk";
+import { type NextRequest, NextResponse } from "next/server";
 
 // Lazy initialization to prevent build errors when env var is missing
 let groq: Groq | null = null;
 function getGroqClient(): Groq {
   if (!groq) {
     if (!process.env.GROQ_API_KEY) {
-      throw new Error('GROQ_API_KEY environment variable is not set');
+      throw new Error("GROQ_API_KEY environment variable is not set");
     }
     groq = new Groq({
       apiKey: process.env.GROQ_API_KEY,
@@ -25,9 +25,9 @@ function getGroqClient(): Groq {
 // TYPES
 // ─────────────────────────────────────────────────────────────
 
-export type TrainingPath = 'glass' | 'grinder' | 'prospect';
-export type WolfIdentity = 'speed' | 'tank' | 'air';
-export type QuestionType = 'pain' | 'volume' | 'ambition';
+export type TrainingPath = "glass" | "grinder" | "prospect";
+export type WolfIdentity = "speed" | "tank" | "air";
+export type QuestionType = "pain" | "volume" | "ambition";
 
 interface ClassificationRequest {
   transcript: string;
@@ -60,53 +60,139 @@ interface ClassificationResponse {
 // ─────────────────────────────────────────────────────────────
 
 const PAIN_KEYWORDS = [
-  'hurt', 'hurts', 'pain', 'painful', 'sore', 'ache', 'aching',
-  'injured', 'injury', 'bad', 'bothers', 'bothering', 'tender',
-  'swollen', 'stiff', 'tight', 'tweaked', 'sprained', 'broken'
+  "hurt",
+  "hurts",
+  "pain",
+  "painful",
+  "sore",
+  "ache",
+  "aching",
+  "injured",
+  "injury",
+  "bad",
+  "bothers",
+  "bothering",
+  "tender",
+  "swollen",
+  "stiff",
+  "tight",
+  "tweaked",
+  "sprained",
+  "broken",
 ];
 
 const BODY_PARTS = [
-  'knee', 'knees', 'ankle', 'ankles', 'back', 'hip', 'hips',
-  'shin', 'shins', 'foot', 'feet', 'leg', 'legs', 'calf', 'calves',
-  'achilles', 'hamstring', 'quad', 'groin'
+  "knee",
+  "knees",
+  "ankle",
+  "ankles",
+  "back",
+  "hip",
+  "hips",
+  "shin",
+  "shins",
+  "foot",
+  "feet",
+  "leg",
+  "legs",
+  "calf",
+  "calves",
+  "achilles",
+  "hamstring",
+  "quad",
+  "groin",
 ];
 
 const HIGH_VOLUME_KEYWORDS = [
-  'two', 'three', 'four', 'five', '2', '3', '4', '5',
-  'multiple', 'travel', 'club', 'aau', 'select',
-  'heavy', 'tired', 'exhausted', 'fatigued', 'worn out',
-  'every day', 'everyday', '7 days', 'seven days'
+  "two",
+  "three",
+  "four",
+  "five",
+  "2",
+  "3",
+  "4",
+  "5",
+  "multiple",
+  "travel",
+  "club",
+  "aau",
+  "select",
+  "heavy",
+  "tired",
+  "exhausted",
+  "fatigued",
+  "worn out",
+  "every day",
+  "everyday",
+  "7 days",
+  "seven days",
 ];
 
 const FRESH_KEYWORDS = [
-  'one', '1', 'just one', 'single',
-  'fresh', 'good', 'great', 'fine', 'ready', 'rested'
+  "one",
+  "1",
+  "just one",
+  "single",
+  "fresh",
+  "good",
+  "great",
+  "fine",
+  "ready",
+  "rested",
 ];
 
 const SPEED_KEYWORDS = [
-  'speed', 'fast', 'faster', 'quick', 'quicker', 'sprint',
-  'run', 'running', 'guard', 'winger', 'forward'
+  "speed",
+  "fast",
+  "faster",
+  "quick",
+  "quicker",
+  "sprint",
+  "run",
+  "running",
+  "guard",
+  "winger",
+  "forward",
 ];
 
 const AIR_KEYWORDS = [
-  'dunk', 'dunking', 'jump', 'jumping', 'fly', 'flying',
-  'vertical', 'bounce', 'air', 'catch bodies', 'block',
-  'above the rim', 'posterize'
+  "dunk",
+  "dunking",
+  "jump",
+  "jumping",
+  "fly",
+  "flying",
+  "vertical",
+  "bounce",
+  "air",
+  "catch bodies",
+  "block",
+  "above the rim",
+  "posterize",
 ];
 
 const TANK_KEYWORDS = [
-  'strong', 'stronger', 'strength', 'power', 'powerful',
-  'big', 'bigger', 'muscle', 'post', 'defense', 'physical'
+  "strong",
+  "stronger",
+  "strength",
+  "power",
+  "powerful",
+  "big",
+  "bigger",
+  "muscle",
+  "post",
+  "defense",
+  "physical",
 ];
 
 function keywordMatch(transcript: string, keywords: string[]): boolean {
   const lower = transcript.toLowerCase();
-  return keywords.some(kw => lower.includes(kw));
+  return keywords.some((kw) => lower.includes(kw));
 }
 
 function findBodyPart(transcript: string): string | undefined {
   const lower = transcript.toLowerCase();
-  return BODY_PARTS.find(part => lower.includes(part));
+  return BODY_PARTS.find((part) => lower.includes(part));
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -114,6 +200,7 @@ function findBodyPart(transcript: string): string | undefined {
 // ─────────────────────────────────────────────────────────────
 
 function fastClassifyPain(transcript: string): ClassificationResponse | null {
+  const lower = transcript.toLowerCase();
   const hasPainWord = keywordMatch(transcript, PAIN_KEYWORDS);
   const bodyPart = findBodyPart(transcript);
 
@@ -123,7 +210,7 @@ function fastClassifyPain(transcript: string): ClassificationResponse | null {
       painDetected: true,
       painConfidence: 0.95,
       bodyPart,
-      trainingPath: 'glass',
+      trainingPath: "glass",
     };
   }
 
@@ -132,17 +219,43 @@ function fastClassifyPain(transcript: string): ClassificationResponse | null {
     return {
       painDetected: true,
       painConfidence: 0.85,
-      trainingPath: 'glass',
+      trainingPath: "glass",
     };
   }
 
   // Clear negative responses
-  const negatives = ['no', 'nah', 'nope', "don't", 'nothing', "i'm good", "i'm fine", 'all good'];
-  if (negatives.some(neg => transcript.toLowerCase().includes(neg))) {
+  const negatives = ["no", "nah", "nope", "don't", "nothing", "i'm good", "i'm fine", "all good", "feeling good", "feel good"];
+  if (negatives.some((neg) => lower.includes(neg))) {
     return {
       painDetected: false,
       painConfidence: 0.9,
     };
+  }
+
+  // SMART DETECTION: If they mention a body part in response to "does anything hurt?",
+  // they're implying that body part hurts (e.g., "just my feet", "my knees", "yeah my back")
+  // This handles responses like "Just my, feet." or "my ankles" without explicit pain words
+  if (bodyPart) {
+    // Check if it's a possessive/reference pattern (my, the, just)
+    const impliedPainPatterns = [
+      "my " + bodyPart,
+      "just " + bodyPart,
+      "just my " + bodyPart,
+      "yeah " + bodyPart,
+      "yes " + bodyPart,
+      "the " + bodyPart,
+    ];
+
+    if (impliedPainPatterns.some((pattern) => lower.includes(pattern)) ||
+        lower.trim().split(/\s+/).length <= 4) {
+      // Short response mentioning body part = pain implied
+      return {
+        painDetected: true,
+        painConfidence: 0.8,
+        bodyPart,
+        trainingPath: "glass",
+      };
+    }
   }
 
   // Ambiguous - fall through to LLM
@@ -157,7 +270,7 @@ function fastClassifyVolume(transcript: string): ClassificationResponse | null {
     return {
       highVolume: true,
       volumeConfidence: 0.9,
-      trainingPath: 'grinder',
+      trainingPath: "grinder",
     };
   }
 
@@ -165,7 +278,7 @@ function fastClassifyVolume(transcript: string): ClassificationResponse | null {
     return {
       highVolume: false,
       volumeConfidence: 0.9,
-      trainingPath: 'prospect',
+      trainingPath: "prospect",
     };
   }
 
@@ -179,13 +292,13 @@ function fastClassifyAmbition(transcript: string): ClassificationResponse | null
 
   // Clear single match
   if (hasSpeed && !hasAir && !hasTank) {
-    return { wolfIdentity: 'speed', identityConfidence: 0.95 };
+    return { wolfIdentity: "speed", identityConfidence: 0.95 };
   }
   if (hasAir && !hasSpeed && !hasTank) {
-    return { wolfIdentity: 'air', identityConfidence: 0.95 };
+    return { wolfIdentity: "air", identityConfidence: 0.95 };
   }
   if (hasTank && !hasSpeed && !hasAir) {
-    return { wolfIdentity: 'tank', identityConfidence: 0.95 };
+    return { wolfIdentity: "tank", identityConfidence: 0.95 };
   }
 
   return null;
@@ -197,7 +310,7 @@ function fastClassifyAmbition(transcript: string): ClassificationResponse | null
 
 async function llmClassify(
   transcript: string,
-  questionType: QuestionType
+  questionType: QuestionType,
 ): Promise<ClassificationResponse> {
   const prompts: Record<QuestionType, string> = {
     pain: `You are classifying an athlete's response about pain/injury.
@@ -246,20 +359,21 @@ Respond with JSON only:
   const startTime = Date.now();
 
   const completion = await getGroqClient().chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: "llama-3.3-70b-versatile",
     messages: [
       {
-        role: 'system',
-        content: 'You are a classification model. Respond with valid JSON only. No markdown, no explanation outside the JSON.',
+        role: "system",
+        content:
+          "You are a classification model. Respond with valid JSON only. No markdown, no explanation outside the JSON.",
       },
       {
-        role: 'user',
+        role: "user",
         content: prompts[questionType],
       },
     ],
     temperature: 0.1,
     max_tokens: 150,
-    response_format: { type: 'json_object' },
+    response_format: { type: "json_object" },
   });
 
   const latency = Date.now() - startTime;
@@ -267,29 +381,29 @@ Respond with JSON only:
 
   const content = completion.choices[0]?.message?.content;
   if (!content) {
-    throw new Error('Empty response from Groq');
+    throw new Error("Empty response from Groq");
   }
 
   const parsed = JSON.parse(content);
 
   // Map LLM response to our format
   switch (questionType) {
-    case 'pain':
+    case "pain":
       return {
         painDetected: parsed.painDetected,
         painConfidence: parsed.confidence,
         bodyPart: parsed.bodyPart,
-        trainingPath: parsed.painDetected ? 'glass' : undefined,
+        trainingPath: parsed.painDetected ? "glass" : undefined,
         reasoning: parsed.reasoning,
       };
-    case 'volume':
+    case "volume":
       return {
         highVolume: parsed.highVolume,
         volumeConfidence: parsed.confidence,
-        trainingPath: parsed.highVolume ? 'grinder' : 'prospect',
+        trainingPath: parsed.highVolume ? "grinder" : "prospect",
         reasoning: parsed.reasoning,
       };
-    case 'ambition':
+    case "ambition":
       return {
         wolfIdentity: parsed.identity as WolfIdentity,
         identityConfidence: parsed.confidence,
@@ -310,23 +424,20 @@ export async function POST(request: NextRequest) {
     const { transcript, questionType } = body;
 
     if (!transcript || !questionType) {
-      return NextResponse.json(
-        { error: 'Missing transcript or questionType' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing transcript or questionType" }, { status: 400 });
     }
 
     // Try fast path first
     let result: ClassificationResponse | null = null;
 
     switch (questionType) {
-      case 'pain':
+      case "pain":
         result = fastClassifyPain(transcript);
         break;
-      case 'volume':
+      case "volume":
         result = fastClassifyVolume(transcript);
         break;
-      case 'ambition':
+      case "ambition":
         result = fastClassifyAmbition(transcript);
         break;
     }
@@ -337,7 +448,7 @@ export async function POST(request: NextRequest) {
       console.log(`[FastPath] Classification: ${latency}ms`);
       return NextResponse.json({
         ...result,
-        method: 'keyword',
+        method: "keyword",
         latencyMs: latency,
       });
     }
@@ -348,15 +459,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       ...result,
-      method: 'llm',
+      method: "llm",
       latencyMs: latency,
     });
-
   } catch (error) {
-    console.error('[Classify] Error:', error);
+    console.error("[Classify] Error:", error);
     return NextResponse.json(
-      { error: 'Classification failed', details: String(error) },
-      { status: 500 }
+      { error: "Classification failed", details: String(error) },
+      { status: 500 },
     );
   }
 }
