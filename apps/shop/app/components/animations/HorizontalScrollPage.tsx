@@ -1,13 +1,17 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link } from '@remix-run/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { WebGLNoise } from './WebGLNoise';
-import { NeoBall3D } from './NeoBall3D';
-import { GlassMorphicHeader } from '../GlassMorphicHeader';
+import { Link } from "@remix-run/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+
+import { GlassMorphicHeader } from "../GlassMorphicHeader";
+import { NeoBall3D } from "./NeoBall3D";
+import { WebGLNoise } from "./WebGLNoise";
+
+// SSR-safe useLayoutEffect - falls back to useEffect on server
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 // Register GSAP plugins
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
@@ -16,24 +20,25 @@ if (typeof window !== 'undefined') {
 // ===========================================================================
 
 // Noise texture
-const NOISE_PNG = 'https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/assets/noise-Q6CzNatq.png';
+const NOISE_PNG =
+  "https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/assets/noise-Q6CzNatq.png";
 
 // Hero images - stacked cards (top to bottom layering)
 // Order: 14.png (top/front) → 17.png (bottom/back) - 4.jpg moved to wolfpack section
 const HERO_IMAGES = [
-  '/images/14.png',  // 1. Top (front) - highest z-index
-  '/images/9.jpg',   // 2.
-  '/images/11.png',  // 3.
-  '/images/12.png',  // 4.
-  '/images/13.png',  // 5.
-  '/images/18.png',  // 6.
-  '/images/17.png',  // 7. Bottom (back) - lowest z-index
+  "/images/14.png", // 1. Top (front) - highest z-index
+  "/images/9.jpg", // 2.
+  "/images/11.png", // 3.
+  "/images/12.png", // 4.
+  "/images/13.png", // 5.
+  "/images/18.png", // 6.
+  "/images/17.png", // 7. Bottom (back) - lowest z-index
 ];
 
 // Scroll physics - EXACT Supply settings
-const SCATTER_EASE = 'power3.out';
+const SCATTER_EASE = "power3.out";
 const PIN_DISTANCE_MULTIPLIER = 1.5; // Desktop: 1.5x viewport
-const MOBILE_PIN_MULTIPLIER = 1.0;   // Mobile: 1x viewport
+const MOBILE_PIN_MULTIPLIER = 1.0; // Mobile: 1x viewport
 
 // Stagger timing - from Supply codebase
 const IMAGE_STAGGER = 0.04;
@@ -50,13 +55,13 @@ const DURATIONS = {
 // Card scatter configuration - spiral vortex (REVERSED z-index: first image = TOP)
 // 7 images with z-index: 7 (top/front) → 1 (bottom/back)
 const CARD_CONFIG = [
-  { x: -220, y: -70,  r: -25, scale: 0.75, z: 7 },  // Image 1 - TOP (front)
-  { x: -200, y: 90,   r: 35,  scale: 0.82, z: 6 },  // Image 2
-  { x: -180, y: -110, r: -45, scale: 0.65, z: 5 },  // Image 3
-  { x: -160, y: 50,   r: 15,  scale: 0.78, z: 4 },  // Image 4
-  { x: -140, y: -40,  r: -10, scale: 0.72, z: 3 },  // Image 5
-  { x: -125, y: 70,   r: 40,  scale: 0.65, z: 2 },  // Image 6
-  { x: -110, y: -30,  r: -20, scale: 0.58, z: 1 },  // Image 7 - BOTTOM (back)
+  { x: -220, y: -70, r: -25, scale: 0.75, z: 7 }, // Image 1 - TOP (front)
+  { x: -200, y: 90, r: 35, scale: 0.82, z: 6 }, // Image 2
+  { x: -180, y: -110, r: -45, scale: 0.65, z: 5 }, // Image 3
+  { x: -160, y: 50, r: 15, scale: 0.78, z: 4 }, // Image 4
+  { x: -140, y: -40, r: -10, scale: 0.72, z: 3 }, // Image 5
+  { x: -125, y: 70, r: 40, scale: 0.65, z: 2 }, // Image 6
+  { x: -110, y: -30, r: -20, scale: 0.58, z: 1 }, // Image 7 - BOTTOM (back)
 ];
 
 // Wheel config - Lenis-like smooth scroll
@@ -64,12 +69,12 @@ const WHEEL_CONFIG = {
   maxDelta: 200,
   multiplier: 1.35,
   duration: 0.35,
-  ease: 'power3.out',
+  ease: "power3.out",
 };
 
 function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+  if (typeof window === "undefined") return false;
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
 
 function splitLetters(text: string) {
@@ -115,17 +120,17 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
   // Wheel scroll target
   const wheelTargetRef = useRef(0);
 
-  const title1 = useMemo(() => splitLetters('WINTER ARC'), []);
-  const title2 = useMemo(() => splitLetters('PERFORMANCE'), []);
+  const title1 = useMemo(() => splitLetters("WINTER ARC"), []);
+  const title2 = useMemo(() => splitLetters("PERFORMANCE"), []);
 
   // Reduced motion listener
   useEffect(() => {
-    const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     if (mq) {
       const onChange = () => setReduceMotion(mq.matches);
       onChange();
-      mq.addEventListener?.('change', onChange);
-      return () => mq.removeEventListener?.('change', onChange);
+      mq.addEventListener?.("change", onChange);
+      return () => mq.removeEventListener?.("change", onChange);
     }
     return undefined;
   }, []);
@@ -133,7 +138,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
   // Lock body scroll for horizontal experience
   useEffect(() => {
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
@@ -158,15 +163,23 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       opacity: 1,
       duration: 0.1,
     })
-    .to(beam, {
-      xPercent: 200,
-      duration: 1.2,
-      ease: 'power2.inOut',
-    }, '<')
-    .to(beam, {
-      opacity: 0,
-      duration: 0.3,
-    }, '-=0.3');
+      .to(
+        beam,
+        {
+          xPercent: 200,
+          duration: 1.2,
+          ease: "power2.inOut",
+        },
+        "<",
+      )
+      .to(
+        beam,
+        {
+          opacity: 0,
+          duration: 0.3,
+        },
+        "-=0.3",
+      );
 
     return () => {
       tl.kill();
@@ -181,7 +194,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
     wheelTargetRef.current = el.scrollLeft;
     const maxScroll = () => Math.max(0, el.scrollWidth - el.clientWidth);
 
-    const scrollToX = gsap.quickTo(el, 'scrollLeft', {
+    const scrollToX = gsap.quickTo(el, "scrollLeft", {
       duration: WHEEL_CONFIG.duration,
       ease: WHEEL_CONFIG.ease,
       overwrite: true,
@@ -193,12 +206,16 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       e.preventDefault();
 
       const delta = gsap.utils.clamp(-WHEEL_CONFIG.maxDelta, WHEEL_CONFIG.maxDelta, e.deltaY);
-      wheelTargetRef.current = gsap.utils.clamp(0, maxScroll(), wheelTargetRef.current + delta * WHEEL_CONFIG.multiplier);
+      wheelTargetRef.current = gsap.utils.clamp(
+        0,
+        maxScroll(),
+        wheelTargetRef.current + delta * WHEEL_CONFIG.multiplier,
+      );
       scrollToX(wheelTargetRef.current);
     };
 
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
   // Pointer drag handler (mobile swipe)
@@ -214,7 +231,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       // Don't capture pointer events when clicking on links or buttons
       // This allows the Link component to handle clicks properly
       const target = e.target as HTMLElement;
-      if (target.closest('a') || target.closest('button') || target.closest('input')) {
+      if (target.closest("a") || target.closest("button") || target.closest("input")) {
         return;
       }
 
@@ -236,15 +253,15 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       isDown = false;
     };
 
-    el.addEventListener('pointerdown', onDown);
-    el.addEventListener('pointermove', onMove);
-    el.addEventListener('pointerup', onUp);
-    el.addEventListener('pointercancel', onUp);
+    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerup", onUp);
+    el.addEventListener("pointercancel", onUp);
     return () => {
-      el.removeEventListener('pointerdown', onDown);
-      el.removeEventListener('pointermove', onMove);
-      el.removeEventListener('pointerup', onUp);
-      el.removeEventListener('pointercancel', onUp);
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
     };
   }, []);
 
@@ -274,25 +291,25 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       const heroContainer = heroContainerRef.current;
       if (heroContainer) {
         const hideThreshold = el.clientWidth * 1.2;
-        heroContainer.style.visibility = el.scrollLeft > hideThreshold ? 'hidden' : 'visible';
+        heroContainer.style.visibility = el.scrollLeft > hideThreshold ? "hidden" : "visible";
       }
     };
 
     // Decay impulse when not scrolling
     const decayInterval = setInterval(() => {
-      setImpulse(prev => prev * 0.9);
+      setImpulse((prev) => prev * 0.9);
     }, 50);
 
     onScroll();
-    el.addEventListener('scroll', onScroll, { passive: true });
+    el.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      el.removeEventListener('scroll', onScroll);
+      el.removeEventListener("scroll", onScroll);
       clearInterval(decayInterval);
     };
   }, []);
 
   // GSAP scroll-scrubbed hero animation
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (reduceMotion) return;
 
     const scroller = scrollerRef.current;
@@ -309,7 +326,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       if (!cards.length || !line1 || !line2 || !heroCopy) return;
 
       // DESKTOP
-      mm.add('(min-width: 769px)', () => {
+      mm.add("(min-width: 769px)", () => {
         const PIN_DISTANCE = scroller.clientWidth * PIN_DISTANCE_MULTIPLIER;
 
         // Initial State: Messy pile
@@ -326,7 +343,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         });
 
         cardsInner.forEach((el) => {
-          gsap.set(el, { rotation: 0, scale: 1, transformOrigin: '50% 50%' });
+          gsap.set(el, { rotation: 0, scale: 1, transformOrigin: "50% 50%" });
         });
 
         // Title: Start below with skew
@@ -342,7 +359,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         });
 
         // Entrance animation
-        const entranceTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        const entranceTl = gsap.timeline({ defaults: { ease: "power3.out" } });
         entranceTl.to(line1, { yPercent: 0, skewY: 0, duration: 0.5 }, 0);
         entranceTl.to(line2, { yPercent: 0, skewY: 0, duration: 0.5 }, LETTER_STAGGER);
         entranceTl.to(heroCopy, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.1);
@@ -353,37 +370,45 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         // PHASE 1 (0-60%): Cards scatter to positions
         cards.forEach((el, i) => {
           const cfg = CARD_CONFIG[i] || CARD_CONFIG[0];
-          tl.to(el, {
-            xPercent: cfg.x,
-            yPercent: cfg.y,
-            rotation: cfg.r,
-            scale: cfg.scale,
-            duration: DURATIONS.rotation,
-          }, i * IMAGE_STAGGER);
+          tl.to(
+            el,
+            {
+              xPercent: cfg.x,
+              yPercent: cfg.y,
+              rotation: cfg.r,
+              scale: cfg.scale,
+              duration: DURATIONS.rotation,
+            },
+            i * IMAGE_STAGGER,
+          );
         });
 
         // Title exit during Phase 1
         tl.to(line1, { yPercent: -100, duration: DURATIONS.titleLetters }, 0);
         tl.to(line2, { yPercent: -100, duration: DURATIONS.titleLetters }, LETTER_STAGGER);
-        tl.to(heroCopy, { autoAlpha: 0, duration: DURATIONS.text }, '<');
+        tl.to(heroCopy, { autoAlpha: 0, duration: DURATIONS.text }, "<");
 
         // PHASE 2 (60-100%): Cards fly out LEFT and fade - clean exit
         // This happens AFTER scatter, so next section slides in clean
-        tl.to(cards, {
-          xPercent: -250,       // Fly far left off-screen
-          rotation: '-=18',     // Additional rotation as they exit
-          opacity: 0,           // Fade out completely
-          stagger: IMAGE_STAGGER,
-          duration: 0.4,
-          ease: 'power2.in',
-        }, '+=0.1');  // Small gap after scatter phase
+        tl.to(
+          cards,
+          {
+            xPercent: -250, // Fly far left off-screen
+            rotation: "-=18", // Additional rotation as they exit
+            opacity: 0, // Fade out completely
+            stagger: IMAGE_STAGGER,
+            duration: 0.4,
+            ease: "power2.in",
+          },
+          "+=0.1",
+        ); // Small gap after scatter phase
 
         // Velocity impulse
         const rotTo = cardsInner.map((el) =>
-          gsap.quickTo(el, 'rotation', { duration: 0.18, ease: 'power3.out' })
+          gsap.quickTo(el, "rotation", { duration: 0.18, ease: "power3.out" }),
         );
         const scaleTo = cardsInner.map((el) =>
-          gsap.quickTo(el, 'scale', { duration: 0.18, ease: 'power3.out' })
+          gsap.quickTo(el, "scale", { duration: 0.18, ease: "power3.out" }),
         );
 
         ScrollTrigger.create({
@@ -406,7 +431,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
       });
 
       // MOBILE
-      mm.add('(max-width: 768px)', () => {
+      mm.add("(max-width: 768px)", () => {
         const PIN_DISTANCE = scroller.clientWidth * MOBILE_PIN_MULTIPLIER;
 
         gsap.set(cards, {
@@ -422,21 +447,25 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         gsap.set([line1, line2], { yPercent: 120, skewY: 12, autoAlpha: 1 });
         gsap.set(heroCopy, { autoAlpha: 0, y: 20 });
 
-        const entranceTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        const entranceTl = gsap.timeline({ defaults: { ease: "power3.out" } });
         entranceTl.to(line1, { yPercent: 0, skewY: 0, duration: 0.5 }, 0);
         entranceTl.to(line2, { yPercent: 0, skewY: 0, duration: 0.5 }, 0.05);
         entranceTl.to(heroCopy, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.1);
 
         const tl = gsap.timeline({ defaults: { ease: SCATTER_EASE } });
-        tl.to(cards, {
-          xPercent: -200,
-          rotation: -12,
-          stagger: IMAGE_STAGGER,
-          duration: DURATIONS.rotation,
-        }, 0);
+        tl.to(
+          cards,
+          {
+            xPercent: -200,
+            rotation: -12,
+            stagger: IMAGE_STAGGER,
+            duration: DURATIONS.rotation,
+          },
+          0,
+        );
         tl.to(line1, { yPercent: -100, duration: DURATIONS.titleLetters }, 0);
         tl.to(line2, { yPercent: -100, duration: DURATIONS.titleLetters }, LETTER_STAGGER);
-        tl.to(heroCopy, { autoAlpha: 0, duration: DURATIONS.text }, '<');
+        tl.to(heroCopy, { autoAlpha: 0, duration: DURATIONS.text }, "<");
 
         ScrollTrigger.create({
           scroller,
@@ -462,9 +491,9 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
     <div
       className="relative text-white w-screen h-screen overflow-hidden"
       style={{
-        backgroundImage: 'url(/images/shopbg6.jpeg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundImage: "url(/images/shopbg6.jpeg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       {/* Navigation Bar - Fixed at top with glass morphism */}
@@ -478,8 +507,8 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         className="absolute inset-0 pointer-events-none opacity-30 z-[2]"
         style={{
           backgroundImage: `url(${NOISE_PNG})`,
-          backgroundRepeat: 'repeat',
-          mixBlendMode: 'overlay',
+          backgroundRepeat: "repeat",
+          mixBlendMode: "overlay",
         }}
       />
 
@@ -493,7 +522,8 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           ref={laserBeamRef}
           className="absolute top-0 left-0 w-full h-full z-[100] pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(0,246,224,0) 35%, rgba(0,246,224,0.2) 45%, rgba(0,246,224,0.5) 50%, rgba(0,246,224,0.2) 55%, rgba(0,246,224,0) 65%, transparent 100%)',
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(0,246,224,0) 35%, rgba(0,246,224,0.2) 45%, rgba(0,246,224,0.5) 50%, rgba(0,246,224,0.2) 55%, rgba(0,246,224,0) 65%, transparent 100%)",
             opacity: 0,
           }}
         />
@@ -508,26 +538,26 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
                 ref={(el) => (cardOuterRefs.current[idx] = el)}
                 className="absolute"
                 style={{
-                  width: 'clamp(280px, 38vw, 480px)',  // Bigger images like shopify.supply
-                  aspectRatio: '3 / 4',
-                  top: '50%',
-                  left: '50%',
+                  width: "clamp(280px, 38vw, 480px)", // Bigger images like shopify.supply
+                  aspectRatio: "3 / 4",
+                  top: "50%",
+                  left: "50%",
                   zIndex: config.z,
-                  willChange: reduceMotion ? undefined : 'transform',
+                  willChange: reduceMotion ? undefined : "transform",
                 }}
               >
                 <div
                   ref={(el) => (cardInnerRefs.current[idx] = el)}
                   className="w-full h-full"
-                  style={{ willChange: reduceMotion ? undefined : 'transform' }}
+                  style={{ willChange: reduceMotion ? undefined : "transform" }}
                 >
                   <img
                     src={img}
                     alt=""
                     className="w-full h-full object-cover select-none"
                     style={{
-                      boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.5)',
-                      borderRadius: '3px',
+                      boxShadow: "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
+                      borderRadius: "3px",
                     }}
                     loading="eager"
                     draggable={false}
@@ -541,34 +571,37 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
         {/* Hero text */}
         <div ref={heroCopyRef} className="relative w-full h-full">
           <div className="absolute top-[12%] right-[5%] md:right-[8%] uppercase text-xs md:text-sm text-right tracking-wide text-gray-400 font-mono">
-            High-Performance Gear<br />
+            High-Performance Gear
+            <br />
             Built For Athletes
           </div>
           <div className="absolute left-[5%] sm:left-[8%] md:left-[10%] bottom-[10%] w-[26ch] uppercase text-sm md:text-base font-mono tracking-wider">
-            Explore the latest drop<br />
-            in our YP Academy<br />
+            Explore the latest drop
+            <br />
+            in our YP Academy
+            <br />
             Shop
           </div>
           <div className="hidden md:block absolute bottom-[10%] right-[5%] uppercase text-sm text-right">
             <span className="mr-2">Scroll</span>
-            <span className="inline-block">{'>>>'}</span>
+            <span className="inline-block">{">>>"}</span>
           </div>
         </div>
 
         {/* Title animation */}
         <div
           className="absolute top-1/2 left-1/2 w-full font-display uppercase z-50 pointer-events-none"
-          style={{ transform: 'translate(-50%, -50%)' }}
+          style={{ transform: "translate(-50%, -50%)" }}
         >
           <div className="overflow-hidden" style={{ lineHeight: 1.0 }}>
             <div
               ref={titleLine1Ref}
               className="text-[12vw] md:text-[10vw] xl:text-[140px] text-nowrap text-center leading-[0.9] tracking-wider"
-              style={{ color: '#eeece2' }}
+              style={{ color: "#eeece2" }}
             >
               {title1.map(({ ch, key }) => (
                 <span key={key} className="relative inline-block">
-                  {ch === ' ' ? '\u00A0' : ch}
+                  {ch === " " ? "\u00A0" : ch}
                 </span>
               ))}
             </div>
@@ -577,11 +610,11 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
             <div
               ref={titleLine2Ref}
               className="text-[10vw] md:text-[8vw] xl:text-[105px] text-nowrap text-center leading-[0.9] tracking-[0.2em]"
-              style={{ color: '#eeece2' }}
+              style={{ color: "#eeece2" }}
             >
               {title2.map(({ ch, key }) => (
                 <span key={key} className="relative inline-block">
-                  {ch === ' ' ? '\u00A0' : ch}
+                  {ch === " " ? "\u00A0" : ch}
                 </span>
               ))}
             </div>
@@ -595,13 +628,31 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           </div>
           <div className="flex items-center gap-0.5">
             <svg className="w-3 h-3 animate-pulse" viewBox="0 0 12 12" fill="none">
-              <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M4.5 2L8.5 6L4.5 10"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             <svg className="w-3 h-3 animate-pulse delay-100" viewBox="0 0 12 12" fill="none">
-              <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M4.5 2L8.5 6L4.5 10"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             <svg className="w-3 h-3 animate-pulse delay-200" viewBox="0 0 12 12" fill="none">
-              <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M4.5 2L8.5 6L4.5 10"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
         </div>
@@ -628,16 +679,20 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at center, rgba(0,235,247,0.12) 0%, transparent 70%)',
+                background:
+                  "radial-gradient(ellipse at center, rgba(0,235,247,0.12) 0%, transparent 70%)",
               }}
             />
 
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 px-4 sm:px-8 w-full max-w-7xl">
               {/* 3D Ball - Responsive sizing that fills frame better */}
+              {/* Ball only rotates when scrolling through THIS section (35%-60% of total scroll) */}
               <div className="w-[min(70vw,400px)] h-[min(70vw,400px)] sm:w-[min(50vw,450px)] sm:h-[min(50vw,450px)] lg:w-[min(45vw,550px)] lg:h-[min(45vw,550px)] pointer-events-auto flex-shrink-0">
                 <NeoBall3D
                   progress={progress}
                   impulse={impulse}
+                  sectionStart={0.32}
+                  sectionEnd={0.58}
                   className="w-full h-full"
                 />
               </div>
@@ -648,21 +703,34 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
                   YP Academy Gear
                 </div>
                 <h2 className="font-display text-[10vw] sm:text-[7vw] lg:text-[5vw] xl:text-[72px] leading-[0.9] uppercase tracking-tight">
-                  {featuredProduct?.title || 'NeoBall'}
+                  {featuredProduct?.title || "NeoBall"}
                 </h2>
                 <p className="mt-2 sm:mt-3 text-gray-400 text-sm sm:text-base max-w-[36ch] mx-auto lg:mx-0">
                   The world's first regulation-weight silent basketball. Train at midnight.
                 </p>
                 <p className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-display text-cyan">
-                  ${featuredProduct ? parseFloat(featuredProduct.priceRange.minVariantPrice.amount).toFixed(0) : '168'}
+                  $
+                  {featuredProduct
+                    ? parseFloat(featuredProduct.priceRange.minVariantPrice.amount).toFixed(0)
+                    : "168"}
                 </p>
                 <Link
-                  to={`/products/${featuredProduct?.handle || 'n'}`}
+                  to={`/products/${featuredProduct?.handle || "n"}`}
                   className="mt-4 sm:mt-6 inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-cyan text-wolf-black font-bold text-base sm:text-lg rounded-lg hover:scale-105 transition-transform"
                 >
                   SHOP NOW
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
                   </svg>
                 </Link>
               </div>
@@ -673,15 +741,14 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <section className="relative h-full w-[100vw] md:w-[90vw] flex items-center justify-center border-l border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: 'url(/images/13.png)' }}
+              style={{ backgroundImage: "url(/images/13.png)" }}
             />
             <div className="absolute inset-0 bg-black/50" />
             <div className="relative z-10 text-center px-6 max-w-2xl">
-              <div className="uppercase tracking-[0.3em] text-sm text-gray-300 mb-6">
-                The Pack
-              </div>
+              <div className="uppercase tracking-[0.3em] text-sm text-gray-300 mb-6">The Pack</div>
               <h3 className="font-display text-[10vw] md:text-[6vw] xl:text-[80px] leading-[0.9] uppercase mb-6">
-                TRAIN LIKE<br />
+                TRAIN LIKE
+                <br />
                 <span className="text-cyan">A PRO</span>
               </h3>
               <p className="text-lg text-gray-300 mb-8">
@@ -695,7 +762,12 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
               >
                 Join YP Academy
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
                 </svg>
               </a>
             </div>
@@ -705,7 +777,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           <section className="relative h-full w-[100vw] md:w-[80vw] flex items-center justify-center border-l border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: 'url(/images/4.jpg)' }}
+              style={{ backgroundImage: "url(/images/4.jpg)" }}
             />
             <div className="absolute inset-0 bg-black/60" />
             <div className="relative z-10 text-center px-6 max-w-lg">
@@ -713,7 +785,8 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
                 Stay Connected
               </div>
               <h3 className="font-display text-[8vw] md:text-[4vw] xl:text-[56px] leading-[0.95] uppercase mb-6">
-                JOIN THE<br />
+                JOIN THE
+                <br />
                 <span className="text-cyan">WOLFPACK</span>
               </h3>
               <p className="text-gray-300 mb-8">
@@ -732,9 +805,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
                   SUBSCRIBE
                 </button>
               </form>
-              <p className="mt-4 text-xs text-gray-500">
-                No spam. Unsubscribe anytime.
-              </p>
+              <p className="mt-4 text-xs text-gray-500">No spam. Unsubscribe anytime.</p>
             </div>
           </section>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 // ===========================================================================
 // NeoBall3D - 3D rotating basketball with texture mapping
@@ -15,9 +15,7 @@ function LoadingSpinner() {
         <div className="absolute inset-0 border-2 border-transparent border-t-cyan rounded-full animate-spin" />
       </div>
       {/* Loading text */}
-      <span className="font-loading text-xs tracking-[0.2em] uppercase text-cyan/70">
-        Loading
-      </span>
+      <span className="font-loading text-xs tracking-[0.2em] uppercase text-cyan/70">Loading</span>
     </div>
   );
 }
@@ -39,9 +37,17 @@ interface NeoBall3DProps {
   progress?: number;
   impulse?: number;
   className?: string;
+  sectionStart?: number; // Scroll progress (0-1) when ball section enters view
+  sectionEnd?: number;   // Scroll progress (0-1) when ball section exits view
 }
 
-export function NeoBall3D({ progress = 0, impulse = 0, className = '' }: NeoBall3DProps) {
+export function NeoBall3D({
+  progress = 0,
+  impulse = 0,
+  className = "",
+  sectionStart = 0,
+  sectionEnd = 1,
+}: NeoBall3DProps) {
   const [Component, setComponent] = useState<React.ComponentType<any> | null>(null);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,8 +57,8 @@ export function NeoBall3D({ progress = 0, impulse = 0, className = '' }: NeoBall
     let mounted = true;
 
     // Check WebGL support first
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
     if (!gl) {
       setHasError(true);
       setIsLoading(false);
@@ -60,7 +66,7 @@ export function NeoBall3D({ progress = 0, impulse = 0, className = '' }: NeoBall
     }
 
     // Dynamic import the canvas component (client-only)
-    import('./NeoBall3DCanvas.client')
+    import("./NeoBall3DCanvas.client")
       .then((mod) => {
         if (mounted) {
           setComponent(() => mod.NeoBall3DCanvas);
@@ -68,7 +74,7 @@ export function NeoBall3D({ progress = 0, impulse = 0, className = '' }: NeoBall
         }
       })
       .catch((err) => {
-        console.error('Failed to load 3D canvas:', err);
+        console.error("Failed to load 3D canvas:", err);
         if (mounted) {
           setHasError(true);
           setIsLoading(false);
@@ -100,7 +106,12 @@ export function NeoBall3D({ progress = 0, impulse = 0, className = '' }: NeoBall
     <div className={`relative ${className}`}>
       {/* Glow effect behind ball */}
       <div className="absolute inset-0 bg-cyan/15 blur-[80px] rounded-full" />
-      <Component progress={progress} impulse={impulse} />
+      <Component
+        progress={progress}
+        impulse={impulse}
+        sectionStart={sectionStart}
+        sectionEnd={sectionEnd}
+      />
     </div>
   );
 }

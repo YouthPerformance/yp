@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
 
 // ===========================================================================
 // NeoBall3DCanvas - Vanilla Three.js implementation (avoids reconciler issues)
@@ -8,23 +8,42 @@ import * as THREE from 'three';
 interface NeoBall3DCanvasProps {
   progress?: number;
   impulse?: number;
+  sectionStart?: number; // Scroll progress (0-1) when ball section enters view
+  sectionEnd?: number;   // Scroll progress (0-1) when ball section exits view
 }
 
-export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasProps) {
+// Shopify.supply style: scroll-bound horizontal rotation only
+// - Logo faces forward at rest
+// - Only Y-axis rotation (horizontal spin)
+// - Rotation directly mapped to scroll progress WITHIN the ball's section
+const ROTATIONS_PER_SECTION = 1.5; // Rotation as you scroll through ball section
+
+export function NeoBall3DCanvas({
+  progress = 0,
+  impulse = 0,
+  sectionStart = 0,
+  sectionEnd = 1,
+}: NeoBall3DCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const meshRef = useRef<THREE.Mesh | null>(null);
   const frameRef = useRef<number>(0);
-  const velocityRef = useRef({ x: 0, y: 0 });
-  const impulseRef = useRef(0);
+  const progressRef = useRef(0);
+  const sectionStartRef = useRef(sectionStart);
+  const sectionEndRef = useRef(sectionEnd);
   const [isReady, setIsReady] = useState(false);
 
-  // Keep impulse in sync
+  // Keep progress and section bounds in sync for animation loop
   useEffect(() => {
-    impulseRef.current = impulse;
-  }, [impulse]);
+    progressRef.current = progress;
+  }, [progress]);
+
+  useEffect(() => {
+    sectionStartRef.current = sectionStart;
+    sectionEndRef.current = sectionEnd;
+  }, [sectionStart, sectionEnd]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -46,7 +65,7 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: 'high-performance',
+      powerPreference: "high-performance",
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -66,7 +85,7 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
     fillLight.position.set(-4, 1, 2);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00EBF7, 0.35);
+    const rimLight = new THREE.DirectionalLight(0x00ebf7, 0.35);
     rimLight.position.set(0, 3, -4);
     scene.add(rimLight);
 
@@ -77,7 +96,7 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
     // Load texture and create ball
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
-      '/images/neoball-texture.png',
+      "/images/neoball-texture.png",
       (texture) => {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.colorSpace = THREE.SRGBColorSpace;
@@ -105,45 +124,43 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
       },
       undefined,
       (error) => {
-        console.error('Failed to load texture:', error);
-      }
+        console.error("Failed to load texture:", error);
+      },
     );
 
-    // Animation loop
-    let lastTime = performance.now();
-
+    // Animation loop - Shopify.supply style scroll-bound rotation
+    // Ball only rotates when scrolling WITHIN its section
     const animate = () => {
       frameRef.current = requestAnimationFrame(animate);
 
-      const currentTime = performance.now();
-      const delta = Math.min((currentTime - lastTime) / 1000, 0.1);
-      lastTime = currentTime;
-
       if (meshRef.current) {
         const mesh = meshRef.current;
-        const currentImpulse = impulseRef.current;
+        const currentProgress = progressRef.current;
+        const start = sectionStartRef.current;
+        const end = sectionEndRef.current;
 
-        // Base rotation speeds - visible but smooth
-        const baseSpinY = 0.6;  // ~35°/sec on Y axis
-        const baseSpinX = 0.15; // ~9°/sec on X axis (slower tilt)
+        // Calculate section-local progress (0-1 within the ball's section only)
+        let sectionProgress = 0;
+        if (currentProgress <= start) {
+          sectionProgress = 0; // Before section: no rotation
+        } else if (currentProgress >= end) {
+          sectionProgress = 1; // After section: hold final rotation
+        } else {
+          // Within section: interpolate 0-1
+          sectionProgress = (currentProgress - start) / (end - start);
+        }
 
-        // Scroll-driven boost (reduced for smoother feel)
-        const boostMultiplier = 1 + currentImpulse * 2.5;
+        // Scroll-bound Y-axis rotation only (like shopify.supply)
+        // Section progress 0-1 maps to 0 to (ROTATIONS_PER_SECTION * 2π) radians
+        const targetRotationY = sectionProgress * Math.PI * 2 * ROTATIONS_PER_SECTION;
 
-        // Apply momentum from scroll (reduced sensitivity)
-        velocityRef.current.x += currentImpulse * 0.08;
-        velocityRef.current.y += currentImpulse * 0.15;
+        // Smooth interpolation for fluid feel (lerp factor controls smoothness)
+        const lerpFactor = 0.08;
+        mesh.rotation.y += (targetRotationY - mesh.rotation.y) * lerpFactor;
 
-        // Damping (increased friction for quicker settling)
-        velocityRef.current.x *= 0.92;
-        velocityRef.current.y *= 0.92;
-
-        // Apply rotation (delta-normalized for consistent speed)
-        mesh.rotation.y += baseSpinY * delta * boostMultiplier + velocityRef.current.y * delta;
-        mesh.rotation.x += baseSpinX * delta * boostMultiplier + velocityRef.current.x * delta;
-
-        // Subtle wobble
-        mesh.rotation.z += Math.sin(currentTime * 0.0003) * 0.0008;
+        // Keep X and Z fixed - logo faces forward
+        mesh.rotation.x = 0;
+        mesh.rotation.z = 0;
       }
 
       renderer.render(scene, camera);
@@ -163,11 +180,11 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
       rendererRef.current.setSize(newWidth, newHeight);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(frameRef.current);
 
       if (rendererRef.current) {
@@ -186,10 +203,10 @@ export function NeoBall3DCanvas({ progress = 0, impulse = 0 }: NeoBall3DCanvasPr
     <div
       ref={containerRef}
       style={{
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
         opacity: isReady ? 1 : 0,
-        transition: 'opacity 0.3s ease-in',
+        transition: "opacity 0.3s ease-in",
       }}
     />
   );
