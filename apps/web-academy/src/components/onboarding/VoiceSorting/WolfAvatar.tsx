@@ -102,7 +102,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         }}
       >
         <Image
-          src="/images/wolffront_nobg.png"
+          src="/images/wolffront.webp"
           alt="YP Wolf"
           width={288}
           height={288}
