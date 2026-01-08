@@ -1,104 +1,62 @@
-# Project Status: The Grind
+# Project Status: CI/CD Pipeline Verification
 
-> **Current Phase:** Phase 8 (Governance & Production Hardening)
-> **Last Updated:** January 2, 2026 @ 00:40 UTC
-> **Sprint:** Pre-Launch Final QA
-
----
-
-## Active Context (What We're Doing RIGHT NOW)
-
-### Completed This Session
-- [x] Pushed all commits to origin
-- [x] Fixed P0 security: removed hardcoded JWT fallback
-- [x] Created PR #7: feat/shop-hero-images → master
-- [x] Fixed CI workflow issues (pnpm version, security scan scope)
-- [x] Resolved merge conflicts with master
-- [x] All CI checks passing
-
-### Current Focus
-- PR #7 awaiting review: https://github.com/YouthPerformance/yp/pull/7
-- User rotating Shopify tokens (P0 blocker)
+> **Current Phase:** CI/CD Testing
+> **Last Updated:** January 7, 2026
+> **Sprint:** Infrastructure Hardening
 
 ---
 
-## On Deck (Next 24h)
+## CI/CD Secrets Status
 
-### P0 - Critical (Before Launch)
-- [ ] Rotate exposed Shopify tokens (`packages/yp-alpha/.env`) ⚠️
-- [x] ~~Remove hardcoded JWT fallback~~ - Fixed: now requires JWT_SECRET env var
+### GitHub Secrets (Complete)
+| Secret | Status |
+|--------|--------|
+| `VERCEL_TOKEN` | ✅ Added |
+| `CONVEX_DEPLOY_KEY_PROD` | ✅ Added |
+| `CONVEX_DEPLOY_KEY_STAGING` | ✅ Added |
+| `OXYGEN_DEPLOYMENT_TOKEN` | ✅ Existing |
+| `PUBLIC_STOREFRONT_API_TOKEN` | ✅ Existing |
+| `SHOPIFY_HYDROGEN_DEPLOY_TOKEN` | ✅ Existing |
 
-### P1 - High Priority
-- [ ] Add pre-commit hooks (Husky + lint-staged)
-- [ ] Create ErrorBoundary components
-- [ ] Fix marketing vercel.json build command (use turbo)
-- [ ] Configure Linear MCP for issue tracking
+### GitHub Variables (Complete)
+| Variable | Status |
+|----------|--------|
+| `VERCEL_ORG_ID` | ✅ Added |
+| `VERCEL_PROJECT_ID_WEB_ACADEMY` | ✅ Added |
+| `CLOUDFLARE_ACCOUNT_ID` | ✅ Added |
+| `NEXT_PUBLIC_CONVEX_URL` | ✅ Existing |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | ✅ Existing |
+| `PUBLIC_STORE_DOMAIN` | ✅ Existing |
 
-### P2 - Should Have
-- [ ] Add Vitest to all apps
-- [ ] Create root ESLint config
-- [ ] Add Prettier config
-- [x] ~~Merge `feat/shop-hero-images` branch~~ - PR #7 ready, awaiting review
-
----
-
-## Blockers
-
-| Blocker | Impact | Owner | Status |
-|---------|--------|-------|--------|
-| Exposed tokens in git | Security risk | Mike | **Needs rotation** |
-| No test suites | Quality risk | Mike | Planning (CI ready) |
-
----
-
-## Recent Deploys
-
-| Date | App | Environment | Status |
-|------|-----|-------------|--------|
-| Jan 1 | Marketing | Production (CF Pages) | ✅ Live (with Mission page) |
-| Jan 1 | Academy | Production (Vercel) | ✅ Live |
-| Dec 31 | Shop | Production (Oxygen) | ✅ Live |
+### Manual Setup Required
+| Secret | Source | Status |
+|--------|--------|--------|
+| `CLOUDFLARE_API_TOKEN` | dash.cloudflare.com | ⚠️ Manual |
+| `ANTHROPIC_API_KEY` | console.anthropic.com | ⚠️ Manual |
 
 ---
 
-## Sprint Metrics
+## Workflows
 
-| Metric | Target | Current | Change |
-|--------|--------|---------|--------|
-| Security Issues | 0 | 2 (tokens) | - |
-| Broken Links | 0 | 0 | ✅ Fixed |
-| CI Coverage | 100% | 75% | ⬆️ +50% |
-| Test Coverage | 30% | 0% | - |
-
----
-
-## Git Status
-
-**Branch:** `feat/shop-hero-images`
-**PR:** #7 (awaiting review)
-
-```
-c0f9fa8 ci: make build non-blocking until env secrets configured
-25440ca ci: make typecheck non-blocking temporarily
-2e335b0 fix(marketing): skip typecheck for JS project
-e34d4d7 fix(ci): resolve pnpm version conflict and security scan
-7968675 Merge origin/master into feat/shop-hero-images
-039b9e8 fix(security): remove hardcoded JWT secret fallback
-```
-
-**Synced with origin, PR ready for merge**
+| Workflow | Trigger | Status |
+|----------|---------|--------|
+| `ci.yml` | PR + push to main | Ready to test |
+| `deploy-staging.yml` | Push to main | Ready |
+| `deploy-prod.yml` | Manual | Ready |
+| `release.yml` | Manual | Ready |
+| `on-release-merge.yml` | PR merge | Ready |
 
 ---
 
-## Notes for Next Session
+## This PR
 
-1. **Approve & Merge** PR #7 (CI passing)
-2. **Rotate Shopify tokens** (security P0) - user handling
-3. **Configure Linear MCP** (user has API key ready)
-4. **Add GitHub secrets** for web-academy build (CONVEX_URL)
-5. **Fix TypeScript errors** in yp-alpha/daily-stack.ts
+Testing CI pipeline with a minimal change to verify:
+- [ ] Lint passes
+- [ ] Typecheck passes
+- [ ] Security scan passes
+- [ ] Build passes
 
 ---
 
 *Updated by: Claude (Wolf Pack Protocol)*
-*Session: Wolf Pack Implementation + CI*
+*Session: CI/CD Pipeline Verification*
