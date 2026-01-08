@@ -112,6 +112,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* DNS Prefetch for external services */}
+        <link rel="dns-prefetch" href="https://api.clerk.com" />
+        <link rel="dns-prefetch" href="https://convex.cloud" />
+        <link rel="dns-prefetch" href="https://api.stripe.com" />
+        <link rel="dns-prefetch" href="https://api.openai.com" />
+
         {/* Preconnect to font origins */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

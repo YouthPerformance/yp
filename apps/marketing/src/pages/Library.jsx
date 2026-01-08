@@ -131,6 +131,7 @@ function Library() {
                     <img
                       src={course.thumbnail_url}
                       alt={course.title}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   ) : (

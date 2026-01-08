@@ -94,6 +94,7 @@ function ManifestoImage({ src, alt }) {
         <motion.img
           src={src}
           alt={alt}
+          loading="lazy"
           className="w-full h-full object-cover"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
