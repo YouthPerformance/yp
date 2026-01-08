@@ -25,13 +25,14 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
         <ThemeProvider>
           <Header
             logoHref="/"
+            logoSrc="/logo/yp-logo.png"
+            hideSubtitle
+            showCart={false}
             links={[
               { label: "ACADEMY", href: "/" },
               { label: "SHOP", href: "https://shop.youthperformance.com" },
               { label: "NEOBALL", href: "https://neoball.co" },
             ]}
-            cartHref="https://shop.youthperformance.com/cart"
-            loginHref="https://shop.youthperformance.com/account/login"
           />
           <main style={{ paddingTop: "64px" }}>
             <MainLayoutInner>{children}</MainLayoutInner>

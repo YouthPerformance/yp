@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 /**
  * YP Unified Header - "Wolf Pack Glass"
@@ -42,6 +42,10 @@ export interface HeaderProps {
   loginHref?: string;
   /** Show login button */
   showLogin?: boolean;
+  /** Show cart icon (default: true) - set false for content/app pages */
+  showCart?: boolean;
+  /** Hide "WOLF PACK" subtitle next to logo */
+  hideSubtitle?: boolean;
 }
 
 const defaultLinks: NavLink[] = [
@@ -60,6 +64,8 @@ export function Header({
   cartHref = "https://shop.youthperformance.com/cart",
   loginHref = "https://shop.youthperformance.com/account/login",
   showLogin = false,
+  showCart = true,
+  hideSubtitle = false,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -84,8 +90,7 @@ export function Header({
           WebkitBackdropFilter: "blur(24px) saturate(180%)",
           borderRadius: "16px",
           border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow:
-            "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
           maxWidth: "1400px",
           margin: "0 auto",
         }}
@@ -132,18 +137,20 @@ export function Header({
                 YP
               </span>
             )}
-            <span
-              style={{
-                fontFamily: "system-ui, -apple-system, sans-serif",
-                fontSize: "11px",
-                fontWeight: 600,
-                letterSpacing: "0.2em",
-                color: "rgba(255, 255, 255, 0.5)",
-                textTransform: "uppercase",
-              }}
-            >
-              WOLF PACK
-            </span>
+            {!hideSubtitle && (
+              <span
+                style={{
+                  fontFamily: "system-ui, -apple-system, sans-serif",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  letterSpacing: "0.2em",
+                  color: "rgba(255, 255, 255, 0.5)",
+                  textTransform: "uppercase",
+                }}
+              >
+                WOLF PACK
+              </span>
+            )}
           </a>
 
           {/* Center: Desktop Navigation */}
@@ -168,18 +175,13 @@ export function Header({
                   letterSpacing: "0.15em",
                   textDecoration: "none",
                   textTransform: "uppercase",
-                  color:
-                    activePath === link.href
-                      ? YP_CYAN
-                      : "rgba(255, 255, 255, 0.7)",
+                  color: activePath === link.href ? YP_CYAN : "rgba(255, 255, 255, 0.7)",
                   transition: "color 0.2s ease",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = YP_CYAN)}
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.color =
-                    activePath === link.href
-                      ? YP_CYAN
-                      : "rgba(255, 255, 255, 0.7)")
+                    activePath === link.href ? YP_CYAN : "rgba(255, 255, 255, 0.7)")
                 }
               >
                 {link.label}
@@ -195,70 +197,71 @@ export function Header({
               gap: "8px",
             }}
           >
-            {/* Cart Icon */}
-            <a
-              href={cartHref}
-              style={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
-                backgroundColor: "rgba(255, 255, 255, 0.06)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                transition: "all 0.2s ease",
-                textDecoration: "none",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = YP_CYAN_HOVER;
-                e.currentTarget.style.borderColor = YP_CYAN_BORDER;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "rgba(255, 255, 255, 0.06)";
-                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
-              }}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="rgba(255, 255, 255, 0.8)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+            {/* Cart Icon - only shown on ecommerce pages */}
+            {showCart && (
+              <a
+                href={cartHref}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  backgroundColor: "rgba(255, 255, 255, 0.06)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  transition: "all 0.2s ease",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = YP_CYAN_HOVER;
+                  e.currentTarget.style.borderColor = YP_CYAN_BORDER;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.06)";
+                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
+                }}
               >
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                <path d="M3 6h18" />
-                <path d="M16 10a4 4 0 0 1-8 0" />
-              </svg>
-              {cartCount > 0 && (
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "-4px",
-                    right: "-4px",
-                    minWidth: "18px",
-                    height: "18px",
-                    padding: "0 5px",
-                    borderRadius: "9px",
-                    backgroundColor: YP_CYAN,
-                    color: "#0f0f0f",
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: "system-ui, sans-serif",
-                  }}
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="rgba(255, 255, 255, 0.8)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  {cartCount > 99 ? "99+" : cartCount}
-                </span>
-              )}
-            </a>
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                  <path d="M3 6h18" />
+                  <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                {cartCount > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-4px",
+                      right: "-4px",
+                      minWidth: "18px",
+                      height: "18px",
+                      padding: "0 5px",
+                      borderRadius: "9px",
+                      backgroundColor: YP_CYAN,
+                      color: "#0f0f0f",
+                      fontSize: "10px",
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: "system-ui, sans-serif",
+                    }}
+                  >
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
+              </a>
+            )}
 
             {/* User Avatar / Login Button */}
             {userAvatar ? (
@@ -357,8 +360,7 @@ export function Header({
             left: "16px",
             right: "16px",
             bottom: "16px",
-            background:
-              "linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%)",
+            background: "linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
             borderRadius: "16px",
@@ -384,19 +386,14 @@ export function Header({
                 letterSpacing: "0.15em",
                 textDecoration: "none",
                 textTransform: "uppercase",
-                color:
-                  activePath === link.href
-                    ? YP_CYAN
-                    : "rgba(255, 255, 255, 0.8)",
+                color: activePath === link.href ? YP_CYAN : "rgba(255, 255, 255, 0.8)",
                 transition: "color 0.2s ease",
               }}
               onClick={() => setMobileMenuOpen(false)}
               onMouseEnter={(e) => (e.currentTarget.style.color = YP_CYAN)}
               onMouseLeave={(e) =>
                 (e.currentTarget.style.color =
-                  activePath === link.href
-                    ? YP_CYAN
-                    : "rgba(255, 255, 255, 0.8)")
+                  activePath === link.href ? YP_CYAN : "rgba(255, 255, 255, 0.8)")
               }
             >
               {link.label}
