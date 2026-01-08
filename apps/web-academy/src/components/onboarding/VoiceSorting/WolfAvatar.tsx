@@ -41,7 +41,7 @@ const IDENTITY_COLORS: Record<WolfIdentity, { primary: string; glow: string; fil
 const DEFAULT_COLORS = {
   primary: "rgb(0, 246, 224)", // cyan brand
   glow: "rgba(0, 246, 224, 0.4)",
-  filter: "drop-shadow(0 0 20px rgba(0, 246, 224, 0.5))",
+  filter: "drop-shadow(0 0 30px rgba(0, 246, 224, 0.8)) brightness(0.9) contrast(1.1)",
 };
 
 export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: WolfAvatarProps) {
@@ -102,7 +102,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         }}
       >
         <Image
-          src="/images/wolffront.png"
+          src="/images/wolffront_nobg.png"
           alt="YP Wolf"
           width={288}
           height={288}

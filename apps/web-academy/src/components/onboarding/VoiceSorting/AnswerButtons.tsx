@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════
 // ANSWER BUTTONS
 // Primary tap interface for voice sorting questions
+// Brand cyan: #00f6e0
 // ═══════════════════════════════════════════════════════════
 
 "use client";
@@ -16,6 +17,9 @@ interface AnswerButtonsProps {
   highlighted?: boolean; // Pulse effect after voice failure
 }
 
+// Brand cyan color
+const BRAND_CYAN = "#00f6e0";
+
 export function AnswerButtons({
   step,
   onPainAnswer,
@@ -24,6 +28,9 @@ export function AnswerButtons({
   highlighted = false,
 }: AnswerButtonsProps) {
   const highlightClass = highlighted ? "ring-2 ring-white/20 ring-offset-2 ring-offset-black" : "";
+
+  // Shared button styles using brand cyan
+  const buttonBase = `w-full py-5 px-6 rounded-xl font-semibold text-lg active:scale-95 transition-all ${highlightClass}`;
 
   if (step === "pain") {
     return (
@@ -34,13 +41,25 @@ export function AnswerButtons({
       >
         <button
           onClick={() => onPainAnswer(true)}
-          className={`w-full py-5 px-6 rounded-xl bg-red-500/10 border border-red-500/40 text-red-400 font-semibold text-lg hover:bg-red-500/20 active:scale-95 transition-all ${highlightClass}`}
+          className={buttonBase}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           Yeah, something hurts
         </button>
         <button
           onClick={() => onPainAnswer(false)}
-          className={`w-full py-5 px-6 rounded-xl bg-green-500/10 border border-green-500/40 text-green-400 font-semibold text-lg hover:bg-green-500/20 active:scale-95 transition-all ${highlightClass}`}
+          className={buttonBase}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           Nah, I&apos;m good
         </button>
@@ -57,13 +76,25 @@ export function AnswerButtons({
       >
         <button
           onClick={() => onVolumeAnswer(true)}
-          className={`w-full py-5 px-6 rounded-xl bg-orange-500/10 border border-orange-500/40 text-orange-400 font-semibold text-lg hover:bg-orange-500/20 active:scale-95 transition-all ${highlightClass}`}
+          className={buttonBase}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           Multiple teams / Feeling heavy
         </button>
         <button
           onClick={() => onVolumeAnswer(false)}
-          className={`w-full py-5 px-6 rounded-xl bg-green-500/10 border border-green-500/40 text-green-400 font-semibold text-lg hover:bg-green-500/20 active:scale-95 transition-all ${highlightClass}`}
+          className={buttonBase}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           One team / Feeling fresh
         </button>
@@ -80,19 +111,37 @@ export function AnswerButtons({
       >
         <button
           onClick={() => onAmbitionAnswer("speed")}
-          className={`w-full py-5 px-6 rounded-xl bg-cyan-500/10 border border-cyan-500/40 text-cyan-400 font-semibold text-lg hover:bg-cyan-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 ${highlightClass}`}
+          className={`${buttonBase} flex items-center justify-center gap-2`}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           <span>⚡</span> Speed
         </button>
         <button
           onClick={() => onAmbitionAnswer("air")}
-          className={`w-full py-5 px-6 rounded-xl bg-yellow-500/10 border border-yellow-500/40 text-yellow-400 font-semibold text-lg hover:bg-yellow-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 ${highlightClass}`}
+          className={`${buttonBase} flex items-center justify-center gap-2`}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           <span>🦅</span> Bounce / Vertical
         </button>
         <button
           onClick={() => onAmbitionAnswer("tank")}
-          className={`w-full py-5 px-6 rounded-xl bg-purple-500/10 border border-purple-500/40 text-purple-400 font-semibold text-lg hover:bg-purple-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 ${highlightClass}`}
+          className={`${buttonBase} flex items-center justify-center gap-2`}
+          style={{
+            backgroundColor: "rgba(0, 246, 224, 0.1)",
+            borderWidth: 1,
+            borderColor: "rgba(0, 246, 224, 0.4)",
+            color: BRAND_CYAN,
+          }}
         >
           <span>🛡️</span> Strength / Power
         </button>
