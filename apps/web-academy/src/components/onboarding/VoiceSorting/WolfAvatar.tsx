@@ -49,15 +49,15 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
 
   return (
     <div className="relative w-56 h-56 md:w-72 md:h-72">
-      {/* Outer glow ring - pulses when active */}
+      {/* Outer glow ring - breathing effect */}
       <motion.div
         className="absolute inset-0 rounded-full"
         animate={{
-          scale: isSpeaking ? [1, 1.15, 1] : isListening ? [1, 1.08, 1] : [1, 1.02, 1],
-          opacity: isSpeaking ? [0.4, 0.7, 0.4] : isListening ? [0.3, 0.5, 0.3] : [0.2, 0.3, 0.2],
+          scale: isSpeaking ? [1, 1.15, 1] : isListening ? [1, 1.08, 1] : [1, 1.06, 1],
+          opacity: isSpeaking ? [0.5, 0.8, 0.5] : isListening ? [0.4, 0.6, 0.4] : [0.3, 0.5, 0.3],
         }}
         transition={{
-          duration: isSpeaking ? 0.3 : isListening ? 0.6 : 2,
+          duration: isSpeaking ? 0.3 : isListening ? 0.6 : 3,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -66,15 +66,15 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         }}
       />
 
-      {/* Secondary glow - creates depth */}
+      {/* Secondary glow - breathing depth */}
       <motion.div
-        className="absolute inset-4 rounded-full blur-xl"
+        className="absolute inset-8 rounded-full blur-2xl"
         animate={{
-          scale: isSpeaking ? [1, 1.1, 1] : [1, 1.03, 1],
-          opacity: revealed ? 0.8 : 0.4,
+          scale: isSpeaking ? [1, 1.1, 1] : [1, 1.08, 1],
+          opacity: isSpeaking ? [0.6, 0.9, 0.6] : [0.4, 0.6, 0.4],
         }}
         transition={{
-          duration: isSpeaking ? 0.2 : 1.5,
+          duration: isSpeaking ? 0.2 : 3,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -102,11 +102,11 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
         }}
       >
         <Image
-          src="/images/wolffront_optimized.jpg"
+          src="/images/wolffront.png"
           alt="YP Wolf"
           width={288}
           height={288}
-          className="object-contain rounded-full"
+          className="object-contain"
           style={{
             filter: revealed ? colors.filter : DEFAULT_COLORS.filter,
             transition: "filter 0.5s ease-out",
@@ -132,7 +132,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
       {/* Speaking indicator - sound waves */}
       {isSpeaking && (
         <motion.div
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-1"
+          className="absolute -bottom-6 inset-x-0 flex items-end justify-center gap-1"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -160,7 +160,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
       {/* Listening indicator - pulsing mic waves */}
       {isListening && !isSpeaking && (
         <motion.div
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1"
+          className="absolute -bottom-6 inset-x-0 flex items-center justify-center gap-1"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >

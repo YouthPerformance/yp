@@ -32,6 +32,7 @@ interface VoiceSortingState {
 
   // Flow control
   waitingForInput: boolean; // True when wolf finished speaking, awaiting user
+  voiceFailures: number; // Track failures per step for progressive fallback
 
   // Accumulated results
   trainingPath: TrainingPath | null;
@@ -104,6 +105,7 @@ export function useVoiceSorting() {
     transcript: "",
     error: null,
     waitingForInput: false,
+    voiceFailures: 0,
     trainingPath: null,
     wolfIdentity: null,
     painDetected: null,
@@ -352,11 +354,12 @@ export function useVoiceSorting() {
       const transcript = await listen(8000);
 
       if (!transcript) {
-        // No voice detected - show error and re-enable input
+        // No voice detected - increment failures and re-enable input
         setState((s) => ({
           ...s,
           waitingForInput: true,
-          error: "No response detected. Try again or tap a button.",
+          voiceFailures: s.voiceFailures + 1,
+          error: s.voiceFailures >= 1 ? "Having trouble? Just tap a button below." : "No response detected. Try again or tap a button.",
         }));
         return;
       }
@@ -377,7 +380,8 @@ export function useVoiceSorting() {
       setState((s) => ({
         ...s,
         waitingForInput: true,
-        error: "Something went wrong. Try again or tap a button.",
+        voiceFailures: s.voiceFailures + 1,
+        error: s.transcript ? `I heard "${s.transcript}". Pick one below.` : "Something went wrong. Tap a button below.",
       }));
     }
   }, [state.step, listen, classify]);
@@ -393,6 +397,7 @@ export function useVoiceSorting() {
         painDetected: hasPain,
         trainingPath: hasPain ? "glass" : null,
         waitingForInput: false,
+        voiceFailures: 0, // Reset on step change
         error: null,
       }));
 
@@ -419,6 +424,7 @@ export function useVoiceSorting() {
         highVolume: isHighVolume,
         trainingPath: isHighVolume ? "grinder" : "prospect",
         waitingForInput: false,
+        voiceFailures: 0, // Reset on step change
         error: null,
       }));
 

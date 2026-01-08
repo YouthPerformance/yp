@@ -1,6 +1,8 @@
 // ═══════════════════════════════════════════════════════════
-// VOICE SORTING COMPONENT v2
-// Tap-to-talk UX: Wolf speaks → User taps mic OR button
+// VOICE SORTING COMPONENT v3
+// Buttons-first UX: Primary buttons + optional voice ("Or speak")
+// Progressive fallback: After 2 voice failures, mic auto-hides
+// Skip option: "Use buttons instead" for full session
 // ═══════════════════════════════════════════════════════════
 
 "use client";
@@ -9,7 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useVoiceSorting } from "@/hooks/useVoiceSorting";
-import { FallbackButtons } from "./FallbackButtons";
+import { AnswerButtons } from "./AnswerButtons";
 import { IdentityReveal } from "./IdentityReveal";
 import { WolfAvatar } from "./WolfAvatar";
 
@@ -43,6 +45,7 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
     trainingPath,
     result,
     waitingForInput,
+    voiceFailures,
     startSorting,
     answerWithVoice,
     answerPain,
@@ -52,6 +55,7 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
 
   const [hasMicPermission, setHasMicPermission] = useState<boolean | null>(null);
   const [showReveal, setShowReveal] = useState(false);
+  const [skipVoice, setSkipVoice] = useState(false); // User chose buttons-only mode
 
   // Check mic permission on mount
   useEffect(() => {
@@ -151,40 +155,27 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
         )}
       </AnimatePresence>
 
-      {/* Status indicators */}
-      <div className="flex items-center gap-4 mb-6 h-8">
-        {isListening && (
-          <motion.div
-            className="flex items-center gap-2 text-cyan-400"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <Mic className="w-5 h-5" />
-            <span className="text-sm">Listening...</span>
-          </motion.div>
-        )}
-
-        {isSpeaking && (
-          <motion.div
-            className="flex items-center gap-2 text-purple-400"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <Volume2 className="w-5 h-5" />
-            <span className="text-sm">Speaking...</span>
-          </motion.div>
-        )}
-      </div>
-
-      {/* Error display */}
-      {error && (
-        <motion.p
-          className="text-red-400 text-sm mb-4 text-center"
+      {/* Speaking indicator (wolf is talking) */}
+      {isSpeaking && (
+        <motion.div
+          className="flex items-center gap-2 text-purple-400 mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          {error}
-        </motion.p>
+          <Volume2 className="w-5 h-5" />
+          <span className="text-sm">Speaking...</span>
+        </motion.div>
+      )}
+
+      {/* Error / guidance display */}
+      {error && (
+        <motion.div
+          className="bg-gray-900/50 border border-gray-700 rounded-lg px-4 py-3 mb-4 max-w-xs text-center"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <p className="text-gray-300 text-sm">{error}</p>
+        </motion.div>
       )}
 
       {/* Start button (idle state) */}
@@ -212,51 +203,50 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
         </motion.button>
       )}
 
-      {/* Tap to Answer mic button (when waiting for input) */}
-      {waitingForInput && isQuestionStep && !isListening && hasMicPermission && (
-        <motion.button
-          onClick={answerWithVoice}
-          className="w-20 h-20 rounded-full text-black flex items-center justify-center mb-4 transition-colors"
-          style={{ backgroundColor: "#00f6e0", boxShadow: "0 0 20px rgba(0, 246, 224, 0.3)" }}
-          whileHover={{ scale: 1.1, backgroundColor: "#33f8e6" }}
-          whileTap={{ scale: 0.9 }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            boxShadow: [
-              "0 0 20px rgba(0, 246, 224, 0.3)",
-              "0 0 40px rgba(0, 246, 224, 0.5)",
-              "0 0 20px rgba(0, 246, 224, 0.3)",
-            ],
-          }}
-          transition={{
-            boxShadow: { duration: 2, repeat: Infinity },
-          }}
-        >
-          <Mic className="w-8 h-8" />
-        </motion.button>
-      )}
-
-      {/* "Tap to answer" label */}
-      {waitingForInput && isQuestionStep && !isListening && hasMicPermission && (
-        <motion.p
-          className="text-gray-500 text-sm mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          Tap to answer
-        </motion.p>
-      )}
-
-      {/* Fallback buttons for each step */}
+      {/* PRIMARY: Answer buttons (always shown when waiting for input) */}
       {waitingForInput && (
-        <FallbackButtons
+        <AnswerButtons
           step={step}
           onPainAnswer={answerPain}
           onVolumeAnswer={answerVolume}
           onAmbitionAnswer={answerAmbition}
+          highlighted={voiceFailures > 0}
         />
+      )}
+
+      {/* SECONDARY: Voice option (if not skipped and < 2 failures) */}
+      {waitingForInput && isQuestionStep && !skipVoice && voiceFailures < 2 && hasMicPermission && !isListening && (
+        <motion.div
+          className="flex items-center gap-4 mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <button
+            onClick={answerWithVoice}
+            className="text-gray-400 text-sm flex items-center gap-2 hover:text-gray-300 transition-colors"
+          >
+            <Mic className="w-4 h-4" /> Or speak your answer
+          </button>
+          <span className="text-gray-600">|</span>
+          <button
+            onClick={() => setSkipVoice(true)}
+            className="text-gray-500 text-xs hover:text-gray-400 transition-colors"
+          >
+            Use buttons instead
+          </button>
+        </motion.div>
+      )}
+
+      {/* Listening indicator with mic */}
+      {waitingForInput && isListening && (
+        <motion.div
+          className="flex items-center gap-2 mt-6 text-cyan-400"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <Mic className="w-5 h-5 animate-pulse" />
+          <span className="text-sm">Listening...</span>
+        </motion.div>
       )}
 
       {/* Identity reveal overlay */}
