@@ -191,8 +191,9 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
       {step === "idle" && (
         <motion.button
           onClick={startSorting}
-          className="px-8 py-4 rounded-full bg-cyan-500 text-black font-bold text-lg hover:bg-cyan-400 transition-colors"
-          whileHover={{ scale: 1.05 }}
+          className="px-8 py-4 rounded-full text-black font-bold text-lg transition-colors"
+          style={{ backgroundColor: "#00f6e0" }}
+          whileHover={{ scale: 1.05, backgroundColor: "#33f8e6" }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -215,17 +216,18 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
       {waitingForInput && isQuestionStep && !isListening && hasMicPermission && (
         <motion.button
           onClick={answerWithVoice}
-          className="w-20 h-20 rounded-full bg-cyan-500 text-black flex items-center justify-center mb-4 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/30"
-          whileHover={{ scale: 1.1 }}
+          className="w-20 h-20 rounded-full text-black flex items-center justify-center mb-4 transition-colors"
+          style={{ backgroundColor: "#00f6e0", boxShadow: "0 0 20px rgba(0, 246, 224, 0.3)" }}
+          whileHover={{ scale: 1.1, backgroundColor: "#33f8e6" }}
           whileTap={{ scale: 0.9 }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{
             opacity: 1,
             scale: 1,
             boxShadow: [
-              "0 0 20px rgba(6, 182, 212, 0.3)",
-              "0 0 40px rgba(6, 182, 212, 0.5)",
-              "0 0 20px rgba(6, 182, 212, 0.3)",
+              "0 0 20px rgba(0, 246, 224, 0.3)",
+              "0 0 40px rgba(0, 246, 224, 0.5)",
+              "0 0 20px rgba(0, 246, 224, 0.3)",
             ],
           }}
           transition={{
