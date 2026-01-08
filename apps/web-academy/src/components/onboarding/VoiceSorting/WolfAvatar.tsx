@@ -112,6 +112,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
             transition: "filter 0.5s ease-out",
           }}
           priority
+          unoptimized
         />
       </motion.div>
 
@@ -132,7 +133,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
       {/* Speaking indicator - sound waves */}
       {isSpeaking && (
         <motion.div
-          className="absolute -bottom-6 inset-x-0 flex items-end justify-center gap-1"
+          className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -141,7 +142,7 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
               key={i}
               className="w-1.5 rounded-full"
               style={{
-                background: `linear-gradient(to top, ${colors.primary}, transparent)`,
+                background: `linear-gradient(to top, #00f6e0, transparent)`,
               }}
               animate={{
                 height: [8, 24 + Math.sin(i) * 8, 8],
@@ -160,14 +161,15 @@ export function WolfAvatar({ isSpeaking, isListening, identity, revealed }: Wolf
       {/* Listening indicator - pulsing mic waves */}
       {isListening && !isSpeaking && (
         <motion.div
-          className="absolute -bottom-6 inset-x-0 flex items-center justify-center gap-1"
+          className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
           {[0, 1, 2, 3, 4].map((i) => (
             <motion.div
               key={i}
-              className="w-1 bg-cyan-400 rounded-full"
+              className="w-1 rounded-full"
+              style={{ backgroundColor: "#00f6e0" }}
               animate={{
                 height: [6, 16, 6],
                 opacity: [0.4, 1, 0.4],

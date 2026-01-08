@@ -158,7 +158,8 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
       {/* Speaking indicator (wolf is talking) */}
       {isSpeaking && (
         <motion.div
-          className="flex items-center gap-2 text-purple-400 mb-6"
+          className="flex items-center gap-2 mb-6"
+          style={{ color: "#00f6e0" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
