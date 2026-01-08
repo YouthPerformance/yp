@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BetaBadge, type BetaBadgeVariant } from "./BetaBadge";
 
 /**
  * YP Unified Header - "Wolf Pack Glass"
@@ -8,7 +9,7 @@ import { useState } from "react";
  * Glass morphism header matching YP design system
  * Works across: Next.js (Academy), Hydrogen/Remix (Shop), Astro (NeoBall)
  *
- * Design: Floating glass container + Cyan (#00F6E0) accents
+ * Design: Floating glass container + Cyan (#00F6E0) accents + Beta Badge
  */
 
 // YP Design Tokens
@@ -46,6 +47,10 @@ export interface HeaderProps {
   showCart?: boolean;
   /** Hide "WOLF PACK" subtitle next to logo */
   hideSubtitle?: boolean;
+  /** Show Beta badge next to logo (default: true) */
+  showBetaBadge?: boolean;
+  /** Beta badge variant */
+  betaBadgeVariant?: BetaBadgeVariant;
 }
 
 const defaultLinks: NavLink[] = [
@@ -66,6 +71,8 @@ export function Header({
   showLogin = false,
   showCart = true,
   hideSubtitle = false,
+  showBetaBadge = true,
+  betaBadgeVariant = "glow",
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -152,6 +159,7 @@ export function Header({
               </span>
             )}
           </a>
+          {showBetaBadge && <BetaBadge variant={betaBadgeVariant} />}
 
           {/* Center: Desktop Navigation */}
           <div
