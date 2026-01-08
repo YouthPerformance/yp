@@ -3,11 +3,11 @@
 // Overview of module with start button
 // ═══════════════════════════════════════════════════════════
 
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { ArrowLeft, Clock, Zap, CheckCircle } from 'lucide-react';
-import { moduleRegistry } from '@/data/modules/bulletproof-ankles';
+import { ArrowLeft, CheckCircle, Clock, Zap } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { moduleRegistry } from "@/data/modules/bulletproof-ankles";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const module = Object.values(moduleRegistry).find((m) => m.slug === slug);
 
   if (!module) {
-    return { title: 'Module Not Found | YP Academy' };
+    return { title: "Module Not Found | YP Academy" };
   }
 
   return {
@@ -39,13 +39,10 @@ export default async function ModuleDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const totalCards = module.sections.reduce(
-    (sum, section) => sum + section.cards.length,
-    0
-  );
+  const totalCards = module.sections.reduce((sum, section) => sum + section.cards.length, 0);
   const checkCards = module.sections.reduce(
-    (sum, section) => sum + section.cards.filter((c) => c.type === 'Check').length,
-    0
+    (sum, section) => sum + section.cards.filter((c) => c.type === "Check").length,
+    0,
   );
 
   return (
@@ -70,9 +67,7 @@ export default async function ModuleDetailPage({ params }: PageProps) {
           <h1 className="text-4xl md:text-5xl font-bebas uppercase tracking-wide text-white mb-4">
             {module.title}
           </h1>
-          <p className="text-lg text-text-secondary max-w-2xl">
-            {module.shortDescription}
-          </p>
+          <p className="text-lg text-text-secondary max-w-2xl">{module.shortDescription}</p>
 
           {/* Quick stats */}
           <div className="flex flex-wrap gap-6 mt-8">
@@ -118,9 +113,7 @@ export default async function ModuleDetailPage({ params }: PageProps) {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-white">{section.title}</p>
-                  <p className="text-sm text-text-tertiary">
-                    {section.cards.length} cards
-                  </p>
+                  <p className="text-sm text-text-tertiary">{section.cards.length} cards</p>
                 </div>
               </div>
             ))}
@@ -139,8 +132,8 @@ export default async function ModuleDetailPage({ params }: PageProps) {
                 <span className="font-bold text-white">Athlete Mode</span>
               </div>
               <p className="text-sm text-text-secondary">
-                Quick, action-focused content written for young athletes.
-                Get straight to what you need to know.
+                Quick, action-focused content written for young athletes. Get straight to what you
+                need to know.
               </p>
             </div>
             <div className="p-4 rounded-lg bg-bg-secondary">
@@ -149,8 +142,8 @@ export default async function ModuleDetailPage({ params }: PageProps) {
                 <span className="font-bold text-white">Parent Mode</span>
               </div>
               <p className="text-sm text-text-secondary">
-                Deeper explanations with context for supporting your athlete.
-                Toggle anytime while learning.
+                Deeper explanations with context for supporting your athlete. Toggle anytime while
+                learning.
               </p>
             </div>
           </div>
@@ -162,7 +155,8 @@ export default async function ModuleDetailPage({ params }: PageProps) {
             Earn XP ⚡
           </h2>
           <p className="text-text-secondary mb-4">
-            Answer quick check questions correctly to earn XP. Complete levels to earn shards that convert to crystals!
+            Answer quick check questions correctly to earn XP. Complete levels to earn shards that
+            convert to crystals!
           </p>
           <ul className="space-y-2 text-sm text-text-secondary">
             <li>• First try correct: +5 XP</li>

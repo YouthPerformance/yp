@@ -3,14 +3,14 @@
 // All available learning modules
 // ═══════════════════════════════════════════════════════════
 
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowRight, Clock, CheckCircle, Lock } from 'lucide-react';
-import { moduleRegistry } from '@/data/modules/bulletproof-ankles';
+import { ArrowRight, CheckCircle, Clock, Lock } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { moduleRegistry } from "@/data/modules/bulletproof-ankles";
 
 export const metadata: Metadata = {
-  title: 'Learning Modules | YP Academy',
-  description: 'Interactive micro-courses to master athletic performance concepts.',
+  title: "Learning Modules | YP Academy",
+  description: "Interactive micro-courses to master athletic performance concepts.",
 };
 
 export default function ModulesPage() {
@@ -70,10 +70,7 @@ interface ModuleCardProps {
 }
 
 function ModuleCard({ module }: ModuleCardProps) {
-  const totalCards = module.sections.reduce(
-    (sum, section) => sum + section.cards.length,
-    0
-  );
+  const totalCards = module.sections.reduce((sum, section) => sum + section.cards.length, 0);
 
   // TODO: Get actual progress from Convex
   const isCompleted = false;
@@ -92,16 +89,12 @@ function ModuleCard({ module }: ModuleCardProps) {
             w-12 h-12 rounded-xl flex items-center justify-center
             ${
               isCompleted
-                ? 'bg-accent-primary text-black'
-                : 'bg-bg-secondary border border-border-default'
+                ? "bg-accent-primary text-black"
+                : "bg-bg-secondary border border-border-default"
             }
           `}
         >
-          {isCompleted ? (
-            <CheckCircle className="w-6 h-6" />
-          ) : (
-            <span className="text-2xl">🦶</span>
-          )}
+          {isCompleted ? <CheckCircle className="w-6 h-6" /> : <span className="text-2xl">🦶</span>}
         </div>
 
         {/* Content */}
@@ -109,9 +102,7 @@ function ModuleCard({ module }: ModuleCardProps) {
           <h2 className="text-xl font-bebas uppercase tracking-wide text-white mb-1 group-hover:text-accent-primary transition-colors">
             {module.title}
           </h2>
-          <p className="text-text-secondary text-sm mb-3 line-clamp-2">
-            {module.shortDescription}
-          </p>
+          <p className="text-text-secondary text-sm mb-3 line-clamp-2">{module.shortDescription}</p>
 
           {/* Meta */}
           <div className="flex items-center gap-4 text-sm text-text-tertiary">
@@ -133,10 +124,7 @@ function ModuleCard({ module }: ModuleCardProps) {
       {/* Progress bar (if started) */}
       {isStarted && !isCompleted && (
         <div className="mt-4 h-1 bg-bg-secondary rounded-full overflow-hidden">
-          <div
-            className="h-full bg-accent-primary rounded-full"
-            style={{ width: '35%' }}
-          />
+          <div className="h-full bg-accent-primary rounded-full" style={{ width: "35%" }} />
         </div>
       )}
     </Link>

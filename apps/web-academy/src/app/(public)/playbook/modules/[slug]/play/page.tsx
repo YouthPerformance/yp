@@ -3,15 +3,15 @@
 // Interactive card-based learning experience
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { X } from 'lucide-react';
-import { moduleRegistry } from '@/data/modules/bulletproof-ankles';
-import { useModuleStore } from '@/stores/moduleStore';
-import { CardSwiper, ModeToggle, ModuleProgress, XpCounter } from '@/components/modules';
+import { X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
+import { CardSwiper, ModeToggle, ModuleProgress, XpCounter } from "@/components/modules";
+import { moduleRegistry } from "@/data/modules/bulletproof-ankles";
+import { useModuleStore } from "@/stores/moduleStore";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -58,7 +58,7 @@ export default function ModulePlayerPage({ params }: PageProps) {
 
     // TODO: Integrate with Convex when auth is available
     // For now, just show success state
-    console.log('Module completed:', stats);
+    console.log("Module completed:", stats);
 
     // Redirect after a short delay
     setTimeout(() => {
@@ -81,10 +81,7 @@ export default function ModulePlayerPage({ params }: PageProps) {
       <div className="min-h-screen bg-bg-primary flex items-center justify-center">
         <div className="text-center">
           <p className="text-text-secondary mb-4">Module not found</p>
-          <Link
-            href="/playbook/modules"
-            className="text-accent-primary hover:underline"
-          >
+          <Link href="/playbook/modules" className="text-accent-primary hover:underline">
             Back to modules
           </Link>
         </div>
@@ -130,11 +127,7 @@ export default function ModulePlayerPage({ params }: PageProps) {
 
       {/* Card area */}
       <main className="flex-1 overflow-hidden">
-        <CardSwiper
-          sections={module.sections}
-          mode={mode}
-          onComplete={handleComplete}
-        />
+        <CardSwiper sections={module.sections} mode={mode} onComplete={handleComplete} />
       </main>
 
       {/* Exit confirmation modal */}
@@ -171,9 +164,7 @@ export default function ModulePlayerPage({ params }: PageProps) {
       {isCompleted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
           <div className="text-center animate-pulse">
-            <p className="text-xl text-accent-primary">
-              Saving your progress...
-            </p>
+            <p className="text-xl text-accent-primary">Saving your progress...</p>
           </div>
         </div>
       )}
