@@ -119,8 +119,8 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6">
-      {/* Progress indicator */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 flex gap-3">
+      {/* Futuristic HUD Progress Indicator */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-4">
         {["pain", "volume", "ambition"].map((s, i) => {
           const questionSteps = ["pain", "volume", "ambition"];
           const stepIndex = questionSteps.indexOf(step);
@@ -129,26 +129,91 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
           const isUpcoming = step === "idle" || step === "intro";
 
           return (
-            <motion.div
-              key={s}
-              className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                isComplete
-                  ? "bg-cyan-400"
-                  : isCurrent
-                    ? "bg-cyan-400"
-                    : isUpcoming
-                      ? "bg-gray-600"
-                      : "bg-gray-700"
-              }`}
-              animate={
-                isCurrent
-                  ? { scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }
-                  : isUpcoming
-                    ? { opacity: [0.4, 0.6, 0.4] }
+            <div key={s} className="flex items-center gap-4">
+              {/* Diamond indicator */}
+              <motion.div
+                className="relative"
+                animate={
+                  isCurrent
+                    ? { scale: [1, 1.1, 1] }
                     : {}
-              }
-              transition={{ duration: isCurrent ? 0.8 : 2, repeat: Infinity }}
-            />
+                }
+                transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+              >
+                {/* Outer glow ring for current */}
+                {isCurrent && (
+                  <motion.div
+                    className="absolute -inset-2 rounded-full"
+                    style={{
+                      background: "radial-gradient(circle, rgba(0, 246, 224, 0.3) 0%, transparent 70%)",
+                    }}
+                    animate={{
+                      scale: [1, 1.5, 1],
+                      opacity: [0.5, 0.8, 0.5],
+                    }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                )}
+
+                {/* Diamond shape */}
+                <motion.div
+                  className="w-4 h-4 rotate-45 border-2 transition-all duration-300"
+                  style={{
+                    borderColor: isComplete
+                      ? "#00f6e0"
+                      : isCurrent
+                        ? "#00f6e0"
+                        : isUpcoming
+                          ? "#374151"
+                          : "#1f2937",
+                    backgroundColor: isComplete
+                      ? "#00f6e0"
+                      : "transparent",
+                    boxShadow: isComplete || isCurrent
+                      ? "0 0 10px rgba(0, 246, 224, 0.5), inset 0 0 5px rgba(0, 246, 224, 0.3)"
+                      : "none",
+                  }}
+                  animate={
+                    isCurrent
+                      ? {
+                          boxShadow: [
+                            "0 0 10px rgba(0, 246, 224, 0.3), inset 0 0 5px rgba(0, 246, 224, 0.2)",
+                            "0 0 20px rgba(0, 246, 224, 0.6), inset 0 0 10px rgba(0, 246, 224, 0.4)",
+                            "0 0 10px rgba(0, 246, 224, 0.3), inset 0 0 5px rgba(0, 246, 224, 0.2)",
+                          ],
+                        }
+                      : {}
+                  }
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
+
+                {/* Inner dot for complete */}
+                {isComplete && (
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                  >
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                  </motion.div>
+                )}
+              </motion.div>
+
+              {/* Connecting line (except after last) */}
+              {i < 2 && (
+                <motion.div
+                  className="w-8 h-[2px] transition-all duration-500"
+                  style={{
+                    background: stepIndex > i || step === "reveal" || step === "complete"
+                      ? "linear-gradient(90deg, #00f6e0 0%, #00f6e0 100%)"
+                      : "linear-gradient(90deg, #374151 0%, #1f2937 100%)",
+                    boxShadow: stepIndex > i || step === "reveal" || step === "complete"
+                      ? "0 0 8px rgba(0, 246, 224, 0.5)"
+                      : "none",
+                  }}
+                />
+              )}
+            </div>
           );
         })}
       </div>
