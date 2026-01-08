@@ -1,0 +1,68 @@
+---
+interface DrillStep {
+  instruction: string;
+  thumbnailUrl?: string;
+  videoUrl?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  duration: string;
+  author: string;
+  steps: DrillStep[];
+  ageMin: number;
+  ageMax: number;
+  slug: string;
+  publishedDate?: string;
+}
+
+const { title, description, duration, author, steps, ageMin, ageMax, slug, publishedDate = new Date().toISOString() } = Astro.props;
+
+// Parse duration like "3 min" to PT3M format
+const durationMatch = duration.match(/(\d+)\s*min/);
+const isoDuration = durationMatch ? `PT${durationMatch[1]}M` : 'PT5M';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": title,
+  "description": description,
+  "totalTime": isoDuration,
+  "estimatedCost": {
+    "@type": "MonetaryAmount",
+    "currency": "USD",
+    "value": "0"
+  },
+  "step": steps.map((step, index) => ({
+    "@type": "HowToStep",
+    "url": `${slug}#step-${index + 1}`,
+    "name": `Step ${index + 1}`,
+    "text": step.instruction,
+    ...(step.videoUrl && {
+      "video": {
+        "@type": "VideoObject",
+        "name": `${title} - Step ${index + 1}`,
+        "description": step.instruction,
+        "thumbnailUrl": step.thumbnailUrl,
+        "contentUrl": step.videoUrl,
+        "uploadDate": publishedDate
+      }
+    })
+  })),
+  "author": {
+    "@type": "Person",
+    "name": author
+  },
+  "audience": {
+    "@type": "PeopleAudience",
+    "suggestedAge": {
+      "@type": "QuantitativeValue",
+      "minValue": ageMin,
+      "maxValue": ageMax
+    }
+  }
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -1,0 +1,180 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply font-body text-[19px] leading-relaxed text-bark bg-earth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container-article {
+    @apply max-w-[800px] mx-auto px-6;
+  }
+
+  /* Direct Answer Box - THE AEO MONEY SHOT */
+  .direct-answer {
+    @apply bg-white border-l-4 border-gold px-6 py-5 mb-6 text-lg leading-relaxed shadow-card;
+  }
+
+  /* Key Takeaways */
+  .key-takeaways {
+    @apply bg-trust-blue text-white p-6 rounded-md mb-6;
+  }
+
+  .key-takeaways ul {
+    @apply list-none;
+  }
+
+  .key-takeaways li {
+    @apply relative pl-6 mb-2 text-[0.95rem];
+  }
+
+  .key-takeaways li::before {
+    content: '✓';
+    @apply absolute left-0 text-gold-light font-bold;
+  }
+
+  /* Expert Box */
+  .expert-box {
+    @apply flex items-center gap-4 p-4 bg-white rounded-md shadow-card;
+  }
+
+  /* Coach Voice Callout */
+  .coach-voice {
+    @apply border-l-4 px-6 py-5 my-6 rounded-r-md;
+  }
+
+  .coach-voice.barefoot {
+    @apply border-moss bg-gradient-to-br from-moss/10 to-copper/5;
+  }
+
+  .coach-voice.basketball {
+    @apply border-gold bg-gradient-to-br from-gold/10 to-action-orange/5;
+  }
+
+  /* Section Header */
+  .section-header {
+    @apply pt-8 pb-4 border-b-2 border-gold mb-6;
+  }
+
+  .chapter-label {
+    @apply font-mono text-[0.7rem] uppercase tracking-widest text-gold mb-2;
+  }
+
+  /* Drill Card */
+  .drill-card {
+    @apply bg-white rounded-lg shadow-card overflow-hidden mb-6 border border-black/5;
+  }
+
+  .drill-header {
+    @apply flex items-center gap-4 px-5 py-4 bg-paper-dark border-b border-black/5;
+  }
+
+  .drill-number {
+    @apply w-11 h-11 rounded-md flex items-center justify-center font-display font-bold text-lg text-white flex-shrink-0;
+  }
+
+  .drill-body {
+    @apply p-5;
+  }
+
+  .drill-footer {
+    @apply flex justify-between items-center px-5 py-3 bg-paper-dark border-t border-black/5 text-sm;
+  }
+
+  /* Age Badges */
+  .age-badge {
+    @apply inline-block px-2 py-1 rounded-sm font-mono text-[0.7rem] font-medium uppercase text-white;
+  }
+
+  .age-badge.age-7-9 { @apply bg-age-7-9; }
+  .age-badge.age-10-13 { @apply bg-age-10-13; }
+  .age-badge.age-14-18 { @apply bg-age-14-18; }
+
+  /* Safety Box */
+  .safety-box {
+    @apply border-l-4 border-warning px-6 py-5 my-6 rounded-r-md bg-gradient-to-br from-warning/10 to-danger/5;
+  }
+
+  /* CTA Block */
+  .cta-block {
+    @apply text-white py-12 px-6 text-center;
+  }
+
+  .cta-block.basketball {
+    @apply bg-gradient-to-br from-trust-blue to-ink;
+  }
+
+  .cta-block.barefoot {
+    @apply bg-gradient-to-br from-moss to-bark;
+  }
+
+  .cta-button {
+    @apply inline-flex items-center gap-2 px-8 py-4 rounded-md font-mono text-sm uppercase tracking-wide text-white transition-all duration-200;
+  }
+
+  .cta-button.green {
+    @apply bg-action-green hover:bg-action-green-hover hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  .cta-button.orange {
+    @apply bg-action-orange hover:bg-action-orange-hover hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  /* FAQ */
+  .faq-item {
+    @apply bg-white rounded-md mb-3 shadow-card overflow-hidden;
+  }
+
+  .faq-question {
+    @apply px-5 py-4 font-medium flex items-center justify-between gap-4 cursor-pointer;
+  }
+
+  .faq-answer {
+    @apply px-5 pb-5 text-ink-soft text-[0.95rem] leading-relaxed;
+  }
+
+  /* Tables */
+  .content-table {
+    @apply w-full border-collapse my-6 text-[0.9rem];
+  }
+
+  .content-table th {
+    @apply bg-trust-blue text-white py-3 px-4 text-left font-mono text-xs uppercase tracking-wide;
+  }
+
+  .content-table td {
+    @apply py-3 px-4 border-b border-black/5 align-top;
+  }
+
+  .content-table tr:nth-child(even) {
+    @apply bg-paper-dark;
+  }
+
+  /* Related Cards */
+  .related-card {
+    @apply flex items-center gap-4 p-4 bg-paper-dark rounded-md no-underline text-inherit transition-all duration-200;
+  }
+
+  .related-card:hover {
+    @apply bg-paper shadow-card -translate-y-0.5;
+  }
+}

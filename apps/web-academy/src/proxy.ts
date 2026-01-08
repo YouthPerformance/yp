@@ -19,7 +19,9 @@ const isPublicRoute = createRouteMatcher([
   '/code',                // Onboarding: parent code
   '/avatar',              // Onboarding: avatar selection
   '/ready',               // Onboarding: final screen
+  '/voice-sorting',       // Onboarding: voice sorting
   '/api/uplink(.*)',      // GPT Uplink webhooks (custom auth)
+  '/api/voice(.*)',       // Voice sorting API (STT/TTS/classify)
   '/bulletproof-ankles',  // Lead magnet landing page
   '/legal(.*)',           // Legal pages
   '/adam',                // Adam Harrington profile page

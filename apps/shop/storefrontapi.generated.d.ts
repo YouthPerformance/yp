@@ -105,6 +105,7 @@ export type AllProductsQuery = {
         featuredImage?: StorefrontAPI.Maybe<
           Pick<StorefrontAPI.Image, 'url' | 'altText'>
         >;
+        images: {nodes: Array<Pick<StorefrontAPI.Image, 'url' | 'altText'>>};
       }
     >;
   };
@@ -123,7 +124,7 @@ interface GeneratedQueryTypes {
     return: ProductQuery;
     variables: ProductQueryVariables;
   };
-  '#graphql\n  query AllProducts {\n    products(first: 50, sortKey: TITLE) {\n      nodes {\n        id\n        title\n        handle\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n  }\n': {
+  '#graphql\n  query AllProducts {\n    products(first: 50, sortKey: TITLE) {\n      nodes {\n        id\n        title\n        handle\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n        images(first: 2) {\n          nodes {\n            url\n            altText\n          }\n        }\n      }\n    }\n  }\n': {
     return: AllProductsQuery;
     variables: AllProductsQueryVariables;
   };

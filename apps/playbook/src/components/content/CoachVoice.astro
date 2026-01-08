@@ -1,0 +1,37 @@
+---
+/**
+ * CoachVoice - Expert callout/quote block
+ * Adds unique first-person coaching insight that AI can't replicate.
+ */
+interface Props {
+  author: 'adam' | 'james';
+  label?: string;
+}
+
+const { author, label } = Astro.props;
+
+const config = {
+  adam: {
+    icon: '💬',
+    label: label || "Coach Adam's Take",
+    theme: 'basketball',
+  },
+  james: {
+    icon: '🦶',
+    label: label || "James's Take",
+    theme: 'barefoot',
+  },
+};
+
+const { icon, label: displayLabel, theme } = config[author];
+---
+
+<div class={`coach-voice ${theme}`}>
+  <div class="flex items-center gap-2 mb-2 font-mono text-[0.7rem] uppercase tracking-widest text-inherit opacity-80">
+    <span>{icon}</span>
+    <span>{displayLabel}</span>
+  </div>
+  <p class="italic text-ink-soft text-base leading-relaxed m-0">
+    <slot />
+  </p>
+</div>

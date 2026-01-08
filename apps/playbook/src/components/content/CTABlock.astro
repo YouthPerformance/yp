@@ -1,0 +1,26 @@
+---
+/**
+ * CTABlock - Conversion section at end of articles
+ */
+interface Props {
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonUrl: string;
+  theme?: 'basketball' | 'barefoot';
+}
+
+const { title, description, buttonText, buttonUrl, theme = 'basketball' } = Astro.props;
+
+const bgClass = theme === 'barefoot' ? 'cta-block barefoot' : 'cta-block basketball';
+const btnClass = theme === 'barefoot' ? 'cta-button green' : 'cta-button orange';
+---
+
+<section class={bgClass}>
+  <h2 class="font-display text-2xl mb-4">{title}</h2>
+  <p class="opacity-90 mb-6 max-w-[500px] mx-auto text-base">{description}</p>
+  <a href={buttonUrl} class={btnClass}>
+    <span>{buttonText}</span>
+    <span>→</span>
+  </a>
+</section>

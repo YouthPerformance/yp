@@ -746,3 +746,294 @@ html {
   font-size: clamp(5rem, 15vw, 15rem);
   letter-spacing: -0.03em;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   SHOPIFY SUPPLY INSPIRED ANIMATIONS
+   Quick View, Image Swap, Rotating Buttons
+   ═══════════════════════════════════════════════════════════ */
+
+/* Rotate - for spinning text rings */
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Spin with Momentum - smooth easing */
+@keyframes spin-with-momentum {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Bloop - satisfying pop/scale effect */
+@keyframes bloop {
+  0% { transform: scale(0.9); }
+  40% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Shine Sweep - diagonal light sweep */
+@keyframes shine {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
+
+/* Rotate and Bob - rotation with vertical movement */
+@keyframes rotate-and-bob {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* Animation Utility Classes */
+.animate-rotate { animation: rotate 10s linear infinite; }
+.animate-rotate-slow { animation: rotate 20s linear infinite; }
+.animate-rotate-fast { animation: rotate 3s linear infinite; }
+.animate-bloop { animation: bloop 0.3s linear; }
+.animate-spin-momentum { animation: spin-with-momentum 3s ease-in-out infinite; }
+.animate-rotate-bob { animation: rotate-and-bob 4s linear infinite; }
+
+/* Paused by default, play on hover */
+.animate-rotate-paused {
+  animation: rotate 10s linear infinite;
+  animation-play-state: paused;
+}
+.animate-rotate-paused:hover,
+.group:hover .animate-rotate-paused {
+  animation-play-state: running;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRODUCT CARD - ENHANCED (Shopify Supply Style)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Secondary image - hidden by default */
+.product-card__image-secondary {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* On hover, swap images */
+.product-card:hover .product-card__image img:first-child {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.product-card:hover .product-card__image-secondary {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Quick View Button */
+.product-card__quick-view {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--c-cyan);
+  color: var(--c-cyan);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.product-card__quick-view:hover {
+  background: var(--c-cyan);
+  color: var(--c-bg);
+}
+
+/* Show Quick View on desktop hover */
+@media (min-width: 768px) {
+  .product-card:hover .product-card__quick-view {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Shine Effect for product cards */
+.product-card--shine {
+  overflow: hidden;
+}
+
+.product-card--shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 246, 224, 0.1),
+    transparent
+  );
+  transform: skewX(-25deg);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.product-card--shine:hover::before {
+  animation: shine 0.8s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ROTATING SHOP ALL BUTTON
+   Circular text that spins on hover
+   ═══════════════════════════════════════════════════════════ */
+.shop-all-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  text-decoration: none;
+}
+
+.shop-all-button__ring {
+  position: absolute;
+  inset: 0;
+  animation: rotate 10s linear infinite;
+  animation-play-state: paused;
+}
+
+.shop-all-button:hover .shop-all-button__ring {
+  animation-play-state: running;
+}
+
+.shop-all-button__center {
+  position: relative;
+  font-size: 1.5rem;
+  color: var(--c-cyan);
+  transition: transform 0.3s ease;
+}
+
+.shop-all-button:hover .shop-all-button__center {
+  transform: translate(2px, -2px);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   QUICK VIEW MODAL
+   ═══════════════════════════════════════════════════════════ */
+.quick-view-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.quick-view-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.quick-view-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 90vw;
+  max-width: 900px;
+  max-height: 85vh;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 101;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-view-overlay.is-open + .quick-view-modal,
+.quick-view-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.quick-view-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  color: var(--c-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.quick-view-modal__close:hover {
+  border-color: var(--c-cyan);
+  color: var(--c-cyan);
+}
+
+.quick-view-modal__content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .quick-view-modal__content {
+    grid-template-columns: 1fr 1fr;
+    padding: 2.5rem;
+  }
+}
+
+.quick-view-modal__image {
+  aspect-ratio: 1;
+  background: var(--c-panel);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.quick-view-modal__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quick-view-modal__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quick-view-modal__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.quick-view-modal__price {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: var(--c-cyan);
+}

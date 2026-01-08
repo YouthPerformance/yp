@@ -1,0 +1,46 @@
+# YouthPerformance Playbook - Crawler Control
+# https://playbook.youthperformance.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_astro/
+
+# AI Search Bots - Welcome
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+# Traditional Search
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemaps
+Sitemap: https://playbook.youthperformance.com/sitemap-index.xml
+Sitemap: https://playbook.youthperformance.com/sitemaps/pillars.xml
+Sitemap: https://playbook.youthperformance.com/sitemaps/drills.xml
+Sitemap: https://playbook.youthperformance.com/sitemaps/parent-sidelines.xml
+
+# AI Knowledge Index
+# See /llms.txt for structured content index

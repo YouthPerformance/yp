@@ -1,0 +1,400 @@
+/* =============================================
+   Shopify Supply Animation Library
+   Extracted from shopify.supply
+   ============================================= */
+
+/* -----------------------------------------
+   CSS Variables / Design Tokens
+   ----------------------------------------- */
+:root {
+  /* Animation Variables */
+  --animate-spin: spin 1s linear infinite;
+  --animate-spin-with-momentum: spin-with-momentum 3s ease-in-out infinite;
+  --animate-rotate-and-bob: rotate-and-bob 4s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-bloop: bloop 0.3s linear;
+  --animate-fade-in: fade-in 0.3s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  --animate-fade-in-out: fade-in-out 2.1s ease-out;
+
+  /* Easing Functions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Transition Defaults */
+  --default-transition-duration: 0.15s;
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* -----------------------------------------
+   KEYFRAME ANIMATIONS
+   ----------------------------------------- */
+
+/* Spin - Basic rotation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Spin with Momentum - Smooth acceleration/deceleration */
+@keyframes spin-with-momentum {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Rotate and Bob - Rotation with vertical movement */
+@keyframes rotate-and-bob {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-5px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
+}
+
+/* Float - Gentle up/down floating effect */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5%);
+  }
+}
+
+/* Bloop - Pop/scale effect */
+@keyframes bloop {
+  0% {
+    transform: scale(0.9);
+  }
+  40% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Rotate - Simple 360 rotation */
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fade In */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Fade Out */
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Fade In Out - For notifications/toasts */
+@keyframes fade-in-out {
+  0%, 100% {
+    opacity: 0;
+  }
+  20%, 80% {
+    opacity: 1;
+  }
+}
+
+/* Shine - Sweeping highlight effect */
+@keyframes shine {
+  to {
+    left: 125%;
+  }
+}
+
+/* Marquee - Horizontal scrolling text */
+@keyframes marquee {
+  0% {
+    transform: translate(0);
+  }
+  100% {
+    transform: translate(-25%);
+  }
+}
+
+/* -----------------------------------------
+   ROTATING TEXT RING (Shop All Button)
+   The circular spinning text button
+   ----------------------------------------- */
+.text-ring {
+  transform-origin: 50%;
+}
+
+/* On desktop, paused by default, plays on hover */
+@media (min-width: 56.25rem) {
+  .text-ring {
+    animation: rotate 10s linear infinite paused;
+  }
+}
+
+.back-to-top:hover .text-ring,
+.shop-all-button:hover .text-ring {
+  animation-play-state: running;
+}
+
+/* Hover triggers spin */
+.hover\:animate-spin:hover {
+  animation: var(--animate-spin);
+}
+
+.hover\:animate-spin-with-momentum:hover {
+  animation: var(--animate-spin-with-momentum);
+}
+
+/* -----------------------------------------
+   PRODUCT CARD HOVER EFFECTS
+   ----------------------------------------- */
+
+/* Product Card Group Container */
+.group\/product-card {
+  position: relative;
+}
+
+.group\/product-image {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Quick View Button - Hidden by default, shown on hover */
+.quick-view-button {
+  display: none;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show Quick View on product card hover (desktop only) */
+@media (min-width: 56.25rem) {
+  .group\/product-card:hover .quick-view-button,
+  .md\:group-hover\/product-card\:block:is(:where(.group\/product-card):hover *) {
+    display: block;
+  }
+
+  .group\/product-card:hover .quick-view-button {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Scale to 100% on hover */
+  .md\:group-hover\/product-card\:scale-100:is(:where(.group\/product-card):hover *) {
+    --tw-scale-x: 100%;
+    --tw-scale-y: 100%;
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
+
+  /* Rotate to 0 on hover (for icons that start rotated) */
+  .md\:group-hover\/product-card\:rotate-0:is(:where(.group\/product-card):hover *) {
+    rotate: none;
+  }
+}
+
+/* Product Image Hover - Scale effects */
+@media (min-width: 56.25rem) {
+  /* Primary image scales down slightly */
+  .md\:group-hover\/product-image\:scale-95:is(:where(.group\/product-image):hover *) {
+    --tw-scale-x: 95%;
+    --tw-scale-y: 95%;
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
+
+  /* Secondary image scales to full */
+  .md\:group-hover\/product-image\:scale-100:is(:where(.group\/product-image):hover *) {
+    --tw-scale-x: 100%;
+    --tw-scale-y: 100%;
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
+
+  /* Opacity transitions for image swap */
+  .md\:group-hover\/product-image\:opacity-0:is(:where(.group\/product-image):hover *) {
+    opacity: 0;
+  }
+
+  .md\:group-hover\/product-image\:opacity-100:is(:where(.group\/product-image):hover *) {
+    opacity: 1;
+  }
+
+  /* Staggered delays for smooth transitions */
+  .md\:group-hover\/product-image\:delay-0:is(:where(.group\/product-image):hover *) {
+    transition-delay: 0s;
+  }
+
+  .md\:group-hover\/product-image\:delay-50:is(:where(.group\/product-image):hover *) {
+    transition-delay: 50ms;
+  }
+}
+
+/* -----------------------------------------
+   QUICK VIEW BUTTON STYLES
+   The bordered button with monospace text
+   ----------------------------------------- */
+.quick-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid currentColor;
+  background: transparent;
+  font-family: monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.quick-view-btn:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Dark theme variant */
+.dark .quick-view-btn {
+  border-color: #eeece2;
+  color: #eeece2;
+}
+
+.dark .quick-view-btn:hover {
+  background-color: #eeece2;
+  color: black;
+}
+
+/* -----------------------------------------
+   MEGA MENU LINK UNDERLINE ANIMATION
+   ----------------------------------------- */
+.mega-menu__link {
+  position: relative;
+}
+
+.mega-menu__link:after {
+  content: "";
+  transform-origin: 0;
+  background-color: currentColor;
+  width: 100%;
+  height: 2px;
+  transition: transform 0.25s ease-in-out;
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  transform: scaleX(0);
+}
+
+.mega-menu__link:hover:after {
+  transform: scaleX(1);
+}
+
+/* -----------------------------------------
+   SHINE EFFECT (for product images)
+   ----------------------------------------- */
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect:before {
+  content: "";
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: -75%;
+  transform: skew(-25deg);
+}
+
+.shine-effect:hover:before,
+.shine-effect:focus:before {
+  animation: shine 1s ease-out;
+}
+
+/* -----------------------------------------
+   FADE IN SECTION (scroll reveal)
+   ----------------------------------------- */
+.fade-in-section {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: translateY(20%);
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* -----------------------------------------
+   UTILITY CLASSES
+   ----------------------------------------- */
+
+/* Transitions */
+.transition {
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform, scale, rotate, filter;
+  transition-timing-function: var(--default-transition-timing-function);
+  transition-duration: var(--default-transition-duration);
+}
+
+.transition-transform {
+  transition-property: transform, translate, scale, rotate;
+  transition-timing-function: var(--default-transition-timing-function);
+  transition-duration: var(--default-transition-duration);
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.duration-500 {
+  transition-duration: 500ms;
+}
+
+/* Rotation utilities */
+.rotate-0 { rotate: none; }
+.rotate-45 { rotate: 45deg; }
+.rotate-90 { rotate: 90deg; }
+.rotate-180 { rotate: 180deg; }
+.-rotate-45 { rotate: -45deg; }
+.-rotate-90 { rotate: -90deg; }
+
+/* Scale utilities */
+.scale-0 { scale: 0; }
+.scale-50 { scale: 0.5; }
+.scale-75 { scale: 0.75; }
+.scale-90 { scale: 0.9; }
+.scale-95 { scale: 0.95; }
+.scale-100 { scale: 1; }
+.scale-105 { scale: 1.05; }
+.scale-110 { scale: 1.1; }
+
+/* Animation utilities */
+.animate-spin { animation: var(--animate-spin); }
+.animate-spin-with-momentum { animation: var(--animate-spin-with-momentum); }
+.animate-rotate-and-bob { animation: var(--animate-rotate-and-bob); }
+.animate-float { animation: var(--animate-float); }
+.animate-bloop { animation: var(--animate-bloop); }

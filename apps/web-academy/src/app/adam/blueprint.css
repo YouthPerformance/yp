@@ -1,0 +1,428 @@
+/* ═══════════════════════════════════════════════════════════
+   ADAM HARRINGTON - THE BLUEPRINT THEME
+   "League Intelligence" Design System
+   Minority Report × Architectural Command Center
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   BLUEPRINT COLOR TOKENS
+   ───────────────────────────────────────────────────────────── */
+
+.blueprint-theme {
+  /* Core Palette */
+  --bp-navy-deep: #0A1628;
+  --bp-navy-mid: #0F1D32;
+  --bp-navy-light: #162540;
+
+  /* Wireframe / Schematic Colors */
+  --bp-wire-white: rgba(255, 255, 255, 0.9);
+  --bp-wire-dim: rgba(255, 255, 255, 0.4);
+  --bp-wire-subtle: rgba(255, 255, 255, 0.15);
+
+  /* Accent - YP Teal (Brand Aligned) */
+  --bp-accent: #00F6E0;
+  --bp-accent-glow: rgba(0, 246, 224, 0.4);
+  --bp-accent-dim: rgba(0, 246, 224, 0.2);
+
+  /* Alert / Highlight */
+  --bp-highlight: #FF6B6B;
+  --bp-gold: #FFE66D;
+
+  /* Glass Effects */
+  --bp-glass-bg: rgba(15, 29, 50, 0.7);
+  --bp-glass-border: rgba(255, 255, 255, 0.1);
+  --bp-glass-blur: 20px;
+
+  /* Grid / Schematic */
+  --bp-grid-color: rgba(0, 246, 224, 0.08);
+  --bp-grid-size: 40px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TYPOGRAPHY - TECHNICAL / MONOSPACE
+   ───────────────────────────────────────────────────────────── */
+
+.blueprint-theme {
+  --bp-font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --bp-font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+  --bp-font-body: 'Inter', system-ui, sans-serif;
+}
+
+.bp-mono {
+  font-family: var(--bp-font-mono);
+  letter-spacing: -0.02em;
+}
+
+.bp-display {
+  font-family: var(--bp-font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GLASSMORPHISM COMPONENTS
+   ───────────────────────────────────────────────────────────── */
+
+.bp-glass {
+  background: var(--bp-glass-bg);
+  backdrop-filter: blur(var(--bp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--bp-glass-blur));
+  border: 1px solid var(--bp-glass-border);
+  border-radius: 12px;
+}
+
+.bp-glass-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 29, 50, 0.8) 0%,
+    rgba(10, 22, 40, 0.6) 100%
+  );
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCHEMATIC GRID BACKGROUND
+   ───────────────────────────────────────────────────────────── */
+
+.bp-grid-bg {
+  background-color: var(--bp-navy-deep);
+  background-image:
+    linear-gradient(var(--bp-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bp-grid-color) 1px, transparent 1px);
+  background-size: var(--bp-grid-size) var(--bp-grid-size);
+}
+
+/* Animated scanning line */
+.bp-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--bp-accent),
+    transparent
+  );
+  opacity: 0.5;
+  animation: scanLine 4s ease-in-out infinite;
+}
+
+@keyframes scanLine {
+  0%, 100% {
+    top: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   AR LENS OVERLAY EFFECT
+   ───────────────────────────────────────────────────────────── */
+
+.bp-ar-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Corner brackets - AR targeting */
+.bp-ar-bracket {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-color: var(--bp-accent);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.6;
+}
+
+.bp-ar-bracket.top-left {
+  top: 20px;
+  left: 20px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.bp-ar-bracket.top-right {
+  top: 20px;
+  right: 20px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.bp-ar-bracket.bottom-left {
+  bottom: 20px;
+  left: 20px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.bp-ar-bracket.bottom-right {
+  bottom: 20px;
+  right: 20px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FLOATING SCHEMATICS (X's and O's)
+   ───────────────────────────────────────────────────────────── */
+
+.bp-schematic {
+  position: absolute;
+  font-family: var(--bp-font-mono);
+  color: var(--bp-wire-dim);
+  font-size: 14px;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+}
+
+.bp-schematic.highlight {
+  color: var(--bp-accent);
+  text-shadow: 0 0 10px var(--bp-accent-glow);
+}
+
+/* Play diagram lines */
+.bp-play-line {
+  stroke: var(--bp-wire-dim);
+  stroke-width: 1;
+  fill: none;
+  stroke-dasharray: 4 4;
+}
+
+.bp-play-line.active {
+  stroke: var(--bp-accent);
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 4px var(--bp-accent-glow));
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DATA READOUT STYLES
+   ───────────────────────────────────────────────────────────── */
+
+.bp-readout {
+  font-family: var(--bp-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bp-wire-dim);
+}
+
+.bp-readout-value {
+  font-family: var(--bp-font-mono);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--bp-wire-white);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.bp-readout-accent {
+  color: var(--bp-accent);
+  text-shadow: 0 0 15px var(--bp-accent-glow);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BUTTONS - BLUEPRINT STYLE
+   ───────────────────────────────────────────────────────────── */
+
+.bp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--bp-accent);
+  color: var(--bp-navy-deep);
+  font-family: var(--bp-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 20px var(--bp-accent-dim);
+}
+
+.bp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px var(--bp-accent-glow);
+}
+
+.bp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--bp-wire-white);
+  font-family: var(--bp-font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--bp-wire-subtle);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bp-btn-secondary:hover {
+  border-color: var(--bp-accent);
+  color: var(--bp-accent);
+  box-shadow: 0 0 15px var(--bp-accent-dim);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PARALLAX LAYERS
+   ───────────────────────────────────────────────────────────── */
+
+.bp-parallax-container {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.bp-parallax-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bp-parallax-layer[data-depth="1"] {
+  transform: translateZ(-10px) scale(1.1);
+}
+
+.bp-parallax-layer[data-depth="2"] {
+  transform: translateZ(-20px) scale(1.2);
+}
+
+.bp-parallax-layer[data-depth="3"] {
+  transform: translateZ(-30px) scale(1.3);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CONSULTANT'S DESK WIDGET
+   ───────────────────────────────────────────────────────────── */
+
+.bp-document {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid var(--bp-glass-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bp-document-blur {
+  filter: blur(3px);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.bp-document:hover .bp-document-blur {
+  filter: blur(0);
+  opacity: 1;
+}
+
+.bp-insight-marker {
+  position: absolute;
+  padding: 6px 12px;
+  background: var(--bp-accent);
+  color: var(--bp-navy-deep);
+  font-family: var(--bp-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px var(--bp-accent-dim);
+}
+
+.bp-document:hover .bp-insight-marker {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   AUDIO WAVEFORM
+   ───────────────────────────────────────────────────────────── */
+
+.bp-waveform {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+}
+
+.bp-waveform-bar {
+  width: 3px;
+  background: var(--bp-accent);
+  border-radius: 2px;
+  opacity: 0.6;
+  animation: waveform 1s ease-in-out infinite;
+}
+
+.bp-waveform-bar:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+.bp-waveform-bar:nth-child(3n) {
+  animation-delay: 0.2s;
+}
+
+@keyframes waveform {
+  0%, 100% {
+    height: 20%;
+  }
+  50% {
+    height: 80%;
+  }
+}
+
+.bp-waveform.paused .bp-waveform-bar {
+  animation-play-state: paused;
+  height: 30%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE ADJUSTMENTS
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .blueprint-theme {
+    --bp-grid-size: 30px;
+  }
+
+  .bp-ar-bracket {
+    width: 40px;
+    height: 40px;
+  }
+
+  .bp-schematic {
+    font-size: 12px;
+  }
+}

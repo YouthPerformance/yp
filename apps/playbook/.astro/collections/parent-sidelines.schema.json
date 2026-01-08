@@ -1,0 +1,94 @@
+{
+  "$ref": "#/definitions/parent-sidelines",
+  "definitions": {
+    "parent-sidelines": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "basketball",
+            "barefoot",
+            "general",
+            "safety"
+          ]
+        },
+        "author": {
+          "type": "string"
+        },
+        "publishedDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "integer",
+              "format": "unix-time"
+            }
+          ]
+        },
+        "updatedDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "integer",
+              "format": "unix-time"
+            }
+          ]
+        },
+        "directAnswer": {
+          "type": "string"
+        },
+        "relatedPillar": {
+          "type": "string"
+        },
+        "relatedDrills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "slug",
+        "category",
+        "author",
+        "publishedDate",
+        "updatedDate",
+        "directAnswer",
+        "relatedPillar",
+        "keywords"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

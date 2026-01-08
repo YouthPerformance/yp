@@ -1,0 +1,18 @@
+---
+/**
+ * DirectAnswer - THE AEO MONEY SHOT
+ * This is the 2-3 sentence definitive answer that AI engines quote.
+ * Must be in the first 200 words of the page.
+ */
+interface Props {
+  theme?: 'basketball' | 'barefoot';
+}
+
+const { theme = 'basketball' } = Astro.props;
+
+const borderColor = theme === 'barefoot' ? 'border-moss' : 'border-gold';
+---
+
+<div class={`direct-answer ${borderColor}`}>
+  <slot />
+</div>

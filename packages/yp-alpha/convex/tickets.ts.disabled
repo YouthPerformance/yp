@@ -1,0 +1,345 @@
+// ═══════════════════════════════════════════════════════════
+// GOLDEN TICKETS - THE SHOPIFY → YP BRIDGE
+// Parent buys on Shopify → Kid claims with ticket → Training unlocked
+// ═══════════════════════════════════════════════════════════
+
+import { v } from "convex/values";
+import { mutation, query, internalMutation } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
+import { internal } from "./_generated/api";
+
+// ─────────────────────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────────────────────
+
+const TICKET_EXPIRY_HOURS = 72; // 3 days to claim
+const TOKEN_LENGTH = 32;
+
+// Product slug mapping (Shopify SKU → YP slug)
+const PRODUCT_MAP: Record<string, { slug: string; name: string; type: "program" | "subscription" | "bundle" }> = {
+  "speed-pack-v1": { slug: "speed-pack", name: "Speed Pack", type: "program" },
+  "foundation-42": { slug: "foundation-42", name: "42-Day Foundation", type: "program" },
+  "ankle-armor": { slug: "ankle-armor", name: "Ankle Armor", type: "program" },
+  "jump-lab": { slug: "jump-lab", name: "Jump Lab", type: "program" },
+  "pro-monthly": { slug: "pro-monthly", name: "Pro Monthly", type: "subscription" },
+  "pro-annual": { slug: "pro-annual", name: "Pro Annual", type: "subscription" },
+};
+
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+
+function generateToken(): string {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let token = "";
+  for (let i = 0; i < TOKEN_LENGTH; i++) {
+    token += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return token;
+}
+
+// ─────────────────────────────────────────────────────────────
+// INTERNAL: Process Shopify Order (called by HTTP action)
+// ─────────────────────────────────────────────────────────────
+
+export const processShopifyOrder = internalMutation({
+  args: {
+    shopifyOrderId: v.string(),
+    shopifyOrderNumber: v.string(),
+    email: v.string(),
+    customerName: v.optional(v.string()),
+    lineItems: v.array(v.object({
+      productId: v.string(),
+      variantId: v.string(),
+      title: v.string(),
+      sku: v.optional(v.string()),
+      quantity: v.number(),
+      price: v.number(),
+    })),
+    totalAmount: v.number(),
+    currency: v.string(),
+    shopifyCreatedAt: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // 1. Check for duplicate order
+    const existing = await ctx.db
+      .query("shopifyOrders")
+      .withIndex("by_shopify_order", (q) => q.eq("shopifyOrderId", args.shopifyOrderId))
+      .first();
+
+    if (existing) {
+      console.log(`[TICKETS] Duplicate order ${args.shopifyOrderId}, skipping`);
+      return { status: "duplicate", orderId: existing._id };
+    }
+
+    // 2. Store the order
+    const orderId = await ctx.db.insert("shopifyOrders", {
+      shopifyOrderId: args.shopifyOrderId,
+      shopifyOrderNumber: args.shopifyOrderNumber,
+      email: args.email,
+      customerName: args.customerName,
+      lineItems: args.lineItems,
+      totalAmount: args.totalAmount,
+      currency: args.currency,
+      processed: false,
+      createdAt: Date.now(),
+      shopifyCreatedAt: args.shopifyCreatedAt,
+    });
+
+    // 3. Generate Golden Tickets for each eligible line item
+    const tickets: Array<{ id: Id<"goldenTickets">; token: string; productName: string; productSlug: string }> = [];
+    const expiresAt = Date.now() + TICKET_EXPIRY_HOURS * 60 * 60 * 1000;
+
+    for (const item of args.lineItems) {
+      const sku = item.sku || "";
+      const productInfo = PRODUCT_MAP[sku];
+
+      if (productInfo) {
+        // Create a ticket for each quantity
+        for (let i = 0; i < item.quantity; i++) {
+          const token = generateToken();
+          const ticketId = await ctx.db.insert("goldenTickets", {
+            token,
+            orderId,
+            productSlug: productInfo.slug,
+            productName: productInfo.name,
+            status: "pending",
+            expiresAt,
+            createdAt: Date.now(),
+          });
+          tickets.push({
+            id: ticketId,
+            token,
+            productName: productInfo.name,
+            productSlug: productInfo.slug,
+          });
+        }
+      }
+    }
+
+    // 4. Mark order as processed
+    await ctx.db.patch(orderId, { processed: true });
+
+    // 5. Schedule Golden Ticket email (send immediately)
+    // For multiple tickets, we send one email per ticket
+    // In a real scenario, you might want to batch these
+    for (const ticket of tickets) {
+      await ctx.scheduler.runAfter(0, internal.emails.sendGoldenTicketEmail, {
+        to: args.email,
+        customerName: args.customerName,
+        productName: ticket.productName,
+        productSlug: ticket.productSlug,
+        claimToken: ticket.token,
+        orderNumber: args.shopifyOrderNumber,
+      });
+    }
+
+    console.log(`[TICKETS] Processed order ${args.shopifyOrderNumber}, created ${tickets.length} tickets, emails scheduled`);
+
+    return {
+      status: "success",
+      orderId,
+      ticketCount: tickets.length,
+      tickets,
+    };
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// QUERY: Get ticket by token (for claim page)
+// ─────────────────────────────────────────────────────────────
+
+export const getByToken = query({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    const ticket = await ctx.db
+      .query("goldenTickets")
+      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .first();
+
+    if (!ticket) {
+      return { error: "INVALID_TOKEN", message: "This access code doesn't exist." };
+    }
+
+    if (ticket.status === "redeemed") {
+      return { error: "ALREADY_REDEEMED", message: "This pack has already been activated." };
+    }
+
+    if (ticket.status === "revoked") {
+      return { error: "REVOKED", message: "This access code has been cancelled." };
+    }
+
+    if (Date.now() > ticket.expiresAt) {
+      return { error: "EXPIRED", message: "This access code has expired. Contact support." };
+    }
+
+    return {
+      valid: true,
+      productSlug: ticket.productSlug,
+      productName: ticket.productName,
+      expiresAt: ticket.expiresAt,
+    };
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// MUTATION: Redeem ticket (The "ACTIVATE" action)
+// ─────────────────────────────────────────────────────────────
+
+export const redeem = mutation({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    // 1. Verify user is authenticated
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("UNAUTHORIZED: Create your YP ID first to claim this pack.");
+    }
+
+    // 2. Find the ticket
+    const ticket = await ctx.db
+      .query("goldenTickets")
+      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .first();
+
+    if (!ticket) {
+      throw new Error("INVALID_TOKEN: This access code doesn't exist.");
+    }
+
+    if (ticket.status === "redeemed") {
+      throw new Error("ALREADY_REDEEMED: This pack is already active on another account.");
+    }
+
+    if (ticket.status === "revoked") {
+      throw new Error("REVOKED: This access code has been cancelled.");
+    }
+
+    if (Date.now() > ticket.expiresAt) {
+      throw new Error("EXPIRED: This access code has expired. Ask the purchaser to contact support.");
+    }
+
+    // 3. Find the user by Clerk ID
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!user) {
+      throw new Error("NO_PROFILE: Complete your YP ID setup first.");
+    }
+
+    // 4. Check if user already has this entitlement
+    const existingEntitlement = await ctx.db
+      .query("entitlements")
+      .withIndex("by_user_product", (q) =>
+        q.eq("userId", user._id).eq("productSlug", ticket.productSlug)
+      )
+      .first();
+
+    if (existingEntitlement && existingEntitlement.status === "active") {
+      throw new Error("DUPLICATE: You already have access to this pack.");
+    }
+
+    // 5. Get product type from mapping
+    const productInfo = Object.values(PRODUCT_MAP).find(p => p.slug === ticket.productSlug);
+    const productType = productInfo?.type || "program";
+
+    // 6. Grant the entitlement
+    const entitlementId = await ctx.db.insert("entitlements", {
+      userId: user._id,
+      productSlug: ticket.productSlug,
+      productType,
+      source: "shopify",
+      ticketId: ticket._id,
+      status: "active",
+      grantedAt: Date.now(),
+      // Subscriptions get 30-day expiry, programs are lifetime
+      expiresAt: productType === "subscription"
+        ? Date.now() + 30 * 24 * 60 * 60 * 1000
+        : undefined,
+    });
+
+    // 7. Burn the ticket
+    await ctx.db.patch(ticket._id, {
+      status: "redeemed",
+      redeemedAt: Date.now(),
+      redeemedByUserId: user._id,
+    });
+
+    console.log(`[TICKETS] User ${user._id} redeemed ticket for ${ticket.productSlug}`);
+
+    return {
+      status: "SUCCESS",
+      productSlug: ticket.productSlug,
+      productName: ticket.productName,
+      entitlementId,
+    };
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// QUERY: Get user's active entitlements
+// ─────────────────────────────────────────────────────────────
+
+export const getUserEntitlements = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!user) return [];
+
+    const entitlements = await ctx.db
+      .query("entitlements")
+      .withIndex("by_user_status", (q) =>
+        q.eq("userId", user._id).eq("status", "active")
+      )
+      .collect();
+
+    return entitlements.map((e) => ({
+      productSlug: e.productSlug,
+      productType: e.productType,
+      source: e.source,
+      grantedAt: e.grantedAt,
+      expiresAt: e.expiresAt,
+    }));
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// QUERY: Check if user has specific entitlement
+// ─────────────────────────────────────────────────────────────
+
+export const hasAccess = query({
+  args: { productSlug: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return false;
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!user) return false;
+
+    const entitlement = await ctx.db
+      .query("entitlements")
+      .withIndex("by_user_product", (q) =>
+        q.eq("userId", user._id).eq("productSlug", args.productSlug)
+      )
+      .first();
+
+    if (!entitlement) return false;
+
+    // Check if active and not expired
+    if (entitlement.status !== "active") return false;
+    if (entitlement.expiresAt && Date.now() > entitlement.expiresAt) return false;
+
+    return true;
+  },
+});

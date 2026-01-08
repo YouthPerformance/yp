@@ -1,0 +1,39 @@
+---
+/**
+ * RelatedGrid - Related content links at bottom of articles
+ */
+interface RelatedItem {
+  title: string;
+  description: string;
+  url: string;
+  icon: string;
+}
+
+interface Props {
+  items: RelatedItem[];
+  title?: string;
+}
+
+const { items, title = 'Continue Reading' } = Astro.props;
+---
+
+<section class="py-12 px-6 bg-white">
+  <div class="container-article">
+    <div class="font-mono text-xs uppercase tracking-widest text-ink-muted mb-6">
+      {title}
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[900px] mx-auto">
+      {items.map((item) => (
+        <a href={item.url} class="related-card">
+          <div class="w-12 h-12 bg-gold rounded-md flex items-center justify-center text-2xl flex-shrink-0">
+            {item.icon}
+          </div>
+          <div>
+            <h3 class="font-display text-[0.95rem] mb-0.5">{item.title}</h3>
+            <p class="text-sm text-ink-muted">{item.description}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

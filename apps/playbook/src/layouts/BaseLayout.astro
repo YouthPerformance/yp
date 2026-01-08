@@ -1,0 +1,76 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  theme?: 'basketball' | 'barefoot';
+  author?: string;
+  publishedDate?: Date;
+  updatedDate?: Date;
+  keywords?: string[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/images/og-default.jpg',
+  theme = 'basketball',
+  author,
+  publishedDate,
+  updatedDate,
+  keywords = [],
+} = Astro.props;
+
+const siteUrl = 'https://playbook.youthperformance.com';
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  {author && <meta name="author" content={author}>}
+  {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')}>}
+
+  <link rel="canonical" href={canonicalUrl}>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="article">
+  <meta property="og:url" content={canonicalUrl}>
+  <meta property="og:image" content={new URL(ogImage, siteUrl).toString()}>
+  <meta property="og:site_name" content="YouthPerformance Playbook">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={new URL(ogImage, siteUrl).toString()}>
+
+  <!-- Dates -->
+  {publishedDate && <meta property="article:published_time" content={publishedDate.toISOString()}>}
+  {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()}>}
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <slot name="head" />
+</head>
+<body class={theme === 'barefoot' ? 'bg-earth' : 'bg-paper'}>
+  <slot />
+
+  <slot name="scripts" />
+</body>
+</html>

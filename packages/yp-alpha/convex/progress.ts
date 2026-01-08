@@ -298,3 +298,78 @@ export const awardCrystals = mutation({
     return { newTotal: user.crystals + args.amount };
   },
 });
+
+/**
+ * Complete a program day (42-day programs)
+ */
+export const completeProgramDay = mutation({
+  args: {
+    clerkUserId: v.string(),
+    programSlug: v.string(),
+    dayNumber: v.number(),
+    xpEarned: v.number(),
+    crystalsEarned: v.number(),
+  },
+  handler: async (ctx, args) => {
+    // Find user by Clerk ID
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkUserId))
+      .unique();
+
+    if (!user) throw new Error("User not found");
+
+    // Find or create enrollment
+    let enrollment = await ctx.db
+      .query("enrollments")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .filter((q) => q.eq(q.field("programSlug"), args.programSlug))
+      .first();
+
+    if (!enrollment) {
+      // Create enrollment
+      const enrollmentId = await ctx.db.insert("enrollments", {
+        userId: user._id,
+        programSlug: args.programSlug,
+        currentDay: 1,
+        isActive: true,
+        startedAt: Date.now(),
+        totalWorkoutsCompleted: 0,
+        totalXpEarned: 0,
+      });
+      enrollment = await ctx.db.get(enrollmentId);
+    }
+
+    if (!enrollment) throw new Error("Failed to create enrollment");
+
+    // Check if already completed this day
+    const existing = await ctx.db
+      .query("workoutCompletions")
+      .withIndex("by_enrollment", (q) => q.eq("enrollmentId", enrollment._id))
+      .filter((q) => q.eq(q.field("dayNumber"), args.dayNumber))
+      .first();
+
+    if (existing) {
+      return { alreadyCompleted: true, completionId: existing._id };
+    }
+
+    // Record completion
+    const completionId = await ctx.db.insert("workoutCompletions", {
+      userId: user._id,
+      enrollmentId: enrollment._id,
+      dayNumber: args.dayNumber,
+      completedAt: Date.now(),
+      durationSeconds: 0, // Not tracked in this flow
+      xpEarned: args.xpEarned,
+    });
+
+    // Award XP and crystals
+    await ctx.db.patch(user._id, {
+      xpTotal: user.xpTotal + args.xpEarned,
+      crystals: user.crystals + args.crystalsEarned,
+      updatedAt: Date.now(),
+    });
+
+    return { alreadyCompleted: false, completionId };
+  },
+});

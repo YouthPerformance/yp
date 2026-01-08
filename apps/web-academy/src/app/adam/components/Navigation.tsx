@@ -46,13 +46,7 @@ export function Navigation() {
           ))}
         </div>
 
-        {/* CTA */}
-        <Link
-          href={NAV.cta.href}
-          className="btn-primary text-sm tracking-wider"
-        >
-          {NAV.cta.label}
-        </Link>
+{/* CTA removed - credibility page */}
       </div>
     </nav>
   );

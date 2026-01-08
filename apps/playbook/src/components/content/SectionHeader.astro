@@ -1,0 +1,20 @@
+---
+/**
+ * SectionHeader - Chapter/section divider with chapter label
+ */
+interface Props {
+  chapter: string;
+  title: string;
+  id: string;
+  theme?: 'basketball' | 'barefoot';
+}
+
+const { chapter, title, id, theme = 'basketball' } = Astro.props;
+const borderColor = theme === 'barefoot' ? 'border-copper' : 'border-gold';
+const labelColor = theme === 'barefoot' ? 'text-copper' : 'text-gold';
+---
+
+<section id={id} class={`section-header ${borderColor}`}>
+  <div class={`chapter-label ${labelColor}`}>{chapter}</div>
+  <h2 class="font-display text-2xl font-semibold text-bark">{title}</h2>
+</section>

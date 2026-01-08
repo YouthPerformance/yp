@@ -1,0 +1,450 @@
+---
+import PillarLayout from '@/layouts/PillarLayout.astro';
+import SectionHeader from '@/components/content/SectionHeader.astro';
+import CoachVoice from '@/components/content/CoachVoice.astro';
+import SafetyBox from '@/components/content/SafetyBox.astro';
+import DrillCard from '@/components/content/DrillCard.astro';
+import FAQSection from '@/components/content/FAQSection.astro';
+import CTABlock from '@/components/content/CTABlock.astro';
+import RelatedGrid from '@/components/content/RelatedGrid.astro';
+
+// Frontmatter
+const frontmatter = {
+  title: "Barefoot Training: The Complete Guide to Stronger, Faster Feet (Barefoot Reset™)",
+  description: "Science-backed barefoot training guide for athletes. Build foot strength, balance, and performance. Safe progressions for youth athletes by movement specialist James Scott.",
+  author: "james-scott",
+  publishedDate: new Date("2025-12-19"),
+  updatedDate: new Date("2026-01-07"),
+  readTime: "18 min read",
+  directAnswer: "<strong>Barefoot training builds foot strength, balance, and proprioception that translate directly to athletic performance.</strong> Start gradually on soft surfaces for 5–10 minutes, 2–3 times per week. Focus on intrinsic foot muscle activation before adding load or intensity. For youth athletes, it's safe when progressive—and it builds the foundation for quicker feet, better landings, and fewer ankle injuries.",
+  keyTakeaways: [
+    "Your feet have 26 bones, 33 joints, and 100+ muscles—they need training too",
+    "Start on grass, carpet, or rubber flooring before harder surfaces",
+    "5–10 minutes of barefoot work, 2–3x per week, creates measurable change",
+    "Improved balance and foot awareness in 2–3 weeks; strength gains in 4–6 weeks",
+    "Safe for kids when done progressively—stop if there's pain"
+  ],
+  category: "barefoot-training",
+  keywords: ["barefoot training", "foot strengthening exercises", "barefoot workout", "foot exercises for athletes", "barefoot reset"],
+  canonical: "https://playbook.youthperformance.com/barefoot-training/",
+  theme: "barefoot" as const,
+  programBadge: "Barefoot Reset™ Program",
+};
+
+// Author data
+const authorData = {
+  name: "James Scott",
+  initials: "JS",
+  tagline: "Weak Feet Don't Eat",
+  credentials: ["Movement Specialist & Foot Performance Coach", "Creator of Weak Feet Don't Eat", "Barefoot Reset Developer"],
+  socialLinks: {
+    instagram: "https://www.instagram.com/weakfeetdonteat/",
+    twitter: "https://twitter.com/weakfeetdonteat",
+  },
+};
+
+// Breadcrumbs
+const breadcrumbs = [
+  { label: "Home", url: "/" },
+  { label: "Barefoot Training" },
+];
+
+// Table of Contents
+const toc = [
+  { id: "what-is", label: "What Is Barefoot Training?" },
+  { id: "benefits", label: "Benefits of Barefoot Training" },
+  { id: "safety", label: "Safety & When NOT to Train Barefoot" },
+  { id: "framework", label: "The Barefoot Reset Framework" },
+  { id: "drills", label: "Core Barefoot Drills" },
+  { id: "30-day", label: "30-Day Barefoot Reset Plan" },
+  { id: "youth", label: "Barefoot Training for Youth Athletes" },
+  { id: "faq", label: "Frequently Asked Questions" },
+];
+
+// FAQs
+const faqs = [
+  {
+    question: "Is barefoot training safe for kids?",
+    answer: "Yes, when done progressively and on appropriate surfaces. Start with short sessions (5–10 minutes), avoid hard concrete initially, and stop immediately if there's any pain. Children's feet are naturally adaptable—barefoot training helps build the strength and sensory awareness they need for athletic performance."
+  },
+  {
+    question: "How long does it take to see results from barefoot training?",
+    answer: "Most people notice improved balance and foot awareness within 2–3 weeks of consistent practice. Measurable strength gains typically appear around 4–6 weeks. Full adaptation to barefoot or minimalist training takes 3–6 months of progressive work."
+  },
+  {
+    question: "What surfaces are best for barefoot training?",
+    answer: "Start on forgiving surfaces: grass, rubber gym flooring, carpet, or foam mats. These allow your feet to adapt without excessive stress. Gradually progress to harder surfaces as foot strength improves. Avoid starting on concrete or asphalt."
+  },
+  {
+    question: "Can barefoot training help with basketball performance?",
+    answer: "Absolutely. Stronger feet improve first-step quickness, change of direction, balance on drives, and landing stability. Many NBA players incorporate barefoot work into their training. It's foundational for any sport requiring quick footwork."
+  },
+  {
+    question: "How often should I do barefoot training exercises?",
+    answer: "Start with 2–3 sessions per week, 10–15 minutes each. As your feet adapt, you can increase to 4–5 sessions or integrate barefoot drills into your regular warm-up. Consistency matters more than duration."
+  },
+];
+
+// Related content
+const relatedItems = [
+  { title: "Barefoot Training for Youth", description: "Safe progressions by age", url: "/barefoot-training/youth-athletes/", icon: "👶" },
+  { title: "Barefoot Drills for Hoopers", description: "12 drills to fix weak feet", url: "/barefoot-training/basketball-drills/", icon: "🏀" },
+  { title: "Is It Safe for Kids?", description: "What science says", url: "/barefoot-training/kids-safety/", icon: "🛡️" },
+  { title: "Youth Basketball Drills", description: "50+ drills by age", url: "/basketball/youth-basketball-drills/", icon: "🏀" },
+];
+---
+
+<PillarLayout
+  frontmatter={frontmatter}
+  authorData={authorData}
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+  toc={toc}
+>
+  <!-- Chapter 1: What Is Barefoot Training -->
+  <SectionHeader
+    id="what-is"
+    chapter="Chapter I"
+    title="What Is Barefoot Training?"
+    theme="barefoot"
+  />
+
+  <p>Barefoot training is the practice of performing exercises without shoes to strengthen the intrinsic muscles of the feet, improve balance, and develop proprioception—your body's awareness of where it is in space.</p>
+
+  <p>Your feet are your foundation. They contain 26 bones, 33 joints, and over 100 muscles, tendons, and ligaments. Most of us spend our lives in supportive shoes that do the work our feet should be doing. Over time, this leads to weak, underdeveloped feet that can't support athletic demands.</p>
+
+  <CoachVoice author="james">
+    Weak feet don't eat. That's not just a saying—it's biomechanics. If your feet can't stabilize, absorb, and produce force, you're leaking power at every step. Training your feet is training your entire kinetic chain.
+  </CoachVoice>
+
+  <p><strong>Barefoot training is NOT:</strong></p>
+  <ul>
+    <li>Running barefoot on pavement (that's a specific skill with different progressions)</li>
+    <li>Never wearing shoes again</li>
+    <li>Something you do for hours at a time</li>
+  </ul>
+
+  <p><strong>Barefoot training IS:</strong></p>
+  <ul>
+    <li>Targeted exercises to build foot strength and awareness</li>
+    <li>Progressive exposure to barefoot movement</li>
+    <li>A supplement to your existing training</li>
+  </ul>
+
+  <!-- Chapter 2: Benefits -->
+  <SectionHeader
+    id="benefits"
+    chapter="Chapter II"
+    title="Benefits of Barefoot Training"
+    theme="barefoot"
+  />
+
+  <p>Research shows barefoot training improves several key athletic qualities:</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+    <div class="bg-white p-5 rounded-md shadow-card border-t-[3px] border-moss">
+      <div class="text-3xl mb-2">⚡</div>
+      <h3 class="font-display font-semibold text-base mb-1">Faster First Step</h3>
+      <p class="text-sm text-bark-soft m-0">Stronger feet = better push-off = quicker acceleration</p>
+    </div>
+    <div class="bg-white p-5 rounded-md shadow-card border-t-[3px] border-moss">
+      <div class="text-3xl mb-2">🎯</div>
+      <h3 class="font-display font-semibold text-base mb-1">Better Balance</h3>
+      <p class="text-sm text-bark-soft m-0">Improved proprioception for cutting, landing, and recovery</p>
+    </div>
+    <div class="bg-white p-5 rounded-md shadow-card border-t-[3px] border-moss">
+      <div class="text-3xl mb-2">🛡️</div>
+      <h3 class="font-display font-semibold text-base mb-1">Injury Prevention</h3>
+      <p class="text-sm text-bark-soft m-0">Stronger ankles, fewer sprains, better landing mechanics</p>
+    </div>
+    <div class="bg-white p-5 rounded-md shadow-card border-t-[3px] border-moss">
+      <div class="text-3xl mb-2">🦶</div>
+      <h3 class="font-display font-semibold text-base mb-1">Arch Support</h3>
+      <p class="text-sm text-bark-soft m-0">Build natural arch strength instead of relying on orthotics</p>
+    </div>
+  </div>
+
+  <p>Studies on intrinsic foot muscle training show improvements in balance, vertical jump, and change of direction—all transferable to sport performance.</p>
+
+  <!-- Chapter 3: Safety -->
+  <SectionHeader
+    id="safety"
+    chapter="Chapter III"
+    title="Safety & When NOT to Train Barefoot"
+    theme="barefoot"
+  />
+
+  <SafetyBox>
+    <ul class="ml-5 mt-2 space-y-1 text-[0.95rem]">
+      <li>Sharp pain in feet, ankles, or lower legs</li>
+      <li>Numbness or tingling</li>
+      <li>Pain that persists after the session ends</li>
+      <li>Visible swelling or bruising</li>
+    </ul>
+  </SafetyBox>
+
+  <p><strong>Who should consult a professional before starting:</strong></p>
+  <ul>
+    <li>Anyone with existing foot conditions (plantar fasciitis, bunions, structural issues)</li>
+    <li>Diabetics (reduced sensation)</li>
+    <li>Anyone with recent lower-leg injuries</li>
+    <li>Those with significant flat feet or high arches</li>
+  </ul>
+
+  <p>For most healthy athletes, barefoot training is safe when you follow progressive overload principles: start easy, add duration and intensity gradually, and listen to your body.</p>
+
+  <!-- Chapter 4: Framework -->
+  <SectionHeader
+    id="framework"
+    chapter="Chapter IV"
+    title="The Barefoot Reset Framework"
+    theme="barefoot"
+  />
+
+  <p>The Barefoot Reset is a 3-stage system for building foot strength safely:</p>
+
+  <!-- Stage Cards -->
+  <div class="space-y-4 my-6">
+    <div class="bg-white rounded-lg shadow-card overflow-hidden border border-black/5">
+      <div class="flex items-center gap-4 px-5 py-4 bg-earth-dark border-b border-black/5">
+        <div class="w-12 h-12 bg-moss text-white rounded-full flex items-center justify-center font-mono font-bold text-sm">01</div>
+        <div>
+          <h3 class="font-display font-semibold text-lg mb-0.5">Wake Up</h3>
+          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Week 1–2 • 5–10 min/session</div>
+        </div>
+      </div>
+      <div class="p-5">
+        <p class="text-bark-soft mb-4">Activate the intrinsic muscles of the foot. Build awareness. No loading yet.</p>
+        <ul class="ml-5 space-y-1">
+          <li>Toe yoga (lift big toe, keep others down, then reverse)</li>
+          <li>Short foot exercise (arch activation without curling toes)</li>
+          <li>Single-leg balance on soft surface</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-card overflow-hidden border border-black/5">
+      <div class="flex items-center gap-4 px-5 py-4 bg-earth-dark border-b border-black/5">
+        <div class="w-12 h-12 bg-moss text-white rounded-full flex items-center justify-center font-mono font-bold text-sm">02</div>
+        <div>
+          <h3 class="font-display font-semibold text-lg mb-0.5">Strengthen</h3>
+          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Week 3–6 • 10–15 min/session</div>
+        </div>
+      </div>
+      <div class="p-5">
+        <p class="text-bark-soft mb-4">Add resistance and challenge. Build capacity in the foot muscles.</p>
+        <ul class="ml-5 space-y-1">
+          <li>Towel scrunches (pull towel toward you with toes)</li>
+          <li>Marble pickups (lift small objects with toes)</li>
+          <li>Barefoot calf raises with full range</li>
+          <li>Single-leg balance on unstable surface</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-card overflow-hidden border border-black/5">
+      <div class="flex items-center gap-4 px-5 py-4 bg-earth-dark border-b border-black/5">
+        <div class="w-12 h-12 bg-moss text-white rounded-full flex items-center justify-center font-mono font-bold text-sm">03</div>
+        <div>
+          <h3 class="font-display font-semibold text-lg mb-0.5">Integrate</h3>
+          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Week 7+ • Part of regular training</div>
+        </div>
+      </div>
+      <div class="p-5">
+        <p class="text-bark-soft mb-4">Apply foot strength to sport-specific movements. Build resilience.</p>
+        <ul class="ml-5 space-y-1">
+          <li>Barefoot jump landings (soft surface)</li>
+          <li>Lateral shuffle and cut patterns</li>
+          <li>Sport-specific footwork drills</li>
+          <li>Gradual transition to minimalist footwear</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 5: Drills -->
+  <SectionHeader
+    id="drills"
+    chapter="Chapter V"
+    title="Core Barefoot Drills"
+    theme="barefoot"
+  />
+
+  <p>These are the foundational drills I use with every athlete I work with:</p>
+
+  <DrillCard
+    number={1}
+    title="Short Foot Exercise"
+    tags={["Activation", "🏠 At Home"]}
+    ageBadge={{ label: "All Ages", class: "age-7-9" }}
+    description="The single most important barefoot drill. Activates the intrinsic foot muscles that support your arch. Do this before every foot session."
+    steps={[
+      { instruction: "Stand barefoot, feet hip-width apart" },
+      { instruction: "Without curling your toes, try to 'shorten' your foot by pulling the ball toward the heel" },
+      { instruction: "Imagine you're trying to dome your arch up from the floor" },
+      { instruction: "Hold for 5 seconds, release. Repeat 10 times each foot" },
+    ]}
+    coachingCues={[
+      "Toes stay flat—don't scrunch them",
+      "Feel the arch lift, not the toes grip",
+      "Start seated if standing is too hard",
+    ]}
+    duration="2–3 min"
+    reps="10 reps x 5 sec holds"
+    difficulty="Beginner"
+    theme="barefoot"
+  />
+
+  <DrillCard
+    number={2}
+    title="Toe Yoga"
+    tags={["Awareness", "🔇 Silent"]}
+    ageBadge={{ label: "10+", class: "age-10-13" }}
+    description="Develops independent toe control. Most people can't lift their big toe without the others—this fixes that."
+    steps={[
+      { instruction: "Sit or stand with feet flat on floor" },
+      { instruction: "Lift ONLY your big toe while keeping the other four down" },
+      { instruction: "Then reverse: lift four toes while keeping big toe down" },
+      { instruction: "Alternate 10 times each foot. Slow and controlled" },
+    ]}
+    coachingCues={[
+      "It's okay if this is hard at first—that's why you need it",
+      "Use your fingers to assist if needed",
+      "This is about neural control, not strength",
+    ]}
+    duration="3 min"
+    reps="10 reps each pattern"
+    difficulty="Beginner"
+    theme="barefoot"
+  />
+
+  <DrillCard
+    number={3}
+    title="Single-Leg Balance Progression"
+    tags={["Balance", "Sport Transfer"]}
+    ageBadge={{ label: "10–13", class: "age-10-13" }}
+    description="Progressive balance challenge that translates directly to sport. Every cut, jump, and landing happens on one foot."
+    steps={[
+      { instruction: "Level 1: Single-leg stand, eyes open, 30 seconds each side" },
+      { instruction: "Level 2: Add eyes closed (huge jump in difficulty)" },
+      { instruction: "Level 3: Stand on pillow or foam pad, eyes open" },
+      { instruction: "Level 4: Pillow + eyes closed" },
+    ]}
+    coachingCues={[
+      "Feel your foot making micro-adjustments",
+      "Don't lock your knee—slight bend is fine",
+      "Quality over time: stop if you're wobbling badly",
+    ]}
+    duration="4–6 min"
+    reps="30 sec x 3 each side"
+    difficulty="Scalable"
+    theme="barefoot"
+  />
+
+  <!-- Chapter 6: 30-Day Plan -->
+  <SectionHeader
+    id="30-day"
+    chapter="Chapter VI"
+    title="30-Day Barefoot Reset Plan"
+    theme="barefoot"
+  />
+
+  <p>Here's a simple 4-week progression to get started:</p>
+
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th>Week</th>
+        <th>Focus</th>
+        <th>Drills</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 1</span></td>
+        <td>Wake Up</td>
+        <td>Short foot, Toe yoga, Seated balance</td>
+        <td>5–8 min, 3x/week</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 2</span></td>
+        <td>Awareness</td>
+        <td>Add single-leg balance (eyes open), marble pickups</td>
+        <td>8–10 min, 3x/week</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 3</span></td>
+        <td>Strengthen</td>
+        <td>Towel scrunches, barefoot calf raises, unstable balance</td>
+        <td>10–12 min, 3–4x/week</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 4</span></td>
+        <td>Integrate</td>
+        <td>Barefoot lateral shuffles, jump landings, sport footwork</td>
+        <td>10–15 min, 4x/week</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <CoachVoice author="james">
+    Don't skip weeks. Your feet have been in shoes for years—they need time to adapt. Rush it and you get injured. Follow the progression and you'll have feet that perform, not just feet that exist.
+  </CoachVoice>
+
+  <!-- Chapter 7: Youth Athletes -->
+  <SectionHeader
+    id="youth"
+    chapter="Chapter VII"
+    title="Barefoot Training for Youth Athletes"
+    theme="barefoot"
+  />
+
+  <p>Kids are natural barefoot movers—they just need permission and a little structure. Here's how I approach it by age:</p>
+
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th>Age Band</th>
+        <th>Approach</th>
+        <th>Weekly Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="age-badge age-7-9">Ages 7–9</span></td>
+        <td>Make it playful: balance games, barefoot tag, obstacle courses. Keep it under 8 minutes. No formal "drills."</td>
+        <td>2–3x, 5–8 min</td>
+      </tr>
+      <tr>
+        <td><span class="age-badge age-10-13">Ages 10–13</span></td>
+        <td>Introduce structured drills: short foot, toe yoga, single-leg challenges. Tie it to their sport.</td>
+        <td>3x, 8–12 min</td>
+      </tr>
+      <tr>
+        <td><span class="age-badge age-14-18">Ages 14–18</span></td>
+        <td>Full barefoot reset program. Add strength work, sport integration, minimalist footwear education.</td>
+        <td>3–4x, 10–15 min</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>For basketball specifically:</strong> Barefoot training improves first-step quickness, lateral cut speed, and landing stability. Many NBA players train barefoot—it's not just for runners.</p>
+
+  <FAQSection
+    faqs={faqs}
+    title="Frequently Asked Questions"
+    subtitle="Common questions about barefoot training for athletes"
+    theme="barefoot"
+  />
+
+  <CTABlock
+    title="Start the Barefoot Reset Today"
+    description="Get the complete 30-Day Barefoot Reset program in the Playbook app. Video demos, daily schedules, and progress tracking."
+    buttonText="Get the Program"
+    buttonUrl="https://academy.youthperformance.com/programs/barefoot-reset"
+    theme="barefoot"
+  />
+
+  <RelatedGrid items={relatedItems} />
+</PillarLayout>

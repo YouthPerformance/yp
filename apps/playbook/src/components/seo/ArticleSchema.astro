@@ -1,0 +1,50 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  author: {
+    name: string;
+    jobTitle: string;
+    description: string;
+    sameAs?: string[];
+  };
+  publishedDate: Date;
+  updatedDate: Date;
+  keywords: string[];
+  canonical: string;
+}
+
+const { title, description, author, publishedDate, updatedDate, keywords, canonical } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "author": {
+    "@type": "Person",
+    "name": author.name,
+    "jobTitle": author.jobTitle,
+    "description": author.description,
+    "sameAs": author.sameAs || [],
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Youth Performance",
+    "url": "https://youthperformance.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://youthperformance.com/logo.png"
+    }
+  },
+  "datePublished": publishedDate.toISOString(),
+  "dateModified": updatedDate.toISOString(),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonical
+  },
+  "keywords": keywords.join(", ")
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

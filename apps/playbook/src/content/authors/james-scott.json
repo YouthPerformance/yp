@@ -1,0 +1,32 @@
+{
+  "name": "James Scott",
+  "slug": "james-scott",
+  "tagline": "Weak Feet Don't Eat",
+  "initials": "JS",
+  "credentials": [
+    "Creator of 'Weak Feet Don't Eat'",
+    "Movement specialist & foot performance coach",
+    "Barefoot Reset program developer"
+  ],
+  "bio": "James Scott is a movement specialist and foot performance coach known for his 'Weak Feet Don't Eat' philosophy. He developed the Barefoot Reset program to help athletes of all ages build stronger, more responsive feet as the foundation for athletic performance. His approach combines biomechanics research with practical, progressive training methods.",
+  "socialLinks": {
+    "instagram": "https://www.instagram.com/weakfeetdonteat/",
+    "twitter": "https://twitter.com/weakfeetdonteat"
+  },
+  "voiceProfile": {
+    "tone": "Science-meets-street, passionate, slightly provocative",
+    "avoid": [
+      "Overly clinical PT-speak",
+      "Dismissive of traditional training",
+      "Making it sound easy",
+      "Skipping safety warnings"
+    ],
+    "speechPatterns": [
+      "Weak feet don't eat—that's not just a saying, it's biomechanics.",
+      "Your feet have been asleep. Time to wake them up.",
+      "Most people have never actually used their feet.",
+      "This is where the magic happens—at the foundation.",
+      "If your feet can't [X], you're leaking power at every [Y]."
+    ]
+  }
+}

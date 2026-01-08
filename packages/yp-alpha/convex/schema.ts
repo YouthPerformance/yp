@@ -27,6 +27,26 @@ const wolfColorValidator = v.union(
   v.literal("red")
 );
 
+// R3 Wolf Pack Sorting validators
+const wolfIdentityValidator = v.union(
+  v.literal("speed"),
+  v.literal("tank"),
+  v.literal("air")
+);
+
+const trainingPathValidator = v.union(
+  v.literal("glass"),    // Pain-dominant → Release phase
+  v.literal("grinder"),  // Volume-dominant → Restore phase
+  v.literal("prospect")  // Output-ready → Re-Engineer phase
+);
+
+const sortingMethodValidator = v.union(
+  v.literal("voice"),
+  v.literal("buttons"),
+  v.literal("parent_assisted"),
+  v.literal("manual")
+);
+
 // ─────────────────────────────────────────────────────────────
 // SCHEMA DEFINITION
 // ─────────────────────────────────────────────────────────────
@@ -80,6 +100,44 @@ export default defineSchema({
     // Onboarding
     onboardingCompletedAt: v.optional(v.number()),
 
+    // ═══════════════════════════════════════════════════════════
+    // R3 WOLF PACK SORTING
+    // Two-layer system: Identity (aspirational) + Path (biological)
+    // ═══════════════════════════════════════════════════════════
+
+    // Wolf Identity (The Skin) - What they WANT to be
+    wolfIdentity: v.optional(wolfIdentityValidator),
+
+    // Training Path (The Engine) - What they NEED right now
+    trainingPath: v.optional(trainingPathValidator),
+
+    // Coach explanation for the sorting
+    sortingCoachComment: v.optional(v.string()),
+
+    // Classification confidence (0-1)
+    sortingConfidence: v.optional(v.number()),
+
+    // How they were sorted
+    sortingMethod: v.optional(sortingMethodValidator),
+
+    // When sorted
+    sortedAt: v.optional(v.number()),
+
+    // First mission assigned based on path
+    firstMissionId: v.optional(v.string()),
+
+    // Path evolution history (for future re-sorting)
+    pathHistory: v.optional(v.array(v.object({
+      path: trainingPathValidator,
+      assignedAt: v.number(),
+      reason: v.string(),
+    }))),
+
+    // COPPA: Age verification for under-13
+    dateOfBirth: v.optional(v.string()), // ISO date string
+    isUnder13: v.optional(v.boolean()),
+    parentConsentId: v.optional(v.id("parentConsents")),
+
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -87,7 +145,53 @@ export default defineSchema({
     .index("by_clerk_id", ["clerkId"])
     .index("by_email", ["email"])
     .index("by_parent_code", ["parentCode"])
-    .index("by_role", ["role"]),
+    .index("by_role", ["role"])
+    .index("by_training_path", ["trainingPath"])
+    .index("by_wolf_identity", ["wolfIdentity"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // PARENT CONSENTS TABLE (COPPA COMPLIANCE)
+  // Verifiable parental consent for athletes under 13
+  // Required before any AI/voice interaction
+  // ═══════════════════════════════════════════════════════════
+  parentConsents: defineTable({
+    // Parent identification
+    parentEmail: v.string(),
+    parentPhone: v.optional(v.string()),
+
+    // Link to athlete
+    athleteUserId: v.id("users"),
+
+    // What are they consenting to?
+    consentType: v.union(
+      v.literal("voice_sorting"),
+      v.literal("ai_chat"),
+      v.literal("data_collection")
+    ),
+
+    // How did they verify? (FTC-approved methods)
+    consentMethod: v.union(
+      v.literal("sms_verification"),
+      v.literal("email_verification"),
+      v.literal("credit_card_verification")
+    ),
+
+    // Verification
+    verificationCode: v.optional(v.string()), // Hashed
+    verified: v.boolean(),
+    consentedAt: v.optional(v.number()),
+
+    // Audit trail (required by COPPA)
+    ipAddress: v.string(),
+    userAgent: v.string(),
+
+    // Timestamps
+    createdAt: v.number(),
+    expiresAt: v.optional(v.number()), // Some consents may expire
+  })
+    .index("by_athlete", ["athleteUserId"])
+    .index("by_parent_email", ["parentEmail"])
+    .index("by_verified", ["verified"]),
 
   // ═══════════════════════════════════════════════════════════
   // ENROLLMENTS TABLE
@@ -108,7 +212,8 @@ export default defineSchema({
     totalXpEarned: v.number(),
   })
     .index("by_user", ["userId"])
-    .index("by_user_active", ["userId", "isActive"]),
+    .index("by_user_active", ["userId", "isActive"])
+    .index("by_user_program", ["userId", "programSlug"]),
 
   // ═══════════════════════════════════════════════════════════
   // WORKOUT COMPLETIONS TABLE
@@ -116,12 +221,13 @@ export default defineSchema({
   // ═══════════════════════════════════════════════════════════
   workoutCompletions: defineTable({
     userId: v.id("users"),
-    enrollmentId: v.id("enrollments"),
+    enrollmentId: v.optional(v.id("enrollments")), // Made optional for standalone programs
+    programSlug: v.optional(v.string()), // For standalone program tracking
     dayNumber: v.number(),
 
     // Completion data
     completedAt: v.number(),
-    durationSeconds: v.number(),
+    durationSeconds: v.optional(v.number()), // Made optional for simple completions
     xpEarned: v.number(),
 
     // Quiz results
@@ -138,7 +244,8 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_enrollment", ["enrollmentId"])
-    .index("by_user_day", ["userId", "dayNumber"]),
+    .index("by_user_day", ["userId", "dayNumber"])
+    .index("by_user_program", ["userId", "programSlug"]),
 
   // ═══════════════════════════════════════════════════════════
   // CARDS TABLE
@@ -407,4 +514,112 @@ export default defineSchema({
   })
     .index("by_campaign", ["campaignId"])
     .index("by_platform", ["platform"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // LEARNING PROGRESS TABLE
+  // Track user progress through interactive learning modules
+  // ─────────────────────────────────────────────────────────────
+  learningProgress: defineTable({
+    userId: v.id("users"),
+    moduleId: v.string(),
+    startedAt: v.number(),
+    completedAt: v.optional(v.number()),
+    currentSectionId: v.string(),
+    currentCardId: v.string(),
+    totalCorrect: v.number(),
+    totalAttempts: v.number(),
+    crystalsEarned: v.number(),
+    sectionsUnlocked: v.array(v.string()),
+    mode: v.union(v.literal("athlete"), v.literal("parent")),
+    cardHistory: v.array(
+      v.object({
+        cardId: v.string(),
+        viewedAt: v.number(),
+        answeredAt: v.optional(v.number()),
+        wasCorrect: v.optional(v.boolean()),
+        attemptsOnCard: v.number(),
+      })
+    ),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_module", ["userId", "moduleId"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // USER BADGES TABLE
+  // Badges earned by completing modules and achievements
+  // ─────────────────────────────────────────────────────────────
+  userBadges: defineTable({
+    userId: v.id("users"),
+    badgeId: v.string(),
+    badgeName: v.string(),
+    badgeIcon: v.string(),
+    badgeDescription: v.string(),
+    source: v.string(), // e.g., "module:bpa-v1"
+    earnedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_badge", ["userId", "badgeId"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // ENTITLEMENTS TABLE
+  // Track user access to programs and content
+  // ─────────────────────────────────────────────────────────────
+  entitlements: defineTable({
+    userId: v.id("users"),
+    productSlug: v.string(),
+    productType: v.union(v.literal("program"), v.literal("content"), v.literal("feature")),
+    source: v.union(v.literal("purchase"), v.literal("promo"), v.literal("admin")),
+    status: v.union(v.literal("active"), v.literal("expired"), v.literal("revoked")),
+    grantedAt: v.number(),
+    expiresAt: v.optional(v.number()),
+    metadata: v.optional(v.any()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_product", ["userId", "productSlug"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // SHOPIFY ORDERS TABLE
+  // Track Shopify orders for golden ticket generation
+  // ─────────────────────────────────────────────────────────────
+  shopifyOrders: defineTable({
+    shopifyOrderId: v.string(),
+    shopifyOrderNumber: v.string(),
+    email: v.string(),
+    customerName: v.string(),
+    lineItems: v.array(
+      v.object({
+        sku: v.optional(v.string()),
+        name: v.string(),
+        quantity: v.number(),
+        price: v.number(),
+      })
+    ),
+    totalAmount: v.number(),
+    currency: v.string(),
+    processed: v.boolean(),
+    createdAt: v.number(),
+    shopifyCreatedAt: v.string(),
+  })
+    .index("by_shopify_order", ["shopifyOrderId"])
+    .index("by_email", ["email"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // GOLDEN TICKETS TABLE
+  // Claimable tickets from Shopify purchases
+  // ─────────────────────────────────────────────────────────────
+  goldenTickets: defineTable({
+    token: v.string(),
+    orderId: v.id("shopifyOrders"),
+    productSlug: v.string(),
+    productName: v.string(),
+    status: v.union(v.literal("pending"), v.literal("claimed"), v.literal("expired")),
+    claimedBy: v.optional(v.id("users")),
+    claimedAt: v.optional(v.number()),
+    expiresAt: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_token", ["token"])
+    .index("by_order", ["orderId"])
+    .index("by_status", ["status"]),
 });

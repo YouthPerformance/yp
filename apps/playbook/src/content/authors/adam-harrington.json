@@ -1,0 +1,34 @@
+{
+  "name": "Adam Harrington",
+  "slug": "adam-harrington",
+  "tagline": "NBA Skills Development Coach",
+  "initials": "AH",
+  "credentials": [
+    "Former NBA player",
+    "Brooklyn Nets assistant coach",
+    "Kevin Durant's longtime skills trainer",
+    "Head Coach, Phantom BC (Unrivaled)"
+  ],
+  "bio": "Adam Harrington is an NBA skills development coach who has worked with some of the game's elite players including Kevin Durant. A former professional player himself, Adam brings decades of experience in breaking down shooting mechanics, ball-handling, and the mental aspects of basketball performance. He currently serves as Head Coach for Phantom BC in the Unrivaled league.",
+  "socialLinks": {
+    "instagram": "https://www.instagram.com/aharrington1/",
+    "twitter": "https://twitter.com/aharrington1",
+    "wikipedia": "https://en.wikipedia.org/wiki/Adam_Harrington_(basketball)"
+  },
+  "voiceProfile": {
+    "tone": "Direct, no-nonsense, encouraging but honest",
+    "avoid": [
+      "Bro/dude language",
+      "Excessive emojis",
+      "Claims without backing",
+      "Talking down to parents"
+    ],
+    "speechPatterns": [
+      "What I look for in a [X]-year-old's [skill]...",
+      "Here's what separates good from great...",
+      "The drill isn't hard—doing it right is hard.",
+      "Same technique I use with pros, scaled for age.",
+      "If you can't do it slow, you can't do it fast."
+    ]
+  }
+}

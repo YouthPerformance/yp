@@ -1,0 +1,90 @@
+{
+  "$ref": "#/definitions/authors",
+  "definitions": {
+    "authors": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "tagline": {
+          "type": "string"
+        },
+        "initials": {
+          "type": "string",
+          "maxLength": 2
+        },
+        "credentials": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bio": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        },
+        "socialLinks": {
+          "type": "object",
+          "properties": {
+            "instagram": {
+              "type": "string"
+            },
+            "twitter": {
+              "type": "string"
+            },
+            "wikipedia": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "voiceProfile": {
+          "type": "object",
+          "properties": {
+            "tone": {
+              "type": "string"
+            },
+            "avoid": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "speechPatterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "tone",
+            "avoid",
+            "speechPatterns"
+          ],
+          "additionalProperties": false
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "slug",
+        "tagline",
+        "initials",
+        "credentials",
+        "bio",
+        "voiceProfile"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

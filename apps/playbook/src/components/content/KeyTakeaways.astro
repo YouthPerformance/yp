@@ -1,0 +1,24 @@
+---
+/**
+ * KeyTakeaways - 5 bullet max summary
+ * Appears right after the direct answer, high visibility for AI extraction.
+ */
+interface Props {
+  takeaways: string[];
+  theme?: 'basketball' | 'barefoot';
+}
+
+const { takeaways, theme = 'basketball' } = Astro.props;
+const bgColor = theme === 'barefoot' ? 'bg-moss' : 'bg-trust-blue';
+---
+
+<div class={`key-takeaways ${bgColor}`}>
+  <h2 class="font-mono text-xs uppercase tracking-widest opacity-80 mb-3">
+    Key Takeaways
+  </h2>
+  <ul>
+    {takeaways.map((item) => (
+      <li>{item}</li>
+    ))}
+  </ul>
+</div>

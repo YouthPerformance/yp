@@ -1,0 +1,69 @@
+---
+/**
+ * Footer - Site footer with trust signals and navigation
+ */
+interface Props {
+  theme?: 'basketball' | 'barefoot';
+}
+
+const { theme = 'basketball' } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-ink text-white py-12 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+      <!-- Train -->
+      <div>
+        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Train</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="https://academy.youthperformance.com" class="text-white/80 hover:text-white transition-colors">YP Academy</a></li>
+          <li><a href="https://shop.youthperformance.com/products/neoball" class="text-white/80 hover:text-white transition-colors">The NeoBall</a></li>
+          <li><a href="/programs/" class="text-white/80 hover:text-white transition-colors">Programs</a></li>
+          <li><a href="https://academy.youthperformance.com/pricing" class="text-white/80 hover:text-white transition-colors">Pricing</a></li>
+        </ul>
+      </div>
+
+      <!-- Learn -->
+      <div>
+        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Learn</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/barefoot-training/" class="text-white/80 hover:text-white transition-colors">Barefoot Training</a></li>
+          <li><a href="/basketball/youth-basketball-drills/" class="text-white/80 hover:text-white transition-colors">Youth Basketball Drills</a></li>
+          <li><a href="/basketball/silent-training/" class="text-white/80 hover:text-white transition-colors">Silent Training</a></li>
+          <li><a href="/parent-sidelines/" class="text-white/80 hover:text-white transition-colors">Parent Sidelines (Q&A)</a></li>
+          <li><a href="/drills/" class="text-white/80 hover:text-white transition-colors">Drill Library</a></li>
+        </ul>
+      </div>
+
+      <!-- Trust -->
+      <div>
+        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Trust & AI</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/about/" class="text-white/80 hover:text-white transition-colors">About YP</a></li>
+          <li><a href="/authors/" class="text-white/80 hover:text-white transition-colors">Our Coaches</a></li>
+          <li><a href="/editorial-policy/" class="text-white/80 hover:text-white transition-colors">Editorial Policy</a></li>
+          <li><a href="/safety/" class="text-white/80 hover:text-white transition-colors">Safety & Medical</a></li>
+          <li><a href="/contact/" class="text-white/80 hover:text-white transition-colors">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Technical -->
+      <div>
+        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Technical</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/sitemap-index.xml" class="text-white/80 hover:text-white transition-colors font-mono text-xs">sitemap.xml</a></li>
+          <li><a href="/robots.txt" class="text-white/80 hover:text-white transition-colors font-mono text-xs">robots.txt</a></li>
+          <li><a href="/llms.txt" class="text-white/80 hover:text-white transition-colors font-mono text-xs">llms.txt (AI Index)</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10 pt-8 text-center text-sm text-white/60">
+      <p>© {year} Youth Performance. All rights reserved.</p>
+      <p class="mt-2 text-xs">
+        Expert content by <a href="/authors/adam-harrington/" class="text-gold-light hover:underline">Adam Harrington</a> and <a href="/authors/james-scott/" class="text-gold-light hover:underline">James Scott</a>.
+      </p>
+    </div>
+  </div>
+</footer>

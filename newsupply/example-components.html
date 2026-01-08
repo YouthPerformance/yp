@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopify Supply Animation Examples</title>
+  <link rel="stylesheet" href="animations.css">
+  <style>
+    /* Base styles for demo */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #1a1a1a;
+      color: #eeece2;
+      padding: 2rem;
+    }
+    h1, h2 { margin-bottom: 1rem; }
+    section { margin-bottom: 3rem; }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Shopify Supply Animation Components</h1>
+
+  <!-- =============================================
+       1. ROTATING "SHOP ALL" BUTTON
+       ============================================= -->
+  <section>
+    <h2>1. Rotating Shop All Button</h2>
+    <p style="margin-bottom: 1rem; opacity: 0.7;">Hover to activate spinning animation</p>
+
+    <a href="#" class="shop-all-button" style="
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 100px;
+      position: relative;
+      text-decoration: none;
+    ">
+      <!-- Rotating text ring using SVG -->
+      <svg class="text-ring" viewBox="0 0 100 100" style="
+        width: 100%;
+        height: 100%;
+        animation: rotate 10s linear infinite paused;
+      ">
+        <defs>
+          <path id="circlePath" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"/>
+        </defs>
+        <text fill="#eeece2" font-size="10" font-family="monospace" letter-spacing="4">
+          <textPath href="#circlePath">
+            SHOP ALL • SHOP ALL • SHOP ALL •
+          </textPath>
+        </text>
+      </svg>
+      <!-- Center icon/arrow -->
+      <span style="
+        position: absolute;
+        font-size: 1.5rem;
+      ">↗</span>
+    </a>
+
+    <style>
+      .shop-all-button:hover .text-ring {
+        animation-play-state: running;
+      }
+    </style>
+  </section>
+
+  <!-- =============================================
+       2. PRODUCT CARD WITH QUICK VIEW
+       ============================================= -->
+  <section>
+    <h2>2. Product Card with Quick View Button</h2>
+    <p style="margin-bottom: 1rem; opacity: 0.7;">Hover to see image swap and Quick View button</p>
+
+    <div class="demo-grid">
+      <div class="product-card group/product-card" style="
+        position: relative;
+        background: #2a2a2a;
+        overflow: hidden;
+      ">
+        <!-- Product Image Container -->
+        <div class="group/product-image" style="
+          position: relative;
+          aspect-ratio: 1;
+          overflow: hidden;
+        ">
+          <!-- Primary Image -->
+          <img
+            src="https://cdn.shopify.com/s/files/1/0458/4836/3030/files/01_TheMVPCrew_Tan_PDP1.png?v=1732550810"
+            alt="MVP Crew - Front"
+            class="primary-image"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transition: transform 0.5s ease, opacity 0.5s ease;
+            "
+          />
+          <!-- Secondary Image (shown on hover) -->
+          <img
+            src="https://cdn.shopify.com/s/files/1/0458/4836/3030/files/02_TheMVPCrew_Tan_PDP2.png?v=1732550811"
+            alt="MVP Crew - Back"
+            class="secondary-image"
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              opacity: 0;
+              transform: scale(1.05);
+              transition: transform 0.5s ease, opacity 0.5s ease;
+            "
+          />
+
+          <!-- Quick View Button -->
+          <button class="quick-view-button" style="
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid #eeece2;
+            color: #eeece2;
+            font-family: monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+          ">
+            QUICK VIEW
+          </button>
+        </div>
+
+        <!-- Product Info -->
+        <div style="padding: 1rem;">
+          <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">The MVP Crew</h3>
+          <p style="opacity: 0.7;">$59.00</p>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      /* Product card hover effects */
+      .product-card:hover .primary-image {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      .product-card:hover .secondary-image {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .product-card:hover .quick-view-button {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+      .quick-view-button:hover {
+        background: #eeece2;
+        color: #1a1a1a;
+      }
+    </style>
+  </section>
+
+  <!-- =============================================
+       3. MEGA MENU LINK UNDERLINE ANIMATION
+       ============================================= -->
+  <section>
+    <h2>3. Mega Menu Link Animation</h2>
+    <p style="margin-bottom: 1rem; opacity: 0.7;">Underline expands from left on hover</p>
+
+    <nav style="display: flex; gap: 2rem;">
+      <a href="#" class="mega-menu__link" style="
+        position: relative;
+        color: #eeece2;
+        text-decoration: none;
+        font-size: 1.25rem;
+        padding-bottom: 0.5rem;
+      ">Shop</a>
+      <a href="#" class="mega-menu__link" style="
+        position: relative;
+        color: #eeece2;
+        text-decoration: none;
+        font-size: 1.25rem;
+        padding-bottom: 0.5rem;
+      ">About</a>
+      <a href="#" class="mega-menu__link" style="
+        position: relative;
+        color: #eeece2;
+        text-decoration: none;
+        font-size: 1.25rem;
+        padding-bottom: 0.5rem;
+      ">Collections</a>
+    </nav>
+  </section>
+
+  <!-- =============================================
+       4. SHINE EFFECT
+       ============================================= -->
+  <section>
+    <h2>4. Shine Sweep Effect</h2>
+    <p style="margin-bottom: 1rem; opacity: 0.7;">Hover to see shine sweep across</p>
+
+    <div class="shine-effect" style="
+      width: 300px;
+      height: 200px;
+      background: linear-gradient(135deg, #405edd, #da9dff);
+      border-radius: 8px;
+      cursor: pointer;
+    "></div>
+  </section>
+
+  <!-- =============================================
+       5. BLOOP ANIMATION
+       ============================================= -->
+  <section>
+    <h2>5. Bloop Pop Effect</h2>
+    <p style="margin-bottom: 1rem; opacity: 0.7;">Click to trigger bloop animation</p>
+
+    <button id="bloopBtn" style="
+      padding: 1rem 2rem;
+      background: #4bfe85;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    ">Add to Cart</button>
+
+    <script>
+      document.getElementById('bloopBtn').addEventListener('click', function() {
+        this.style.animation = 'none';
+        this.offsetHeight; // Trigger reflow
+        this.style.animation = 'bloop 0.3s linear';
+      });
+    </script>
+  </section>
+
+  <!-- =============================================
+       6. SCROLL REVEAL FADE IN
+       ============================================= -->
+  <section>
+    <h2>6. Scroll Reveal Animation</h2>
+    <p style="margin-bottom: 1rem; opacity: 0.7;">Elements fade in as they enter viewport</p>
+
+    <div class="fade-in-section" style="
+      padding: 2rem;
+      background: #2a2a2a;
+      border-radius: 8px;
+      text-align: center;
+    ">
+      <p>This content fades in when scrolled into view</p>
+    </div>
+
+    <script>
+      // Simple Intersection Observer for scroll reveal
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-in-section').forEach(el => {
+        observer.observe(el);
+      });
+    </script>
+  </section>
+
+</body>
+</html>

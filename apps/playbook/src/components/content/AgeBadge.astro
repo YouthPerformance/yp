@@ -1,0 +1,28 @@
+---
+/**
+ * AgeBadge - Age band indicator
+ */
+interface Props {
+  ageMin: number;
+  ageMax: number;
+}
+
+const { ageMin, ageMax } = Astro.props;
+
+// Determine badge style based on age range
+let badgeClass = 'age-7-9';
+let label = `${ageMin}–${ageMax}`;
+
+if (ageMin >= 14) {
+  badgeClass = 'age-14-18';
+} else if (ageMin >= 10) {
+  badgeClass = 'age-10-13';
+}
+
+// Special labels
+if (ageMin <= 7 && ageMax >= 18) {
+  label = 'All Ages';
+}
+---
+
+<span class={`age-badge ${badgeClass}`}>{label}</span>

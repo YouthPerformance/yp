@@ -1,0 +1,18 @@
+---
+/**
+ * SafetyBox - Warning/safety callout for youth training content
+ */
+interface Props {
+  title?: string;
+}
+
+const { title = 'Stop Immediately If You Experience' } = Astro.props;
+---
+
+<div class="safety-box">
+  <div class="flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-widest text-warning mb-2">
+    <span>⚠️</span>
+    <span>{title}</span>
+  </div>
+  <slot />
+</div>

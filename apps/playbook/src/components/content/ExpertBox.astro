@@ -1,0 +1,40 @@
+---
+/**
+ * ExpertBox - Author attribution for E-E-A-T
+ * Shows the expert's credentials prominently.
+ */
+interface Props {
+  name: string;
+  initials: string;
+  tagline?: string;
+  credentials: string;
+  badgeText?: string;
+  theme?: 'basketball' | 'barefoot';
+}
+
+const { name, initials, tagline, credentials, badgeText = 'Expert Author', theme = 'basketball' } = Astro.props;
+
+const avatarGradient = theme === 'barefoot'
+  ? 'from-moss to-bark'
+  : 'from-trust-blue to-ink';
+
+const badgeColor = theme === 'barefoot' ? 'bg-copper' : 'bg-gold';
+---
+
+<div class="expert-box">
+  <div class={`w-[72px] h-[72px] rounded-full bg-gradient-to-br ${avatarGradient} flex items-center justify-center font-display font-bold text-2xl text-white flex-shrink-0`}>
+    {initials}
+  </div>
+  <div class="flex-1">
+    <div class="font-display font-semibold text-lg text-bark mb-0.5">{name}</div>
+    {tagline && (
+      <div class="font-mono text-[0.7rem] text-copper uppercase tracking-wide mb-0.5">
+        {tagline}
+      </div>
+    )}
+    <div class="text-sm text-bark-muted leading-snug">{credentials}</div>
+  </div>
+  <span class={`${badgeColor} text-white px-3 py-1 rounded-full font-mono text-[0.65rem] uppercase tracking-wide whitespace-nowrap`}>
+    {badgeText}
+  </span>
+</div>

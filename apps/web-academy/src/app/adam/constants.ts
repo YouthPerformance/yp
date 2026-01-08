@@ -8,7 +8,7 @@
 // ─────────────────────────────────────────────────────────────
 
 export const HERO = {
-  label: "NBA & WNBA Skills Development Coach",
+  label: "Global Head of Basketball",
   firstName: "Adam",
   lastName: "Harrington",
   description:

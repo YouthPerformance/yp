@@ -1,0 +1,408 @@
+---
+import PillarLayout from '@/layouts/PillarLayout.astro';
+import SectionHeader from '@/components/content/SectionHeader.astro';
+import CoachVoice from '@/components/content/CoachVoice.astro';
+import DrillCard from '@/components/content/DrillCard.astro';
+import FAQSection from '@/components/content/FAQSection.astro';
+import CTABlock from '@/components/content/CTABlock.astro';
+import RelatedGrid from '@/components/content/RelatedGrid.astro';
+
+// Frontmatter
+const frontmatter = {
+  title: "Youth Basketball Drills: Age-by-Age Guide (50+ Fun Drills for Kids & Teens)",
+  description: "Expert-reviewed youth basketball drills for ages 7-18. Ball-handling, shooting, footwork drills organized by age. From NBA skills coach Adam Harrington.",
+  author: "adam-harrington",
+  publishedDate: new Date("2025-12-19"),
+  updatedDate: new Date("2026-01-07"),
+  readTime: "15 min read",
+  directAnswer: "<strong>Youth basketball drills should focus on ball-handling, footwork, shooting form, and decision-making—scaled by age.</strong> For ages 7–9, keep drills game-like and under 5 minutes each. Ages 10–13 can handle more structured repetition with basic reads. By 14–18, add intensity, live decision-making, and conditioning. The best drill is one the player will actually do consistently.",
+  keyTakeaways: [
+    "Match drill complexity to age: games for young kids, structure for teens",
+    "Ball-handling and footwork are foundational at every age",
+    "Shooting form before shooting volume—build the habit early",
+    "2–3 practices per week is optimal for most youth players",
+    "Silent drills work for apartments; no hoop needed to improve handles"
+  ],
+  category: "basketball",
+  keywords: ["youth basketball drills", "basketball drills for kids", "kids basketball drills", "fun basketball drills", "basketball training for youth"],
+  canonical: "https://playbook.youthperformance.com/basketball/youth-basketball-drills/",
+  theme: "basketball" as const,
+  programBadge: "YP Hoops Academy",
+};
+
+// Author data
+const authorData = {
+  name: "Adam Harrington",
+  initials: "AH",
+  tagline: "NBA Skills Development Coach",
+  credentials: ["Former NBA Player", "Brooklyn Nets Assistant Coach", "Kevin Durant's Longtime Skills Trainer", "Head Coach, Phantom BC (Unrivaled)"],
+  socialLinks: {
+    instagram: "https://www.instagram.com/aharrington1/",
+    twitter: "https://twitter.com/aharrington1",
+  },
+};
+
+// Breadcrumbs
+const breadcrumbs = [
+  { label: "Home", url: "/" },
+  { label: "Basketball", url: "/basketball/" },
+  { label: "Youth Basketball Drills" },
+];
+
+// Table of Contents
+const toc = [
+  { id: "by-age", label: "Youth Basketball Drills by Age" },
+  { id: "ball-handling", label: "Ball-Handling Drills" },
+  { id: "shooting", label: "Shooting Drills" },
+  { id: "footwork", label: "Footwork & Defense Drills" },
+  { id: "practice-templates", label: "Ready-Made Practice Plans" },
+  { id: "faq", label: "Frequently Asked Questions" },
+];
+
+// FAQs
+const faqs = [
+  {
+    question: "How many days a week should youth players practice basketball?",
+    answer: "For ages 7–12, 2–3 organized practices per week is ideal, with informal play encouraged on other days. For ages 13+, 3–4 sessions including games is appropriate. Rest days are critical—overtraining leads to burnout and injury."
+  },
+  {
+    question: "What basketball drills can kids do in an apartment?",
+    answer: "Silent ball-handling drills work great indoors: low pounds, stationary crossovers on carpet, form shooting without a hoop (focus on release), and footwork ladders. Use a deflated or foam ball if noise is a concern. Our Silent Pound Series is perfect for apartment training."
+  },
+  {
+    question: "At what age should kids start basketball training?",
+    answer: "Kids can start basketball fundamentals as young as 5–6 through play-based activities. Structured skill training typically begins around age 7–8. Before that, focus on general athleticism: running, jumping, catching, and coordination games."
+  },
+  {
+    question: "What are the best basketball drills for beginners?",
+    answer: "Start with stationary ball-handling (pounds, circles around waist/legs), basic layup progressions from close range, and form shooting 3–5 feet from the basket. Focus on technique before speed or distance. The Figure 8 Wrap is a great starting point."
+  },
+  {
+    question: "How long should youth basketball practice be?",
+    answer: "Ages 7–9: 30–45 minutes. Ages 10–13: 45–60 minutes. Ages 14+: 60–90 minutes. Younger players need more variety and shorter drill segments to stay engaged. Always end on a positive note."
+  },
+];
+
+// Related content
+const relatedItems = [
+  { title: "Drills for 8–10 Year Olds", description: "Fun fundamentals, no fancy gear needed", url: "/basketball/basketball-drills-8-10-year-olds/", icon: "🏀" },
+  { title: "Fun Basketball Drills", description: "Games that teach without feeling like practice", url: "/basketball/fun-basketball-drills-for-kids/", icon: "🎮" },
+  { title: "Youth Shooting Drills", description: "Form, footwork, and confidence", url: "/basketball/youth-basketball-shooting-drills/", icon: "🎯" },
+  { title: "Barefoot Training Guide", description: "Build stronger, faster feet for better court movement", url: "/barefoot-training/", icon: "🦶" },
+];
+---
+
+<PillarLayout
+  frontmatter={frontmatter}
+  authorData={authorData}
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+  toc={toc}
+>
+  <!-- Chapter 1: Age-by-Age -->
+  <SectionHeader
+    id="by-age"
+    chapter="Chapter I"
+    title="Youth Basketball Drills by Age"
+    theme="basketball"
+  />
+
+  <p>Not all drills work for all ages. A 7-year-old and a 15-year-old need completely different approaches. Here's how I break it down when I'm working with young players:</p>
+
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th>Age Band</th>
+        <th>Primary Focus</th>
+        <th>Session Length</th>
+        <th>Drill Types</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="age-badge age-7-9">Ages 7–9</span></td>
+        <td>Coordination, fun, body control, ambidextrous play</td>
+        <td>30–45 min, mostly games</td>
+        <td>Dribble tag, Statues, Red Light Green Light with ball</td>
+      </tr>
+      <tr>
+        <td><span class="age-badge age-10-13">Ages 10–13</span></td>
+        <td>Footwork, layup progressions, basic reads, ball-handling combos</td>
+        <td>45–60 min, structured with games</td>
+        <td>Two-ball dribbling, Form shooting, 1v1 closeouts</td>
+      </tr>
+      <tr>
+        <td><span class="age-badge age-14-18">Ages 14–18</span></td>
+        <td>Decision-making under fatigue, shooting volume, advanced reads</td>
+        <td>60–90 min, high intensity intervals</td>
+        <td>3v3 live, Transition finishing, Conditioning circuits</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <CoachVoice author="adam">
+    What I look for in a 10-year-old isn't what I look for in a 15-year-old. At 10, I want to see them comfortable with the ball in both hands. At 15, I want to see them make decisions at game speed. Same drills won't get you there.
+  </CoachVoice>
+
+  <!-- Chapter 2: Ball-Handling -->
+  <SectionHeader
+    id="ball-handling"
+    chapter="Chapter II"
+    title="Ball-Handling Drills"
+    theme="basketball"
+  />
+
+  <p>Ball-handling is the foundation. A player who can control the ball can create opportunities. Here are the drills I use most:</p>
+
+  <DrillCard
+    number={1}
+    title="Silent Pound Series"
+    tags={["Ball-Handling", "🔇 Silent", "🏠 Apartment"]}
+    ageBadge={{ label: "10–13", class: "age-10-13" }}
+    description="Build quiet ball control for apartment or late-night training. Low bounce, wrist-driven pounds that develop feel without noise. Perfect for building touch."
+    steps={[
+      { instruction: "Start in athletic stance, ball in dominant hand, knees bent" },
+      { instruction: "Pound the ball below knee height using wrist snaps only (no arm)" },
+      { instruction: "Complete 30 seconds right hand, 30 seconds left hand" },
+      { instruction: "Progress to alternating hands every 5 pounds" },
+    ]}
+    coachingCues={[
+      "Stay low—lower than you think",
+      "Eyes up every 3 reps (build court vision)",
+      "If it's loud, you're bouncing too high",
+    ]}
+    duration="3 min"
+    reps="3 x 30s each hand"
+    difficulty="Beginner"
+    theme="basketball"
+  />
+
+  <DrillCard
+    number={2}
+    title="Two-Ball Stationary Dribble"
+    tags={["Ball-Handling", "🏀🏀 Two Balls"]}
+    ageBadge={{ label: "10–13", class: "age-10-13" }}
+    description="Develops both hands equally and builds coordination. Can't cheat with your weak hand when both hands are working."
+    steps={[
+      { instruction: "Hold one ball in each hand, athletic stance" },
+      { instruction: "Dribble both balls at the same time (synchronized)" },
+      { instruction: "After 20 reps, switch to alternating (one up, one down)" },
+      { instruction: "Progress to crossover patterns: both balls cross at once" },
+    ]}
+    coachingCues={[
+      "Same height for both balls",
+      "Fingertip control, not palm slapping",
+      "Start slow—speed comes with control",
+    ]}
+    duration="5 min"
+    reps="20 reps each pattern"
+    difficulty="Intermediate"
+    theme="basketball"
+  />
+
+  <DrillCard
+    number={3}
+    title="Figure 8 Wrap (No Dribble)"
+    tags={["Ball-Handling", "🔇 Silent"]}
+    ageBadge={{ label: "7–9", class: "age-7-9" }}
+    description="Great for young players. Develops hand speed and coordination without needing to dribble. Perfect warm-up for any age."
+    steps={[
+      { instruction: "Stand with feet wider than shoulder width" },
+      { instruction: "Pass the ball around one leg, through to the other" },
+      { instruction: "Continue in a figure 8 pattern without dropping" },
+      { instruction: "Count how many you can do in 30 seconds" },
+    ]}
+    coachingCues={[
+      "Fingertips only—no palms",
+      "Keep head up, feel the ball",
+      "Beat your record every day",
+    ]}
+    duration="2 min"
+    reps="30 sec x 3"
+    difficulty="Beginner"
+    theme="basketball"
+  />
+
+  <!-- Chapter 3: Shooting -->
+  <SectionHeader
+    id="shooting"
+    chapter="Chapter III"
+    title="Shooting Drills"
+    theme="basketball"
+  />
+
+  <p>Shooting form should be locked in before distance or volume increases. I see too many young players chucking from three-point range before they can make a layup consistently.</p>
+
+  <CoachVoice author="adam">
+    Form before distance. Always. I'd rather see a kid shoot 100 perfect shots from 5 feet than 100 broken shots from the three-point line. Build the muscle memory first.
+  </CoachVoice>
+
+  <DrillCard
+    number={4}
+    title="Form Shooting (BEEF)"
+    tags={["Shooting", "🎯 Form"]}
+    ageBadge={{ label: "7–13", class: "age-10-13" }}
+    description="BEEF = Balance, Eyes, Elbow, Follow-through. Start 3–5 feet from basket. This is how every great shooter built their stroke."
+    steps={[
+      { instruction: "Stand 3–5 feet from basket, square up" },
+      { instruction: "Check Balance: feet shoulder-width, slight bend in knees" },
+      { instruction: "Eyes on target (back of the rim or center)" },
+      { instruction: "Elbow under the ball, in line with basket" },
+      { instruction: "Follow-through: reach into the basket, hold finish" },
+    ]}
+    coachingCues={[
+      "Shoot up, not forward",
+      "Elbow finishes above eyebrow",
+      "Hold your follow-through until ball hits",
+    ]}
+    duration="5–10 min"
+    reps="50–100 makes"
+    difficulty="Beginner"
+    theme="basketball"
+  />
+
+  <!-- Chapter 4: Footwork -->
+  <SectionHeader
+    id="footwork"
+    chapter="Chapter IV"
+    title="Footwork & Defense Drills"
+    theme="basketball"
+  />
+
+  <p>Footwork separates good players from great players. It's the most underrated skill in youth basketball.</p>
+
+  <DrillCard
+    number={5}
+    title="Defensive Slides (Zig-Zag)"
+    tags={["Defense", "Footwork"]}
+    ageBadge={{ label: "10–13", class: "age-10-13" }}
+    description="Builds lateral quickness and defensive stance. Essential for any player who wants to guard effectively."
+    steps={[
+      { instruction: "Start at baseline in defensive stance" },
+      { instruction: "Slide diagonally to elbow, drop step, slide to opposite elbow" },
+      { instruction: "Continue zig-zag pattern to half court" },
+      { instruction: "Sprint back and repeat" },
+    ]}
+    coachingCues={[
+      "Feet never touch—push off, don't hop",
+      "Stay low, butt down",
+      "Hands active, chest up",
+    ]}
+    duration="3 min"
+    reps="4–6 trips"
+    difficulty="Beginner"
+    theme="basketball"
+  />
+
+  <!-- Chapter 5: Practice Templates -->
+  <SectionHeader
+    id="practice-templates"
+    chapter="Chapter V"
+    title="Ready-Made Practice Plans"
+    theme="basketball"
+  />
+
+  <p>Here are two practice templates you can use immediately:</p>
+
+  <h3 class="font-display font-semibold text-lg mt-8 mb-4">45-Minute Practice (Ages 8–10)</h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Activity</th>
+        <th>Focus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">0–5 min</span></td>
+        <td>Dynamic warm-up</td>
+        <td>Get blood flowing, prevent injury</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">5–15 min</span></td>
+        <td>Ball-handling circuit</td>
+        <td>Figure 8s, stationary dribbles</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">15–25 min</span></td>
+        <td>Layup lines</td>
+        <td>Right hand, left hand, both sides</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">25–35 min</span></td>
+        <td>Dribble tag game</td>
+        <td>Ball control under pressure (fun!)</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">35–45 min</span></td>
+        <td>Knockout or free throws</td>
+        <td>End with game, positive finish</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="font-display font-semibold text-lg mt-8 mb-4">60-Minute Practice (Ages 11–13)</h3>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Activity</th>
+        <th>Focus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">0–8 min</span></td>
+        <td>Dynamic warm-up + form shooting</td>
+        <td>10 makes close range</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">8–20 min</span></td>
+        <td>Ball-handling series</td>
+        <td>Two-ball dribbling, combo moves</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">20–30 min</span></td>
+        <td>1v1 from triple threat</td>
+        <td>Decision-making, finishing</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">30–40 min</span></td>
+        <td>Defensive slides + closeouts</td>
+        <td>Footwork, positioning</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">40–55 min</span></td>
+        <td>3v3 half court</td>
+        <td>Game application</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-gold text-white rounded-sm font-mono text-[0.65rem] font-medium">55–60 min</span></td>
+        <td>Free throws + stretch</td>
+        <td>Cool down</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <CoachVoice author="adam">
+    The drill isn't hard—doing it right is hard. I watch kids rush through drills to get to the game. Slow down. If you can't do it slow, you can't do it fast. Same technique I use with pros, scaled for age.
+  </CoachVoice>
+
+  <FAQSection
+    faqs={faqs}
+    title="Frequently Asked Questions"
+    subtitle="Common questions from parents and coaches about youth basketball training"
+    theme="basketball"
+  />
+
+  <CTABlock
+    title="Turn These Drills Into Action"
+    description="Get the full Youth Basketball Drills program in the Playbook app. Track progress, follow along with videos, and get personalized recommendations."
+    buttonText="Start Training Free"
+    buttonUrl="https://academy.youthperformance.com/programs/youth-hoops"
+    theme="basketball"
+  />
+
+  <RelatedGrid items={relatedItems} />
+</PillarLayout>
