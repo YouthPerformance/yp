@@ -5,9 +5,9 @@
  * "NeoBall" aesthetics: dark, neon, premium.
  */
 
+// Components
 export type { BetaBadgeProps, BetaBadgeVariant } from "./components/BetaBadge";
 export { BetaBadge } from "./components/BetaBadge";
-// Components
 export type { ButtonProps } from "./components/Button";
 export { Button } from "./components/Button";
 
