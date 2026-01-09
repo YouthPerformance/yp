@@ -61,7 +61,7 @@ async function sendEmail(params: SendEmailParams): Promise<{ id: string } | { er
     const response = await fetch(RESEND_API_URL, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -75,7 +75,7 @@ async function sendEmail(params: SendEmailParams): Promise<{ id: string } | { er
       }),
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as { id?: string; message?: string };
 
     if (!response.ok) {
       console.error("[EMAIL] Resend error:", data);
@@ -83,7 +83,7 @@ async function sendEmail(params: SendEmailParams): Promise<{ id: string } | { er
     }
 
     console.log(`[EMAIL] Sent to ${params.to}: ${params.subject}`);
-    return { id: data.id };
+    return { id: data.id || "" };
   } catch (error) {
     console.error("[EMAIL] Network error:", error);
     return { error: "Failed to connect to email service" };
@@ -305,7 +305,7 @@ export const sendGoldenTicketEmail = internalAction({
     claimToken: v.string(),
     orderNumber: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     const claimUrl = `https://youthperformance.com/claim/${args.claimToken}`;
 
     const { html, text } = goldenTicketTemplate({
@@ -343,7 +343,7 @@ export const sendOTPEmail = internalAction({
     to: v.string(),
     code: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     const html = `
 <!DOCTYPE html>
 <html>
@@ -404,7 +404,7 @@ export const sendWelcomeEmail = internalAction({
     to: v.string(),
     name: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     const html = `
 <!DOCTYPE html>
 <html>
