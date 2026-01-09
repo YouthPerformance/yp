@@ -46,9 +46,13 @@ For the `production` environment, configure:
 
 | Secret | Description | When needed |
 |--------|-------------|-------------|
-| `CLERK_SECRET_KEY` | Clerk secret key | Server-side auth validation |
+| `BETTER_AUTH_SECRET` | BetterAuth session signing key | Server-side auth (Academy) |
 | `STRIPE_SECRET_KEY` | Stripe secret key | Webhook testing |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing | Webhook verification |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | OAuth sign-in |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth secret | OAuth sign-in |
+| `APPLE_CLIENT_ID` | Apple OAuth client ID | OAuth sign-in |
+| `APPLE_CLIENT_SECRET` | Apple OAuth secret | OAuth sign-in |
 
 ---
 
@@ -60,7 +64,7 @@ For the `production` environment, configure:
 |----------|-------------|---------|
 | `NEXT_PUBLIC_CONVEX_URL` | Convex production URL | `https://wry-cuttlefish-942.convex.cloud` |
 | `NEXT_PUBLIC_CONVEX_URL_STAGING` | Convex staging URL | `https://staging-xxx.convex.cloud` |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key | `pk_test_xxx` |
+| `NEXT_PUBLIC_SITE_URL` | Academy production URL | `https://academy.youthperformance.com` |
 | `PUBLIC_STORE_DOMAIN` | Shopify store domain | `youthperformance.myshopify.com` |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID | Found in CF dashboard URL |
 | `TURBO_TEAM` | Turborepo team name | `youthperformance` |
