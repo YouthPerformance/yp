@@ -3,13 +3,13 @@
 // Visual representation of a program day with status
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Lock, Check, ChevronRight } from 'lucide-react';
-import type { WorkoutTheme } from '@/data/programs/basketball-chassis';
+import { motion } from "framer-motion";
+import { Check, ChevronRight, Lock } from "lucide-react";
+import type { WorkoutTheme } from "@/data/programs/basketball-chassis";
 
-type DayStatus = 'locked' | 'unlocked' | 'current' | 'completed';
+type DayStatus = "locked" | "unlocked" | "current" | "completed";
 
 interface DayCardProps {
   dayNumber: number;
@@ -20,15 +20,8 @@ interface DayCardProps {
   onClick?: () => void;
 }
 
-export function DayCard({
-  dayNumber,
-  theme,
-  title,
-  status,
-  themeColor,
-  onClick,
-}: DayCardProps) {
-  const isClickable = status !== 'locked';
+export function DayCard({ dayNumber, theme, title, status, themeColor, onClick }: DayCardProps) {
+  const isClickable = status !== "locked";
 
   return (
     <motion.button
@@ -36,13 +29,12 @@ export function DayCard({
       disabled={!isClickable}
       className={`
         w-full p-4 rounded-xl flex items-center gap-4 text-left transition-all
-        ${status === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+        ${status === "locked" ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
       `}
       style={{
-        backgroundColor: status === 'current' ? 'var(--bg-secondary)' : 'var(--bg-tertiary)',
-        border: status === 'current'
-          ? `1px solid ${themeColor}`
-          : '1px solid var(--border-default)',
+        backgroundColor: status === "current" ? "var(--bg-secondary)" : "var(--bg-tertiary)",
+        border:
+          status === "current" ? `1px solid ${themeColor}` : "1px solid var(--border-default)",
       }}
       whileHover={isClickable ? { scale: 1.01 } : {}}
       whileTap={isClickable ? { scale: 0.99 } : {}}
@@ -52,23 +44,23 @@ export function DayCard({
         className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
         style={{
           backgroundColor:
-            status === 'completed'
+            status === "completed"
               ? themeColor
-              : status === 'current'
-              ? `${themeColor}20`
-              : 'var(--bg-secondary)',
+              : status === "current"
+                ? `${themeColor}20`
+                : "var(--bg-secondary)",
         }}
       >
-        {status === 'locked' && (
-          <Lock className="w-4 h-4" style={{ color: 'var(--text-tertiary)' }} />
+        {status === "locked" && (
+          <Lock className="w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
         )}
-        {status === 'completed' && (
-          <Check className="w-5 h-5" style={{ color: 'var(--bg-primary)' }} />
+        {status === "completed" && (
+          <Check className="w-5 h-5" style={{ color: "var(--bg-primary)" }} />
         )}
-        {(status === 'unlocked' || status === 'current') && (
+        {(status === "unlocked" || status === "current") && (
           <span
             className="text-sm font-bold"
-            style={{ color: status === 'current' ? themeColor : 'var(--text-secondary)' }}
+            style={{ color: status === "current" ? themeColor : "var(--text-secondary)" }}
           >
             {dayNumber}
           </span>
@@ -85,13 +77,13 @@ export function DayCard({
               color: themeColor,
             }}
           >
-            {theme.replace('-', ' ')}
+            {theme.replace("-", " ")}
           </span>
         </div>
         <p
           className="text-sm font-medium truncate"
           style={{
-            color: status === 'locked' ? 'var(--text-tertiary)' : 'var(--text-primary)',
+            color: status === "locked" ? "var(--text-tertiary)" : "var(--text-primary)",
           }}
         >
           Day {dayNumber}: {title}
@@ -102,7 +94,7 @@ export function DayCard({
       {isClickable && (
         <ChevronRight
           className="w-5 h-5 flex-shrink-0"
-          style={{ color: status === 'current' ? themeColor : 'var(--text-tertiary)' }}
+          style={{ color: status === "current" ? themeColor : "var(--text-tertiary)" }}
         />
       )}
     </motion.button>

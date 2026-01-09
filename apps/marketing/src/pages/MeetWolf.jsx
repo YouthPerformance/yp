@@ -1,56 +1,56 @@
 // MeetWolf - Curio-style prompt editor for Wolf AI coach
 // E10-7: Create editable AI coach profile based on user inputs
 
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useUser } from '@clerk/clerk-react'
-import { useMutation, useQuery } from 'convex/react'
-import { api } from '../../convex/_generated/api'
-import { Button, Card } from '../components/ui'
-import { useOnboarding } from '../context/OnboardingContext'
-import { generateWolfPrompt } from '../config/interestPills'
-import analytics, { EVENTS } from '../lib/analytics'
+import { useUser } from "@clerk/clerk-react";
+import { useMutation, useQuery } from "convex/react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { api } from "../../convex/_generated/api";
+import { Button, Card } from "../components/ui";
+import { generateWolfPrompt } from "../config/interestPills";
+import { useOnboarding } from "../context/OnboardingContext";
+import analytics, { EVENTS } from "../lib/analytics";
 
 function MeetWolf() {
-  const navigate = useNavigate()
-  const { user } = useUser()
-  const { data } = useOnboarding()
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const { data } = useOnboarding();
 
   // Convex queries and mutations
-  const email = user?.primaryEmailAddress?.emailAddress
-  const profile = useQuery(api.users.getByEmail, email ? { email } : 'skip')
-  const updateWolfPromptMutation = useMutation(api.users.updateWolfPrompt)
+  const email = user?.primaryEmailAddress?.emailAddress;
+  const profile = useQuery(api.users.getByEmail, email ? { email } : "skip");
+  const updateWolfPromptMutation = useMutation(api.users.updateWolfPrompt);
 
   // Generate initial prompt from onboarding data
   const initialPrompt = generateWolfPrompt({
     ...data,
-    childNickname: data.childNickname || 'your athlete',
-  })
+    childNickname: data.childNickname || "your athlete",
+  });
 
-  const [prompt, setPrompt] = useState(initialPrompt)
-  const [isEditing, setIsEditing] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
+  const [prompt, setPrompt] = useState(initialPrompt);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Load saved prompt from profile if available
   useEffect(() => {
     if (profile?.wolfPrompt) {
-      setPrompt(profile.wolfPrompt)
+      setPrompt(profile.wolfPrompt);
     }
-  }, [profile])
+  }, [profile]);
 
   // Track page view
   useEffect(() => {
-    analytics.trackPageView('meet_wolf')
-  }, [])
+    analytics.trackPageView("meet_wolf");
+  }, []);
 
   const handleSave = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
 
     // Track prompt customization
     analytics.track(EVENTS.WOLF_PROMPT_SAVED, {
       was_edited: prompt !== initialPrompt,
       prompt_length: prompt.length,
-    })
+    });
 
     try {
       // Save to Convex if we have a profile
@@ -58,23 +58,23 @@ function MeetWolf() {
         await updateWolfPromptMutation({
           profileId: profile._id,
           wolfPrompt: prompt,
-        })
+        });
       }
     } catch (err) {
-      console.error('Error saving wolf prompt:', err)
+      console.error("Error saving wolf prompt:", err);
     }
 
-    setIsSaving(false)
-    setIsEditing(false)
+    setIsSaving(false);
+    setIsEditing(false);
 
     // Navigate to chat
-    navigate('/wolf-chat')
-  }
+    navigate("/wolf-chat");
+  };
 
   const handleReset = () => {
-    setPrompt(initialPrompt)
-    setIsEditing(false)
-  }
+    setPrompt(initialPrompt);
+    setIsEditing(false);
+  };
 
   return (
     <div className="min-h-screen bg-black py-12">
@@ -84,12 +84,10 @@ function MeetWolf() {
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-cyan-500/20 flex items-center justify-center">
             <span className="text-4xl">🐺</span>
           </div>
-          <h1 className="text-3xl font-yp-display uppercase text-white mb-2">
-            Meet Your Wolf
-          </h1>
+          <h1 className="text-3xl font-yp-display uppercase text-white mb-2">Meet Your Wolf</h1>
           <p className="text-dark-text-secondary">
-            Wolf is your AI training buddy. Here's what Wolf knows about{' '}
-            {data.childNickname || 'your athlete'}.
+            Wolf is your AI training buddy. Here's what Wolf knows about{" "}
+            {data.childNickname || "your athlete"}.
           </p>
         </div>
 
@@ -101,19 +99,19 @@ function MeetWolf() {
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-dark-text-tertiary">Name:</span>
-              <span className="text-white ml-2">{data.childNickname || 'Your Athlete'}</span>
+              <span className="text-white ml-2">{data.childNickname || "Your Athlete"}</span>
             </div>
             <div>
               <span className="text-dark-text-tertiary">Age:</span>
-              <span className="text-white ml-2">{data.ageBand || 'Youth'}</span>
+              <span className="text-white ml-2">{data.ageBand || "Youth"}</span>
             </div>
             <div>
               <span className="text-dark-text-tertiary">Sport:</span>
-              <span className="text-white ml-2 capitalize">{data.sport || 'Multi-sport'}</span>
+              <span className="text-white ml-2 capitalize">{data.sport || "Multi-sport"}</span>
             </div>
             <div>
               <span className="text-dark-text-tertiary">Space:</span>
-              <span className="text-white ml-2 capitalize">{data.space || 'Home'}</span>
+              <span className="text-white ml-2 capitalize">{data.space || "Home"}</span>
             </div>
           </div>
           {data.goals?.length > 0 && (
@@ -143,7 +141,7 @@ function MeetWolf() {
               onClick={() => setIsEditing(!isEditing)}
               className="text-cyan-500 text-sm hover:text-cyan-400 transition-colors"
             >
-              {isEditing ? 'Cancel' : 'Edit'}
+              {isEditing ? "Cancel" : "Edit"}
             </button>
           </div>
 
@@ -156,19 +154,10 @@ function MeetWolf() {
                 className="w-full bg-black-100 border border-black-400 rounded-lg p-3 text-dark-text-secondary text-sm resize-none focus:outline-none focus:border-cyan-500 transition-colors"
               />
               <div className="flex gap-2 mt-3">
-                <Button
-                  size="sm"
-                  onClick={handleSave}
-                  loading={isSaving}
-                  className="flex-1"
-                >
+                <Button size="sm" onClick={handleSave} loading={isSaving} className="flex-1">
                   Save Changes
                 </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleReset}
-                >
+                <Button variant="secondary" size="sm" onClick={handleReset}>
                   Reset
                 </Button>
               </div>
@@ -199,12 +188,7 @@ function MeetWolf() {
           >
             Start Chat with Wolf
           </Button>
-          <Button
-            variant="secondary"
-            size="lg"
-            fullWidth
-            onClick={() => navigate('/settings')}
-          >
+          <Button variant="secondary" size="lg" fullWidth onClick={() => navigate("/settings")}>
             Edit Later in Settings
           </Button>
         </div>
@@ -212,7 +196,7 @@ function MeetWolf() {
         {/* Skip */}
         <p className="text-center mt-6">
           <button
-            onClick={() => navigate('/bulletproof-ankles')}
+            onClick={() => navigate("/bulletproof-ankles")}
             className="text-dark-text-tertiary hover:text-dark-text-secondary text-sm transition-colors"
           >
             Skip for now
@@ -220,7 +204,7 @@ function MeetWolf() {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-export default MeetWolf
+export default MeetWolf;

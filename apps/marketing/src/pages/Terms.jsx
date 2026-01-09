@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 /**
  * Terms of Service Page
@@ -30,59 +30,45 @@ function Terms() {
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
         <header className="mb-12">
-          <p className="text-cyan-400 font-mono text-xs uppercase tracking-[0.2em] mb-2">
-            Legal
-          </p>
+          <p className="text-cyan-400 font-mono text-xs uppercase tracking-[0.2em] mb-2">Legal</p>
           <h1 className="font-bebas text-5xl md:text-6xl tracking-wide text-white mb-4">
             Terms of Service
           </h1>
-          <p className="font-mono text-sm text-neutral-500">
-            Last Updated: [Date]
-          </p>
+          <p className="font-mono text-sm text-neutral-500">Last Updated: [Date]</p>
         </header>
 
         {/* Content */}
         <article className="space-y-10 text-neutral-300 leading-relaxed">
           <section>
-            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">
-              1. Introduction
-            </h2>
+            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">1. Introduction</h2>
             <p className="mb-4">
               Welcome to Youth Performance ("YP", "we", "our", or "us"). These Terms of Service
               ("Terms") govern your access to and use of our website, applications, training
               programs, and services (collectively, the "Services").
             </p>
             <p>
-              By accessing or using our Services, you agree to be bound by these Terms. If you
-              do not agree to these Terms, please do not use our Services.
+              By accessing or using our Services, you agree to be bound by these Terms. If you do
+              not agree to these Terms, please do not use our Services.
             </p>
           </section>
 
           <section>
-            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">
-              2. Eligibility
-            </h2>
+            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">2. Eligibility</h2>
             <p className="mb-4">
-              Our Services are designed for youth athletes and their parents or guardians.
-              Users under 18 years of age must have parental or guardian consent to use our Services.
+              Our Services are designed for youth athletes and their parents or guardians. Users
+              under 18 years of age must have parental or guardian consent to use our Services.
             </p>
-            <p>
-              [Additional eligibility requirements to be added by legal counsel]
-            </p>
+            <p>[Additional eligibility requirements to be added by legal counsel]</p>
           </section>
 
           <section>
-            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">
-              3. User Accounts
-            </h2>
+            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">3. User Accounts</h2>
             <p className="mb-4">
               To access certain features of our Services, you may be required to create an account.
               You are responsible for maintaining the confidentiality of your account credentials
               and for all activities that occur under your account.
             </p>
-            <p>
-              [Additional account terms to be added by legal counsel]
-            </p>
+            <p>[Additional account terms to be added by legal counsel]</p>
           </section>
 
           <section>
@@ -90,8 +76,8 @@ function Terms() {
               4. Subscription and Payments
             </h2>
             <p className="mb-4">
-              Some of our Services require a paid subscription. By subscribing, you agree to pay
-              the applicable fees and authorize us to charge your payment method on a recurring basis.
+              Some of our Services require a paid subscription. By subscribing, you agree to pay the
+              applicable fees and authorize us to charge your payment method on a recurring basis.
             </p>
             <p>
               [Subscription terms, billing cycles, and refund policies to be added by legal counsel]
@@ -99,12 +85,10 @@ function Terms() {
           </section>
 
           <section>
-            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">
-              5. Acceptable Use
-            </h2>
+            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">5. Acceptable Use</h2>
             <p className="mb-4">
-              You agree to use our Services only for lawful purposes and in accordance with these Terms.
-              You agree not to:
+              You agree to use our Services only for lawful purposes and in accordance with these
+              Terms. You agree not to:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Use the Services in any way that violates applicable laws or regulations</li>
@@ -123,9 +107,7 @@ function Terms() {
               are provided for educational and informational purposes. Results may vary based on
               individual effort and other factors.
             </p>
-            <p>
-              [Additional content terms to be added by legal counsel]
-            </p>
+            <p>[Additional content terms to be added by legal counsel]</p>
           </section>
 
           <section>
@@ -134,12 +116,12 @@ function Terms() {
             </h2>
             <p className="mb-4">
               The training programs and exercises provided through our Services are for
-              informational and educational purposes only. Always consult with a healthcare
-              provider before starting any new exercise program.
+              informational and educational purposes only. Always consult with a healthcare provider
+              before starting any new exercise program.
             </p>
             <p>
-              Youth Performance is not responsible for any injuries that may occur during
-              the use of our training programs. Users participate at their own risk.
+              Youth Performance is not responsible for any injuries that may occur during the use of
+              our training programs. Users participate at their own risk.
             </p>
           </section>
 
@@ -148,9 +130,9 @@ function Terms() {
               8. Intellectual Property
             </h2>
             <p>
-              All content, trademarks, and intellectual property on our Services are owned by
-              Youth Performance or our licensors. You may not use, reproduce, or distribute
-              our content without prior written permission.
+              All content, trademarks, and intellectual property on our Services are owned by Youth
+              Performance or our licensors. You may not use, reproduce, or distribute our content
+              without prior written permission.
             </p>
           </section>
 
@@ -158,9 +140,7 @@ function Terms() {
             <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">
               9. Limitation of Liability
             </h2>
-            <p>
-              [Limitation of liability provisions to be added by legal counsel]
-            </p>
+            <p>[Limitation of liability provisions to be added by legal counsel]</p>
           </section>
 
           <section>
@@ -174,15 +154,11 @@ function Terms() {
           </section>
 
           <section>
-            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">
-              11. Contact Us
-            </h2>
+            <h2 className="font-bebas text-2xl tracking-wide text-white mb-4">11. Contact Us</h2>
             <p className="mb-4">
               If you have any questions about these Terms, please contact us at:
             </p>
-            <p className="font-mono text-cyan-400">
-              legal@youthperformance.com
-            </p>
+            <p className="font-mono text-cyan-400">legal@youthperformance.com</p>
           </section>
         </article>
 
@@ -201,14 +177,12 @@ function Terms() {
                 legal@youthperformance.com
               </a>
             </div>
-            <p className="text-neutral-600">
-              Youth Performance
-            </p>
+            <p className="text-neutral-600">Youth Performance</p>
           </div>
         </footer>
       </div>
     </div>
-  )
+  );
 }
 
-export default Terms
+export default Terms;

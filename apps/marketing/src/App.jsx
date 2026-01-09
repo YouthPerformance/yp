@@ -1,37 +1,39 @@
-import { Routes, Route } from 'react-router-dom'
-import { OnboardingProvider } from './context/OnboardingContext'
-import Layout from './components/Layout'
-import StartHereModal from './components/StartHereModal'
-import Home from './pages/Home'
-import Library from './pages/Library'
-import CourseDetail from './pages/CourseDetail'
-import Instructor from './pages/Instructor'
-import Dashboard from './pages/Dashboard'
-import Settings from './pages/Settings'
-import FAQ from './pages/FAQ'
-import NotFound from './pages/NotFound'
-import BulletproofAnkles from './pages/BulletproofAnkles'
-import Quiz from './pages/Quiz'
-import QuizResults from './pages/QuizResults'
-import Offer from './pages/Offer'
-import Start from './pages/Start'
-import PlanReady from './pages/PlanReady'
-import SaveProfile from './pages/SaveProfile'
-import StackRunner from './pages/app/StackRunner'
-import AppHome from './pages/app/AppHome'
-import ProgramHome from './pages/app/ProgramHome'
-import LessonPlayer from './pages/app/LessonPlayer'
-import MeetWolf from './pages/MeetWolf'
-import WolfChat from './pages/WolfChat'
-import WolfGrow from './pages/WolfGrow'
-import AuthPage from './pages/AuthPage'
-import Terms from './pages/Terms'
-import Privacy from './pages/Privacy'
-import Mission from './pages/Mission'
-import OilSpill from './pages/test/OilSpill'
-import FogNoise from './pages/test/FogNoise'
-import PortalFrameTest from './pages/test/PortalFrameTest'
-import GlobeTest from './tests/GlobeTest'
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import StartHereModal from "./components/StartHereModal";
+import { OnboardingProvider } from "./context/OnboardingContext";
+import AuthPage from "./pages/AuthPage";
+import AppHome from "./pages/app/AppHome";
+import LessonPlayer from "./pages/app/LessonPlayer";
+import ProgramHome from "./pages/app/ProgramHome";
+import StackRunner from "./pages/app/StackRunner";
+import BulletproofAnkles from "./pages/BulletproofAnkles";
+import CourseDetail from "./pages/CourseDetail";
+import Dashboard from "./pages/Dashboard";
+import FAQ from "./pages/FAQ";
+import Home from "./pages/Home";
+import Instructor from "./pages/Instructor";
+import Library from "./pages/Library";
+import LP from "./pages/LP";
+import MeetWolf from "./pages/MeetWolf";
+import Mission from "./pages/Mission";
+import NotFound from "./pages/NotFound";
+import Offer from "./pages/Offer";
+import PlanReady from "./pages/PlanReady";
+import Privacy from "./pages/Privacy";
+import Quiz from "./pages/Quiz";
+import QuizResults from "./pages/QuizResults";
+import SaveProfile from "./pages/SaveProfile";
+import Settings from "./pages/Settings";
+import Start from "./pages/Start";
+import Terms from "./pages/Terms";
+import FogNoise from "./pages/test/FogNoise";
+import OilSpill from "./pages/test/OilSpill";
+import PortalFrameTest from "./pages/test/PortalFrameTest";
+import Waitlist from "./pages/Waitlist";
+import WolfChat from "./pages/WolfChat";
+import WolfGrow from "./pages/WolfGrow";
+import GlobeTest from "./tests/GlobeTest";
 
 function App() {
   return (
@@ -39,11 +41,13 @@ function App() {
       <StartHereModal />
       <Routes>
         {/* Standalone pages - no Layout wrapper */}
+        <Route path="/waitlist" element={<Waitlist />} />
         <Route path="/grow" element={<WolfGrow />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/mission" element={<Mission />} />
+        <Route path="/lp" element={<LP />} />
 
         {/* Test pages for Iridescence backgrounds */}
         <Route path="/test/oil-spill" element={<OilSpill />} />
@@ -79,7 +83,7 @@ function App() {
         </Route>
       </Routes>
     </OnboardingProvider>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { ShardIcon } from './icons';
-import { CrystalIcon } from './icons';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { CrystalIcon, ShardIcon } from "./icons";
 
 interface ShardMeterProps {
   /** Current shard count (0-9, resets at 10) */
@@ -58,19 +57,14 @@ export function ShardMeter({
       {showCrystalCount && (
         <div className="flex items-center gap-1">
           <CrystalIcon size={compact ? 18 : 24} />
-          <span
-            className={`font-bold text-purple-400 ${compact ? 'text-sm' : 'text-base'}`}
-          >
+          <span className={`font-bold text-purple-400 ${compact ? "text-sm" : "text-base"}`}>
             {crystals}
           </span>
         </div>
       )}
 
       {/* Shard meter */}
-      <div
-        className="flex items-center rounded-full bg-slate-900/50 px-2 py-1"
-        style={{ gap }}
-      >
+      <div className="flex items-center rounded-full bg-slate-900/50 px-2 py-1" style={{ gap }}>
         {Array.from({ length: 10 }).map((_, i) => {
           const isFilled = i < shards;
           const isLatest = i === shards - 1 && shards > 0;
@@ -84,24 +78,18 @@ export function ShardMeter({
                 opacity: isFilled ? 1 : 0.3,
               }}
               transition={{
-                scale: { duration: 0.3, ease: 'easeOut' },
+                scale: { duration: 0.3, ease: "easeOut" },
                 opacity: { duration: 0.2 },
               }}
             >
-              <ShardIcon
-                size={segmentSize}
-                filled={isFilled}
-                glowing={isLatest}
-              />
+              <ShardIcon size={segmentSize} filled={isFilled} glowing={isLatest} />
             </motion.div>
           );
         })}
       </div>
 
       {/* Shard count text */}
-      <span
-        className={`font-mono text-cyan-400 ${compact ? 'text-xs' : 'text-sm'}`}
-      >
+      <span className={`font-mono text-cyan-400 ${compact ? "text-xs" : "text-sm"}`}>
         {shards}/10
       </span>
 
@@ -117,7 +105,7 @@ export function ShardMeter({
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: 'spring', damping: 10 }}
+              transition={{ type: "spring", damping: 10 }}
               className="flex flex-col items-center gap-4"
             >
               <CrystalIcon size={96} variant="default" glowing />

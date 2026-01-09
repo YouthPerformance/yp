@@ -5,11 +5,11 @@
 // Intensity Budget: 10 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useOnboarding, WolfColor } from '@/contexts/OnboardingContext';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useOnboarding, type WolfColor } from "@/contexts/OnboardingContext";
 
 interface AvatarSelectProps {
   onContinue: () => void;
@@ -26,21 +26,21 @@ interface WolfOption {
 }
 
 const WOLF_OPTIONS: WolfOption[] = [
-  { id: 'black', name: 'Shadow', bgColor: '#1A1A1A', borderColor: '#333' },
-  { id: 'white', name: 'Ghost', bgColor: '#E5E5E5', borderColor: '#CCC' },
-  { id: 'gray', name: 'Steel', bgColor: '#4A4A4A', borderColor: '#666' },
-  { id: 'brown', name: 'Earth', bgColor: '#5D4037', borderColor: '#795548' },
+  { id: "black", name: "Shadow", bgColor: "#1A1A1A", borderColor: "#333" },
+  { id: "white", name: "Ghost", bgColor: "#E5E5E5", borderColor: "#CCC" },
+  { id: "gray", name: "Steel", bgColor: "#4A4A4A", borderColor: "#666" },
+  { id: "brown", name: "Earth", bgColor: "#5D4037", borderColor: "#795548" },
 ];
 
 const LOCKED_WOLVES = [
-  { name: 'Cyber', color: '#00F6E0', unlockRank: 'Hunter' },
-  { name: 'Fire', color: '#FF6B6B', unlockRank: 'Alpha' },
-  { name: 'Gold', color: '#FFD700', unlockRank: 'Apex' },
+  { name: "Cyber", color: "#00F6E0", unlockRank: "Hunter" },
+  { name: "Fire", color: "#FF6B6B", unlockRank: "Alpha" },
+  { name: "Gold", color: "#FFD700", unlockRank: "Apex" },
 ];
 
 export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
   const { data, updateAthleteData } = useOnboarding();
-  const [selected, setSelected] = useState<WolfColor>(data.avatarColor || 'black');
+  const [selected, setSelected] = useState<WolfColor>(data.avatarColor || "black");
 
   const handleSelect = (color: WolfColor) => {
     setSelected(color);
@@ -52,12 +52,12 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
     onContinue();
   };
 
-  const selectedWolf = WOLF_OPTIONS.find(w => w.id === selected);
+  const selectedWolf = WOLF_OPTIONS.find((w) => w.id === selected);
 
   return (
     <motion.div
       className="min-h-screen flex flex-col px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -66,10 +66,10 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
       <motion.button
         onClick={onBack}
         className="flex items-center gap-2 mb-8 text-sm self-start"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        whileHover={{ color: 'var(--text-primary)' }}
+        whileHover={{ color: "var(--text-primary)" }}
       >
         ← Back
       </motion.button>
@@ -77,7 +77,7 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
       {/* Title */}
       <motion.h1
         className="font-bebas text-3xl tracking-wider mb-2 text-center"
-        style={{ color: 'var(--text-primary)' }}
+        style={{ color: "var(--text-primary)" }}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
@@ -86,7 +86,7 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
 
       <motion.p
         className="text-sm text-center mb-8"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
@@ -111,7 +111,7 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
           }}
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <span className="text-6xl">🐺</span>
         </motion.div>
@@ -120,7 +120,7 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
       {/* Wolf Name */}
       <motion.p
         className="font-bebas text-xl tracking-wider text-center mb-8"
-        style={{ color: 'var(--accent-primary)' }}
+        style={{ color: "var(--accent-primary)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
@@ -137,7 +137,7 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
       >
         <p
           className="text-xs uppercase tracking-wider mb-3 text-center"
-          style={{ color: 'var(--text-tertiary)' }}
+          style={{ color: "var(--text-tertiary)" }}
         >
           Select Color
         </p>
@@ -149,8 +149,8 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
               className="w-14 h-14 rounded-full transition-all"
               style={{
                 backgroundColor: wolf.bgColor,
-                border: `3px solid ${selected === wolf.id ? 'var(--accent-primary)' : wolf.borderColor}`,
-                boxShadow: selected === wolf.id ? '0 0 15px var(--accent-primary)50' : 'none',
+                border: `3px solid ${selected === wolf.id ? "var(--accent-primary)" : wolf.borderColor}`,
+                boxShadow: selected === wolf.id ? "0 0 15px var(--accent-primary)50" : "none",
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -168,7 +168,7 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
       >
         <p
           className="text-xs uppercase tracking-wider mb-3 text-center"
-          style={{ color: 'var(--text-tertiary)' }}
+          style={{ color: "var(--text-tertiary)" }}
         >
           Unlock with Rank
         </p>
@@ -187,20 +187,14 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
                   <span className="text-lg">🔒</span>
                 </div>
               </div>
-              <p
-                className="text-xs mt-1"
-                style={{ color: 'var(--text-tertiary)' }}
-              >
+              <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                 {wolf.unlockRank}
               </p>
             </div>
           ))}
         </div>
 
-        <p
-          className="text-xs text-center mt-4"
-          style={{ color: 'var(--text-tertiary)' }}
-        >
+        <p className="text-xs text-center mt-4" style={{ color: "var(--text-tertiary)" }}>
           More wolves unlock as you rank up!
         </p>
       </motion.div>
@@ -210,8 +204,8 @@ export function AvatarSelect({ onContinue, onBack }: AvatarSelectProps) {
         onClick={handleContinue}
         className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider"
         style={{
-          backgroundColor: 'var(--accent-primary)',
-          color: 'var(--bg-primary)',
+          backgroundColor: "var(--accent-primary)",
+          color: "var(--bg-primary)",
         }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

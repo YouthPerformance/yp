@@ -6,12 +6,12 @@
 /**
  * R3 Framework phases for workout progression
  */
-export type WorkoutTheme = 'RELEASE' | 'RESTORE' | 'RE-ENGINEER' | 'INTEGRATE';
+export type WorkoutTheme = "RELEASE" | "RESTORE" | "RE-ENGINEER" | "INTEGRATE";
 
 /**
  * Exercise side indication for unilateral movements
  */
-export type ExerciseSide = 'left' | 'right' | 'both' | 'alternate';
+export type ExerciseSide = "left" | "right" | "both" | "alternate";
 
 /**
  * Individual exercise within a workout day

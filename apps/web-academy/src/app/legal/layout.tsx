@@ -3,18 +3,11 @@
 // Shared layout for Terms of Service and Privacy Policy
 // ═══════════════════════════════════════════════════════════
 
-import Link from 'next/link';
+import Link from "next/link";
 
-export default function LegalLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: 'var(--bg-primary, #0a0a0a)' }}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: "var(--bg-primary, #0a0a0a)" }}>
       {/* Legal Navigation */}
       <nav className="border-b border-white/10 bg-black/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="max-w-4xl mx-auto px-6 py-4">
@@ -36,9 +29,7 @@ export default function LegalLayout({
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-12">
-        {children}
-      </main>
+      <main className="max-w-4xl mx-auto px-6 py-12">{children}</main>
 
       {/* Footer */}
       <footer className="border-t border-white/10 mt-16">
@@ -56,9 +47,7 @@ export default function LegalLayout({
                 legal@youthperformance.com
               </a>
             </div>
-            <p className="text-gray-600">
-              Youth Performance
-            </p>
+            <p className="text-gray-600">Youth Performance</p>
           </div>
         </div>
       </footer>

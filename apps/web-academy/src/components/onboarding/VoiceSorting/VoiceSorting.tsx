@@ -115,7 +115,8 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
 
   // Should show buttons? (after voice attempt or no mic)
   const showButtons =
-    waitingForInput && (buttonsRevealed || voiceAttemptedThisStep || !hasMicPermission || voiceFailures > 0);
+    waitingForInput &&
+    (buttonsRevealed || voiceAttemptedThisStep || !hasMicPermission || voiceFailures > 0);
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6">
@@ -133,11 +134,7 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
               {/* Diamond indicator */}
               <motion.div
                 className="relative"
-                animate={
-                  isCurrent
-                    ? { scale: [1, 1.1, 1] }
-                    : {}
-                }
+                animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
                 transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
               >
                 {/* Outer glow ring for current */}
@@ -145,7 +142,8 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
                   <motion.div
                     className="absolute -inset-2 rounded-full"
                     style={{
-                      background: "radial-gradient(circle, rgba(0, 246, 224, 0.3) 0%, transparent 70%)",
+                      background:
+                        "radial-gradient(circle, rgba(0, 246, 224, 0.3) 0%, transparent 70%)",
                     }}
                     animate={{
                       scale: [1, 1.5, 1],
@@ -166,12 +164,11 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
                         : isUpcoming
                           ? "#374151"
                           : "#1f2937",
-                    backgroundColor: isComplete
-                      ? "#00f6e0"
-                      : "transparent",
-                    boxShadow: isComplete || isCurrent
-                      ? "0 0 10px rgba(0, 246, 224, 0.5), inset 0 0 5px rgba(0, 246, 224, 0.3)"
-                      : "none",
+                    backgroundColor: isComplete ? "#00f6e0" : "transparent",
+                    boxShadow:
+                      isComplete || isCurrent
+                        ? "0 0 10px rgba(0, 246, 224, 0.5), inset 0 0 5px rgba(0, 246, 224, 0.3)"
+                        : "none",
                   }}
                   animate={
                     isCurrent
@@ -204,12 +201,14 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
                 <motion.div
                   className="w-8 h-[2px] transition-all duration-500"
                   style={{
-                    background: stepIndex > i || step === "reveal" || step === "complete"
-                      ? "linear-gradient(90deg, #00f6e0 0%, #00f6e0 100%)"
-                      : "linear-gradient(90deg, #374151 0%, #1f2937 100%)",
-                    boxShadow: stepIndex > i || step === "reveal" || step === "complete"
-                      ? "0 0 8px rgba(0, 246, 224, 0.5)"
-                      : "none",
+                    background:
+                      stepIndex > i || step === "reveal" || step === "complete"
+                        ? "linear-gradient(90deg, #00f6e0 0%, #00f6e0 100%)"
+                        : "linear-gradient(90deg, #374151 0%, #1f2937 100%)",
+                    boxShadow:
+                      stepIndex > i || step === "reveal" || step === "complete"
+                        ? "0 0 8px rgba(0, 246, 224, 0.5)"
+                        : "none",
                   }}
                 />
               )}
@@ -337,10 +336,7 @@ export function VoiceSorting({ onComplete }: VoiceSortingProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <motion.div
-            className="flex items-center gap-2"
-            style={{ color: "#00f6e0" }}
-          >
+          <motion.div className="flex items-center gap-2" style={{ color: "#00f6e0" }}>
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 0.5, repeat: Infinity }}

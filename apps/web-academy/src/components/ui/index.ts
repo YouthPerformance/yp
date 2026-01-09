@@ -2,4 +2,4 @@
 // UI COMPONENTS INDEX
 // ═══════════════════════════════════════════════════════════
 
-export { StatTicker } from './StatTicker';
+export { StatTicker } from "./StatTicker";

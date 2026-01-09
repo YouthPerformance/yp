@@ -3,10 +3,10 @@
 // Entry point - "Who's joining the pack?"
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { RoleSelection } from '@/components/screens/onboarding';
+import { useRouter } from "next/navigation";
+import { RoleSelection } from "@/components/screens/onboarding";
 
 export default function RolePage() {
   const router = useRouter();
@@ -14,16 +14,18 @@ export default function RolePage() {
   return (
     <RoleSelection
       onSelectRole={(role) => {
-        if (role === 'athlete') {
-          router.push('/athlete-info'); // Athlete flow
+        if (role === "athlete") {
+          // Solo athlete flow - goes to code entry if they have a parent code
+          // or direct sign up
+          router.push("/kid/enter-code");
         } else {
-          // TODO: Parent flow - for now go to athlete-info
-          router.push('/athlete-info');
+          // Parent flow - starts with athlete age selection
+          router.push("/parent/athlete-age");
         }
       }}
       onSignIn={() => {
-        // TODO: Implement sign in
-        router.push('/home');
+        // Go to sign in
+        router.push("/auth");
       }}
     />
   );

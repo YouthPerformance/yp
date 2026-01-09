@@ -2,14 +2,14 @@ import {
   Links,
   Meta,
   Outlet,
+  PrefetchPageLinks,
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  PrefetchPageLinks,
-} from '@remix-run/react';
-import type {LinksFunction, LoaderFunctionArgs, HeadersFunction} from '@shopify/remix-oxygen';
-import {Analytics, useNonce} from '@shopify/hydrogen';
-import styles from './styles/app.css?url';
+} from "@remix-run/react";
+import { Analytics, useNonce } from "@shopify/hydrogen";
+import type { HeadersFunction, LinksFunction, LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import styles from "./styles/app.css?url";
 
 /**
  * Performance-optimized links
@@ -19,26 +19,29 @@ import styles from './styles/app.css?url';
  */
 export const links: LinksFunction = () => [
   // Critical CSS
-  {rel: 'stylesheet', href: styles},
+  { rel: "stylesheet", href: styles },
   // Preconnect to critical origins (reduces connection time by ~100ms)
-  {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
-  {rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous'},
-  {rel: 'preconnect', href: 'https://cdn.shopify.com'},
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+  { rel: "preconnect", href: "https://cdn.shopify.com" },
   // DNS prefetch for image CDN
-  {rel: 'dns-prefetch', href: 'https://cdn.shopify.com'},
+  { rel: "dns-prefetch", href: "https://cdn.shopify.com" },
   // Fonts with display=swap for faster text rendering
-  {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap'},
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+  },
 ];
 
 /**
  * Response headers for edge caching
  */
 export const headers: HeadersFunction = () => ({
-  'Cache-Control': 'public, max-age=600, stale-while-revalidate=86400',
+  "Cache-Control": "public, max-age=600, stale-while-revalidate=86400",
 });
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront, cart} = context;
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { storefront, cart } = context;
 
   // Fetch cart for header cart count (parallel with page data)
   const cartPromise = cart.get();
@@ -46,6 +49,12 @@ export async function loader({context}: LoaderFunctionArgs) {
   return {
     publicStoreDomain: context.env.PUBLIC_STORE_DOMAIN,
     cart: await cartPromise,
+    shop: {
+      shopId: storefront.getShopifyDomain(),
+      acceptedLanguage: storefront.i18n.language,
+      currency: "USD" as const,
+      hydrogenSubchannelId: "0",
+    },
   };
 }
 
@@ -74,11 +83,7 @@ export default function App() {
         <PrefetchPageLinks page="/cart" />
 
         {/* Shopify Analytics */}
-        <Analytics.Provider
-          cart={data.cart}
-          shop={{}}
-          consent={{}}
-        />
+        <Analytics.Provider cart={data.cart} shop={data.shop} consent={{}} />
       </body>
     </html>
   );

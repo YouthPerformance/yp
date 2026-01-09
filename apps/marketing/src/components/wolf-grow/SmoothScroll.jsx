@@ -1,11 +1,11 @@
 // SmoothScroll - Lenis wrapper for buttery smooth scrolling
 // E14-1: Foundation Setup
 
-import { useEffect, useRef } from 'react'
-import Lenis from 'lenis'
+import Lenis from "lenis";
+import { useEffect, useRef } from "react";
 
 export function SmoothScroll({ children }) {
-  const lenisRef = useRef(null)
+  const lenisRef = useRef(null);
 
   useEffect(() => {
     // Initialize Lenis with premium settings
@@ -15,28 +15,28 @@ export function SmoothScroll({ children }) {
       smoothWheel: true,
       smoothTouch: true,
       touchMultiplier: 2,
-    })
+    });
 
     // RAF loop
     function raf(time) {
-      lenisRef.current?.raf(time)
-      requestAnimationFrame(raf)
+      lenisRef.current?.raf(time);
+      requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf)
+    requestAnimationFrame(raf);
 
     // Cleanup
     return () => {
-      lenisRef.current?.destroy()
-    }
-  }, [])
+      lenisRef.current?.destroy();
+    };
+  }, []);
 
-  return children
+  return children;
 }
 
 // Hook to access Lenis instance
 export function useLenis() {
   // This would need context for full implementation
-  return null
+  return null;
 }
 
-export default SmoothScroll
+export default SmoothScroll;

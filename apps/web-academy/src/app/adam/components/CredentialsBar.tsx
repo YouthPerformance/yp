@@ -19,7 +19,7 @@ export function CredentialsBar() {
               {cred.org}
             </p>
             <p className="text-[11px] text-[var(--accent-primary)] mt-1 tracking-[1px]">
-              {cred.role}
+              {cred.years}
             </p>
           </div>
         ))}

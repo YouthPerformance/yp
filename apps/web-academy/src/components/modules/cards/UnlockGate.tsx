@@ -3,12 +3,11 @@
 // Section threshold screen - shows when user needs more correct answers
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Lock, Unlock, CheckCircle } from 'lucide-react';
-import type { LearningSection } from '@/data/modules/types';
+import { motion } from "framer-motion";
+import { CheckCircle, Lock, Unlock } from "lucide-react";
+import type { LearningSection } from "@/data/modules/types";
 
 interface UnlockGateProps {
   section: LearningSection;
@@ -17,12 +16,7 @@ interface UnlockGateProps {
   onUnlock?: () => void;
 }
 
-export function UnlockGate({
-  section,
-  currentScore,
-  isUnlocked,
-  onUnlock,
-}: UnlockGateProps) {
+export function UnlockGate({ section, currentScore, isUnlocked, onUnlock }: UnlockGateProps) {
   const threshold = section.unlockThreshold;
   const progress = Math.min(100, (currentScore / threshold) * 100);
   const meetsThreshold = currentScore >= threshold;
@@ -34,7 +28,7 @@ export function UnlockGate({
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
           className="w-24 h-24 rounded-full bg-accent-primary/20 flex items-center justify-center mb-6"
         >
           <Unlock className="w-12 h-12 text-accent-primary" />
@@ -106,7 +100,7 @@ export function UnlockGate({
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
           className="w-24 h-24 rounded-full bg-accent-gold/20 flex items-center justify-center mb-6"
         >
           <Unlock className="w-12 h-12 text-accent-gold" />
@@ -147,7 +141,7 @@ export function UnlockGate({
         transition={{
           duration: 2,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         }}
         className="w-24 h-24 rounded-full bg-bg-tertiary border-2 border-border-default flex items-center justify-center mb-6"
       >
@@ -160,9 +154,7 @@ export function UnlockGate({
 
       <p className="text-lg text-text-secondary mb-2">{section.title}</p>
 
-      <p className="text-sm text-text-tertiary mb-6">
-        Answer more questions correctly to unlock
-      </p>
+      <p className="text-sm text-text-tertiary mb-6">Answer more questions correctly to unlock</p>
 
       {/* Progress bar */}
       <div className="w-full max-w-xs">
@@ -176,19 +168,18 @@ export function UnlockGate({
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="h-full bg-gradient-to-r from-accent-primary/50 to-accent-primary rounded-full"
           />
         </div>
         <p className="mt-2 text-xs text-text-tertiary">
-          {threshold - currentScore} more correct {threshold - currentScore === 1 ? 'answer' : 'answers'} needed
+          {threshold - currentScore} more correct{" "}
+          {threshold - currentScore === 1 ? "answer" : "answers"} needed
         </p>
       </div>
 
       <div className="mt-8 text-center">
-        <p className="text-sm text-text-tertiary">
-          Go back and answer more questions
-        </p>
+        <p className="text-sm text-text-tertiary">Go back and answer more questions</p>
       </div>
     </div>
   );

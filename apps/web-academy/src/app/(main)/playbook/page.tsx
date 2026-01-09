@@ -10,8 +10,8 @@ import { BookOpen, Clock, Lock, Play, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { UpsellModal } from "@/components/modals";
-import { teaserRegistry } from "@/data/modules/bulletproof-ankles";
 import { useUserContext } from "@/contexts/UserContext";
+import { teaserRegistry } from "@/data/modules/bulletproof-ankles";
 
 // Get the BPA teaser module
 const bpaTeaser = teaserRegistry["bulletproof-ankles-teaser"];
@@ -43,16 +43,13 @@ export default function PlaybookPage() {
 
       {/* FREE Teaser Module - Featured */}
       {bpaTeaser && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <Link href={`/playbook/modules/${bpaTeaser.slug}/play`}>
             <motion.div
               className="relative p-5 rounded-2xl overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, rgba(0, 246, 224, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%)",
+                background:
+                  "linear-gradient(135deg, rgba(0, 246, 224, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%)",
                 border: "1px solid var(--accent-cyan)",
               }}
               whileHover={{ scale: 1.02 }}

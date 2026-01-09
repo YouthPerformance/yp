@@ -1,8 +1,8 @@
-import {defineConfig} from 'vite';
-import {hydrogen} from '@shopify/hydrogen/vite';
-import {oxygen} from '@shopify/mini-oxygen/vite';
-import {vitePlugin as remix} from '@remix-run/dev';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import { vitePlugin as remix } from "@remix-run/dev";
+import { hydrogen } from "@shopify/hydrogen/vite";
+import { oxygen } from "@shopify/mini-oxygen/vite";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 // Oxygen = Cloudflare Edge (300+ cities, 0ms cold starts)
 // This is the Ferrari config for maximum e-commerce speed
@@ -25,13 +25,13 @@ export default defineConfig({
     assetsInlineLimit: 0,
   },
   resolve: {
-    dedupe: ['react', 'react-dom', 'three'],
+    dedupe: ["react", "react-dom", "three"],
   },
   optimizeDeps: {
-    include: ['three'],
+    include: ["three"],
   },
   ssr: {
     // Externalize Three.js - it doesn't work in SSR
-    external: ['three'],
+    external: ["three"],
   },
 });

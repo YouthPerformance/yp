@@ -1,0 +1,68 @@
+// ===================================================================
+// WOLF PACK AUTH CLIENT
+// BetterAuth integration for web-academy
+// ===================================================================
+
+"use client";
+
+import { emailOTPClient } from "better-auth/client/plugins";
+import { createAuthClient } from "better-auth/react";
+
+// ---------------------------------------------------------------
+// AUTH CLIENT
+// ---------------------------------------------------------------
+
+export const authClient = createAuthClient({
+  baseURL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3003",
+  plugins: [emailOTPClient()],
+});
+
+// ---------------------------------------------------------------
+// CONVENIENCE EXPORTS
+// ---------------------------------------------------------------
+
+export const { signIn, signUp, signOut, useSession } = authClient;
+
+// ---------------------------------------------------------------
+// OTP HELPERS
+// ---------------------------------------------------------------
+
+/**
+ * Send OTP to email - triggers email via server
+ */
+export async function sendOTP(email: string) {
+  const client = authClient as unknown as {
+    emailOtp?: {
+      sendVerificationOtp?: (opts: { email: string; type: string }) => Promise<unknown>;
+    };
+  };
+  return client.emailOtp?.sendVerificationOtp?.({ email, type: "sign-in" });
+}
+
+/**
+ * Verify OTP and sign in
+ */
+export async function verifyOTP(email: string, otp: string) {
+  const client = authClient as unknown as {
+    signIn: { emailOtp?: (opts: { email: string; otp: string }) => Promise<unknown> };
+  };
+  return client.signIn.emailOtp?.({ email, otp });
+}
+
+// ---------------------------------------------------------------
+// SOCIAL AUTH
+// ---------------------------------------------------------------
+
+export async function signInWithGoogle(callbackURL = "/home") {
+  return authClient.signIn.social({
+    provider: "google",
+    callbackURL,
+  });
+}
+
+export async function signInWithApple(callbackURL = "/home") {
+  return authClient.signIn.social({
+    provider: "apple",
+    callbackURL,
+  });
+}

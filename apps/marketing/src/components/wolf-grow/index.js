@@ -1,17 +1,16 @@
 // Wolf Grow Components - Barrel Export
 // E14: Premier Landing Page
 
-export { SmoothScroll, useLenis } from './SmoothScroll'
-export { FilmGrain } from './FilmGrain'
-export { CursorGlow } from './CursorGlow'
-export { Hero } from './Hero'
-export { Agitation } from './Agitation'
-export { Solution } from './Solution'
-export { Authority } from './Authority'
-export { Results } from './Results'
-export { Community } from './Community'
-export { FooterCTA } from './FooterCTA'
-export { WolfBentoGrid } from './WolfBentoGrid'
-
+export { Agitation } from "./Agitation";
+export { Authority } from "./Authority";
+export { Community } from "./Community";
+export { CursorGlow } from "./CursorGlow";
+export { FilmGrain } from "./FilmGrain";
+export { FooterCTA } from "./FooterCTA";
+export { Hero } from "./Hero";
 // Motion utilities
-export * from './motion'
+export * from "./motion";
+export { Results } from "./Results";
+export { SmoothScroll, useLenis } from "./SmoothScroll";
+export { Solution } from "./Solution";
+export { WolfBentoGrid } from "./WolfBentoGrid";

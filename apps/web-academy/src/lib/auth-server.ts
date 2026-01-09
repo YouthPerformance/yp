@@ -3,8 +3,8 @@
 // For use in API routes and server components
 // ===================================================================
 
-import { cookies, headers } from "next/headers";
 import { auth } from "@yp/alpha/auth";
+import { cookies, headers } from "next/headers";
 
 // ---------------------------------------------------------------
 // GET SESSION FROM COOKIES

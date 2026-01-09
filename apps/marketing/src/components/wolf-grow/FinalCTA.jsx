@@ -6,28 +6,25 @@
  * Premium animations and grid background
  */
 
-import { useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
 
 export default function FinalCTA() {
-  const [handle, setHandle] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
-  const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+  const [handle, setHandle] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (handle.trim()) {
       // Navigate to signup with handle
-      window.location.href = `/join?handle=${encodeURIComponent(handle.trim())}`
+      window.location.href = `/join?handle=${encodeURIComponent(handle.trim())}`;
     }
-  }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-24 md:py-32 bg-[#030303] overflow-hidden"
-    >
+    <section ref={sectionRef} className="relative py-24 md:py-32 bg-[#030303] overflow-hidden">
       {/* Grid Background */}
       <div className="absolute inset-0 opacity-[0.08]">
         <div
@@ -37,7 +34,7 @@ export default function FinalCTA() {
               linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
               linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px)
             `,
-            backgroundSize: '60px 60px',
+            backgroundSize: "60px 60px",
           }}
         />
         {/* Radial fade from center */}
@@ -48,12 +45,12 @@ export default function FinalCTA() {
       <motion.div
         className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent pointer-events-none"
         animate={{
-          top: ['0%', '100%', '0%'],
+          top: ["0%", "100%", "0%"],
         }}
         transition={{
           duration: 8,
           repeat: Infinity,
-          ease: 'linear',
+          ease: "linear",
         }}
       />
 
@@ -84,7 +81,7 @@ export default function FinalCTA() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1 }}
         >
-          The Piston Era{' '}
+          The Piston Era{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400">
             Ends Today
           </span>
@@ -97,7 +94,7 @@ export default function FinalCTA() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Your spot in the Global Node is waiting.{' '}
+          Your spot in the Global Node is waiting.{" "}
           <span className="text-white">Secure your Pack ID.</span>
         </motion.p>
 
@@ -116,9 +113,10 @@ export default function FinalCTA() {
               p-2 sm:p-1.5 rounded-xl sm:rounded-full
               bg-neutral-900/80 backdrop-blur-sm
               border transition-all duration-500
-              ${isFocused
-                ? 'border-cyan-500/60 shadow-[0_0_40px_rgba(0,255,255,0.2)]'
-                : 'border-neutral-800 shadow-[0_0_20px_rgba(0,255,255,0.05)]'
+              ${
+                isFocused
+                  ? "border-cyan-500/60 shadow-[0_0_40px_rgba(0,255,255,0.2)]"
+                  : "border-neutral-800 shadow-[0_0_20px_rgba(0,255,255,0.05)]"
               }
             `}
           >
@@ -129,11 +127,13 @@ export default function FinalCTA() {
 
             {/* Input Field */}
             <div className="relative flex-1">
-              <span className="sm:hidden absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500 font-mono text-lg">@</span>
+              <span className="sm:hidden absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500 font-mono text-lg">
+                @
+              </span>
               <input
                 type="text"
                 value={handle}
-                onChange={(e) => setHandle(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
+                onChange={(e) => setHandle(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 placeholder="CreateYourHandle"
@@ -157,9 +157,10 @@ export default function FinalCTA() {
                 group relative px-8 py-4 sm:py-3 rounded-lg sm:rounded-full
                 font-bold text-base uppercase tracking-wider
                 transition-all duration-300
-                ${handle.trim()
-                  ? 'bg-cyan-500 text-black hover:bg-cyan-400 shadow-[0_0_30px_rgba(0,255,255,0.4)] hover:shadow-[0_0_50px_rgba(0,255,255,0.6)]'
-                  : 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+                ${
+                  handle.trim()
+                    ? "bg-cyan-500 text-black hover:bg-cyan-400 shadow-[0_0_30px_rgba(0,255,255,0.4)] hover:shadow-[0_0_50px_rgba(0,255,255,0.6)]"
+                    : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
                 }
               `}
             >
@@ -225,5 +226,5 @@ export default function FinalCTA() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

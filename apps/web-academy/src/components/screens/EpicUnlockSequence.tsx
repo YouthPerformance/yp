@@ -5,13 +5,13 @@
 // Intensity Budget: 15 points (Epic moment)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useHaptics } from '@/hooks/useHaptics';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useHaptics } from "@/hooks/useHaptics";
 
-type UnlockPhase = 'authenticating' | 'unlocking' | 'granted' | 'complete';
+type UnlockPhase = "authenticating" | "unlocking" | "granted" | "complete";
 
 interface EpicUnlockSequenceProps {
   onComplete: () => void;
@@ -21,7 +21,7 @@ interface EpicUnlockSequenceProps {
 // Particle configuration for lock shatter effect
 const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   id: i,
-  angle: (i * 30) * (Math.PI / 180),
+  angle: i * 30 * (Math.PI / 180),
   distance: 100 + Math.random() * 100,
   size: 4 + Math.random() * 8,
   rotation: Math.random() * 360,
@@ -29,34 +29,42 @@ const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
 
 export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequenceProps) {
   const { trigger } = useHaptics();
-  const [phase, setPhase] = useState<UnlockPhase>('authenticating');
+  const [phase, setPhase] = useState<UnlockPhase>("authenticating");
 
   useEffect(() => {
     // Phase timeline
     const timers: NodeJS.Timeout[] = [];
 
     // Start after initial delay
-    timers.push(setTimeout(() => {
-      trigger('impact_light');
-    }, delay));
+    timers.push(
+      setTimeout(() => {
+        trigger("impact_light");
+      }, delay),
+    );
 
     // Authenticating → Unlocking (1.5s)
-    timers.push(setTimeout(() => {
-      setPhase('unlocking');
-      trigger('impact_heavy');
-    }, delay + 1500));
+    timers.push(
+      setTimeout(() => {
+        setPhase("unlocking");
+        trigger("impact_heavy");
+      }, delay + 1500),
+    );
 
     // Unlocking → Granted (0.8s for shatter animation)
-    timers.push(setTimeout(() => {
-      setPhase('granted');
-      trigger('success_pattern');
-    }, delay + 2300));
+    timers.push(
+      setTimeout(() => {
+        setPhase("granted");
+        trigger("success_pattern");
+      }, delay + 2300),
+    );
 
     // Granted → Complete (2s to enjoy the moment)
-    timers.push(setTimeout(() => {
-      setPhase('complete');
-      onComplete();
-    }, delay + 4300));
+    timers.push(
+      setTimeout(() => {
+        setPhase("complete");
+        onComplete();
+      }, delay + 4300),
+    );
 
     return () => {
       timers.forEach(clearTimeout);
@@ -66,7 +74,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: '#000' }}
+      style={{ backgroundColor: "#000" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -74,7 +82,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
       <div className="relative flex flex-col items-center justify-center">
         {/* Phase 1: Authenticating */}
         <AnimatePresence mode="wait">
-          {phase === 'authenticating' && (
+          {phase === "authenticating" && (
             <motion.div
               key="authenticating"
               className="flex flex-col items-center"
@@ -86,7 +94,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
               {/* Pulsing ring */}
               <motion.div
                 className="w-24 h-24 rounded-full border-4 mb-8"
-                style={{ borderColor: 'var(--accent-primary)' }}
+                style={{ borderColor: "var(--accent-primary)" }}
                 animate={{
                   scale: [1, 1.1, 1],
                   opacity: [0.5, 1, 0.5],
@@ -97,7 +105,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
               {/* Loading dots */}
               <motion.p
                 className="font-bebas text-2xl tracking-[0.3em]"
-                style={{ color: 'var(--accent-primary)' }}
+                style={{ color: "var(--accent-primary)" }}
               >
                 AUTHENTICATING
                 <motion.span
@@ -113,21 +121,21 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
 
         {/* Phase 2: Unlocking (Lock with cracks → shatter) */}
         <AnimatePresence mode="wait">
-          {phase === 'unlocking' && (
+          {phase === "unlocking" && (
             <motion.div
               key="unlocking"
               className="relative flex items-center justify-center"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
               {/* Central lock that will shatter */}
               <motion.div
                 className="w-28 h-28 rounded-2xl flex items-center justify-center"
                 style={{
-                  backgroundColor: 'rgba(0, 246, 224, 0.2)',
-                  border: '3px solid var(--accent-primary)',
+                  backgroundColor: "rgba(0, 246, 224, 0.2)",
+                  border: "3px solid var(--accent-primary)",
                 }}
                 animate={{
                   scale: [1, 1.1, 1.2],
@@ -152,7 +160,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
                   style={{
                     width: particle.size,
                     height: particle.size,
-                    backgroundColor: 'var(--accent-primary)',
+                    backgroundColor: "var(--accent-primary)",
                   }}
                   initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
                   animate={{
@@ -165,7 +173,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
                   transition={{
                     duration: 0.8,
                     delay: 0.3,
-                    ease: 'easeOut',
+                    ease: "easeOut",
                   }}
                 />
               ))}
@@ -175,27 +183,27 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
 
         {/* Phase 3: Access Granted */}
         <AnimatePresence mode="wait">
-          {phase === 'granted' && (
+          {phase === "granted" && (
             <motion.div
               key="granted"
               className="flex flex-col items-center"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
             >
               {/* Glowing checkmark */}
               <motion.div
                 className="w-28 h-28 rounded-full flex items-center justify-center mb-8"
                 style={{
-                  backgroundColor: 'rgba(0, 246, 224, 0.2)',
-                  border: '3px solid var(--accent-primary)',
+                  backgroundColor: "rgba(0, 246, 224, 0.2)",
+                  border: "3px solid var(--accent-primary)",
                 }}
                 animate={{
                   boxShadow: [
-                    '0 0 0 0 rgba(0, 246, 224, 0.4)',
-                    '0 0 60px 30px rgba(0, 246, 224, 0.2)',
-                    '0 0 80px 40px rgba(0, 246, 224, 0)',
+                    "0 0 0 0 rgba(0, 246, 224, 0.4)",
+                    "0 0 60px 30px rgba(0, 246, 224, 0.2)",
+                    "0 0 80px 40px rgba(0, 246, 224, 0)",
                   ],
                 }}
                 transition={{ duration: 1.5, repeat: Infinity }}
@@ -204,7 +212,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
                   className="text-5xl"
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
                 >
                   ✓
                 </motion.span>
@@ -218,12 +226,12 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
               >
                 <motion.h1
                   className="font-bebas text-4xl tracking-[0.2em] text-center"
-                  style={{ color: 'var(--accent-primary)' }}
+                  style={{ color: "var(--accent-primary)" }}
                   animate={{
                     textShadow: [
-                      '0 0 10px rgba(0, 246, 224, 0.5)',
-                      '0 0 30px rgba(0, 246, 224, 0.8)',
-                      '0 0 10px rgba(0, 246, 224, 0.5)',
+                      "0 0 10px rgba(0, 246, 224, 0.5)",
+                      "0 0 30px rgba(0, 246, 224, 0.8)",
+                      "0 0 10px rgba(0, 246, 224, 0.5)",
                     ],
                   }}
                   transition={{ duration: 1.5, repeat: Infinity }}
@@ -232,7 +240,7 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
                 </motion.h1>
                 <motion.p
                   className="text-sm text-center mt-2"
-                  style={{ color: 'var(--text-tertiary)' }}
+                  style={{ color: "var(--text-tertiary)" }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -247,9 +255,10 @@ export function EpicUnlockSequence({ onComplete, delay = 500 }: EpicUnlockSequen
                   key={i}
                   className="absolute w-1 h-40"
                   style={{
-                    background: 'linear-gradient(to bottom, transparent, var(--accent-primary), transparent)',
+                    background:
+                      "linear-gradient(to bottom, transparent, var(--accent-primary), transparent)",
                     transform: `rotate(${i * 45}deg)`,
-                    transformOrigin: 'center',
+                    transformOrigin: "center",
                   }}
                   initial={{ opacity: 0, scaleY: 0 }}
                   animate={{ opacity: [0, 0.5, 0], scaleY: [0, 1, 0] }}

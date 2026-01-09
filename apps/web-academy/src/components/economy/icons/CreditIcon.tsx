@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 interface CreditIconProps extends SVGProps<SVGSVGElement> {
   size?: number;
@@ -16,7 +16,7 @@ interface CreditIconProps extends SVGProps<SVGSVGElement> {
 export function CreditIcon({
   size = 24,
   glowing = false,
-  className = '',
+  className = "",
   ...props
 }: CreditIconProps) {
   return (
@@ -27,18 +27,11 @@ export function CreditIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      style={glowing ? { filter: 'drop-shadow(0 0 4px #3b82f6)' } : undefined}
+      style={glowing ? { filter: "drop-shadow(0 0 4px #3b82f6)" } : undefined}
       {...props}
     >
       {/* Outer circle - coin edge */}
-      <circle
-        cx="12"
-        cy="12"
-        r="10"
-        fill="#1e3a5f"
-        stroke="#3b82f6"
-        strokeWidth="1.5"
-      />
+      <circle cx="12" cy="12" r="10" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1.5" />
 
       {/* Inner circle */}
       <circle
@@ -60,12 +53,7 @@ export function CreditIcon({
       />
 
       {/* Center node */}
-      <circle
-        cx="12"
-        cy="12"
-        r="2"
-        fill="#60a5fa"
-      />
+      <circle cx="12" cy="12" r="2" fill="#60a5fa" />
 
       {/* Corner nodes */}
       <circle cx="9" cy="9" r="1" fill="#93c5fd" fillOpacity={0.8} />

@@ -5,11 +5,10 @@
 // Intensity Budget: 15 points (celebration moment)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useOnboarding, FOUNDATION_PROGRAM } from '@/contexts/OnboardingContext';
+import { motion } from "framer-motion";
+import { FOUNDATION_PROGRAM, useOnboarding } from "@/contexts/OnboardingContext";
 
 interface AthleteReadyProps {
   onStart: () => void;
@@ -26,17 +25,21 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
   // Get wolf background based on selected color
   const getWolfBg = () => {
     switch (data.avatarColor) {
-      case 'white': return '#E5E5E5';
-      case 'gray': return '#4A4A4A';
-      case 'brown': return '#5D4037';
-      default: return '#1A1A1A';
+      case "white":
+        return "#E5E5E5";
+      case "gray":
+        return "#4A4A4A";
+      case "brown":
+        return "#5D4037";
+      default:
+        return "#1A1A1A";
     }
   };
 
   return (
     <motion.div
       className="min-h-screen flex flex-col px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -48,20 +51,20 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
           className="mb-6"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
+          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
         >
           <motion.div
             className="w-28 h-28 rounded-full flex items-center justify-center"
             style={{
               backgroundColor: getWolfBg(),
-              border: '4px solid var(--accent-primary)',
-              boxShadow: '0 0 30px var(--accent-primary)40',
+              border: "4px solid var(--accent-primary)",
+              boxShadow: "0 0 30px var(--accent-primary)40",
             }}
             animate={{
               boxShadow: [
-                '0 0 30px rgba(0, 246, 224, 0.4)',
-                '0 0 50px rgba(0, 246, 224, 0.6)',
-                '0 0 30px rgba(0, 246, 224, 0.4)',
+                "0 0 30px rgba(0, 246, 224, 0.4)",
+                "0 0 50px rgba(0, 246, 224, 0.6)",
+                "0 0 30px rgba(0, 246, 224, 0.4)",
               ],
             }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -73,7 +76,7 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         {/* Name */}
         <motion.h1
           className="font-bebas text-4xl tracking-wider mb-2"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -90,14 +93,11 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         >
           <span
             className="font-bebas text-xl tracking-wider"
-            style={{ color: 'var(--text-tertiary)' }}
+            style={{ color: "var(--text-tertiary)" }}
           >
             YOU'RE A
           </span>
-          <span
-            className="font-bebas text-xl tracking-wider"
-            style={{ color: '#A0A0A0' }}
-          >
+          <span className="font-bebas text-xl tracking-wider" style={{ color: "#A0A0A0" }}>
             PUP
           </span>
         </motion.div>
@@ -106,8 +106,8 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         <motion.div
           className="w-full max-w-xs rounded-2xl p-6 mb-8"
           style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-default)',
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
           }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,51 +115,36 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         >
           <div className="flex justify-around">
             <div className="text-center">
-              <p
-                className="font-bebas text-3xl"
-                style={{ color: 'var(--text-primary)' }}
-              >
+              <p className="font-bebas text-3xl" style={{ color: "var(--text-primary)" }}>
                 1
               </p>
               <p
                 className="text-xs uppercase tracking-wider"
-                style={{ color: 'var(--text-tertiary)' }}
+                style={{ color: "var(--text-tertiary)" }}
               >
                 Day
               </p>
             </div>
-            <div
-              className="w-px"
-              style={{ backgroundColor: 'var(--border-default)' }}
-            />
+            <div className="w-px" style={{ backgroundColor: "var(--border-default)" }} />
             <div className="text-center">
-              <p
-                className="font-bebas text-3xl"
-                style={{ color: 'var(--accent-primary)' }}
-              >
+              <p className="font-bebas text-3xl" style={{ color: "var(--accent-primary)" }}>
                 0
               </p>
               <p
                 className="text-xs uppercase tracking-wider"
-                style={{ color: 'var(--text-tertiary)' }}
+                style={{ color: "var(--text-tertiary)" }}
               >
                 XP
               </p>
             </div>
-            <div
-              className="w-px"
-              style={{ backgroundColor: 'var(--border-default)' }}
-            />
+            <div className="w-px" style={{ backgroundColor: "var(--border-default)" }} />
             <div className="text-center">
-              <p
-                className="font-bebas text-3xl"
-                style={{ color: 'var(--text-primary)' }}
-              >
+              <p className="font-bebas text-3xl" style={{ color: "var(--text-primary)" }}>
                 0
               </p>
               <p
                 className="text-xs uppercase tracking-wider"
-                style={{ color: 'var(--text-tertiary)' }}
+                style={{ color: "var(--text-tertiary)" }}
               >
                 Streak
               </p>
@@ -170,7 +155,7 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         {/* Message */}
         <motion.p
           className="text-sm max-w-xs"
-          style={{ color: 'var(--text-secondary)' }}
+          style={{ color: "var(--text-secondary)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
@@ -184,8 +169,8 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         onClick={handleStart}
         className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider relative overflow-hidden"
         style={{
-          backgroundColor: 'var(--accent-primary)',
-          color: 'var(--bg-primary)',
+          backgroundColor: "var(--accent-primary)",
+          color: "var(--bg-primary)",
         }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -196,7 +181,7 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
         {/* Pulse effect */}
         <motion.div
           className="absolute inset-0"
-          style={{ backgroundColor: 'white' }}
+          style={{ backgroundColor: "white" }}
           animate={{ opacity: [0, 0.2, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -206,12 +191,14 @@ export function AthleteReady({ onStart }: AthleteReadyProps) {
       {/* Program info */}
       <motion.p
         className="text-xs text-center mt-4"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
       >
-        {data.programId === 'foundation_42_day' ? `${FOUNDATION_PROGRAM.name} • ${FOUNDATION_PROGRAM.duration} Days` : ''}
+        {data.programId === "foundation_42_day"
+          ? `${FOUNDATION_PROGRAM.name} • ${FOUNDATION_PROGRAM.duration} Days`
+          : ""}
       </motion.p>
     </motion.div>
   );

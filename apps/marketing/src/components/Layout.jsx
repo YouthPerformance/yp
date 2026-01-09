@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router-dom'
-import Header from './Header'
-import Footer from './Footer'
-import SearchOverlay from './SearchOverlay'
+import { Outlet } from "react-router-dom";
+import Footer from "./Footer";
+import Header from "./Header";
+import SearchOverlay from "./SearchOverlay";
 
 function Layout() {
   return (
@@ -13,7 +13,7 @@ function Layout() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default Layout
+export default Layout;

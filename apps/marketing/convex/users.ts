@@ -9,17 +9,44 @@ export const getOrCreateProfile = mutation({
     role: v.union(v.literal("parent"), v.literal("athlete"), v.literal("coach")),
     childNickname: v.optional(v.string()),
     ageBand: v.optional(v.union(v.literal("under8"), v.literal("8-12"), v.literal("13+"))),
-    sport: v.optional(v.union(v.literal("basketball"), v.literal("barefoot"), v.literal("both"), v.literal("other"))),
-    space: v.optional(v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field"))),
-    painFlag: v.optional(v.union(v.literal("none"), v.literal("foot-ankle"), v.literal("knee-hip-back"), v.literal("not-sure"))),
-    goals: v.optional(v.array(v.object({
-      id: v.string(),
-      label: v.string(),
-      tag: v.string(),
-    }))),
+    sport: v.optional(
+      v.union(
+        v.literal("basketball"),
+        v.literal("barefoot"),
+        v.literal("both"),
+        v.literal("other"),
+      ),
+    ),
+    space: v.optional(
+      v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field")),
+    ),
+    painFlag: v.optional(
+      v.union(
+        v.literal("none"),
+        v.literal("foot-ankle"),
+        v.literal("knee-hip-back"),
+        v.literal("not-sure"),
+      ),
+    ),
+    goals: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          label: v.string(),
+          tag: v.string(),
+        }),
+      ),
+    ),
     lane: v.optional(v.string()),
     wolfPrompt: v.optional(v.string()),
-    athleteIdentity: v.optional(v.union(v.literal("force-leaker"), v.literal("elasticity-block"), v.literal("absorption-deficit"), v.literal("control-gap"))),
+    athleteIdentity: v.optional(
+      v.union(
+        v.literal("force-leaker"),
+        v.literal("elasticity-block"),
+        v.literal("absorption-deficit"),
+        v.literal("control-gap"),
+      ),
+    ),
     utmSource: v.optional(v.string()),
     utmMedium: v.optional(v.string()),
     utmCampaign: v.optional(v.string()),
@@ -99,18 +126,34 @@ export const updateProfile = mutation({
     email: v.optional(v.string()),
     childNickname: v.optional(v.string()),
     ageBand: v.optional(v.union(v.literal("under8"), v.literal("8-12"), v.literal("13+"))),
-    space: v.optional(v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field"))),
-    painFlag: v.optional(v.union(v.literal("none"), v.literal("foot-ankle"), v.literal("knee-hip-back"), v.literal("not-sure"))),
+    space: v.optional(
+      v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field")),
+    ),
+    painFlag: v.optional(
+      v.union(
+        v.literal("none"),
+        v.literal("foot-ankle"),
+        v.literal("knee-hip-back"),
+        v.literal("not-sure"),
+      ),
+    ),
     wolfPrompt: v.optional(v.string()),
     trainingReminders: v.optional(v.boolean()),
     progressReports: v.optional(v.boolean()),
-    athleteIdentity: v.optional(v.union(v.literal("force-leaker"), v.literal("elasticity-block"), v.literal("absorption-deficit"), v.literal("control-gap"))),
+    athleteIdentity: v.optional(
+      v.union(
+        v.literal("force-leaker"),
+        v.literal("elasticity-block"),
+        v.literal("absorption-deficit"),
+        v.literal("control-gap"),
+      ),
+    ),
   },
   handler: async (ctx, args) => {
     const { profileId, ...updates } = args;
     // Filter out undefined values
     const filteredUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([_, v]) => v !== undefined)
+      Object.entries(updates).filter(([_, v]) => v !== undefined),
     );
     await ctx.db.patch(profileId, {
       ...filteredUpdates,
@@ -126,14 +169,34 @@ export const saveProfileFromEmail = mutation({
     childNickname: v.optional(v.string()),
     role: v.optional(v.union(v.literal("parent"), v.literal("athlete"), v.literal("coach"))),
     ageBand: v.optional(v.union(v.literal("under8"), v.literal("8-12"), v.literal("13+"))),
-    sport: v.optional(v.union(v.literal("basketball"), v.literal("barefoot"), v.literal("both"), v.literal("other"))),
-    space: v.optional(v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field"))),
-    painFlag: v.optional(v.union(v.literal("none"), v.literal("foot-ankle"), v.literal("knee-hip-back"), v.literal("not-sure"))),
-    goals: v.optional(v.array(v.object({
-      id: v.string(),
-      label: v.string(),
-      tag: v.string(),
-    }))),
+    sport: v.optional(
+      v.union(
+        v.literal("basketball"),
+        v.literal("barefoot"),
+        v.literal("both"),
+        v.literal("other"),
+      ),
+    ),
+    space: v.optional(
+      v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field")),
+    ),
+    painFlag: v.optional(
+      v.union(
+        v.literal("none"),
+        v.literal("foot-ankle"),
+        v.literal("knee-hip-back"),
+        v.literal("not-sure"),
+      ),
+    ),
+    goals: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          label: v.string(),
+          tag: v.string(),
+        }),
+      ),
+    ),
     lane: v.optional(v.string()),
     wolfPrompt: v.optional(v.string()),
   },

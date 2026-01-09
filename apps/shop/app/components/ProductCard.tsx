@@ -1,5 +1,5 @@
-import {useState, useCallback} from 'react';
-import {Link} from '@remix-run/react';
+import { Link } from "@remix-run/react";
+import { useCallback, useState } from "react";
 
 interface ProductImage {
   url: string;
@@ -70,7 +70,7 @@ export function ProductCard({
             className="transition-all duration-500"
             style={{
               opacity: isHovered && secondaryImage ? 0 : 1,
-              transform: isHovered && secondaryImage ? 'scale(0.95)' : 'scale(1)',
+              transform: isHovered && secondaryImage ? "scale(0.95)" : "scale(1)",
             }}
           />
         )}
@@ -83,7 +83,7 @@ export function ProductCard({
             className="product-card__image-secondary"
             style={{
               opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'scale(1)' : 'scale(1.05)',
+              transform: isHovered ? "scale(1)" : "scale(1.05)",
             }}
           />
         )}
@@ -126,31 +126,27 @@ interface QuickViewModalProps {
   } | null;
 }
 
-export function QuickViewModal({isOpen, onClose, product}: QuickViewModalProps) {
+export function QuickViewModal({ isOpen, onClose, product }: QuickViewModalProps) {
   if (!product) return null;
 
   return (
     <>
       {/* Overlay */}
       <div
-        className={`quick-view-overlay ${isOpen ? 'is-open' : ''}`}
+        className={`quick-view-overlay ${isOpen ? "is-open" : ""}`}
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal */}
       <div
-        className={`quick-view-modal ${isOpen ? 'is-open' : ''}`}
+        className={`quick-view-modal ${isOpen ? "is-open" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="quick-view-title"
       >
         {/* Close Button */}
-        <button
-          className="quick-view-modal__close"
-          onClick={onClose}
-          aria-label="Close quick view"
-        >
+        <button className="quick-view-modal__close" onClick={onClose} aria-label="Close quick view">
           <svg
             width="14"
             height="14"
@@ -167,9 +163,7 @@ export function QuickViewModal({isOpen, onClose, product}: QuickViewModalProps) 
         <div className="quick-view-modal__content">
           {/* Image */}
           <div className="quick-view-modal__image">
-            {product.image && (
-              <img src={product.image} alt={product.title} />
-            )}
+            {product.image && <img src={product.image} alt={product.title} />}
           </div>
 
           {/* Info */}

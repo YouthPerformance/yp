@@ -3,24 +3,24 @@
 // State machine: music → countdown → active → finished
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { AnimatePresence } from 'framer-motion';
-import { useMutation } from 'convex/react';
-import { api } from '@yp/alpha/convex/_generated/api';
-import { useUserContext } from '@/contexts/UserContext';
-import { PROGRAM, getDay, getThemeColor } from '@/data/programs/basketball-chassis';
-import { useProgramAccess, isDayUnlocked } from '@/hooks/useProgramAccess';
+import { api } from "@yp/alpha/convex/_generated/api";
+import { useMutation } from "convex/react";
+import { AnimatePresence } from "framer-motion";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  MusicPrompt,
-  CountdownView,
   ActiveWorkout,
+  CountdownView,
   FinishedView,
-} from '@/components/programs/player';
+  MusicPrompt,
+} from "@/components/programs/player";
+import { useUserContext } from "@/contexts/UserContext";
+import { getDay, getThemeColor, PROGRAM } from "@/data/programs/basketball-chassis";
+import { isDayUnlocked, useProgramAccess } from "@/hooks/useProgramAccess";
 
-type PlayerState = 'loading' | 'music' | 'countdown' | 'active' | 'finished';
+type PlayerState = "loading" | "music" | "countdown" | "active" | "finished";
 
 export default function WorkoutPlayerPage() {
   const router = useRouter();
@@ -28,16 +28,20 @@ export default function WorkoutPlayerPage() {
   const dayNumber = parseInt(params.n as string, 10);
   const { user } = useUserContext();
 
-  const { hasAccess, completedDays, isLoading: accessLoading } = useProgramAccess('basketball-chassis');
+  const {
+    hasAccess,
+    completedDays,
+    isLoading: accessLoading,
+  } = useProgramAccess("basketball-chassis");
   const completeDay = useMutation(api.progress.completeProgramDay);
 
-  const [playerState, setPlayerState] = useState<PlayerState>('loading');
+  const [playerState, setPlayerState] = useState<PlayerState>("loading");
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isFirstCompletion, setIsFirstCompletion] = useState(true);
   const hasInitialized = useRef(false);
 
   const day = getDay(dayNumber);
-  const themeColor = day ? getThemeColor(day.theme) : '#00C8C8';
+  const themeColor = day ? getThemeColor(day.theme) : "#00C8C8";
   const exercises = day?.exercises ?? [];
   const currentExercise = exercises[currentExerciseIndex];
 
@@ -46,12 +50,12 @@ export default function WorkoutPlayerPage() {
     if (accessLoading || hasInitialized.current) return;
 
     if (!hasAccess) {
-      router.replace('/programs/basketball-chassis');
+      router.replace("/programs/basketball-chassis");
       return;
     }
 
     if (!day || !isDayUnlocked(dayNumber, completedDays)) {
-      router.replace('/programs/basketball-chassis');
+      router.replace("/programs/basketball-chassis");
       return;
     }
 
@@ -60,17 +64,17 @@ export default function WorkoutPlayerPage() {
 
     // Check if this is a replay
     setIsFirstCompletion(!completedDays.includes(dayNumber));
-    setPlayerState('music');
+    setPlayerState("music");
   }, [hasAccess, completedDays, dayNumber, day, accessLoading, router]);
 
   // Handle music prompt dismissal
   const handleMusicDismiss = useCallback(() => {
-    setPlayerState('countdown');
+    setPlayerState("countdown");
   }, []);
 
   // Handle countdown complete
   const handleCountdownComplete = useCallback(() => {
-    setPlayerState('active');
+    setPlayerState("active");
   }, []);
 
   // Handle exercise complete
@@ -79,18 +83,25 @@ export default function WorkoutPlayerPage() {
       setCurrentExerciseIndex((prev) => prev + 1);
     } else {
       // Workout complete - record completion if first time
-      if (isFirstCompletion && user?.clerkId) {
+      if (isFirstCompletion && user?.authUserId) {
         completeDay({
-          clerkUserId: user.clerkId,
-          programSlug: 'basketball-chassis',
+          authUserId: user.authUserId,
+          programSlug: "basketball-chassis",
           dayNumber,
           xpEarned: PROGRAM.xpPerDay,
           crystalsEarned: PROGRAM.crystalsPerDay,
         }).catch(console.error);
       }
-      setPlayerState('finished');
+      setPlayerState("finished");
     }
-  }, [currentExerciseIndex, exercises.length, isFirstCompletion, user?.clerkId, completeDay, dayNumber]);
+  }, [
+    currentExerciseIndex,
+    exercises.length,
+    isFirstCompletion,
+    user?.authUserId,
+    completeDay,
+    dayNumber,
+  ]);
 
   // Handle skip exercise
   const handleSkipExercise = useCallback(() => {
@@ -104,25 +115,25 @@ export default function WorkoutPlayerPage() {
 
   // Handle continue after finish
   const handleContinue = useCallback(() => {
-    router.push('/programs/basketball-chassis');
+    router.push("/programs/basketball-chassis");
   }, [router]);
 
   // Handle replay
   const handleReplay = useCallback(() => {
     setCurrentExerciseIndex(0);
-    setPlayerState('countdown');
+    setPlayerState("countdown");
   }, []);
 
   // Loading state
-  if (playerState === 'loading' || !day) {
+  if (playerState === "loading" || !day) {
     return (
       <main
         className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: 'var(--bg-primary)' }}
+        style={{ backgroundColor: "var(--bg-primary)" }}
       >
         <div className="animate-pulse text-center">
           <div className="text-4xl mb-2">🏀</div>
-          <p style={{ color: 'var(--text-tertiary)' }}>Loading workout...</p>
+          <p style={{ color: "var(--text-tertiary)" }}>Loading workout...</p>
         </div>
       </main>
     );
@@ -131,14 +142,12 @@ export default function WorkoutPlayerPage() {
   return (
     <main
       className="min-h-screen max-w-md mx-auto relative overflow-hidden"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
     >
       <AnimatePresence mode="wait">
-        {playerState === 'music' && (
-          <MusicPrompt key="music" onDismiss={handleMusicDismiss} />
-        )}
+        {playerState === "music" && <MusicPrompt key="music" onDismiss={handleMusicDismiss} />}
 
-        {playerState === 'countdown' && (
+        {playerState === "countdown" && (
           <CountdownView
             key="countdown"
             onComplete={handleCountdownComplete}
@@ -146,7 +155,7 @@ export default function WorkoutPlayerPage() {
           />
         )}
 
-        {playerState === 'active' && currentExercise && (
+        {playerState === "active" && currentExercise && (
           <ActiveWorkout
             key={`exercise-${currentExerciseIndex}`}
             exercise={currentExercise}
@@ -159,7 +168,7 @@ export default function WorkoutPlayerPage() {
           />
         )}
 
-        {playerState === 'finished' && (
+        {playerState === "finished" && (
           <FinishedView
             key="finished"
             dayNumber={dayNumber}

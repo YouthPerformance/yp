@@ -1,36 +1,36 @@
-import type {LoaderFunctionArgs, MetaFunction} from '@shopify/remix-oxygen';
-import {useLoaderData, Link} from '@remix-run/react';
-import {Image, Money} from '@shopify/hydrogen';
+import { Link, useLoaderData } from "@remix-run/react";
+import { Image, Money } from "@shopify/hydrogen";
+import type { LoaderFunctionArgs, MetaFunction } from "@shopify/remix-oxygen";
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    {title: `${data?.collection.title || 'Collection'} | YP Shop`},
-    {description: data?.collection.description || ''},
+    { title: `${data?.collection.title || "Collection"} | YP Shop` },
+    { description: data?.collection.description || "" },
   ];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
-  const {handle} = params;
-  const {storefront} = context;
+export async function loader({ params, context }: LoaderFunctionArgs) {
+  const { handle } = params;
+  const { storefront } = context;
 
   if (!handle) {
-    throw new Response('Collection handle is required', {status: 400});
+    throw new Response("Collection handle is required", { status: 400 });
   }
 
-  const {collection} = await storefront.query(COLLECTION_QUERY, {
-    variables: {handle},
+  const { collection } = await storefront.query(COLLECTION_QUERY, {
+    variables: { handle },
   });
 
   if (!collection) {
-    throw new Response('Not found', {status: 404});
+    throw new Response("Not found", { status: 404 });
   }
 
-  return {collection};
+  return { collection };
 }
 
 export default function Collection() {
-  const {collection} = useLoaderData<typeof loader>();
-  const {title, description, products} = collection;
+  const { collection } = useLoaderData<typeof loader>();
+  const { title, description, products } = collection;
 
   return (
     <main className="min-h-screen pt-24 px-6">
@@ -38,11 +38,7 @@ export default function Collection() {
         {/* Collection Header */}
         <div className="text-center mb-12">
           <h1 className="font-display text-5xl tracking-wider mb-4">{title}</h1>
-          {description && (
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-gray-400 text-lg max-w-2xl mx-auto">{description}</p>}
         </div>
 
         {/* Product Grid */}
@@ -63,9 +59,7 @@ export default function Collection() {
                 </div>
               )}
               <div className="p-6">
-                <h3 className="font-display text-xl tracking-wide mb-2">
-                  {product.title}
-                </h3>
+                <h3 className="font-display text-xl tracking-wide mb-2">{product.title}</h3>
                 <div className="text-cyan font-mono">
                   <Money data={product.priceRange.minVariantPrice} />
                 </div>
@@ -76,9 +70,7 @@ export default function Collection() {
 
         {products.nodes.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-gray-400 text-lg">
-              No products in this collection yet.
-            </p>
+            <p className="text-gray-400 text-lg">No products in this collection yet.</p>
           </div>
         )}
       </div>

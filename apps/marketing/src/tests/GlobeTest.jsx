@@ -1,4 +1,4 @@
-import WolfNetworkGlobe from './WolfNetworkGlobe'
+import WolfNetworkGlobe from "./WolfNetworkGlobe";
 
 export default function GlobeTest() {
   return (
@@ -32,5 +32,5 @@ export default function GlobeTest() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -6,11 +6,10 @@
 // Intensity Budget: 6 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface WorkoutCardProps {
   day: number;
@@ -31,7 +30,7 @@ export function WorkoutCard({
   day,
   title,
   subtitle,
-  duration = '15 min',
+  duration = "15 min",
   isCompleted = false,
   isCurrent = false,
   isLocked = false,
@@ -55,23 +54,23 @@ export function WorkoutCard({
     <motion.button
       onClick={handleClick}
       className={cn(
-        'relative w-full rounded-2xl p-5 text-left overflow-hidden',
-        'transition-all duration-200',
-        isLocked && 'cursor-pointer'
+        "relative w-full rounded-2xl p-5 text-left overflow-hidden",
+        "transition-all duration-200",
+        isLocked && "cursor-pointer",
       )}
       style={{
         backgroundColor: isLocked
-          ? 'var(--bg-tertiary)'
+          ? "var(--bg-tertiary)"
           : isCompleted
-          ? 'var(--bg-secondary)'
-          : isCurrent
-          ? 'var(--accent-primary)'
-          : 'var(--bg-secondary)',
+            ? "var(--bg-secondary)"
+            : isCurrent
+              ? "var(--accent-primary)"
+              : "var(--bg-secondary)",
         border: isCompleted
-          ? '1px solid var(--border-default)'
+          ? "1px solid var(--border-default)"
           : isCurrent && !isLocked
-          ? 'none'
-          : '1px solid var(--border-default)',
+            ? "none"
+            : "1px solid var(--border-default)",
         opacity: isLocked ? 0.85 : 1,
       }}
       whileHover={!isCompleted ? { scale: 1.02, y: -2 } : {}}
@@ -86,7 +85,7 @@ export function WorkoutCard({
           className="absolute inset-0 flex items-center justify-center z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
         >
           <motion.div
             className="flex flex-col items-center"
@@ -96,8 +95,8 @@ export function WorkoutCard({
             <div
               className="w-14 h-14 rounded-full flex items-center justify-center mb-2"
               style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                border: '2px solid var(--accent-primary)',
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                border: "2px solid var(--accent-primary)",
               }}
             >
               <svg
@@ -116,7 +115,7 @@ export function WorkoutCard({
             </div>
             <span
               className="font-bebas text-sm tracking-wider"
-              style={{ color: 'var(--accent-primary)' }}
+              style={{ color: "var(--accent-primary)" }}
             >
               TAP TO UNLOCK
             </span>
@@ -125,23 +124,19 @@ export function WorkoutCard({
       )}
 
       {/* Content */}
-      <div className={cn('relative', isLocked && 'blur-[2px]')}>
+      <div className={cn("relative", isLocked && "blur-[2px]")}>
         <div className="flex items-start justify-between mb-3">
           {/* Day Badge */}
           <div
             className="px-3 py-1 rounded-full"
             style={{
-              backgroundColor: isCurrent && !isLocked
-                ? 'rgba(0, 0, 0, 0.2)'
-                : 'var(--bg-tertiary)',
+              backgroundColor: isCurrent && !isLocked ? "rgba(0, 0, 0, 0.2)" : "var(--bg-tertiary)",
             }}
           >
             <span
               className="font-bebas text-sm tracking-wider"
               style={{
-                color: isCurrent && !isLocked
-                  ? 'var(--bg-primary)'
-                  : 'var(--text-tertiary)',
+                color: isCurrent && !isLocked ? "var(--bg-primary)" : "var(--text-tertiary)",
               }}
             >
               DAY {day}
@@ -152,25 +147,22 @@ export function WorkoutCard({
           {isCompleted ? (
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(0, 246, 224, 0.15)' }}
+              style={{ backgroundColor: "rgba(0, 246, 224, 0.15)" }}
             >
-              <span style={{ color: 'var(--accent-primary)' }}>✓</span>
+              <span style={{ color: "var(--accent-primary)" }}>✓</span>
             </div>
           ) : (
             <div
               className="px-2 py-1 rounded-full"
               style={{
-                backgroundColor: isCurrent && !isLocked
-                  ? 'rgba(0, 0, 0, 0.2)'
-                  : 'var(--bg-tertiary)',
+                backgroundColor:
+                  isCurrent && !isLocked ? "rgba(0, 0, 0, 0.2)" : "var(--bg-tertiary)",
               }}
             >
               <span
                 className="font-mono text-xs"
                 style={{
-                  color: isCurrent && !isLocked
-                    ? 'var(--bg-primary)'
-                    : 'var(--accent-primary)',
+                  color: isCurrent && !isLocked ? "var(--bg-primary)" : "var(--accent-primary)",
                 }}
               >
                 +{xpReward} XP
@@ -183,11 +175,12 @@ export function WorkoutCard({
         <h3
           className="font-bebas text-2xl tracking-wider mb-1"
           style={{
-            color: isCurrent && !isLocked
-              ? 'var(--bg-primary)'
-              : isCompleted
-              ? 'var(--text-secondary)'
-              : 'var(--text-primary)',
+            color:
+              isCurrent && !isLocked
+                ? "var(--bg-primary)"
+                : isCompleted
+                  ? "var(--text-secondary)"
+                  : "var(--text-primary)",
           }}
         >
           {isBossDay ? `STRIKE WOD: ${bossName || title}` : title}
@@ -198,9 +191,7 @@ export function WorkoutCard({
           <span
             className="text-sm"
             style={{
-              color: isCurrent && !isLocked
-                ? 'rgba(0, 0, 0, 0.6)'
-                : 'var(--text-tertiary)',
+              color: isCurrent && !isLocked ? "rgba(0, 0, 0, 0.6)" : "var(--text-tertiary)",
             }}
           >
             {subtitle || duration}
@@ -210,8 +201,8 @@ export function WorkoutCard({
             <span
               className="px-2 py-0.5 rounded text-xs font-medium"
               style={{
-                backgroundColor: 'rgba(255, 107, 107, 0.2)',
-                color: '#FF6B6B',
+                backgroundColor: "rgba(255, 107, 107, 0.2)",
+                color: "#FF6B6B",
               }}
             >
               BOSS FIGHT
@@ -223,7 +214,7 @@ export function WorkoutCard({
         {isCurrent && !isCompleted && !isLocked && (
           <motion.div
             className="absolute right-4 bottom-4 w-12 h-12 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           >

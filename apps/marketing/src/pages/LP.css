@@ -1,0 +1,85 @@
+/* LP Landing Page Styles */
+
+.lp-container {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.lp-bg-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.lp-aura-background {
+  width: 100%;
+  height: 100%;
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+.lp-unicorn-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.lp-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.lp-logo {
+  width: 180px;
+  margin-bottom: 3rem;
+  filter: drop-shadow(0 0 20px #00f6e0);
+}
+
+.lp-cta-button {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 0.1em;
+  padding: 1.25rem 3rem;
+  background: transparent;
+  color: #00f6e0;
+  border: 3px solid #00f6e0;
+  cursor: pointer;
+  position: relative;
+  text-transform: uppercase;
+  animation: pulse-glow 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.lp-cta-button:hover {
+  background: #00f6e0;
+  color: #000;
+  box-shadow:
+    0 0 40px #00f6e0,
+    0 0 80px #00f6e0;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px #00f6e0,
+      0 0 40px rgba(0, 246, 224, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 40px #00f6e0,
+      0 0 80px rgba(0, 246, 224, 0.8),
+      0 0 120px rgba(0, 246, 224, 0.4);
+  }
+}

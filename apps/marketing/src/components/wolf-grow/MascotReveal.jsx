@@ -7,7 +7,7 @@
  * 3. THE SLAM: Heavy spring entrance animation
  */
 
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 export default function MascotReveal() {
   return (
@@ -21,16 +21,15 @@ export default function MascotReveal() {
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             damping: 12,
             stiffness: 90,
-            duration: 0.8
+            duration: 0.8,
           }}
           viewport={{ once: true }}
         >
           {/* The Card */}
           <div className="relative bg-[#050505] rounded-3xl p-8 md:p-12 border border-cyan-500/20 shadow-[0_0_60px_rgba(0,255,255,0.15)] max-w-md w-full">
-
             {/* THE GLOW - Pulsing Power Aura */}
             <div className="absolute top-8 left-1/2 -translate-x-1/2 w-40 h-40 flex items-center justify-center">
               <motion.div
@@ -42,7 +41,7 @@ export default function MascotReveal() {
                 transition={{
                   duration: 3,
                   repeat: Infinity,
-                  ease: 'easeInOut',
+                  ease: "easeInOut",
                 }}
               />
               <motion.div
@@ -54,7 +53,7 @@ export default function MascotReveal() {
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  ease: 'easeInOut',
+                  ease: "easeInOut",
                   delay: 0.5,
                 }}
               />
@@ -69,7 +68,7 @@ export default function MascotReveal() {
               transition={{
                 duration: 4,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
             >
               {/* Using YP logo until wolf mascot is ready */}
@@ -92,9 +91,8 @@ export default function MascotReveal() {
                 Meet YP: <span className="text-cyan-400">Your Pack Leader</span>
               </h2>
               <p className="text-neutral-400 text-sm md:text-base leading-relaxed mb-8 max-w-sm mx-auto">
-                YP is here to guide your athlete through the protocol.
-                Real-time coaching, adaptive training, and 24/7 support —
-                all powered by AI that understands youth performance.
+                YP is here to guide your athlete through the protocol. Real-time coaching, adaptive
+                training, and 24/7 support — all powered by AI that understands youth performance.
               </p>
 
               {/* THE BUTTON */}
@@ -128,5 +126,5 @@ export default function MascotReveal() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

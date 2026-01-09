@@ -5,10 +5,9 @@
 // Intensity Budget: 10 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface AthleteWelcomeProps {
   onContinue: () => void;
@@ -19,7 +18,7 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
   return (
     <motion.div
       className="min-h-screen flex flex-col px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -28,10 +27,10 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
       <motion.button
         onClick={onBack}
         className="flex items-center gap-2 mb-8 text-sm self-start"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        whileHover={{ color: 'var(--text-primary)' }}
+        whileHover={{ color: "var(--text-primary)" }}
       >
         ← Back
       </motion.button>
@@ -51,7 +50,7 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
         {/* Title */}
         <motion.h1
           className="font-bebas text-4xl tracking-wider mb-4"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -62,7 +61,7 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
         {/* Tagline */}
         <motion.p
           className="text-lg mb-8"
-          style={{ color: 'var(--accent-primary)' }}
+          style={{ color: "var(--accent-primary)" }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -78,9 +77,9 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
           transition={{ delay: 0.4 }}
         >
           {[
-            { icon: '⚡', text: 'Earn XP every workout' },
-            { icon: '🃏', text: 'Collect wolf cards' },
-            { icon: '🏆', text: 'Rise through the ranks' },
+            { icon: "⚡", text: "Earn XP every workout" },
+            { icon: "🃏", text: "Collect wolf cards" },
+            { icon: "🏆", text: "Rise through the ranks" },
           ].map((item, i) => (
             <motion.div
               key={i}
@@ -90,10 +89,7 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
               transition={{ delay: 0.5 + i * 0.1 }}
             >
               <span className="text-2xl">{item.icon}</span>
-              <span
-                className="text-base"
-                style={{ color: 'var(--text-secondary)' }}
-              >
+              <span className="text-base" style={{ color: "var(--text-secondary)" }}>
                 {item.text}
               </span>
             </motion.div>
@@ -106,8 +102,8 @@ export function AthleteWelcome({ onContinue, onBack }: AthleteWelcomeProps) {
         onClick={onContinue}
         className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider"
         style={{
-          backgroundColor: 'var(--accent-primary)',
-          color: 'var(--bg-primary)',
+          backgroundColor: "var(--accent-primary)",
+          color: "var(--bg-primary)",
         }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

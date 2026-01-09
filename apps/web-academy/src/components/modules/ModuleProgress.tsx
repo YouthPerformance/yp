@@ -3,12 +3,11 @@
 // Overall progress indicator for the learning module
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle, Lock } from 'lucide-react';
-import type { LearningSection } from '@/data/modules/types';
+import { motion } from "framer-motion";
+import { CheckCircle, Lock } from "lucide-react";
+import type { LearningSection } from "@/data/modules/types";
 
 interface ModuleProgressProps {
   sections: LearningSection[];
@@ -23,7 +22,7 @@ export function ModuleProgress({
   currentSectionIndex,
   currentCardIndex,
   sectionProgress,
-  className = '',
+  className = "",
 }: ModuleProgressProps) {
   // Calculate total progress
   const totalCards = sections.reduce((sum, s) => sum + s.cards.length, 0);
@@ -45,7 +44,7 @@ export function ModuleProgress({
             className="h-full bg-gradient-to-r from-accent-primary to-accent-primary-hover rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           />
         </div>
         <span className="text-sm font-medium text-accent-primary min-w-[3rem] text-right">
@@ -60,13 +59,14 @@ export function ModuleProgress({
           const isCurrent = idx === currentSectionIndex;
           const isLocked = !sectionProgress[section.id] && idx > 0;
           const sectionCards = section.cards.length;
-          const sectionCardsCompleted = isCurrent ? currentCardIndex : isCompleted ? sectionCards : 0;
+          const sectionCardsCompleted = isCurrent
+            ? currentCardIndex
+            : isCompleted
+              ? sectionCards
+              : 0;
 
           return (
-            <div
-              key={section.id}
-              className="flex-1 flex flex-col items-center gap-1"
-            >
+            <div key={section.id} className="flex-1 flex flex-col items-center gap-1">
               {/* Section indicator */}
               <div
                 className={`
@@ -74,12 +74,12 @@ export function ModuleProgress({
                   border-2 transition-all
                   ${
                     isCompleted
-                      ? 'bg-accent-primary border-accent-primary'
+                      ? "bg-accent-primary border-accent-primary"
                       : isCurrent
-                        ? 'border-accent-primary bg-accent-primary/20'
+                        ? "border-accent-primary bg-accent-primary/20"
                         : isLocked
-                          ? 'border-border-default bg-bg-tertiary'
-                          : 'border-border-default bg-bg-secondary'
+                          ? "border-border-default bg-bg-tertiary"
+                          : "border-border-default bg-bg-secondary"
                   }
                 `}
               >
@@ -90,7 +90,7 @@ export function ModuleProgress({
                 ) : (
                   <span
                     className={`text-xs font-bold ${
-                      isCurrent ? 'text-accent-primary' : 'text-text-tertiary'
+                      isCurrent ? "text-accent-primary" : "text-text-tertiary"
                     }`}
                   >
                     {idx + 1}
@@ -103,16 +103,16 @@ export function ModuleProgress({
                 <motion.div
                   className={`h-full rounded-full ${
                     isCompleted
-                      ? 'bg-accent-primary'
+                      ? "bg-accent-primary"
                       : isCurrent
-                        ? 'bg-accent-primary/70'
-                        : 'bg-transparent'
+                        ? "bg-accent-primary/70"
+                        : "bg-transparent"
                   }`}
                   initial={{ width: 0 }}
                   animate={{
                     width: `${(sectionCardsCompleted / sectionCards) * 100}%`,
                   }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               </div>
             </div>

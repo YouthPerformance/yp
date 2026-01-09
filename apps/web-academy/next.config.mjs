@@ -3,18 +3,18 @@
 // YP Academy PWA
 // ═══════════════════════════════════════════════════════════
 
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const monorepoRoot = resolve(__dirname, '../..');
+const monorepoRoot = resolve(__dirname, "../..");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ─────────────────────────────────────────────────────────
   // OUTPUT MODE - Standalone for monorepo deployments
   // ─────────────────────────────────────────────────────────
-  output: 'standalone',
+  output: "standalone",
 
   // ─────────────────────────────────────────────────────────
   // MONOREPO SUPPORT
@@ -29,7 +29,7 @@ const nextConfig = {
   // ─────────────────────────────────────────────────────────
   experimental: {
     serverActions: {
-      bodySizeLimit: '2mb',
+      bodySizeLimit: "2mb",
     },
   },
 
@@ -39,15 +39,15 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**.supabase.co',
+        protocol: "https",
+        hostname: "**.supabase.co",
       },
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
   },
 
   // ─────────────────────────────────────────────────────────
@@ -56,28 +56,28 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
           },
         ],
       },
       {
-        source: '/sw.js',
+        source: "/sw.js",
         headers: [
           {
-            key: 'Service-Worker-Allowed',
-            value: '/',
+            key: "Service-Worker-Allowed",
+            value: "/",
           },
         ],
       },
@@ -90,7 +90,7 @@ const nextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.(mp3|wav|ogg)$/,
-      type: 'asset/resource',
+      type: "asset/resource",
     });
     return config;
   },

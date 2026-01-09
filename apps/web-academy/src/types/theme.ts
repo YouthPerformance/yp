@@ -3,7 +3,7 @@
 // Dual-Mode System: Athlete (Kids) vs Parent (Sponsor Report)
 // ═══════════════════════════════════════════════════════════
 
-export type ThemeMode = 'athlete' | 'athlete-light' | 'parent';
+export type ThemeMode = "athlete" | "athlete-light" | "parent";
 
 export interface ThemeColors {
   bg: {
@@ -39,7 +39,7 @@ export interface ThemeColors {
 }
 
 export interface ThemeMotion {
-  type: 'elastic' | 'smooth';
+  type: "elastic" | "smooth";
   duration: {
     instant: number;
     micro: number;

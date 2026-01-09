@@ -5,10 +5,7 @@ import { JOURNEY } from "../constants";
 
 export function JourneyTimeline() {
   return (
-    <section
-      id="journey"
-      className="py-24 px-[60px] bg-[var(--bg-primary)]"
-    >
+    <section id="journey" className="py-24 px-[60px] bg-[var(--bg-primary)]">
       <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-16">
         {/* Left Column - Sticky */}
         <div className="lg:sticky lg:top-32 lg:self-start">
@@ -52,7 +49,9 @@ export function JourneyTimeline() {
               {/* Year */}
               <p
                 className={`font-bebas text-[18px] ${
-                  item.type === "milestone" ? "text-[var(--accent-primary)] font-semibold" : "text-[var(--text-primary)]"
+                  item.type === "milestone"
+                    ? "text-[var(--accent-primary)] font-semibold"
+                    : "text-[var(--text-primary)]"
                 }`}
               >
                 {item.year}
@@ -64,10 +63,10 @@ export function JourneyTimeline() {
                   item.type === "milestone"
                     ? "border-[var(--accent-primary)]"
                     : item.type === "coaching"
-                    ? "border-[var(--accent-gold)]"
-                    : item.type === "venture"
-                    ? "border-[#39FF14]"
-                    : "border-[var(--border-default)]"
+                      ? "border-[var(--accent-gold)]"
+                      : item.type === "venture"
+                        ? "border-[#39FF14]"
+                        : "border-[var(--border-default)]"
                 }`}
               >
                 {item.event}

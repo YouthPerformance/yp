@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from "react";
 
 interface CircularTextProps {
   text?: string;
@@ -11,8 +11,8 @@ interface CircularTextProps {
  * CircularText - Rotating circular text like shopify.supply "SHOP ALL"
  */
 export function CircularText({
-  text = 'SHOP ALL ',
-  className = '',
+  text = "SHOP ALL ",
+  className = "",
   size = 120,
   duration = 20,
 }: CircularTextProps) {
@@ -20,7 +20,7 @@ export function CircularText({
 
   // Repeat text to fill circle
   const repeatedText = text.repeat(4);
-  const characters = repeatedText.split('');
+  const characters = repeatedText.split("");
   const angleStep = 360 / characters.length;
   const radius = size / 2 - 12; // Account for text size
 
@@ -38,7 +38,7 @@ export function CircularText({
         className="absolute inset-0 animate-spin"
         style={{
           animationDuration: `${duration}s`,
-          animationTimingFunction: 'linear',
+          animationTimingFunction: "linear",
         }}
       >
         {characters.map((char, index) => {
@@ -54,19 +54,17 @@ export function CircularText({
                 left: x,
                 top: y,
                 transform: `translate(-50%, -50%) rotate(${angle}deg)`,
-                transformOrigin: 'center',
+                transformOrigin: "center",
               }}
             >
-              {char === ' ' ? '\u00A0' : char}
+              {char === " " ? "\u00A0" : char}
             </span>
           );
         })}
       </div>
 
       {/* Center circle (optional) */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan/50"
-      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan/50" />
     </div>
   );
 }

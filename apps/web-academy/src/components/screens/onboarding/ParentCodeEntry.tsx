@@ -5,12 +5,13 @@
 // Intensity Budget: 10 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useOnboarding } from '@/contexts/OnboardingContext';
-import { useHaptics } from '@/hooks/useHaptics';
+import { AnimatePresence, motion } from "framer-motion";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import { useOnboarding } from "@/contexts/OnboardingContext";
+import { useHaptics } from "@/hooks/useHaptics";
 
 interface ParentCodeEntryProps {
   onSuccess: () => void;
@@ -21,7 +22,7 @@ interface ParentCodeEntryProps {
 export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntryProps) {
   const { validateParentCode } = useOnboarding();
   const { trigger } = useHaptics();
-  const [code, setCode] = useState<string[]>(['', '', '', '', '', '']);
+  const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [sponsorName, setSponsorName] = useState<string | null>(null);
@@ -35,14 +36,14 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
 
   const handleChange = (index: number, value: string) => {
     // Only allow alphanumeric
-    const cleanValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const cleanValue = value.toUpperCase().replace(/[^A-Z0-9]/g, "");
     if (!cleanValue && value) return;
 
     setError(false);
 
     // Haptic on valid input
     if (cleanValue) {
-      trigger('impact_light');
+      trigger("impact_light");
     }
 
     const newCode = [...code];
@@ -55,26 +56,29 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
     }
 
     // Check if complete
-    if (newCode.every(c => c) && newCode.join('').length === 6) {
-      handleSubmit(newCode.join(''));
+    if (newCode.every((c) => c) && newCode.join("").length === 6) {
+      handleSubmit(newCode.join(""));
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
     // Handle backspace
-    if (e.key === 'Backspace' && !code[index] && index > 0) {
+    if (e.key === "Backspace" && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedText = e.clipboardData.getData('text').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const pastedText = e.clipboardData
+      .getData("text")
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "");
     if (pastedText.length >= 6) {
-      const newCode = pastedText.slice(0, 6).split('');
+      const newCode = pastedText.slice(0, 6).split("");
       setCode(newCode);
-      trigger('impact_light');
-      handleSubmit(newCode.join(''));
+      trigger("impact_light");
+      handleSubmit(newCode.join(""));
     }
   };
 
@@ -84,7 +88,7 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
     const result = await validateParentCode(fullCode);
 
     if (result.valid && result.sponsorName) {
-      trigger('success_pattern');
+      trigger("success_pattern");
       setSponsorName(result.sponsorName);
       setShowSuccess(true);
       // Show success message for 1.5s before advancing
@@ -92,11 +96,11 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
         onSuccess();
       }, 1500);
     } else {
-      trigger('impact_heavy');
+      trigger("impact_heavy");
       setError(true);
       // Clear code after error
       setTimeout(() => {
-        setCode(['', '', '', '', '', '']);
+        setCode(["", "", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }, 500);
       setIsValidating(false);
@@ -106,7 +110,7 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
   return (
     <motion.div
       className="min-h-screen flex flex-col px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -115,10 +119,10 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
       <motion.button
         onClick={onBack}
         className="flex items-center gap-2 mb-8 text-sm self-start"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        whileHover={{ color: 'var(--text-primary)' }}
+        whileHover={{ color: "var(--text-primary)" }}
       >
         ← Back
       </motion.button>
@@ -128,7 +132,7 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
         {/* Title */}
         <motion.h1
           className="font-bebas text-3xl tracking-wider mb-2 text-center"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -138,7 +142,7 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
         {/* Subtitle */}
         <motion.p
           className="text-sm text-center mb-12"
-          style={{ color: 'var(--text-tertiary)' }}
+          style={{ color: "var(--text-tertiary)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
@@ -156,7 +160,9 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
           {code.map((digit, i) => (
             <input
               key={i}
-              ref={(el) => { inputRefs.current[i] = el; }}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
               type="text"
               inputMode="text"
               maxLength={1}
@@ -167,9 +173,9 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
               disabled={isValidating}
               className="w-12 h-14 text-center text-2xl font-mono rounded-xl outline-none transition-all"
               style={{
-                backgroundColor: 'var(--bg-secondary)',
-                border: `2px solid ${error ? 'var(--accent-error)' : digit ? 'var(--accent-primary)' : 'var(--border-default)'}`,
-                color: error ? 'var(--accent-error)' : 'var(--accent-primary)',
+                backgroundColor: "var(--bg-secondary)",
+                border: `2px solid ${error ? "var(--accent-error)" : digit ? "var(--accent-primary)" : "var(--border-default)"}`,
+                color: error ? "var(--accent-error)" : "var(--accent-primary)",
               }}
             />
           ))}
@@ -180,7 +186,7 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
           {error && (
             <motion.p
               className="text-sm text-center mb-8"
-              style={{ color: 'var(--accent-error)' }}
+              style={{ color: "var(--accent-error)" }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
@@ -201,23 +207,23 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
               <div
                 className="absolute inset-0 border-2 rounded-full"
                 style={{
-                  borderColor: 'var(--accent-primary)',
+                  borderColor: "var(--accent-primary)",
                   opacity: 0.2,
                 }}
               />
               <div
                 className="absolute inset-0 border-2 rounded-full animate-spin"
                 style={{
-                  borderColor: 'transparent',
-                  borderTopColor: 'var(--accent-primary)',
+                  borderColor: "transparent",
+                  borderTopColor: "var(--accent-primary)",
                 }}
               />
             </div>
             <span
               className="text-xs tracking-[0.15em] uppercase"
               style={{
-                fontFamily: 'var(--font-loading)',
-                color: 'var(--text-tertiary)'
+                fontFamily: "var(--font-loading)",
+                color: "var(--text-tertiary)",
               }}
             >
               Checking
@@ -237,12 +243,12 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
               <motion.div
                 className="w-16 h-16 rounded-full flex items-center justify-center"
                 style={{
-                  backgroundColor: 'rgba(0, 246, 224, 0.15)',
-                  border: '2px solid var(--accent-primary)',
+                  backgroundColor: "rgba(0, 246, 224, 0.15)",
+                  border: "2px solid var(--accent-primary)",
                 }}
                 initial={{ scale: 0 }}
                 animate={{ scale: [0, 1.2, 1] }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <motion.span
                   className="text-3xl"
@@ -255,13 +261,12 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
               </motion.div>
               <motion.p
                 className="text-sm text-center"
-                style={{ color: 'var(--accent-primary)' }}
+                style={{ color: "var(--accent-primary)" }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                Linked to Sponsor:{' '}
-                <span className="font-bold">{sponsorName}</span>
+                Linked to Sponsor: <span className="font-bold">{sponsorName}</span>
               </motion.p>
             </motion.div>
           )}
@@ -272,16 +277,14 @@ export function ParentCodeEntry({ onSuccess, onBack, onNoCode }: ParentCodeEntry
       <motion.button
         onClick={onNoCode}
         className="text-sm text-center py-4"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        whileHover={{ color: 'var(--accent-primary)' }}
+        whileHover={{ color: "var(--accent-primary)" }}
       >
-        Don't have a code?{' '}
-        <span style={{ color: 'var(--accent-primary)' }}>
-          Parent needs to sign up first
-        </span>
+        Don't have a code?{" "}
+        <span style={{ color: "var(--accent-primary)" }}>Parent needs to sign up first</span>
       </motion.button>
     </motion.div>
   );

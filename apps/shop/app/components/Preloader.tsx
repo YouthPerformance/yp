@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from "react";
 
 /**
  * YP Preloader - Cyan fill animation using CSS clip-path
@@ -18,7 +18,7 @@ export function Preloader() {
     if (!isMounted) return;
 
     // Skip on subsequent navigations (only show on initial load)
-    if (typeof window !== 'undefined' && sessionStorage.getItem('yp-loaded')) {
+    if (typeof window !== "undefined" && sessionStorage.getItem("yp-loaded")) {
       setIsHidden(true);
       return;
     }
@@ -33,9 +33,7 @@ export function Preloader() {
       const progress = Math.min(elapsed / duration, 1);
 
       // Easing: ease-in-out
-      const eased = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      const eased = progress < 0.5 ? 2 * progress * progress : 1 - (-2 * progress + 2) ** 2 / 2;
 
       setFillPercent(eased * 100);
 
@@ -45,11 +43,11 @@ export function Preloader() {
         // Fill complete, now fade out
         setTimeout(() => {
           if (containerRef.current) {
-            containerRef.current.style.opacity = '0';
+            containerRef.current.style.opacity = "0";
           }
           setTimeout(() => {
-            if (typeof window !== 'undefined') {
-              sessionStorage.setItem('yp-loaded', 'true');
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("yp-loaded", "true");
             }
             setIsHidden(true);
           }, 500);
@@ -76,7 +74,7 @@ export function Preloader() {
           viewBox="0 0 456.1 276.4"
           className="w-full"
           style={{
-            filter: 'drop-shadow(0 0 20px rgba(0, 246, 224, 0.3))',
+            filter: "drop-shadow(0 0 20px rgba(0, 246, 224, 0.3))",
           }}
         >
           <path
@@ -92,20 +90,16 @@ export function Preloader() {
           viewBox="0 0 456.1 276.4"
           className="absolute inset-0 w-full overflow-visible"
           style={{
-            filter: fillPercent === 100
-              ? 'drop-shadow(0 0 40px rgba(0, 246, 224, 0.8))'
-              : 'drop-shadow(0 0 20px rgba(0, 246, 224, 0.4))',
-            transition: 'filter 0.2s ease',
+            filter:
+              fillPercent === 100
+                ? "drop-shadow(0 0 40px rgba(0, 246, 224, 0.8))"
+                : "drop-shadow(0 0 20px rgba(0, 246, 224, 0.4))",
+            transition: "filter 0.2s ease",
           }}
         >
           <defs>
             <clipPath id="fill-reveal">
-              <rect
-                x="0"
-                y={276.4 * (1 - fillPercent / 100)}
-                width="456.1"
-                height="276.4"
-              />
+              <rect x="0" y={276.4 * (1 - fillPercent / 100)} width="456.1" height="276.4" />
             </clipPath>
           </defs>
           <path

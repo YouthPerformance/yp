@@ -1,19 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Instagram } from "lucide-react";
+import Link from "next/link";
 import { FINAL_CTA, NAV } from "../constants";
 
 // Simple X/Twitter icon component
 function XIcon({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="currentColor"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
@@ -46,16 +41,10 @@ export function FinalCTA() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <Link
-            href={FINAL_CTA.primaryCTA.href}
-            className="btn-primary text-sm tracking-wider"
-          >
+          <Link href={FINAL_CTA.primaryCTA.href} className="btn-primary text-sm tracking-wider">
             {FINAL_CTA.primaryCTA.label}
           </Link>
-          <Link
-            href={FINAL_CTA.secondaryCTA.href}
-            className="btn-secondary text-sm tracking-wider"
-          >
+          <Link href={FINAL_CTA.secondaryCTA.href} className="btn-secondary text-sm tracking-wider">
             {FINAL_CTA.secondaryCTA.label}
           </Link>
         </div>
@@ -95,8 +84,7 @@ export function FinalCTA() {
 
           {/* Copyright */}
           <p className="text-[12px] text-[var(--text-tertiary)]">
-            &copy; {new Date().getFullYear()} YouthPerformance. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} YouthPerformance. All rights reserved.
           </p>
 
           {/* Links */}

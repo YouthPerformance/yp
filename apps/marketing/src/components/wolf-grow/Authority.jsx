@@ -1,40 +1,40 @@
 // Authority - The Living Portraits
 // E14-5: Trainer showcase with B&W to color video transitions
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { EASE } from './motion'
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { EASE } from "./motion";
 
 const TRAINERS = [
   {
     id: 1,
-    name: 'Coach Marcus',
-    title: 'NBA Performance Coach',
-    bio: 'Trained 15+ NBA players. Specialist in foot mechanics.',
-    image: '/images/trainer-1.jpg',
+    name: "Coach Marcus",
+    title: "NBA Performance Coach",
+    bio: "Trained 15+ NBA players. Specialist in foot mechanics.",
+    image: "/images/trainer-1.jpg",
   },
   {
     id: 2,
-    name: 'Dr. Elena',
-    title: 'Sports Medicine PhD',
-    bio: 'Published researcher in youth athletic development.',
-    image: '/images/trainer-2.jpg',
+    name: "Dr. Elena",
+    title: "Sports Medicine PhD",
+    bio: "Published researcher in youth athletic development.",
+    image: "/images/trainer-2.jpg",
   },
   {
     id: 3,
-    name: 'Coach Ray',
-    title: 'Olympic Track Coach',
-    bio: 'Coached 3 Olympic medalists. Speed development expert.',
-    image: '/images/trainer-3.jpg',
+    name: "Coach Ray",
+    title: "Olympic Track Coach",
+    bio: "Coached 3 Olympic medalists. Speed development expert.",
+    image: "/images/trainer-3.jpg",
   },
-]
+];
 
 function TrainerCard({ trainer }) {
-  const [isActive, setIsActive] = useState(false)
+  const [isActive, setIsActive] = useState(false);
 
   // Handle both hover and touch
-  const handleInteractionStart = () => setIsActive(true)
-  const handleInteractionEnd = () => setIsActive(false)
+  const handleInteractionStart = () => setIsActive(true);
+  const handleInteractionEnd = () => setIsActive(false);
 
   return (
     <motion.div
@@ -47,10 +47,10 @@ function TrainerCard({ trainer }) {
       {/* B&W Image (default) */}
       <div
         className={`absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 transition-opacity duration-300 ${
-          isActive ? 'opacity-0' : 'opacity-100'
+          isActive ? "opacity-0" : "opacity-100"
         }`}
         style={{
-          filter: 'grayscale(100%) contrast(1.2)',
+          filter: "grayscale(100%) contrast(1.2)",
         }}
       >
         {/* Placeholder for actual image */}
@@ -84,14 +84,14 @@ function TrainerCard({ trainer }) {
         <p className="text-cyan-400 text-xs md:text-sm">{trainer.title}</p>
         <motion.p
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: isActive ? 1 : 0, height: isActive ? 'auto' : 0 }}
+          animate={{ opacity: isActive ? 1 : 0, height: isActive ? "auto" : 0 }}
           className="text-gray-400 text-xs mt-2 overflow-hidden"
         >
           {trainer.bio}
         </motion.p>
       </div>
     </motion.div>
-  )
+  );
 }
 
 export function Authority() {
@@ -110,8 +110,8 @@ export function Authority() {
             TRAIN WITH THE <span className="text-cyan-400">MASTERS.</span>
           </h2>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Your child won't be trained by influencers. They will be trained by
-            the experts who build professionals.
+            Your child won't be trained by influencers. They will be trained by the experts who
+            build professionals.
           </p>
         </motion.div>
 
@@ -138,12 +138,12 @@ export function Authority() {
           viewport={{ once: true }}
           className="text-center text-gray-400 mt-12 max-w-xl mx-auto"
         >
-          Our team trains athletes in the NBA, NFL, and Olympics. We've distilled their
-          elite protocols into micro-doses that fit into a student-athlete's busy life.
+          Our team trains athletes in the NBA, NFL, and Olympics. We've distilled their elite
+          protocols into micro-doses that fit into a student-athlete's busy life.
         </motion.p>
       </div>
     </section>
-  )
+  );
 }
 
-export default Authority
+export default Authority;

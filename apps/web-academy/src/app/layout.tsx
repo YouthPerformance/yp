@@ -7,6 +7,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 
 // ─────────────────────────────────────────────────────────────
@@ -106,7 +107,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/logo/blackcyan.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo/blackcyan.png" />
       </head>
-      <body className="font-inter antialiased bg-black text-white">{children}</body>
+      <body className="font-inter antialiased bg-black text-white">
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FSHVRSHFLQ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-FSHVRSHFLQ');
+          `}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }

@@ -151,7 +151,12 @@ export default function ModulePlayerPage({ params }: PageProps) {
 
       {/* Card area */}
       <main className="flex-1 overflow-hidden">
-        <CardSwiper module={module} sections={module.sections} mode={mode} onComplete={handleComplete} />
+        <CardSwiper
+          module={module}
+          sections={module.sections}
+          mode={mode}
+          onComplete={handleComplete}
+        />
       </main>
 
       {/* Exit confirmation modal */}

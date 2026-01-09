@@ -3,53 +3,49 @@
 // Main dashboard with stats, today's mission, and lockers
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import {
-  LockerRoomHeader,
-  StatsBar,
-  TodaysMission,
-} from '@/components/dashboard';
-import { UpsellModal } from '@/components/modals';
-import { useUserContext } from '@/contexts/UserContext';
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LockerRoomHeader, StatsBar, TodaysMission } from "@/components/dashboard";
+import { UpsellModal } from "@/components/modals";
+import { useUserContext } from "@/contexts/UserContext";
 
 // Wolf color to hex mapping
 const WOLF_COLORS: Record<string, string> = {
-  cyan: '#00F6E0',
-  gold: '#FFD700',
-  purple: '#9B30FF',
-  green: '#10B981',
-  red: '#DC143C',
+  cyan: "#00F6E0",
+  gold: "#FFD700",
+  purple: "#9B30FF",
+  green: "#10B981",
+  red: "#DC143C",
 };
 
 // Program config
 const PROGRAM = {
-  name: 'Foundation',
-  emoji: '🐺',
+  name: "Foundation",
+  emoji: "🐺",
   totalDays: 42,
 };
 
 // Helper functions
 function getWorkoutName(day: number): string {
   const workouts = [
-    'Foundation Flow',
-    'Ankle Awakening',
-    'Balance Basics',
-    'Foot Fundamentals',
-    'Ground Connection',
-    'Mobility Matrix',
-    'Spring Activation',
+    "Foundation Flow",
+    "Ankle Awakening",
+    "Balance Basics",
+    "Foot Fundamentals",
+    "Ground Connection",
+    "Mobility Matrix",
+    "Spring Activation",
   ];
   return workouts[(day - 1) % workouts.length];
 }
 
 function getPhase(day: number): string {
-  if (day <= 14) return 'Release Phase';
-  if (day <= 28) return 'Restore Phase';
-  return 'Reengineer Phase';
+  if (day <= 14) return "Release Phase";
+  if (day <= 28) return "Restore Phase";
+  return "Reengineer Phase";
 }
 
 export default function HomePage() {
@@ -67,18 +63,18 @@ export default function HomePage() {
         <div className="relative w-10 h-10">
           <div
             className="absolute inset-0 border-2 rounded-full"
-            style={{ borderColor: 'var(--accent-primary)', opacity: 0.2 }}
+            style={{ borderColor: "var(--accent-primary)", opacity: 0.2 }}
           />
           <div
             className="absolute inset-0 border-2 border-transparent rounded-full animate-spin"
-            style={{ borderTopColor: 'var(--accent-primary)' }}
+            style={{ borderTopColor: "var(--accent-primary)" }}
           />
         </div>
         <span
           className="text-xs tracking-[0.2em] uppercase"
           style={{
-            fontFamily: 'var(--font-loading)',
-            color: 'var(--text-tertiary)'
+            fontFamily: "var(--font-loading)",
+            color: "var(--text-tertiary)",
           }}
         >
           Loading
@@ -89,27 +85,26 @@ export default function HomePage() {
 
   // Get user data with fallbacks for when not signed in
   const userData = {
-    name: user?.name || 'Athlete',
-    avatarColor: WOLF_COLORS[user?.avatarColor || 'cyan'] || '#00F6E0',
-    rank: user?.rank || 'pup',
-    sport: user?.sport || 'Training',
+    name: user?.name || "Athlete",
+    avatarColor: WOLF_COLORS[user?.avatarColor || "cyan"] || "#00F6E0",
+    rank: user?.rank || "pup",
+    sport: user?.sport || "Training",
     age: user?.age || 14,
     xp: user?.xpTotal || 0,
     streak: user?.streakCurrent || 0,
     crystals: user?.crystals || 0,
     currentDay: enrollment?.currentDay || 1,
-    subscriptionStatus: user?.subscriptionStatus || 'free',
+    subscriptionStatus: user?.subscriptionStatus || "free",
   };
 
   // Determine if workout is locked (Day 2+ for free users)
-  const isWorkoutLocked =
-    userData.subscriptionStatus === 'free' && userData.currentDay > 1;
+  const isWorkoutLocked = userData.subscriptionStatus === "free" && userData.currentDay > 1;
 
   const handleStartWorkout = () => {
     if (isWorkoutLocked) {
       setShowUpsellModal(true);
     } else {
-      router.push('/workout/player');
+      router.push("/workout/player");
     }
   };
 
@@ -123,7 +118,7 @@ export default function HomePage() {
         sport={userData.sport}
         age={userData.age}
         onParentModeClick={() => setParentModeActive(!parentModeActive)}
-        onSettingsClick={() => router.push('/profile')}
+        onSettingsClick={() => router.push("/profile")}
       />
 
       {/* Stats Bar */}
@@ -143,25 +138,22 @@ export default function HomePage() {
       </motion.div>
 
       {/* Free User Banner */}
-      {userData.subscriptionStatus === 'free' && (
+      {userData.subscriptionStatus === "free" && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
           className="mb-4 p-3 rounded-xl flex items-center justify-between"
           style={{
-            backgroundColor: 'rgba(255, 215, 0, 0.1)',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
+            backgroundColor: "rgba(255, 215, 0, 0.1)",
+            border: "1px solid rgba(255, 215, 0, 0.3)",
           }}
         >
           <div>
-            <p
-              className="text-sm font-medium"
-              style={{ color: 'var(--accent-gold)' }}
-            >
+            <p className="text-sm font-medium" style={{ color: "var(--accent-gold)" }}>
               Free Trial - Day 1 Only
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
               Upgrade to unlock all 42 days
             </p>
           </div>
@@ -169,8 +161,8 @@ export default function HomePage() {
             onClick={() => setShowUpsellModal(true)}
             className="px-4 py-2 rounded-lg text-xs font-bebas tracking-wider"
             style={{
-              backgroundColor: 'var(--accent-gold)',
-              color: 'var(--bg-primary)',
+              backgroundColor: "var(--accent-gold)",
+              color: "var(--bg-primary)",
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -195,7 +187,7 @@ export default function HomePage() {
           duration="12 min"
           intensity="med"
           focusArea={getPhase(userData.currentDay)}
-          tags={['Ankle Mobility', 'Foundation']}
+          tags={["Ankle Mobility", "Foundation"]}
           isLocked={isWorkoutLocked}
           onStart={handleStartWorkout}
           onLockedClick={() => setShowUpsellModal(true)}
@@ -209,49 +201,46 @@ export default function HomePage() {
         transition={{ delay: 0.3 }}
         className="rounded-2xl p-4"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <h3
           className="font-bebas text-lg tracking-wider mb-3"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           YOUR JOURNEY
         </h3>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-2xl font-mono font-bold" style={{ color: 'var(--accent-primary)' }}>
+            <p className="text-2xl font-mono font-bold" style={{ color: "var(--accent-primary)" }}>
               Day {userData.currentDay}
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
               of {PROGRAM.totalDays}
             </p>
           </div>
           <div className="flex-1 mx-4">
             <div
               className="h-2 rounded-full overflow-hidden"
-              style={{ backgroundColor: 'var(--bg-tertiary)' }}
+              style={{ backgroundColor: "var(--bg-tertiary)" }}
             >
               <motion.div
                 className="h-full rounded-full"
-                style={{ backgroundColor: 'var(--accent-primary)' }}
+                style={{ backgroundColor: "var(--accent-primary)" }}
                 initial={{ width: 0 }}
                 animate={{
                   width: `${(userData.currentDay / PROGRAM.totalDays) * 100}%`,
                 }}
-                transition={{ duration: 1, ease: 'easeOut' }}
+                transition={{ duration: 1, ease: "easeOut" }}
               />
             </div>
           </div>
           <div className="text-right">
-            <p
-              className="text-lg font-mono font-bold"
-              style={{ color: 'var(--text-primary)' }}
-            >
+            <p className="text-lg font-mono font-bold" style={{ color: "var(--text-primary)" }}>
               {Math.round((userData.currentDay / PROGRAM.totalDays) * 100)}%
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
               complete
             </p>
           </div>
@@ -265,7 +254,7 @@ export default function HomePage() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
           onClick={() => setParentModeActive(false)}
         >
           <motion.div
@@ -273,22 +262,21 @@ export default function HomePage() {
             animate={{ scale: 1, opacity: 1 }}
             className="rounded-2xl p-6 max-w-sm w-full text-center"
             style={{
-              backgroundColor: 'var(--bg-secondary)',
-              border: '1px solid var(--border-default)',
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border-default)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <h2
               className="font-bebas text-2xl tracking-wider mb-4"
-              style={{ color: 'var(--text-primary)' }}
+              style={{ color: "var(--text-primary)" }}
             >
               PARENT MODE
             </h2>
-            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-              View your athlete's progress, manage notifications, and access parental
-              controls.
+            <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
+              View your athlete's progress, manage notifications, and access parental controls.
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
               Coming Soon
             </p>
           </motion.div>

@@ -5,10 +5,10 @@
 // Intensity Budget: 5 points (logo fade only)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface SplashProps {
   onComplete: () => void;
@@ -42,7 +42,7 @@ export function Splash({ onComplete, minDuration = 2500 }: SplashProps) {
       {!isReady && (
         <motion.div
           className="fixed inset-0 flex flex-col items-center justify-center"
-          style={{ backgroundColor: 'var(--bg-primary)' }}
+          style={{ backgroundColor: "var(--bg-primary)" }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
@@ -51,7 +51,7 @@ export function Splash({ onComplete, minDuration = 2500 }: SplashProps) {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="mb-6"
           >
             <span className="text-8xl">🐺</span>
@@ -60,7 +60,7 @@ export function Splash({ onComplete, minDuration = 2500 }: SplashProps) {
           {/* Title */}
           <motion.h1
             className="font-bebas text-4xl tracking-widest mb-2"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -71,7 +71,7 @@ export function Splash({ onComplete, minDuration = 2500 }: SplashProps) {
           {/* Tagline */}
           <motion.p
             className="text-sm tracking-wider mb-12"
-            style={{ color: 'var(--text-tertiary)' }}
+            style={{ color: "var(--text-tertiary)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -103,7 +103,7 @@ function LoadingDots() {
           <motion.div
             key={i}
             className="w-1.5 h-1.5 rounded-full"
-            style={{ backgroundColor: 'var(--accent-primary)' }}
+            style={{ backgroundColor: "var(--accent-primary)" }}
             animate={{
               opacity: [0.3, 1, 0.3],
               scale: [0.8, 1, 0.8],
@@ -120,8 +120,8 @@ function LoadingDots() {
       <span
         className="text-[10px] tracking-[0.2em] uppercase"
         style={{
-          fontFamily: 'var(--font-loading)',
-          color: 'var(--text-tertiary)'
+          fontFamily: "var(--font-loading)",
+          color: "var(--text-tertiary)",
         }}
       >
         Loading

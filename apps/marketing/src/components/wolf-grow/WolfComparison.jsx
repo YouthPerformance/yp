@@ -5,36 +5,36 @@
  * Traditional Coach (dimmed, strikethrough) vs Wolf AI (glowing, highlighted)
  */
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 const COMPARISON_DATA = [
   {
-    label: 'Cost',
-    traditional: { value: '$600 / Month', subtext: '(1x/week)', strike: true },
-    wolf: { value: '$29 / Month', subtext: '(Daily Access)', highlight: true }
+    label: "Cost",
+    traditional: { value: "$600 / Month", subtext: "(1x/week)", strike: true },
+    wolf: { value: "$29 / Month", subtext: "(Daily Access)", highlight: true },
   },
   {
-    label: 'Availability',
-    traditional: { value: '1 Hour / Week', subtext: 'Schedule conflicts', strike: false },
-    wolf: { value: '24/7 / 365', subtext: 'Always ready', highlight: true }
+    label: "Availability",
+    traditional: { value: "1 Hour / Week", subtext: "Schedule conflicts", strike: false },
+    wolf: { value: "24/7 / 365", subtext: "Always ready", highlight: true },
   },
   {
-    label: 'Adaptability',
-    traditional: { value: 'Generic Plan', subtext: '"One size fits all"', strike: false },
-    wolf: { value: 'Real-Time Biometrics', subtext: 'Adapts to your athlete', highlight: true }
+    label: "Adaptability",
+    traditional: { value: "Generic Plan", subtext: '"One size fits all"', strike: false },
+    wolf: { value: "Real-Time Biometrics", subtext: "Adapts to your athlete", highlight: true },
   },
   {
-    label: 'Community',
-    traditional: { value: 'Local Kids', subtext: 'Limited network', strike: false },
-    wolf: { value: 'Global Elite Network', subtext: '2,800+ wolves worldwide', highlight: true }
+    label: "Community",
+    traditional: { value: "Local Kids", subtext: "Limited network", strike: false },
+    wolf: { value: "Global Elite Network", subtext: "2,800+ wolves worldwide", highlight: true },
   },
   {
-    label: 'Safety',
-    traditional: { value: '"Push Through Pain"', subtext: 'Old-school mentality', strike: false },
-    wolf: { value: 'Pain-Aware AI', subtext: 'Injury prevention built-in', highlight: true }
+    label: "Safety",
+    traditional: { value: '"Push Through Pain"', subtext: "Old-school mentality", strike: false },
+    wolf: { value: "Pain-Aware AI", subtext: "Injury prevention built-in", highlight: true },
   },
-]
+];
 
 function TraditionalCell({ data, isHovered }) {
   return (
@@ -46,36 +46,42 @@ function TraditionalCell({ data, isHovered }) {
         animate={{ opacity: isHovered ? 0.15 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <svg className="w-16 h-16 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          className="w-16 h-16 text-red-500"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
       </motion.div>
 
-      <p className={`text-neutral-500 text-sm md:text-base ${data.strike ? 'line-through decoration-red-500/50' : ''}`}>
+      <p
+        className={`text-neutral-500 text-sm md:text-base ${data.strike ? "line-through decoration-red-500/50" : ""}`}
+      >
         {data.value}
       </p>
-      {data.subtext && (
-        <p className="text-neutral-600 text-xs mt-1">{data.subtext}</p>
-      )}
+      {data.subtext && <p className="text-neutral-600 text-xs mt-1">{data.subtext}</p>}
     </div>
-  )
+  );
 }
 
 function WolfCell({ data }) {
   return (
     <div className="p-4 md:p-6 text-center">
-      <p className={`text-white font-semibold text-sm md:text-base ${data.highlight ? 'text-cyan-300' : ''}`}>
+      <p
+        className={`text-white font-semibold text-sm md:text-base ${data.highlight ? "text-cyan-300" : ""}`}
+      >
         {data.value}
       </p>
-      {data.subtext && (
-        <p className="text-cyan-400/70 text-xs mt-1">{data.subtext}</p>
-      )}
+      {data.subtext && <p className="text-cyan-400/70 text-xs mt-1">{data.subtext}</p>}
     </div>
-  )
+  );
 }
 
 export default function WolfComparison() {
-  const [hoveredRow, setHoveredRow] = useState(null)
+  const [hoveredRow, setHoveredRow] = useState(null);
 
   return (
     <section className="relative py-20 md:py-32 bg-[#050505]">
@@ -160,12 +166,16 @@ export default function WolfComparison() {
                   </div>
 
                   {/* Traditional */}
-                  <div className={`bg-neutral-900/30 opacity-50 transition-all duration-300 ${hoveredRow === index ? 'bg-red-900/10' : ''}`}>
+                  <div
+                    className={`bg-neutral-900/30 opacity-50 transition-all duration-300 ${hoveredRow === index ? "bg-red-900/10" : ""}`}
+                  >
                     <TraditionalCell data={row.traditional} isHovered={hoveredRow === index} />
                   </div>
 
                   {/* Wolf - Highlighted column */}
-                  <div className={`bg-[#0a1a1a] border-x-2 border-cyan-500/50 ${index === COMPARISON_DATA.length - 1 ? 'border-b-2 rounded-br-2xl' : ''}`}>
+                  <div
+                    className={`bg-[#0a1a1a] border-x-2 border-cyan-500/50 ${index === COMPARISON_DATA.length - 1 ? "border-b-2 rounded-br-2xl" : ""}`}
+                  >
                     <WolfCell data={row.wolf} />
                   </div>
                 </div>
@@ -202,7 +212,10 @@ export default function WolfComparison() {
 
               <div className="space-y-4">
                 {COMPARISON_DATA.map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-2 border-b border-cyan-500/20 last:border-0">
+                  <div
+                    key={row.label}
+                    className="flex justify-between items-center py-2 border-b border-cyan-500/20 last:border-0"
+                  >
                     <span className="text-neutral-400 text-sm">{row.label}</span>
                     <div className="text-right">
                       <p className="text-cyan-300 font-semibold text-sm">{row.wolf.value}</p>
@@ -235,10 +248,15 @@ export default function WolfComparison() {
 
               <div className="space-y-4">
                 {COMPARISON_DATA.map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-2 border-b border-neutral-800 last:border-0">
+                  <div
+                    key={row.label}
+                    className="flex justify-between items-center py-2 border-b border-neutral-800 last:border-0"
+                  >
                     <span className="text-neutral-500 text-sm">{row.label}</span>
                     <div className="text-right">
-                      <p className={`text-neutral-500 text-sm ${row.traditional.strike ? 'line-through decoration-red-500/50' : ''}`}>
+                      <p
+                        className={`text-neutral-500 text-sm ${row.traditional.strike ? "line-through decoration-red-500/50" : ""}`}
+                      >
                         {row.traditional.value}
                       </p>
                       {row.traditional.subtext && (
@@ -268,12 +286,19 @@ export default function WolfComparison() {
             className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-[0_0_30px_rgba(0,255,255,0.3)] hover:shadow-[0_0_50px_rgba(0,255,255,0.5)]"
           >
             Join the Pack
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </a>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

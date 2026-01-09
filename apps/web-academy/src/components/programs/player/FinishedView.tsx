@@ -3,11 +3,11 @@
 // Celebration screen after completing a workout
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Trophy, Zap, Gem, ArrowRight, RotateCcw } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ArrowRight, Gem, RotateCcw, Trophy, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface FinishedViewProps {
   dayNumber: number;
@@ -48,7 +48,7 @@ export function FinishedView({
       <motion.div
         initial={{ scale: 0, rotate: -20 }}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+        transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
         className="relative mb-8"
       >
         <div
@@ -58,7 +58,7 @@ export function FinishedView({
             boxShadow: `0 0 60px ${themeColor}40`,
           }}
         >
-          <Trophy className="w-16 h-16" style={{ color: 'white' }} />
+          <Trophy className="w-16 h-16" style={{ color: "white" }} />
         </div>
 
         {/* Particles */}
@@ -68,8 +68,8 @@ export function FinishedView({
             className="absolute w-2 h-2 rounded-full"
             style={{
               backgroundColor: themeColor,
-              top: '50%',
-              left: '50%',
+              top: "50%",
+              left: "50%",
             }}
             initial={{ x: 0, y: 0, opacity: 1 }}
             animate={{
@@ -77,7 +77,7 @@ export function FinishedView({
               y: Math.sin((i * Math.PI) / 4) * 80,
               opacity: 0,
             }}
-            transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
           />
         ))}
       </motion.div>
@@ -91,11 +91,11 @@ export function FinishedView({
       >
         <h1
           className="font-bebas text-5xl tracking-wider mb-2"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           DAY {dayNumber} COMPLETE!
         </h1>
-        <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-lg" style={{ color: "var(--text-secondary)" }}>
           {dayTitle}
         </p>
       </motion.div>
@@ -117,16 +117,13 @@ export function FinishedView({
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2"
               style={{
-                backgroundColor: 'var(--accent-primary)',
-                boxShadow: '0 4px 20px rgba(0,200,200,0.3)',
+                backgroundColor: "var(--accent-primary)",
+                boxShadow: "0 4px 20px rgba(0,200,200,0.3)",
               }}
             >
-              <Zap className="w-8 h-8" style={{ color: 'var(--bg-primary)' }} />
+              <Zap className="w-8 h-8" style={{ color: "var(--bg-primary)" }} />
             </div>
-            <span
-              className="font-bebas text-2xl"
-              style={{ color: 'var(--accent-primary)' }}
-            >
+            <span className="font-bebas text-2xl" style={{ color: "var(--accent-primary)" }}>
               +{xpEarned} XP
             </span>
           </motion.div>
@@ -141,13 +138,13 @@ export function FinishedView({
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2"
               style={{
-                backgroundColor: '#9C27B0',
-                boxShadow: '0 4px 20px rgba(156,39,176,0.3)',
+                backgroundColor: "#9C27B0",
+                boxShadow: "0 4px 20px rgba(156,39,176,0.3)",
               }}
             >
-              <Gem className="w-8 h-8" style={{ color: 'white' }} />
+              <Gem className="w-8 h-8" style={{ color: "white" }} />
             </div>
-            <span className="font-bebas text-2xl" style={{ color: '#9C27B0' }}>
+            <span className="font-bebas text-2xl" style={{ color: "#9C27B0" }}>
               +{crystalsEarned} 💎
             </span>
           </motion.div>
@@ -161,7 +158,7 @@ export function FinishedView({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
           className="text-sm mb-8"
-          style={{ color: 'var(--text-tertiary)' }}
+          style={{ color: "var(--text-tertiary)" }}
         >
           Great practice session!
         </motion.p>
@@ -180,7 +177,7 @@ export function FinishedView({
           className="w-full py-4 rounded-xl font-bebas text-lg tracking-wider flex items-center justify-center gap-2"
           style={{
             backgroundColor: themeColor,
-            color: 'var(--bg-primary)',
+            color: "var(--bg-primary)",
           }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -194,9 +191,9 @@ export function FinishedView({
           onClick={onReplay}
           className="w-full py-4 rounded-xl font-bebas text-lg tracking-wider flex items-center justify-center gap-2"
           style={{
-            backgroundColor: 'transparent',
-            border: '1px solid var(--border-default)',
-            color: 'var(--text-secondary)',
+            backgroundColor: "transparent",
+            border: "1px solid var(--border-default)",
+            color: "var(--text-secondary)",
           }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

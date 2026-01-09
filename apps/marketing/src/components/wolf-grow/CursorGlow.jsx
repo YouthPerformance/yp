@@ -1,44 +1,44 @@
 // CursorGlow - Dynamic lighting effect following cursor
 // E14-9: Premium UX Polish
 
-import { useEffect, useState } from 'react'
-import { motion, useSpring, useMotionValue } from 'framer-motion'
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export function CursorGlow() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(false);
 
   // Motion values for position
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   // Smooth spring animation (1 second lag)
-  const springConfig = { damping: 25, stiffness: 50 }
-  const x = useSpring(mouseX, springConfig)
-  const y = useSpring(mouseY, springConfig)
+  const springConfig = { damping: 25, stiffness: 50 };
+  const x = useSpring(mouseX, springConfig);
+  const y = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
-      if (!isVisible) setIsVisible(true)
-    }
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      if (!isVisible) setIsVisible(true);
+    };
 
     const handleMouseLeave = () => {
-      setIsVisible(false)
-    }
+      setIsVisible(false);
+    };
 
-    window.addEventListener('mousemove', handleMouseMove)
-    document.body.addEventListener('mouseleave', handleMouseLeave)
+    window.addEventListener("mousemove", handleMouseMove);
+    document.body.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      document.body.removeEventListener('mouseleave', handleMouseLeave)
-    }
-  }, [mouseX, mouseY, isVisible])
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.body.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [mouseX, mouseY, isVisible]);
 
   // Don't render on touch devices
-  if (typeof window !== 'undefined' && 'ontouchstart' in window) {
-    return null
+  if (typeof window !== "undefined" && "ontouchstart" in window) {
+    return null;
   }
 
   return (
@@ -47,8 +47,8 @@ export function CursorGlow() {
       style={{
         x,
         y,
-        translateX: '-50%',
-        translateY: '-50%',
+        translateX: "-50%",
+        translateY: "-50%",
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
@@ -58,11 +58,11 @@ export function CursorGlow() {
       <div
         className="w-[600px] h-[600px] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%)',
+          background: "radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%)",
         }}
       />
     </motion.div>
-  )
+  );
 }
 
-export default CursorGlow
+export default CursorGlow;

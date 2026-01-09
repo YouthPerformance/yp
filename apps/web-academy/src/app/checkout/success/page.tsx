@@ -3,12 +3,12 @@
 // Shown after successful Stripe payment
 // ===================================================================
 
-'use client';
+"use client";
 
-import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { useUserContext } from '@/contexts/UserContext';
+import { motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useUserContext } from "@/contexts/UserContext";
 
 interface SessionStatus {
   status: string;
@@ -23,21 +23,21 @@ function LoadingSpinner() {
       <div className="relative w-12 h-12">
         <div
           className="absolute inset-0 border-2 rounded-full"
-          style={{ borderColor: 'var(--accent-primary)', opacity: 0.2 }}
+          style={{ borderColor: "var(--accent-primary)", opacity: 0.2 }}
         />
         <motion.div
           className="absolute inset-0 border-2 border-transparent rounded-full"
-          style={{ borderTopColor: 'var(--accent-primary)' }}
+          style={{ borderTopColor: "var(--accent-primary)" }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         />
       </div>
       {/* Loading text - Space Grotesk */}
       <span
         className="text-xs tracking-[0.2em] uppercase"
         style={{
-          fontFamily: 'var(--font-loading)',
-          color: 'var(--text-tertiary)'
+          fontFamily: "var(--font-loading)",
+          color: "var(--text-tertiary)",
         }}
       >
         Loading
@@ -54,11 +54,11 @@ function CheckoutSuccessContent() {
   const [sessionStatus, setSessionStatus] = useState<SessionStatus | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const sessionId = searchParams.get('session_id');
+  const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
     if (!sessionId) {
-      router.push('/home');
+      router.push("/home");
       return;
     }
 
@@ -79,7 +79,7 @@ function CheckoutSuccessContent() {
   // Auto-redirect after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push('/home');
+      router.push("/home");
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -89,19 +89,19 @@ function CheckoutSuccessContent() {
     return <LoadingSpinner />;
   }
 
-  const isPaid = sessionStatus?.status === 'paid';
+  const isPaid = sessionStatus?.status === "paid";
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
       <motion.div
         className="max-w-md w-full rounded-3xl p-8 text-center"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
       >
         {isPaid ? (
           <>
@@ -109,12 +109,12 @@ function CheckoutSuccessContent() {
             <motion.div
               className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
               style={{
-                background: 'linear-gradient(135deg, var(--accent-primary) 0%, #00a3b8 100%)',
-                boxShadow: '0 0 60px rgba(0, 246, 224, 0.4)',
+                background: "linear-gradient(135deg, var(--accent-primary) 0%, #00a3b8 100%)",
+                boxShadow: "0 0 60px rgba(0, 246, 224, 0.4)",
               }}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', damping: 15 }}
+              transition={{ delay: 0.2, type: "spring", damping: 15 }}
             >
               <motion.span
                 className="text-5xl"
@@ -128,45 +128,36 @@ function CheckoutSuccessContent() {
 
             <h1
               className="font-bebas text-4xl tracking-wider mb-4"
-              style={{ color: 'var(--text-primary)' }}
+              style={{ color: "var(--text-primary)" }}
             >
               WELCOME TO THE PACK
             </h1>
 
-            <p
-              className="text-lg mb-6"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Your transformation begins now, {user?.name || 'Athlete'}!
+            <p className="text-lg mb-6" style={{ color: "var(--text-secondary)" }}>
+              Your transformation begins now, {user?.name || "Athlete"}!
             </p>
 
             <div
               className="p-4 rounded-xl mb-6"
               style={{
-                backgroundColor: 'rgba(0, 246, 224, 0.1)',
-                border: '1px solid rgba(0, 246, 224, 0.3)',
+                backgroundColor: "rgba(0, 246, 224, 0.1)",
+                border: "1px solid rgba(0, 246, 224, 0.3)",
               }}
             >
-              <p
-                className="text-sm font-medium"
-                style={{ color: 'var(--accent-primary)' }}
-              >
+              <p className="text-sm font-medium" style={{ color: "var(--accent-primary)" }}>
                 Barefoot Reset - 42 Day Program
               </p>
-              <p
-                className="text-xs mt-1"
-                style={{ color: 'var(--text-tertiary)' }}
-              >
+              <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                 Full access unlocked
               </p>
             </div>
 
             <motion.button
-              onClick={() => router.push('/home')}
+              onClick={() => router.push("/home")}
               className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider"
               style={{
-                backgroundColor: 'var(--accent-primary)',
-                color: 'var(--bg-primary)',
+                backgroundColor: "var(--accent-primary)",
+                color: "var(--bg-primary)",
               }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -174,10 +165,7 @@ function CheckoutSuccessContent() {
               START TRAINING
             </motion.button>
 
-            <p
-              className="text-xs mt-4"
-              style={{ color: 'var(--text-tertiary)' }}
-            >
+            <p className="text-xs mt-4" style={{ color: "var(--text-tertiary)" }}>
               Redirecting in 5 seconds...
             </p>
           </>
@@ -188,25 +176,22 @@ function CheckoutSuccessContent() {
 
             <h1
               className="font-bebas text-3xl tracking-wider mb-4"
-              style={{ color: 'var(--text-primary)' }}
+              style={{ color: "var(--text-primary)" }}
             >
               PROCESSING PAYMENT
             </h1>
 
-            <p
-              className="text-sm mb-6"
-              style={{ color: 'var(--text-secondary)' }}
-            >
+            <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
               Your payment is being processed. This may take a moment.
             </p>
 
             <motion.button
-              onClick={() => router.push('/home')}
+              onClick={() => router.push("/home")}
               className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider"
               style={{
-                backgroundColor: 'var(--bg-tertiary)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border-default)',
+                backgroundColor: "var(--bg-tertiary)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border-default)",
               }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

@@ -3,14 +3,14 @@
 // Main workout view with video, timer, and controls
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, SkipForward, ChevronLeft } from 'lucide-react';
-import Hls from 'hls.js';
-import { TimerCircle } from './TimerCircle';
-import type { Exercise } from '@/data/programs/basketball-chassis';
+import { AnimatePresence, motion } from "framer-motion";
+import Hls from "hls.js";
+import { ChevronLeft, Pause, Play, SkipForward } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { Exercise } from "@/data/programs/basketball-chassis";
+import { TimerCircle } from "./TimerCircle";
 
 interface ActiveWorkoutProps {
   exercise: Exercise;
@@ -41,7 +41,7 @@ export function ActiveWorkout({
     setTimeLeft(exercise.duration);
     setIsPaused(false);
     setShowSkipConfirm(false);
-  }, [exercise.id, exercise.duration]);
+  }, [exercise.duration]);
 
   // Timer countdown
   useEffect(() => {
@@ -65,7 +65,7 @@ export function ActiveWorkout({
     const video = videoRef.current;
     if (!video || !exercise.videoUrl) return;
 
-    const isHls = exercise.videoUrl.includes('.m3u8');
+    const isHls = exercise.videoUrl.includes(".m3u8");
 
     if (isHls && Hls.isSupported()) {
       const hls = new Hls({
@@ -83,7 +83,7 @@ export function ActiveWorkout({
       return () => {
         hls.destroy();
       };
-    } else if (isHls && video.canPlayType('application/vnd.apple.mpegurl')) {
+    } else if (isHls && video.canPlayType("application/vnd.apple.mpegurl")) {
       // Safari native HLS support
       video.src = exercise.videoUrl;
       if (!isPaused) {
@@ -95,7 +95,7 @@ export function ActiveWorkout({
         video.play().catch(() => {});
       }
     }
-  }, [exercise.videoUrl, exercise.id]);
+  }, [exercise.videoUrl, isPaused]);
 
   // Sync video with pause state
   useEffect(() => {
@@ -123,8 +123,8 @@ export function ActiveWorkout({
   }, [showSkipConfirm, onSkip]);
 
   const getSideLabel = () => {
-    if (!exercise.side || exercise.side === 'both') return null;
-    if (exercise.side === 'alternate') return 'Alternate Sides';
+    if (!exercise.side || exercise.side === "both") return null;
+    if (exercise.side === "alternate") return "Alternate Sides";
     return `${exercise.side.charAt(0).toUpperCase() + exercise.side.slice(1)} Side`;
   };
 
@@ -138,13 +138,7 @@ export function ActiveWorkout({
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
         {exercise.videoUrl ? (
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            loop
-            muted
-            playsInline
-          />
+          <video ref={videoRef} className="w-full h-full object-cover" loop muted playsInline />
         ) : (
           <div
             className="w-full h-full"
@@ -165,8 +159,8 @@ export function ActiveWorkout({
             onClick={onExit}
             className="flex items-center gap-1 px-3 py-2 rounded-full backdrop-blur-md"
             style={{
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              color: 'var(--text-primary)',
+              backgroundColor: "rgba(0,0,0,0.3)",
+              color: "var(--text-primary)",
             }}
             whileTap={{ scale: 0.95 }}
           >
@@ -177,8 +171,8 @@ export function ActiveWorkout({
           <div
             className="px-4 py-2 rounded-full text-xs font-medium backdrop-blur-md"
             style={{
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              color: 'var(--text-primary)',
+              backgroundColor: "rgba(0,0,0,0.3)",
+              color: "var(--text-primary)",
             }}
           >
             {exerciseIndex + 1} / {totalExercises}
@@ -204,7 +198,7 @@ export function ActiveWorkout({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="font-bebas text-4xl text-center mt-6 mb-2"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
             {exercise.name.toUpperCase()}
           </motion.h1>
@@ -229,7 +223,7 @@ export function ActiveWorkout({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="text-sm text-center px-8 max-w-xs"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: "var(--text-secondary)" }}
           >
             {exercise.cue}
           </motion.p>
@@ -249,9 +243,9 @@ export function ActiveWorkout({
             whileTap={{ scale: 0.95 }}
           >
             {isPaused ? (
-              <Play className="w-8 h-8 ml-1" fill="white" style={{ color: 'white' }} />
+              <Play className="w-8 h-8 ml-1" fill="white" style={{ color: "white" }} />
             ) : (
-              <Pause className="w-8 h-8" fill="white" style={{ color: 'white' }} />
+              <Pause className="w-8 h-8" fill="white" style={{ color: "white" }} />
             )}
           </motion.button>
         </div>
@@ -262,20 +256,23 @@ export function ActiveWorkout({
             onClick={handleSkipPress}
             className="flex items-center gap-2 px-6 py-3 rounded-full backdrop-blur-md"
             style={{
-              backgroundColor: showSkipConfirm ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.1)',
-              color: showSkipConfirm ? '#EF4444' : 'var(--text-tertiary)',
+              backgroundColor: showSkipConfirm ? "rgba(239,68,68,0.3)" : "rgba(255,255,255,0.1)",
+              color: showSkipConfirm ? "#EF4444" : "var(--text-tertiary)",
             }}
             whileTap={{ scale: 0.95 }}
           >
             <SkipForward className="w-4 h-4" />
             <span className="text-sm font-medium">
-              {showSkipConfirm ? 'Tap again to skip' : 'Skip'}
+              {showSkipConfirm ? "Tap again to skip" : "Skip"}
             </span>
           </motion.button>
         </div>
 
         {/* Progress Bar */}
-        <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+        <div
+          className="h-1 rounded-full overflow-hidden"
+          style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+        >
           <motion.div
             className="h-full"
             style={{ backgroundColor: themeColor }}
@@ -302,11 +299,11 @@ export function ActiveWorkout({
               >
                 <p
                   className="font-bebas text-3xl tracking-wider mb-2"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: "var(--text-primary)" }}
                 >
                   PAUSED
                 </p>
-                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
                   Tap play to continue
                 </p>
               </motion.div>

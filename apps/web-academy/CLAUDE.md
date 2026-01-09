@@ -12,7 +12,7 @@
 |-------|------------|
 | Framework | Next.js 15 (App Router) |
 | State | Convex (server) + Zustand (client) |
-| Auth | Clerk |
+| Auth | BetterAuth |
 | Payments | Stripe |
 | Styling | Tailwind CSS |
 | Animation | Framer Motion |
@@ -115,11 +115,21 @@ pnpm lint
 ```bash
 # Required
 NEXT_PUBLIC_CONVEX_URL=
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
+NEXT_PUBLIC_SITE_URL=
+BETTER_AUTH_SECRET=
 STRIPE_SECRET_KEY=
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 ANTHROPIC_API_KEY=
+
+# Optional - OAuth Providers
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+APPLE_CLIENT_ID=
+APPLE_CLIENT_SECRET=
+
+# Optional - Email (Resend)
+RESEND_API_KEY=
+EMAIL_FROM=
 ```
 
 ---
@@ -132,6 +142,21 @@ ANTHROPIC_API_KEY=
 | `XpCounter` | `components/modules/` | XP display |
 | `CheckCard` | `components/modules/cards/` | Quiz cards |
 | `WorkoutPlayer` | `components/workout/` | Video workout |
+
+---
+
+## Anti-Patterns (Don't Repeat)
+
+> **Pattern:** App-specific mistakes captured via `/retro`.
+
+| Don't | Instead | Why | Added |
+|-------|---------|-----|-------|
+| Use `Date.now()` or `Math.random()` in SSR | Use `useEffect` or pass as prop | Hydration mismatch errors | 2026-01 |
+| Import Convex directly | Use `@yp/alpha/convex/_generated/api` | One Brain - database lives in alpha | 2026-01 |
+| Create new auth logic | Use `useSession` from `@/lib/auth` | Auth is already solved via BetterAuth | 2026-01 |
+| Skip `suppressHydrationWarning` for timestamps | Add attribute or use ClientOnly wrapper | SSR/client mismatch warnings | 2026-01 |
+| Put API keys in `NEXT_PUBLIC_*` vars | Use server-only env vars for secrets | Public vars are exposed to client | 2026-01 |
+| Use relative imports for @yp packages | Use `@yp/alpha/...` absolute paths | Build resolution failures | 2026-01 |
 
 ---
 

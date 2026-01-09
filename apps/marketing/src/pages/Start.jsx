@@ -1,15 +1,15 @@
-import { useEffect } from 'react'
-import { useOnboarding } from '../context/OnboardingContext'
+import { useEffect } from "react";
+import { useOnboarding } from "../context/OnboardingContext";
 
 // Fallback page if modal is blocked
 function Start() {
-  const { openModal, isModalOpen } = useOnboarding()
+  const { openModal, isModalOpen } = useOnboarding();
 
   useEffect(() => {
     if (!isModalOpen) {
-      openModal()
+      openModal();
     }
-  }, [openModal, isModalOpen])
+  }, [openModal, isModalOpen]);
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
@@ -18,7 +18,7 @@ function Start() {
         <p className="text-dark-text-secondary">Loading your starter plan...</p>
       </div>
     </div>
-  )
+  );
 }
 
-export default Start
+export default Start;

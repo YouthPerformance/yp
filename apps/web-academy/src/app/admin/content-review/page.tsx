@@ -136,22 +136,22 @@ export default function ContentReviewPage() {
             Status:
           </span>
           <div className="flex gap-1 flex-wrap">
-            {(["ALL", "DRAFT", "IN_REVIEW", "CHANGES_REQUESTED", "APPROVED", "PUBLISHED"] as const).map(
-              (status) => (
-                <button
-                  key={status}
-                  onClick={() => setStatusFilter(status)}
-                  className="px-3 py-1 rounded-lg text-xs font-medium transition-colors"
-                  style={{
-                    backgroundColor:
-                      statusFilter === status ? "var(--accent-primary)" : "var(--bg-tertiary)",
-                    color: statusFilter === status ? "var(--bg-primary)" : "var(--text-secondary)",
-                  }}
-                >
-                  {status.replace("_", " ")}
-                </button>
-              ),
-            )}
+            {(
+              ["ALL", "DRAFT", "IN_REVIEW", "CHANGES_REQUESTED", "APPROVED", "PUBLISHED"] as const
+            ).map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className="px-3 py-1 rounded-lg text-xs font-medium transition-colors"
+                style={{
+                  backgroundColor:
+                    statusFilter === status ? "var(--accent-primary)" : "var(--bg-tertiary)",
+                  color: statusFilter === status ? "var(--bg-primary)" : "var(--text-secondary)",
+                }}
+              >
+                {status.replace("_", " ")}
+              </button>
+            ))}
           </div>
         </div>
 

@@ -7,7 +7,7 @@
  * - Short TTL for dynamic content, long TTL for static
  */
 
-import type {CachingStrategy} from '@shopify/hydrogen';
+import type { CachingStrategy } from "@shopify/hydrogen";
 
 /**
  * Cache durations (in seconds)
@@ -28,9 +28,9 @@ export const CACHE_DURATIONS = {
  * Content is served stale while fresh content is fetched in background
  */
 export const SWR_DURATIONS = {
-  SHORT: 60 * 5,      // 5 min stale window
-  MEDIUM: 60 * 30,    // 30 min stale window
-  LONG: 60 * 60 * 2,  // 2 hour stale window
+  SHORT: 60 * 5, // 5 min stale window
+  MEDIUM: 60 * 30, // 30 min stale window
+  LONG: 60 * 60 * 2, // 2 hour stale window
 } as const;
 
 /**
@@ -57,59 +57,64 @@ export const createCacheStrategies = (storefront: {
    * Homepage - cached for 10 min, SWR for 30 min
    * Balance between freshness and speed
    */
-  homepage: () => storefront.CacheCustom({
-    mode: 'public',
-    maxAge: CACHE_DURATIONS.MEDIUM,
-    staleWhileRevalidate: SWR_DURATIONS.MEDIUM,
-    sMaxAge: CACHE_DURATIONS.MEDIUM,
-    staleIfError: CACHE_DURATIONS.DAY,
-  }),
+  homepage: () =>
+    storefront.CacheCustom({
+      mode: "public",
+      maxAge: CACHE_DURATIONS.MEDIUM,
+      staleWhileRevalidate: SWR_DURATIONS.MEDIUM,
+      sMaxAge: CACHE_DURATIONS.MEDIUM,
+      staleIfError: CACHE_DURATIONS.DAY,
+    }),
 
   /**
    * Product pages - cached for 1 min, SWR for 5 min
    * Shorter TTL for inventory accuracy
    */
-  product: () => storefront.CacheCustom({
-    mode: 'public',
-    maxAge: CACHE_DURATIONS.SHORT,
-    staleWhileRevalidate: SWR_DURATIONS.SHORT,
-    sMaxAge: CACHE_DURATIONS.SHORT,
-    staleIfError: CACHE_DURATIONS.LONG,
-  }),
+  product: () =>
+    storefront.CacheCustom({
+      mode: "public",
+      maxAge: CACHE_DURATIONS.SHORT,
+      staleWhileRevalidate: SWR_DURATIONS.SHORT,
+      sMaxAge: CACHE_DURATIONS.SHORT,
+      staleIfError: CACHE_DURATIONS.LONG,
+    }),
 
   /**
    * Collections - cached for 10 min, SWR for 30 min
    * Collections change less frequently than individual products
    */
-  collection: () => storefront.CacheCustom({
-    mode: 'public',
-    maxAge: CACHE_DURATIONS.MEDIUM,
-    staleWhileRevalidate: SWR_DURATIONS.MEDIUM,
-    sMaxAge: CACHE_DURATIONS.MEDIUM,
-    staleIfError: CACHE_DURATIONS.DAY,
-  }),
+  collection: () =>
+    storefront.CacheCustom({
+      mode: "public",
+      maxAge: CACHE_DURATIONS.MEDIUM,
+      staleWhileRevalidate: SWR_DURATIONS.MEDIUM,
+      sMaxAge: CACHE_DURATIONS.MEDIUM,
+      staleIfError: CACHE_DURATIONS.DAY,
+    }),
 
   /**
    * All products listing - cached for 10 min
    */
-  productListing: () => storefront.CacheCustom({
-    mode: 'public',
-    maxAge: CACHE_DURATIONS.MEDIUM,
-    staleWhileRevalidate: SWR_DURATIONS.MEDIUM,
-    sMaxAge: CACHE_DURATIONS.MEDIUM,
-    staleIfError: CACHE_DURATIONS.DAY,
-  }),
+  productListing: () =>
+    storefront.CacheCustom({
+      mode: "public",
+      maxAge: CACHE_DURATIONS.MEDIUM,
+      staleWhileRevalidate: SWR_DURATIONS.MEDIUM,
+      sMaxAge: CACHE_DURATIONS.MEDIUM,
+      staleIfError: CACHE_DURATIONS.DAY,
+    }),
 
   /**
    * Static pages (legal, about) - cached for 1 day
    */
-  static: () => storefront.CacheCustom({
-    mode: 'public',
-    maxAge: CACHE_DURATIONS.DAY,
-    staleWhileRevalidate: CACHE_DURATIONS.DAY,
-    sMaxAge: CACHE_DURATIONS.DAY,
-    staleIfError: CACHE_DURATIONS.DAY,
-  }),
+  static: () =>
+    storefront.CacheCustom({
+      mode: "public",
+      maxAge: CACHE_DURATIONS.DAY,
+      staleWhileRevalidate: CACHE_DURATIONS.DAY,
+      sMaxAge: CACHE_DURATIONS.DAY,
+      staleIfError: CACHE_DURATIONS.DAY,
+    }),
 
   /**
    * Cart - never cached (user-specific)
@@ -119,12 +124,13 @@ export const createCacheStrategies = (storefront: {
   /**
    * Search results - short cache
    */
-  search: () => storefront.CacheCustom({
-    mode: 'public',
-    maxAge: CACHE_DURATIONS.SHORT,
-    staleWhileRevalidate: SWR_DURATIONS.SHORT,
-    sMaxAge: CACHE_DURATIONS.SHORT,
-  }),
+  search: () =>
+    storefront.CacheCustom({
+      mode: "public",
+      maxAge: CACHE_DURATIONS.SHORT,
+      staleWhileRevalidate: SWR_DURATIONS.SHORT,
+      sMaxAge: CACHE_DURATIONS.SHORT,
+    }),
 });
 
 /**
@@ -136,28 +142,28 @@ export const CACHE_HEADERS = {
    * Standard cacheable response
    */
   standard: {
-    'Cache-Control': `public, max-age=${CACHE_DURATIONS.MEDIUM}, stale-while-revalidate=${SWR_DURATIONS.MEDIUM}`,
+    "Cache-Control": `public, max-age=${CACHE_DURATIONS.MEDIUM}, stale-while-revalidate=${SWR_DURATIONS.MEDIUM}`,
   },
 
   /**
    * Product pages - shorter cache for inventory accuracy
    */
   product: {
-    'Cache-Control': `public, max-age=${CACHE_DURATIONS.SHORT}, stale-while-revalidate=${SWR_DURATIONS.SHORT}`,
+    "Cache-Control": `public, max-age=${CACHE_DURATIONS.SHORT}, stale-while-revalidate=${SWR_DURATIONS.SHORT}`,
   },
 
   /**
    * Static content - long cache
    */
   static: {
-    'Cache-Control': `public, max-age=${CACHE_DURATIONS.DAY}, immutable`,
+    "Cache-Control": `public, max-age=${CACHE_DURATIONS.DAY}, immutable`,
   },
 
   /**
    * No cache (cart, checkout, user-specific)
    */
   none: {
-    'Cache-Control': 'no-store, no-cache, must-revalidate',
+    "Cache-Control": "no-store, no-cache, must-revalidate",
   },
 } as const;
 
@@ -169,11 +175,11 @@ export const addServerTimingHeader = (
   headers: Headers,
   name: string,
   duration: number,
-  description?: string
+  description?: string,
 ) => {
-  const existing = headers.get('Server-Timing') || '';
+  const existing = headers.get("Server-Timing") || "";
   const timing = description
     ? `${name};dur=${duration};desc="${description}"`
     : `${name};dur=${duration}`;
-  headers.set('Server-Timing', existing ? `${existing}, ${timing}` : timing);
+  headers.set("Server-Timing", existing ? `${existing}, ${timing}` : timing);
 };

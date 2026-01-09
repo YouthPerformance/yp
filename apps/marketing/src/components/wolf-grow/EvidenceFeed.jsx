@@ -6,69 +6,69 @@
  * PARENT (green) vs ATHLETE (cyan) badges
  */
 
-import { useRef, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 
 // Testimonial data
 const PARENT_TESTIMONIALS = [
   {
     quote: "Worth every penny. The doctor bills stopped after week 3.",
     name: "Sarah Jenkins",
-    image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "His confidence is back. He isn't scared to sprint anymore.",
     name: "David M.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "Finally, a program that actually explains the 'why' to parents.",
     name: "Michelle R.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "We tried 3 other programs. This is the only one that stuck.",
     name: "James K.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "The 8-minute sessions fit our crazy schedule perfectly.",
     name: "Lisa Chen",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&h=600&fit=crop",
   },
-]
+];
 
 const ATHLETE_TESTIMONIALS = [
   {
     quote: "Added 4 inches to my vert. The Wolf Protocol is a cheat code.",
     name: "Marcus T. (14)",
-    image: "https://images.unsplash.com/photo-1519766304800-c9519df914ce?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1519766304800-c9519df914ce?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "My heels stopped hurting in 3 days. Level 12 Hunter now.",
     name: "Jake S. (12)",
-    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "I can actually feel my feet now. Cuts are way sharper.",
     name: "Aiden P. (15)",
-    image: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "Coach noticed the difference in my first step. No cap.",
     name: "Tyler W. (13)",
-    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=600&fit=crop",
   },
   {
     quote: "The ankle exercises are fire. Never rolling my ankle again.",
     name: "Jordan M. (11)",
-    image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=400&h=600&fit=crop"
+    image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=400&h=600&fit=crop",
   },
-]
+];
 
 // Single testimonial card
 function TestimonialCard({ testimonial, type }) {
-  const isAthlete = type === 'athlete'
+  const isAthlete = type === "athlete";
 
   return (
     <article className="group relative shrink-0 w-[240px] h-[380px] rounded-lg overflow-hidden border border-white/10 hover:border-cyan-500 transition-all duration-300 cursor-pointer">
@@ -92,18 +92,18 @@ function TestimonialCard({ testimonial, type }) {
       {/* Content Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-4 flex flex-col justify-end">
         {/* Badge */}
-        <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold w-fit mb-2 backdrop-blur-md ${
-          isAthlete
-            ? 'bg-cyan-900/80 text-cyan-400 border border-cyan-500/30'
-            : 'bg-emerald-900/80 text-emerald-400 border border-emerald-500/30'
-        }`}>
-          {isAthlete ? 'ATHLETE' : 'PARENT'}
+        <span
+          className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold w-fit mb-2 backdrop-blur-md ${
+            isAthlete
+              ? "bg-cyan-900/80 text-cyan-400 border border-cyan-500/30"
+              : "bg-emerald-900/80 text-emerald-400 border border-emerald-500/30"
+          }`}
+        >
+          {isAthlete ? "ATHLETE" : "PARENT"}
         </span>
 
         {/* Quote */}
-        <p className="text-white font-medium text-sm leading-snug mb-2">
-          "{testimonial.quote}"
-        </p>
+        <p className="text-white font-medium text-sm leading-snug mb-2">"{testimonial.quote}"</p>
 
         {/* Name */}
         <div className="flex items-center gap-2">
@@ -114,16 +114,16 @@ function TestimonialCard({ testimonial, type }) {
       {/* Hover Glow Effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-[inset_0_0_30px_rgba(0,255,255,0.1)]" />
     </article>
-  )
+  );
 }
 
 // Marquee row component
-function MarqueeRow({ testimonials, type, direction = 'left', speed = 60 }) {
-  const containerRef = useRef(null)
-  const [isPaused, setIsPaused] = useState(false)
+function MarqueeRow({ testimonials, type, direction = "left", speed = 60 }) {
+  const containerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Duplicate items for seamless loop
-  const items = [...testimonials, ...testimonials, ...testimonials]
+  const items = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <div
@@ -135,18 +135,18 @@ function MarqueeRow({ testimonials, type, direction = 'left', speed = 60 }) {
         ref={containerRef}
         className="flex gap-4"
         animate={{
-          x: direction === 'left' ? ['0%', '-33.33%'] : ['-33.33%', '0%']
+          x: direction === "left" ? ["0%", "-33.33%"] : ["-33.33%", "0%"],
         }}
         transition={{
           x: {
             duration: speed,
             repeat: Infinity,
-            ease: 'linear',
-            repeatType: 'loop'
-          }
+            ease: "linear",
+            repeatType: "loop",
+          },
         }}
         style={{
-          animationPlayState: isPaused ? 'paused' : 'running'
+          animationPlayState: isPaused ? "paused" : "running",
         }}
       >
         {items.map((testimonial, index) => (
@@ -158,7 +158,7 @@ function MarqueeRow({ testimonials, type, direction = 'left', speed = 60 }) {
         ))}
       </motion.div>
     </div>
-  )
+  );
 }
 
 export default function EvidenceFeed() {
@@ -168,7 +168,8 @@ export default function EvidenceFeed() {
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")"
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
         }}
       />
 
@@ -186,7 +187,10 @@ export default function EvidenceFeed() {
 
             {/* Title */}
             <h2 className="font-bebas text-4xl md:text-5xl lg:text-6xl tracking-wide text-white">
-              THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-500">PROOF</span>
+              THE{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-500">
+                PROOF
+              </span>
             </h2>
           </div>
 
@@ -244,5 +248,5 @@ export default function EvidenceFeed() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

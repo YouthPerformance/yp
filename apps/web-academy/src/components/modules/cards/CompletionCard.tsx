@@ -3,13 +3,13 @@
 // Module finish screen with badge, XP, and unlocked content
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Trophy, ArrowRight, Share2, Zap } from 'lucide-react';
-import Link from 'next/link';
-import type { CompletionCard as CompletionCardType, ContentMode, Badge } from '@/data/modules/types';
+import { motion } from "framer-motion";
+import { ArrowRight, Share2, Trophy, Zap } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import type { CompletionCard as CompletionCardType, ContentMode } from "@/data/modules/types";
 
 interface CompletionCardProps {
   card: CompletionCardType;
@@ -38,7 +38,7 @@ export function CompletionCard({
   // Format time
   const minutes = Math.floor(timeElapsed / 60);
   const seconds = timeElapsed % 60;
-  const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const timeString = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
   useEffect(() => {
     // Trigger confetti after a short delay
@@ -57,7 +57,7 @@ export function CompletionCard({
       <motion.div
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+        transition={{ type: "spring", stiffness: 200, damping: 15 }}
         className="flex justify-center mb-6"
       >
         <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent-gold to-accent-gold/50 flex items-center justify-center shadow-[0_0_40px_rgba(255,215,0,0.4)]">
@@ -97,9 +97,7 @@ export function CompletionCard({
       >
         <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-gold/10 border border-accent-gold/30">
           <Zap className="w-6 h-6 text-accent-gold" />
-          <span className="text-2xl font-bold text-accent-gold">
-            +{xpEarned} XP
-          </span>
+          <span className="text-2xl font-bold text-accent-gold">+{xpEarned} XP</span>
         </div>
       </motion.div>
 
@@ -135,9 +133,9 @@ export function CompletionCard({
               <Link
                 key={item.id}
                 href={
-                  item.type === 'Product'
+                  item.type === "Product"
                     ? `/shop/${item.handle}`
-                    : item.type === 'DrillStack'
+                    : item.type === "DrillStack"
                       ? `/playbook/drills/${item.id}`
                       : `/programs/${item.id}`
                 }
@@ -145,9 +143,9 @@ export function CompletionCard({
                          hover:border-accent-primary/50 transition-colors group"
               >
                 <div className="w-12 h-12 rounded-lg bg-accent-primary/10 flex items-center justify-center">
-                  {item.type === 'DrillStack' && <span className="text-xl">🎬</span>}
-                  {item.type === 'Program' && <span className="text-xl">📚</span>}
-                  {item.type === 'Product' && <span className="text-xl">🛒</span>}
+                  {item.type === "DrillStack" && <span className="text-xl">🎬</span>}
+                  {item.type === "Program" && <span className="text-xl">📚</span>}
+                  {item.type === "Product" && <span className="text-xl">🛒</span>}
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-white group-hover:text-accent-primary transition-colors">
@@ -175,9 +173,7 @@ export function CompletionCard({
         <h3 className="text-xl font-bebas uppercase tracking-wide text-white mb-3">
           {content.headline}
         </h3>
-        {content.body && (
-          <p className="text-text-secondary whitespace-pre-line">{content.body}</p>
-        )}
+        {content.body && <p className="text-text-secondary whitespace-pre-line">{content.body}</p>}
       </motion.div>
 
       {/* Actions */}
@@ -201,7 +197,7 @@ export function CompletionCard({
             // Share functionality - could be implemented with Web Share API
             if (navigator.share) {
               navigator.share({
-                title: 'I completed Bulletproof Ankles!',
+                title: "I completed Bulletproof Ankles!",
                 text: `I scored ${percentage}% on the Bulletproof Ankles module at YP Academy!`,
                 url: window.location.href,
               });
@@ -230,7 +226,7 @@ function ConfettiEffect() {
     delay: Math.random() * 0.5,
     duration: 2 + Math.random() * 2,
     size: 6 + Math.random() * 8,
-    color: ['var(--accent-primary)', 'var(--accent-gold)', '#ffffff'][
+    color: ["var(--accent-primary)", "var(--accent-gold)", "#ffffff"][
       Math.floor(Math.random() * 3)
     ],
   }));
@@ -241,19 +237,19 @@ function ConfettiEffect() {
         <motion.div
           key={p.id}
           initial={{ y: -20, opacity: 1 }}
-          animate={{ y: '100vh', opacity: 0 }}
+          animate={{ y: "100vh", opacity: 0 }}
           transition={{
             duration: p.duration,
             delay: p.delay,
-            ease: 'easeIn',
+            ease: "easeIn",
           }}
           style={{
-            position: 'absolute',
+            position: "absolute",
             left: `${p.x}%`,
             width: p.size,
             height: p.size,
             backgroundColor: p.color,
-            borderRadius: Math.random() > 0.5 ? '50%' : '0',
+            borderRadius: Math.random() > 0.5 ? "50%" : "0",
           }}
         />
       ))}

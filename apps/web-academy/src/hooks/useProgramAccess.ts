@@ -3,15 +3,15 @@
 // Check user's access and progress for a program
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useQuery } from 'convex/react';
-import { api } from '@yp/alpha/convex/_generated/api';
-import { useUserContext } from '@/contexts/UserContext';
-import type { Id } from '@yp/alpha/convex/_generated/dataModel';
+import { api } from "@yp/alpha/convex/_generated/api";
+import type { Id } from "@yp/alpha/convex/_generated/dataModel";
+import { useQuery } from "convex/react";
+import { useUserContext } from "@/contexts/UserContext";
 
 // Dev mode detection
-const DEV_BYPASS_AUTH = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
+const DEV_BYPASS_AUTH = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === "true";
 
 export interface ProgramAccessState {
   /** Whether user has access to the program */
@@ -30,7 +30,7 @@ export interface ProgramAccessState {
   isLoading: boolean;
 
   /** User ID for mutations */
-  userId: Id<'users'> | null;
+  userId: Id<"users"> | null;
 }
 
 /**
@@ -41,18 +41,18 @@ export function useProgramAccess(programSlug: string): ProgramAccessState {
   const { user, isLoaded } = useUserContext();
 
   // Dev mode: skip Convex queries, return mock data
-  const isDevMode = DEV_BYPASS_AUTH && user?.clerkId === 'dev_clerk_123';
+  const isDevMode = DEV_BYPASS_AUTH && user?.authUserId === "dev_auth_123";
 
   // Check entitlement access using tickets.hasAccess (skip in dev mode)
   const accessResult = useQuery(
     api.tickets.hasAccess,
-    isDevMode ? 'skip' : { productSlug: programSlug }
+    isDevMode ? "skip" : { productSlug: programSlug },
   );
 
   // Get user's workout completions to derive program progress (skip in dev mode)
   const completions = useQuery(
     api.progress.getUserProgress,
-    isDevMode ? 'skip' : (user?._id ? { userId: user._id } : 'skip')
+    isDevMode ? "skip" : user?._id ? { userId: user._id } : "skip",
   );
 
   // Dev mode: return mock access state
@@ -97,7 +97,7 @@ export function useProgramAccess(programSlug: string): ProgramAccessState {
 
   // Calculate completed days from completions
   // Filter for this program's day range (1000-1007 for basketball-chassis)
-  const programDayOffset = programSlug === 'basketball-chassis' ? 1000 : 0;
+  const programDayOffset = programSlug === "basketball-chassis" ? 1000 : 0;
   const completedDays: number[] = [];
 
   if (completions) {
@@ -135,10 +135,7 @@ export function useProgramAccess(programSlug: string): ProgramAccessState {
 /**
  * Check if a specific day is unlocked
  */
-export function isDayUnlocked(
-  dayNumber: number,
-  completedDays: number[]
-): boolean {
+export function isDayUnlocked(dayNumber: number, completedDays: number[]): boolean {
   // Day 1 is always unlocked
   if (dayNumber === 1) return true;
 
@@ -152,19 +149,19 @@ export function isDayUnlocked(
 export function getDayStatus(
   dayNumber: number,
   completedDays: number[],
-  currentDay: number
-): 'locked' | 'unlocked' | 'current' | 'completed' {
+  currentDay: number,
+): "locked" | "unlocked" | "current" | "completed" {
   if (completedDays.includes(dayNumber)) {
-    return 'completed';
+    return "completed";
   }
 
   if (dayNumber === currentDay) {
-    return 'current';
+    return "current";
   }
 
   if (isDayUnlocked(dayNumber, completedDays)) {
-    return 'unlocked';
+    return "unlocked";
   }
 
-  return 'locked';
+  return "locked";
 }

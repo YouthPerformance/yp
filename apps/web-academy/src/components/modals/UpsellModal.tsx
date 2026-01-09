@@ -5,10 +5,10 @@
 // Intensity Budget: 8 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 interface UpsellModalProps {
   isOpen: boolean;
@@ -18,18 +18,18 @@ interface UpsellModalProps {
 }
 
 const FEATURES = [
-  { icon: '🦶', text: '42-Day Foundation Program' },
-  { icon: '📱', text: 'Daily Guided Workouts' },
-  { icon: '🎮', text: 'Gamified XP & Rank System' },
-  { icon: '🃏', text: 'Collectible Training Cards' },
-  { icon: '👨‍👩‍👧', text: 'Parent Progress Dashboard' },
-  { icon: '🏆', text: 'Leaderboards & Achievements' },
+  { icon: "🦶", text: "42-Day Foundation Program" },
+  { icon: "📱", text: "Daily Guided Workouts" },
+  { icon: "🎮", text: "Gamified XP & Rank System" },
+  { icon: "🃏", text: "Collectible Training Cards" },
+  { icon: "👨‍👩‍👧", text: "Parent Progress Dashboard" },
+  { icon: "🏆", text: "Leaderboards & Achievements" },
 ];
 
 const PRICE = {
   original: 129,
   sale: 88,
-  currency: '$',
+  currency: "$",
 };
 
 export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: UpsellModalProps) {
@@ -41,10 +41,10 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
     setError(null);
 
     try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
+      const response = await fetch("/api/checkout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({}),
       });
@@ -52,21 +52,21 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
+        throw new Error(data.error || "Failed to create checkout session");
       }
 
       // Redirect to Stripe Checkout
       if (data.url) {
         window.location.href = data.url;
       } else {
-        throw new Error('No checkout URL returned');
+        throw new Error("No checkout URL returned");
       }
 
       // Call optional onPurchase callback
       onPurchase?.();
     } catch (err) {
-      console.error('[UpsellModal] Checkout error:', err);
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      console.error("[UpsellModal] Checkout error:", err);
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setIsLoading(false);
     }
   };
@@ -78,7 +78,7 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
           {/* Backdrop */}
           <motion.div
             className="fixed inset-0 z-50"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -89,40 +89,41 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
           <motion.div
             className="fixed inset-x-4 top-1/2 z-50 max-w-md mx-auto"
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
-            animate={{ opacity: 1, y: '-50%', scale: 1 }}
+            animate={{ opacity: 1, y: "-50%", scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             <div
               className="rounded-3xl overflow-hidden"
               style={{
-                backgroundColor: 'var(--bg-secondary)',
-                border: '1px solid var(--border-default)',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                backgroundColor: "var(--bg-secondary)",
+                border: "1px solid var(--border-default)",
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
               }}
             >
               {/* Header with gradient */}
               <div
                 className="relative px-6 pt-8 pb-6 text-center"
                 style={{
-                  background: 'linear-gradient(180deg, rgba(0, 246, 224, 0.15) 0%, transparent 100%)',
+                  background:
+                    "linear-gradient(180deg, rgba(0, 246, 224, 0.15) 0%, transparent 100%)",
                 }}
               >
                 {/* Close button */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: 'var(--bg-tertiary)' }}
+                  style={{ backgroundColor: "var(--bg-tertiary)" }}
                 >
-                  <span style={{ color: 'var(--text-tertiary)' }}>✕</span>
+                  <span style={{ color: "var(--text-tertiary)" }}>✕</span>
                 </button>
 
                 {/* Wolf icon with glow */}
                 <motion.div
                   className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center"
                   style={{
-                    background: 'linear-gradient(135deg, var(--accent-primary) 0%, #00a3b8 100%)',
-                    boxShadow: '0 0 40px rgba(0, 246, 224, 0.4)',
+                    background: "linear-gradient(135deg, var(--accent-primary) 0%, #00a3b8 100%)",
+                    boxShadow: "0 0 40px rgba(0, 246, 224, 0.4)",
                   }}
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -132,39 +133,32 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
 
                 <h2
                   className="font-bebas text-3xl tracking-wider mb-2"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: "var(--text-primary)" }}
                 >
                   UNLOCK YOUR JOURNEY
                 </h2>
-                <p
-                  className="text-sm"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {athleteName ? `${athleteName}, transform` : 'Transform'} your training with
-                  the complete Barefoot Reset program
+                <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                  {athleteName ? `${athleteName}, transform` : "Transform"} your training with the
+                  complete Barefoot Reset program
                 </p>
               </div>
 
               {/* Pricing */}
               <div className="px-6 py-4">
                 <div className="flex items-center justify-center gap-4 mb-4">
-                  <span
-                    className="text-2xl line-through"
-                    style={{ color: 'var(--text-tertiary)' }}
-                  >
-                    {PRICE.currency}{PRICE.original}
+                  <span className="text-2xl line-through" style={{ color: "var(--text-tertiary)" }}>
+                    {PRICE.currency}
+                    {PRICE.original}
                   </span>
                   <div className="flex items-baseline">
                     <span
                       className="font-bebas text-6xl"
-                      style={{ color: 'var(--accent-primary)' }}
+                      style={{ color: "var(--accent-primary)" }}
                     >
-                      {PRICE.currency}{PRICE.sale}
+                      {PRICE.currency}
+                      {PRICE.sale}
                     </span>
-                    <span
-                      className="text-sm ml-1"
-                      style={{ color: 'var(--text-tertiary)' }}
-                    >
+                    <span className="text-sm ml-1" style={{ color: "var(--text-tertiary)" }}>
                       one-time
                     </span>
                   </div>
@@ -175,12 +169,13 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
                   <span
                     className="px-4 py-1 rounded-full text-sm font-medium"
                     style={{
-                      backgroundColor: 'rgba(0, 246, 224, 0.15)',
-                      color: 'var(--accent-primary)',
-                      border: '1px solid var(--accent-primary)',
+                      backgroundColor: "rgba(0, 246, 224, 0.15)",
+                      color: "var(--accent-primary)",
+                      border: "1px solid var(--accent-primary)",
                     }}
                   >
-                    Save {PRICE.currency}{PRICE.original - PRICE.sale} - Limited Time
+                    Save {PRICE.currency}
+                    {PRICE.original - PRICE.sale} - Limited Time
                   </span>
                 </div>
 
@@ -195,10 +190,7 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
                       transition={{ delay: 0.1 + i * 0.05 }}
                     >
                       <span className="text-lg">{feature.icon}</span>
-                      <span
-                        className="text-sm"
-                        style={{ color: 'var(--text-secondary)' }}
-                      >
+                      <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
                         {feature.text}
                       </span>
                     </motion.div>
@@ -212,9 +204,9 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
                   <div
                     className="p-3 rounded-lg text-sm text-center mb-2"
                     style={{
-                      backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                      color: '#ef4444',
-                      border: '1px solid rgba(220, 38, 38, 0.3)',
+                      backgroundColor: "rgba(220, 38, 38, 0.1)",
+                      color: "#ef4444",
+                      border: "1px solid rgba(220, 38, 38, 0.3)",
                     }}
                   >
                     {error}
@@ -226,9 +218,9 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
                   disabled={isLoading}
                   className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider relative overflow-hidden"
                   style={{
-                    backgroundColor: isLoading ? 'var(--bg-tertiary)' : 'var(--accent-primary)',
-                    color: isLoading ? 'var(--text-tertiary)' : 'var(--bg-primary)',
-                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    backgroundColor: isLoading ? "var(--bg-tertiary)" : "var(--accent-primary)",
+                    color: isLoading ? "var(--text-tertiary)" : "var(--bg-primary)",
+                    cursor: isLoading ? "not-allowed" : "pointer",
                   }}
                   whileHover={isLoading ? {} : { scale: 1.02 }}
                   whileTap={isLoading ? {} : { scale: 0.98 }}
@@ -238,12 +230,12 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
                       <motion.span
                         className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       />
                       REDIRECTING TO CHECKOUT...
                     </span>
                   ) : (
-                    'START MY TRANSFORMATION'
+                    "START MY TRANSFORMATION"
                   )}
                 </motion.button>
 
@@ -252,8 +244,8 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
                   disabled={isLoading}
                   className="w-full py-3 text-sm"
                   style={{
-                    color: 'var(--text-tertiary)',
-                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                    color: "var(--text-tertiary)",
+                    cursor: isLoading ? "not-allowed" : "pointer",
                     opacity: isLoading ? 0.5 : 1,
                   }}
                 >
@@ -265,26 +257,20 @@ export function UpsellModal({ isOpen, onClose, onPurchase, athleteName }: Upsell
               <div
                 className="px-6 py-4 text-center"
                 style={{
-                  backgroundColor: 'var(--bg-tertiary)',
-                  borderTop: '1px solid var(--border-default)',
+                  backgroundColor: "var(--bg-tertiary)",
+                  borderTop: "1px solid var(--border-default)",
                 }}
               >
                 <div className="flex items-center justify-center gap-6">
                   <div className="flex items-center gap-1">
                     <span className="text-lg">🔒</span>
-                    <span
-                      className="text-xs"
-                      style={{ color: 'var(--text-tertiary)' }}
-                    >
+                    <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
                       Secure Payment
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="text-lg">💯</span>
-                    <span
-                      className="text-xs"
-                      style={{ color: 'var(--text-tertiary)' }}
-                    >
+                    <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
                       30-Day Guarantee
                     </span>
                   </div>

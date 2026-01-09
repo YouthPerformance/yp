@@ -9,7 +9,7 @@ interface NeoBall3DCanvasProps {
   progress?: number;
   impulse?: number;
   sectionStart?: number; // Scroll progress (0-1) when ball section enters view
-  sectionEnd?: number;   // Scroll progress (0-1) when ball section exits view
+  sectionEnd?: number; // Scroll progress (0-1) when ball section exits view
 }
 
 // Shopify.supply style: scroll-bound horizontal rotation only

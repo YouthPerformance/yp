@@ -3,8 +3,8 @@
 // The Armor-Building System by James Scott
 // ═══════════════════════════════════════════════════════════
 
-import type { LearningModule, LearningSection, TeaserModule } from "../types";
 import { bpaTeaser } from "../bulletproof-ankles-teaser";
+import type { LearningModule, LearningSection, TeaserModule } from "../types";
 
 // ─────────────────────────────────────────────────────────────
 // SECTION 0: THE IMPOSSIBLE RECOVERY

@@ -3,7 +3,7 @@
 // Free lead magnet → Barefoot Reset Challenge ($88)
 // ═══════════════════════════════════════════════════════════
 
-import type { TeaserModule, LearningSection } from "../types";
+import type { LearningSection, TeaserModule } from "../types";
 
 // ─────────────────────────────────────────────────────────────
 // SECTION 0: THE PROOF (L1 - 5 cards)
@@ -152,7 +152,8 @@ const section0Proof: LearningSection = {
           isCorrect: true,
           feedback: {
             athlete: "That's it. Bulletproof in action.",
-            parent: "Correct. This outcome demonstrates the potential of proactive tissue preparation.",
+            parent:
+              "Correct. This outcome demonstrates the potential of proactive tissue preparation.",
           },
         },
         {
@@ -297,7 +298,7 @@ const section1GlassCannon: LearningSection = {
       content: {
         athlete: {
           headline: "THE HIDDEN COST",
-          body: "Every rolled ankle costs more than time.\n\nIt costs:\n→ Confidence (hesitation on cuts)\n→ Development (missed practice)\n→ Long-term health (repeat injuries)\n\nAnd the worst part?\n\nMost kids accept it as normal.\n\n\"Everyone gets hurt.\"\n\nNo. Not if you train smart.",
+          body: 'Every rolled ankle costs more than time.\n\nIt costs:\n→ Confidence (hesitation on cuts)\n→ Development (missed practice)\n→ Long-term health (repeat injuries)\n\nAnd the worst part?\n\nMost kids accept it as normal.\n\n"Everyone gets hurt."\n\nNo. Not if you train smart.',
           mediaType: null,
           mediaUrl: null,
           caption: null,
@@ -361,7 +362,8 @@ const section1GlassCannon: LearningSection = {
           isCorrect: true,
           feedback: {
             athlete: 'Exactly. More "protection" = more injuries. That\'s the paradox.',
-            parent: "Correct. This counterintuitive finding is central to understanding the problem.",
+            parent:
+              "Correct. This counterintuitive finding is central to understanding the problem.",
           },
         },
         {
@@ -567,7 +569,8 @@ const section2Science: LearningSection = {
           isCorrect: false,
           feedback: {
             athlete: "Rest is part of it, but load drives adaptation.",
-            parent: "Incorrect. While recovery is necessary, mechanical load drives tissue remodeling.",
+            parent:
+              "Incorrect. While recovery is necessary, mechanical load drives tissue remodeling.",
           },
         },
         {
@@ -579,7 +582,8 @@ const section2Science: LearningSection = {
           isCorrect: false,
           feedback: {
             athlete: "Genetics matter, but training matters more for this.",
-            parent: "Incorrect. While genetics influence baseline, tissue adaptation is highly trainable.",
+            parent:
+              "Incorrect. While genetics influence baseline, tissue adaptation is highly trainable.",
           },
         },
       ],
@@ -861,7 +865,8 @@ export const bpaTeaser: TeaserModule = {
   slug: "bulletproof-ankles-teaser",
   title: "Bulletproof Ankles",
   subtitle: "Free Foundations Course",
-  shortDescription: "Learn why ankle injuries keep happening — and the science behind preventing them.",
+  shortDescription:
+    "Learn why ankle injuries keep happening — and the science behind preventing them.",
   longDescription:
     "This free module teaches you the science behind bulletproof ankles. You'll understand the Glass Cannon problem, Davis's Law, and the R3 Protocol framework. No fluff, no upsell walls — just the knowledge you need to understand WHY before learning HOW.",
   sport: "Barefoot",

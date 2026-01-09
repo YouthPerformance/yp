@@ -224,7 +224,18 @@ function fastClassifyPain(transcript: string): ClassificationResponse | null {
   }
 
   // Clear negative responses
-  const negatives = ["no", "nah", "nope", "don't", "nothing", "i'm good", "i'm fine", "all good", "feeling good", "feel good"];
+  const negatives = [
+    "no",
+    "nah",
+    "nope",
+    "don't",
+    "nothing",
+    "i'm good",
+    "i'm fine",
+    "all good",
+    "feeling good",
+    "feel good",
+  ];
   if (negatives.some((neg) => lower.includes(neg))) {
     return {
       painDetected: false,
@@ -238,16 +249,18 @@ function fastClassifyPain(transcript: string): ClassificationResponse | null {
   if (bodyPart) {
     // Check if it's a possessive/reference pattern (my, the, just)
     const impliedPainPatterns = [
-      "my " + bodyPart,
-      "just " + bodyPart,
-      "just my " + bodyPart,
-      "yeah " + bodyPart,
-      "yes " + bodyPart,
-      "the " + bodyPart,
+      `my ${bodyPart}`,
+      `just ${bodyPart}`,
+      `just my ${bodyPart}`,
+      `yeah ${bodyPart}`,
+      `yes ${bodyPart}`,
+      `the ${bodyPart}`,
     ];
 
-    if (impliedPainPatterns.some((pattern) => lower.includes(pattern)) ||
-        lower.trim().split(/\s+/).length <= 4) {
+    if (
+      impliedPainPatterns.some((pattern) => lower.includes(pattern)) ||
+      lower.trim().split(/\s+/).length <= 4
+    ) {
       // Short response mentioning body part = pain implied
       return {
         painDetected: true,

@@ -3,18 +3,18 @@
 // Display XP earned during module (v2 economy)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface XpCounterProps {
   count: number;
   className?: string;
 }
 
-export function XpCounter({ count, className = '' }: XpCounterProps) {
+export function XpCounter({ count, className = "" }: XpCounterProps) {
   const [displayCount, setDisplayCount] = useState(count);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -61,7 +61,7 @@ interface ShardCounterProps {
   className?: string;
 }
 
-export function ShardCounter({ count, className = '' }: ShardCounterProps) {
+export function ShardCounter({ count, className = "" }: ShardCounterProps) {
   return (
     <div
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full
@@ -100,14 +100,14 @@ export function XpReward({ amount, show, onComplete }: XpRewardProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.5, y: 20 }}
       animate={{ opacity: show ? 1 : 0, scale: show ? 1 : 0.5, y: show ? 0 : 20 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
       className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50
                  flex flex-col items-center gap-2 pointer-events-none"
     >
       <motion.div
         initial={{ rotate: -15 }}
         animate={{ rotate: 15 }}
-        transition={{ repeat: 2, repeatType: 'reverse', duration: 0.15 }}
+        transition={{ repeat: 2, repeatType: "reverse", duration: 0.15 }}
       >
         <Zap className="w-16 h-16 text-accent-gold" />
       </motion.div>

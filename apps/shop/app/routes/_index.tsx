@@ -1,19 +1,22 @@
-import type {LoaderFunctionArgs, MetaFunction} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
-import {HorizontalScrollPage} from '~/components/animations/HorizontalScrollPage';
+import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunctionArgs, MetaFunction } from "@shopify/remix-oxygen";
+import { HorizontalScrollPage } from "~/components/animations/HorizontalScrollPage";
 
 export const meta: MetaFunction = () => {
   return [
-    {title: 'YP Shop | Premium Training Gear'},
-    {description: 'Premium training gear for young athletes. NeoBall silent basketball, training equipment, and more.'},
+    { title: "YP Shop | Premium Training Gear" },
+    {
+      description:
+        "Premium training gear for young athletes. NeoBall silent basketball, training equipment, and more.",
+    },
   ];
 };
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { storefront } = context;
 
   // Fetch featured products
-  const {products} = await storefront.query(FEATURED_PRODUCTS_QUERY);
+  const { products } = await storefront.query(FEATURED_PRODUCTS_QUERY);
 
   return {
     products: products.nodes,
@@ -21,9 +24,9 @@ export async function loader({context}: LoaderFunctionArgs) {
 }
 
 export default function Homepage() {
-  const {products} = useLoaderData<typeof loader>();
+  const { products } = useLoaderData<typeof loader>();
 
-return <HorizontalScrollPage products={products} />;
+  return <HorizontalScrollPage products={products} />;
 }
 
 const FEATURED_PRODUCTS_QUERY = `#graphql

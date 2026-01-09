@@ -6,10 +6,10 @@
 
 "use client";
 
+import { api } from "@yp/alpha/convex/_generated/api";
+import { useMutation } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@yp/alpha/convex/_generated/api";
 
 interface EmailCaptureModalProps {
   isOpen: boolean;
@@ -110,7 +110,8 @@ export function EmailCaptureModal({
               <div
                 className="h-3"
                 style={{
-                  background: "linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-gold) 100%)",
+                  background:
+                    "linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-gold) 100%)",
                 }}
               />
 
@@ -163,7 +164,10 @@ export function EmailCaptureModal({
                       className="p-4 rounded-xl space-y-3"
                       style={{ backgroundColor: "var(--bg-tertiary)" }}
                     >
-                      <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+                      <p
+                        className="text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         What you'll get:
                       </p>
                       <ul className="space-y-2">
@@ -172,7 +176,11 @@ export function EmailCaptureModal({
                           "Step-by-step instructions",
                           "Image guides for each exercise",
                         ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-2 text-sm" style={{ color: "var(--text-primary)" }}>
+                          <li
+                            key={i}
+                            className="flex items-center gap-2 text-sm"
+                            style={{ color: "var(--text-primary)" }}
+                          >
                             <span style={{ color: "var(--accent-cyan)" }}>✓</span>
                             {item}
                           </li>
@@ -191,7 +199,9 @@ export function EmailCaptureModal({
                           className="w-full px-4 py-3 rounded-xl text-base outline-none transition-all"
                           style={{
                             backgroundColor: "var(--bg-primary)",
-                            border: error ? "2px solid var(--accent-red)" : "1px solid var(--border-default)",
+                            border: error
+                              ? "2px solid var(--accent-red)"
+                              : "1px solid var(--border-default)",
                             color: "var(--text-primary)",
                           }}
                           disabled={isLoading}
@@ -208,7 +218,8 @@ export function EmailCaptureModal({
                         type="submit"
                         className="w-full py-4 rounded-xl font-bold text-black flex items-center justify-center gap-2"
                         style={{
-                          background: "linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-gold) 100%)",
+                          background:
+                            "linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-gold) 100%)",
                         }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}

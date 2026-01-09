@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  Navigation,
-  Hero,
-  CredentialsBar,
-  JourneyTimeline,
-  AthletesSection,
-  TestimonialCarousel,
-  Philosophy,
-  VenturesGrid,
-  Family,
-  FinalCTA,
-} from "./components";
+import { ConversionCTA, DualTrack, Hero, Navigation, Origin, Receipts } from "./components";
 
 export default function AdamPage() {
   return (
@@ -19,33 +8,21 @@ export default function AdamPage() {
       {/* Fixed Navigation */}
       <Navigation />
 
-      <main className="overflow-x-hidden">
-        {/* Section 1: Hero with Stats */}
+      <main className="overflow-x-hidden bg-bg-secondary">
+        {/* Section A: Hero - The Hook */}
         <Hero />
 
-        {/* Section 2: Credentials Bar */}
-        <CredentialsBar />
+        {/* Section B: Origin - The Real World Reset */}
+        <Origin />
 
-        {/* Section 3: Journey Timeline */}
-        <JourneyTimeline />
+        {/* Section C: Dual-Track Value Props */}
+        <DualTrack />
 
-        {/* Section 4: Athletes Developed */}
-        <AthletesSection />
+        {/* Section D: The Receipts - Social Proof */}
+        <Receipts />
 
-        {/* Section 5: Testimonials Carousel */}
-        <TestimonialCarousel />
-
-        {/* Section 6: Philosophy + NeoBall */}
-        <Philosophy />
-
-        {/* Section 7: Ventures Grid */}
-        <VenturesGrid />
-
-        {/* Section 8: Family / Beyond the Court */}
-        <Family />
-
-        {/* Section 9: Final CTA + Footer */}
-        <FinalCTA />
+        {/* Section E: Conversion CTA */}
+        <ConversionCTA />
       </main>
     </>
   );

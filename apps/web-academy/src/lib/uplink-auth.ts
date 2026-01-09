@@ -3,7 +3,7 @@
 // Verifies Bearer tokens for incoming GPT webhook requests
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 /**
  * Verify the GPT Actions Bearer token
@@ -36,9 +36,7 @@ export function verifyUplinkToken(request: NextRequest): boolean {
 /**
  * Get the author from the request, with validation
  */
-export function validateAuthor(
-  author: string | undefined
-): "ADAM" | "JAMES" | null {
+export function validateAuthor(author: string | undefined): "ADAM" | "JAMES" | null {
   if (author === "ADAM" || author === "JAMES") {
     return author;
   }

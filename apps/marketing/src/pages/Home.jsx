@@ -1,51 +1,54 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useOnboarding } from '../context/OnboardingContext'
-import ElectricBorder from '../components/ElectricBorder'
-import ProblemSection from '../components/wolf-grow/ProblemSection'
-import WolfComparison from '../components/wolf-grow/WolfComparison'
-import MascotReveal from '../components/wolf-grow/MascotReveal'
-import EvidenceFeed from '../components/wolf-grow/EvidenceFeed'
-import FinalCTA from '../components/wolf-grow/FinalCTA'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import ElectricBorder from "../components/ElectricBorder";
+import EvidenceFeed from "../components/wolf-grow/EvidenceFeed";
+import FinalCTA from "../components/wolf-grow/FinalCTA";
+import MascotReveal from "../components/wolf-grow/MascotReveal";
+import ProblemSection from "../components/wolf-grow/ProblemSection";
+import WolfComparison from "../components/wolf-grow/WolfComparison";
+import { useOnboarding } from "../context/OnboardingContext";
 
-const API_URL = 'http://localhost:3010/api'
+const API_URL = "http://localhost:3010/api";
 
 function Home() {
-  const [courses, setCourses] = useState([])
-  const [loading, setLoading] = useState(true)
-  const { openModal } = useOnboarding()
+  const [_courses, setCourses] = useState([]);
+  const [_loading, setLoading] = useState(true);
+  const { openModal } = useOnboarding();
 
   useEffect(() => {
-    fetchCourses()
-  }, [])
+    fetchCourses();
+  }, [fetchCourses]);
 
   const fetchCourses = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/courses?limit=6`)
-      const data = await res.json()
-      setCourses(data)
+      const res = await fetch(`${API_URL}/courses?limit=6`);
+      const data = await res.json();
+      setCourses(data);
     } catch (error) {
-      console.error('Failed to fetch courses:', error)
+      console.error("Failed to fetch courses:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const r3Stages = [
     {
-      title: 'Release',
-      blurb: 'Short routines to loosen tight muscles and restore range of motion. Athletes feel the difference right away.'
+      title: "Release",
+      blurb:
+        "Short routines to loosen tight muscles and restore range of motion. Athletes feel the difference right away.",
     },
     {
-      title: 'Restore',
-      blurb: 'Build the base: feet, balance, posture, and control. This is where confidence starts.'
+      title: "Restore",
+      blurb:
+        "Build the base: feet, balance, posture, and control. This is where confidence starts.",
     },
     {
-      title: 'Re-Engineer',
-      blurb: 'Turn clean movement into game speed: sprint, cut, jump, land—with control and confidence.'
-    }
-  ]
+      title: "Re-Engineer",
+      blurb:
+        "Turn clean movement into game speed: sprint, cut, jump, land—with control and confidence.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-black">
@@ -72,7 +75,8 @@ function Home() {
             <span className="block text-cyan-500">in Your Pocket.</span>
           </h1>
           <p className="text-lg md:text-xl text-dark-text-secondary mb-8 max-w-2xl mx-auto font-yp-body">
-            A short starter protocol to improve balance, landing control, and ankle-foot stability — adjusted by age and training space.
+            A short starter protocol to improve balance, landing control, and ankle-foot stability —
+            adjusted by age and training space.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
             <button
@@ -125,15 +129,11 @@ function Home() {
                 className="rounded-xl"
               >
                 <div className="bg-black-50 rounded-xl p-8">
-                  <div className="text-cyan-500 text-6xl font-yp-display mb-4">
-                    {index + 1}
-                  </div>
+                  <div className="text-cyan-500 text-6xl font-yp-display mb-4">{index + 1}</div>
                   <h3 className="text-2xl font-yp-display uppercase text-white mb-3">
                     {stage.title}
                   </h3>
-                  <p className="text-dark-text-secondary">
-                    {stage.blurb}
-                  </p>
+                  <p className="text-dark-text-secondary">{stage.blurb}</p>
                 </div>
               </ElectricBorder>
             ))}
@@ -184,7 +184,8 @@ function Home() {
             The Wolf <span className="text-cyan-400">Dispatch</span>
           </h3>
           <p className="text-neutral-500 text-sm mb-6 max-w-md mx-auto">
-            Weekly training intel, protocol updates, and early access drops. No spam. Unsubscribe anytime.
+            Weekly training intel, protocol updates, and early access drops. No spam. Unsubscribe
+            anytime.
           </p>
 
           {/* Email Input */}
@@ -206,7 +207,7 @@ function Home() {
 
           {/* Privacy note */}
           <p className="text-neutral-700 text-[10px] mt-4 font-mono">
-            We respect your privacy. View our{' '}
+            We respect your privacy. View our{" "}
             <Link to="/privacy" className="text-neutral-600 hover:text-neutral-500 underline">
               privacy policy
             </Link>
@@ -214,7 +215,7 @@ function Home() {
         </div>
       </section>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

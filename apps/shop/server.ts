@@ -1,17 +1,13 @@
+// @ts-expect-error Virtual module provided by Vite/Remix
+import * as remixBuild from "virtual:remix/server-build";
+import { createCartHandler, createStorefrontClient, storefrontRedirect } from "@shopify/hydrogen";
 import {
-  createStorefrontClient,
-  storefrontRedirect,
-  createCartHandler,
-} from '@shopify/hydrogen';
-import {
+  type AppLoadContext,
   createRequestHandler,
   getStorefrontHeaders,
-  type AppLoadContext,
-} from '@shopify/remix-oxygen';
-import {HydrogenSession} from './app/lib/session.server';
-import {validateEnv} from './app/lib/env.server';
-// @ts-expect-error Virtual module provided by Vite/Remix
-import * as remixBuild from 'virtual:remix/server-build';
+} from "@shopify/remix-oxygen";
+import { validateEnv } from "./app/lib/env.server";
+import { HydrogenSession } from "./app/lib/session.server";
 
 // Maintenance mode HTML response
 const maintenanceHTML = `<!DOCTYPE html>
@@ -60,11 +56,7 @@ const maintenanceHTML = `<!DOCTYPE html>
 </html>`;
 
 export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    executionContext: ExecutionContext,
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env, executionContext: ExecutionContext): Promise<Response> {
     try {
       // Validate environment variables at request time
       const validatedEnv = validateEnv(env as unknown as Record<string, string | undefined>);
@@ -74,22 +66,22 @@ export default {
         return new Response(maintenanceHTML, {
           status: 503,
           headers: {
-            'Content-Type': 'text/html',
-            'Retry-After': '3600',
+            "Content-Type": "text/html",
+            "Retry-After": "3600",
           },
         });
       }
       // Create Hydrogen storefront client
-      const {storefront} = createStorefrontClient({
-        cache: await caches.open('hydrogen'),
+      const { storefront } = createStorefrontClient({
+        cache: await caches.open("hydrogen"),
         waitUntil: (p) => executionContext.waitUntil(p),
-        i18n: {language: 'EN', country: 'US'},
+        i18n: { language: "EN", country: "US" },
         publicStorefrontToken: env.PUBLIC_STOREFRONT_API_TOKEN,
         privateStorefrontToken: env.PRIVATE_STOREFRONT_API_TOKEN,
         storeDomain: env.PUBLIC_STORE_DOMAIN,
         storefrontId: env.PUBLIC_STOREFRONT_ID,
         storefrontHeaders: getStorefrontHeaders(request),
-        storefrontApiVersion: env.PUBLIC_STOREFRONT_API_VERSION || '2024-10',
+        storefrontApiVersion: env.PUBLIC_STOREFRONT_API_VERSION || "2024-10",
       });
 
       // Create session
@@ -99,11 +91,11 @@ export default {
       const cart = createCartHandler({
         storefront,
         getCartId: () => {
-          const cartId = session.get('cartId');
+          const cartId = session.get("cartId");
           return cartId;
         },
         setCartId: (cartId: string) => {
-          session.set('cartId', cartId);
+          session.set("cartId", cartId);
         },
       });
 
@@ -126,13 +118,13 @@ export default {
       const response = await handleRequest(request);
 
       if (response.status === 404) {
-        return storefrontRedirect({request, response, storefront});
+        return storefrontRedirect({ request, response, storefront });
       }
 
       return response;
     } catch (error) {
       console.error(error);
-      return new Response('An unexpected error occurred', {status: 500});
+      return new Response("An unexpected error occurred", { status: 500 });
     }
   },
 };

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { XpIcon } from './icons';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { XpIcon } from "./icons";
 
 interface XpRewardProps {
   /** XP amount to show */
@@ -12,7 +12,7 @@ interface XpRewardProps {
   /** Callback when animation completes */
   onComplete?: () => void;
   /** Position relative to trigger element */
-  position?: 'center' | 'top-right' | 'inline';
+  position?: "center" | "top-right" | "inline";
 }
 
 /**
@@ -21,12 +21,7 @@ interface XpRewardProps {
  * Shows "+50 XP" with lightning icon floating up
  * Used after: Exercise complete, quiz answer, level finish
  */
-export function XpReward({
-  amount,
-  show,
-  onComplete,
-  position = 'inline',
-}: XpRewardProps) {
+export function XpReward({ amount, show, onComplete, position = "inline" }: XpRewardProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -41,9 +36,9 @@ export function XpReward({
   }, [show, onComplete]);
 
   const positionClasses = {
-    center: 'fixed inset-0 flex items-center justify-center pointer-events-none z-50',
-    'top-right': 'absolute -top-2 -right-2 pointer-events-none',
-    inline: 'inline-flex items-center',
+    center: "fixed inset-0 flex items-center justify-center pointer-events-none z-50",
+    "top-right": "absolute -top-2 -right-2 pointer-events-none",
+    inline: "inline-flex items-center",
   };
 
   return (
@@ -65,7 +60,7 @@ export function XpReward({
             exit={{ scale: 0.8, y: -30, opacity: 0 }}
             transition={{
               duration: 1,
-              ease: 'easeOut',
+              ease: "easeOut",
             }}
           >
             <XpIcon size={20} animated />
@@ -73,7 +68,7 @@ export function XpReward({
               className="text-sm font-bold text-yellow-300"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: 'spring', damping: 8 }}
+              transition={{ delay: 0.1, type: "spring", damping: 8 }}
             >
               +{amount} XP
             </motion.span>

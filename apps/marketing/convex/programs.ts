@@ -43,9 +43,7 @@ export const getProgramWithContent = query({
     // Organize lessons by week
     const weeksWithLessons = weeks.map((week) => ({
       ...week,
-      lessons: lessons
-        .filter((l) => l.weekId === week._id)
-        .sort((a, b) => a.order - b.order),
+      lessons: lessons.filter((l) => l.weekId === week._id).sort((a, b) => a.order - b.order),
     }));
 
     return {
@@ -208,7 +206,8 @@ export const seedBulletproofAnklesStack = mutation({
         {
           name: "Short Foot Holds",
           duration: 45,
-          instruction: "Without curling your toes, try to shorten your foot by pulling the ball toward your heel.",
+          instruction:
+            "Without curling your toes, try to shorten your foot by pulling the ball toward your heel.",
           cue: "Dome the arch. No toe curling.",
           reps: "2 sets",
         },
@@ -241,7 +240,8 @@ export const seedBulletproofAnklesStack = mutation({
         {
           name: "Slow Calf Raises",
           duration: 60,
-          instruction: "Rise up on your toes slowly (3 seconds up). Pause at the top. Lower slowly.",
+          instruction:
+            "Rise up on your toes slowly (3 seconds up). Pause at the top. Lower slowly.",
           cue: "3 up. Pause. 3 down.",
           reps: "10 reps",
         },

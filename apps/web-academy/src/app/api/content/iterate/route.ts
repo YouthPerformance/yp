@@ -4,12 +4,8 @@
 // Takes feedback transcript + original content → returns updated version
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from "next/server";
-import {
-  expertVoices,
-  buildContentSystemPrompt,
-  type ExpertId,
-} from "@yp/alpha/voices";
+import { type ExpertId, expertVoices } from "@yp/alpha/voices";
+import { type NextRequest, NextResponse } from "next/server";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -20,12 +16,7 @@ const USE_GROQ = true;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      originalContent,
-      feedbackTranscript,
-      author,
-      contentType,
-    } = body as {
+    const { originalContent, feedbackTranscript, author, contentType } = body as {
       contentId: string;
       originalContent: string;
       feedbackTranscript: string;
@@ -34,14 +25,11 @@ export async function POST(request: NextRequest) {
     };
 
     if (!originalContent || !feedbackTranscript) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Get expert voice profile
-    const expertVoice = expertVoices[author] || expertVoices["YP"];
+    const expertVoice = expertVoices[author] || expertVoices.YP;
 
     // Build the iteration prompt
     const systemPrompt = `You are an expert editor helping ${expertVoice.name} revise their content.
@@ -61,7 +49,9 @@ RULES:
 - Maintain the expert's signature style and tone
 - Preserve any content structure that isn't mentioned in feedback
 - Avoid these words: ${expertVoice.bannedWords.join(", ")}
-- Use preferred terms: ${Object.entries(expertVoice.preferredTerms).map(([k, v]) => `"${k}" → "${v}"`).join(", ")}
+- Use preferred terms: ${Object.entries(expertVoice.preferredTerms)
+      .map(([k, v]) => `"${k}" → "${v}"`)
+      .join(", ")}
 
 OUTPUT:
 Return ONLY the updated content. No explanations, no preamble, just the revised content.`;
@@ -119,10 +109,7 @@ Please apply this feedback and return the updated content:`;
       const result = await response.json();
       newContent = result.content?.[0]?.text || "";
     } else {
-      return NextResponse.json(
-        { error: "No AI provider configured" },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: "No AI provider configured" }, { status: 500 });
     }
 
     // Detect what changed (simple summary)
@@ -135,10 +122,7 @@ Please apply this feedback and return the updated content:`;
     });
   } catch (error) {
     console.error("Content iteration failed:", error);
-    return NextResponse.json(
-      { error: "Failed to iterate content" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to iterate content" }, { status: 500 });
   }
 }
 
@@ -153,9 +137,7 @@ function detectChanges(original: string, updated: string, feedback: string): str
 
   if (Math.abs(wordDiff) > 10) {
     changes.push(
-      wordDiff > 0
-        ? `Added ~${wordDiff} words`
-        : `Removed ~${Math.abs(wordDiff)} words`,
+      wordDiff > 0 ? `Added ~${wordDiff} words` : `Removed ~${Math.abs(wordDiff)} words`,
     );
   }
 

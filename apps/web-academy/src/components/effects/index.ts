@@ -2,5 +2,6 @@
 // EFFECTS COMPONENTS INDEX
 // ═══════════════════════════════════════════════════════════
 
-export { WolfParticles, Confetti } from './WolfParticles';
-export { WolfEyes, WolfEyesTransition } from './WolfEyes';
+export { UnicornBackground } from "./UnicornBackground";
+export { WolfEyes, WolfEyesTransition } from "./WolfEyes";
+export { Confetti, WolfParticles } from "./WolfParticles";

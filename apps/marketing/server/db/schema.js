@@ -1,16 +1,16 @@
-import Database from 'better-sqlite3'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import Database from "better-sqlite3";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const dbPath = join(__dirname, 'peterson.db')
-export const db = new Database(dbPath)
+const dbPath = join(__dirname, "peterson.db");
+export const db = new Database(dbPath);
 
 export function initializeDatabase() {
   // Enable foreign keys
-  db.pragma('foreign_keys = ON')
+  db.pragma("foreign_keys = ON");
 
   // Users table
   db.exec(`
@@ -29,7 +29,7 @@ export function initializeDatabase() {
       email_verified INTEGER DEFAULT 0,
       verification_token TEXT
     )
-  `)
+  `);
 
   // Instructors table
   db.exec(`
@@ -44,7 +44,7 @@ export function initializeDatabase() {
       social_links TEXT DEFAULT '{}',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
-  `)
+  `);
 
   // Disciplines table
   db.exec(`
@@ -57,7 +57,7 @@ export function initializeDatabase() {
       color TEXT,
       display_order INTEGER DEFAULT 0
     )
-  `)
+  `);
 
   // Courses table
   db.exec(`
@@ -81,7 +81,7 @@ export function initializeDatabase() {
       exam_count INTEGER DEFAULT 0,
       FOREIGN KEY (instructor_id) REFERENCES instructors(id)
     )
-  `)
+  `);
 
   // Course-Discipline junction table
   db.exec(`
@@ -93,7 +93,7 @@ export function initializeDatabase() {
       FOREIGN KEY (discipline_id) REFERENCES disciplines(id),
       UNIQUE(course_id, discipline_id)
     )
-  `)
+  `);
 
   // Lectures table
   db.exec(`
@@ -111,7 +111,7 @@ export function initializeDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (course_id) REFERENCES courses(id)
     )
-  `)
+  `);
 
   // User progress table
   db.exec(`
@@ -128,7 +128,7 @@ export function initializeDatabase() {
       FOREIGN KEY (lecture_id) REFERENCES lectures(id),
       UNIQUE(user_id, lecture_id)
     )
-  `)
+  `);
 
   // User courses (enrollment)
   db.exec(`
@@ -146,7 +146,7 @@ export function initializeDatabase() {
       FOREIGN KEY (course_id) REFERENCES courses(id),
       UNIQUE(user_id, course_id)
     )
-  `)
+  `);
 
   // User bookmarks
   db.exec(`
@@ -160,7 +160,7 @@ export function initializeDatabase() {
       FOREIGN KEY (lecture_id) REFERENCES lectures(id),
       UNIQUE(user_id, lecture_id)
     )
-  `)
+  `);
 
   // Subscriptions table
   db.exec(`
@@ -178,7 +178,7 @@ export function initializeDatabase() {
       cancellation_reason TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `)
+  `);
 
   // Certificates table
   db.exec(`
@@ -193,7 +193,7 @@ export function initializeDatabase() {
       FOREIGN KEY (course_id) REFERENCES courses(id),
       UNIQUE(user_id, course_id)
     )
-  `)
+  `);
 
   // Newsletter subscribers
   db.exec(`
@@ -203,7 +203,7 @@ export function initializeDatabase() {
       subscribed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       is_active INTEGER DEFAULT 1
     )
-  `)
+  `);
 
   // FAQ items
   db.exec(`
@@ -215,7 +215,7 @@ export function initializeDatabase() {
       sort_order INTEGER DEFAULT 0,
       is_published INTEGER DEFAULT 1
     )
-  `)
+  `);
 
   // Create indexes
   db.exec(`
@@ -223,9 +223,9 @@ export function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_lectures_course ON lectures(course_id);
     CREATE INDEX IF NOT EXISTS idx_user_progress_user ON user_progress(user_id);
     CREATE INDEX IF NOT EXISTS idx_user_courses_user ON user_courses(user_id);
-  `)
+  `);
 
-  return db
+  return db;
 }
 
-export default db
+export default db;

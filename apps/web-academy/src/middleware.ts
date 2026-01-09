@@ -12,6 +12,7 @@ import { type NextRequest, NextResponse } from "next/server";
 // Public routes (no auth required)
 const PUBLIC_ROUTES = new Set([
   "/",
+  "/auth",
   "/sign-in",
   "/sign-up",
   "/role",

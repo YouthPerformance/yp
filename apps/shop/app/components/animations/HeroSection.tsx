@@ -1,30 +1,27 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Link } from '@remix-run/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { WebGLNoise } from './WebGLNoise';
+import { Link } from "@remix-run/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { WebGLNoise } from "./WebGLNoise";
 
 // Register GSAP plugins
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 // Noise texture for grain overlay
-const NOISE_PNG = 'https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/assets/noise-Q6CzNatq.png';
+const NOISE_PNG =
+  "https://cdn.shopify.com/oxygen-v2/25850/10228/21102/2758078/assets/noise-Q6CzNatq.png";
 
 // Hero images - stacked cards
-const HERO_IMAGES = [
-  '/images/4.jpg',
-  '/images/9.jpg',
-  '/images/6.jpg',
-];
+const HERO_IMAGES = ["/images/4.jpg", "/images/9.jpg", "/images/6.jpg"];
 
 // ===========================================================================
 // CONFIGURATION: SHOPIFY SUPPLY ANIMATION SETTINGS
 // ===========================================================================
 
 // Scroll physics - power3.out for exit animations
-const SCATTER_EASE = 'power3.out';
+const SCATTER_EASE = "power3.out";
 
 // Hero range multiplier - 1.15x viewport for fixed-range hero animation
 const HERO_RANGE_MULTIPLIER = 1.15;
@@ -49,8 +46,8 @@ const CARD_CONFIG = [
 ];
 
 function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+  if (typeof window === "undefined") return false;
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
 
 export function HeroSection() {
@@ -64,19 +61,19 @@ export function HeroSection() {
 
   // Reduced motion preference listener
   useEffect(() => {
-    const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     if (mq) {
       const onChange = () => setReduceMotion(mq.matches);
       onChange();
-      mq.addEventListener?.('change', onChange);
-      return () => mq.removeEventListener?.('change', onChange);
+      mq.addEventListener?.("change", onChange);
+      return () => mq.removeEventListener?.("change", onChange);
     }
     return undefined;
   }, []);
 
   // GSAP scroll-scrubbed animation
   useLayoutEffect(() => {
-    if (reduceMotion || typeof window === 'undefined') return;
+    if (reduceMotion || typeof window === "undefined") return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -109,7 +106,7 @@ export function HeroSection() {
 
       // Set inner wrappers for velocity impulse
       cardsInner.forEach((el) => {
-        gsap.set(el, { rotation: 0, scale: 1, transformOrigin: '50% 50%' });
+        gsap.set(el, { rotation: 0, scale: 1, transformOrigin: "50% 50%" });
       });
 
       // TITLE: Initial state - slide up from below with skew
@@ -127,26 +124,38 @@ export function HeroSection() {
 
       // B. ENTRANCE ANIMATION (plays immediately on load)
       const entranceTl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
+        defaults: { ease: "power3.out" },
       });
 
-      entranceTl.to(line1, {
-        yPercent: 0,
-        skewY: 0,
-        duration: 0.5,
-      }, 0);
+      entranceTl.to(
+        line1,
+        {
+          yPercent: 0,
+          skewY: 0,
+          duration: 0.5,
+        },
+        0,
+      );
 
-      entranceTl.to(line2, {
-        yPercent: 0,
-        skewY: 0,
-        duration: 0.5,
-      }, LETTER_STAGGER);
+      entranceTl.to(
+        line2,
+        {
+          yPercent: 0,
+          skewY: 0,
+          duration: 0.5,
+        },
+        LETTER_STAGGER,
+      );
 
-      entranceTl.to(heroCopy, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.5,
-      }, 0.1);
+      entranceTl.to(
+        heroCopy,
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+        },
+        0.1,
+      );
 
       // C. SCROLL EXIT TIMELINE (scrubbed with scroll)
       const exitTl = gsap.timeline({
@@ -156,49 +165,65 @@ export function HeroSection() {
       // Cards scatter left with rotation - spiral vortex effect
       cards.forEach((el, i) => {
         const config = CARD_CONFIG[i] || CARD_CONFIG[0];
-        exitTl.to(el, {
-          xPercent: config.x,
-          yPercent: config.y,
-          rotation: config.r,
-          scale: config.scale,
-          opacity: 0,
-          stagger: IMAGE_STAGGER,
-          duration: DURATIONS.rotation,
-        }, 0);
+        exitTl.to(
+          el,
+          {
+            xPercent: config.x,
+            yPercent: config.y,
+            rotation: config.r,
+            scale: config.scale,
+            opacity: 0,
+            stagger: IMAGE_STAGGER,
+            duration: DURATIONS.rotation,
+          },
+          0,
+        );
       });
 
       // TITLE EXIT: Slide up and out
-      exitTl.to(line1, {
-        yPercent: -100,
-        ease: 'power3.out',
-        duration: DURATIONS.titleLetters,
-      }, 0);
+      exitTl.to(
+        line1,
+        {
+          yPercent: -100,
+          ease: "power3.out",
+          duration: DURATIONS.titleLetters,
+        },
+        0,
+      );
 
-      exitTl.to(line2, {
-        yPercent: -100,
-        ease: 'power3.out',
-        duration: DURATIONS.titleLetters,
-      }, LETTER_STAGGER);
+      exitTl.to(
+        line2,
+        {
+          yPercent: -100,
+          ease: "power3.out",
+          duration: DURATIONS.titleLetters,
+        },
+        LETTER_STAGGER,
+      );
 
       // TAGLINE EXIT: Fade out
-      exitTl.to(heroCopy, {
-        autoAlpha: 0,
-        ease: 'power4.out',
-        duration: DURATIONS.text,
-      }, '<');
+      exitTl.to(
+        heroCopy,
+        {
+          autoAlpha: 0,
+          ease: "power4.out",
+          duration: DURATIONS.text,
+        },
+        "<",
+      );
 
       // D. Velocity-based impulse on inner wrappers
       const rotTo = cardsInner.map((el) =>
-        gsap.quickTo(el, 'rotation', { duration: 0.18, ease: 'power3.out' })
+        gsap.quickTo(el, "rotation", { duration: 0.18, ease: "power3.out" }),
       );
       const scaleTo = cardsInner.map((el) =>
-        gsap.quickTo(el, 'scale', { duration: 0.18, ease: 'power3.out' })
+        gsap.quickTo(el, "scale", { duration: 0.18, ease: "power3.out" }),
       );
 
       // E. ScrollTrigger for vertical scroll
       ScrollTrigger.create({
         trigger: container,
-        start: 'top top',
+        start: "top top",
         end: `+=${HERO_RANGE}`,
         scrub: true,
         animation: exitTl,
@@ -235,8 +260,8 @@ export function HeroSection() {
         className="absolute inset-0 pointer-events-none opacity-20 z-[1]"
         style={{
           backgroundImage: `url(${NOISE_PNG})`,
-          backgroundRepeat: 'repeat',
-          mixBlendMode: 'overlay',
+          backgroundRepeat: "repeat",
+          mixBlendMode: "overlay",
         }}
       />
 
@@ -250,12 +275,12 @@ export function HeroSection() {
               ref={(el) => (cardRefs.current[idx] = el)}
               className="absolute"
               style={{
-                width: 'clamp(180px, 22vw, 300px)',
-                aspectRatio: '3 / 4',
-                top: '50%',
-                left: '50%',
+                width: "clamp(180px, 22vw, 300px)",
+                aspectRatio: "3 / 4",
+                top: "50%",
+                left: "50%",
                 zIndex: config.z,
-                willChange: reduceMotion ? undefined : 'transform, opacity',
+                willChange: reduceMotion ? undefined : "transform, opacity",
               }}
             >
               {/* Inner wrapper for impulse transforms */}
@@ -263,7 +288,7 @@ export function HeroSection() {
                 ref={(el) => (cardInnerRefs.current[idx] = el)}
                 className="w-full h-full"
                 style={{
-                  willChange: reduceMotion ? undefined : 'transform',
+                  willChange: reduceMotion ? undefined : "transform",
                 }}
               >
                 <img
@@ -271,7 +296,8 @@ export function HeroSection() {
                   alt=""
                   className="w-full h-full object-cover select-none rounded"
                   style={{
-                    boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 8px 20px -5px rgba(0, 0, 0, 0.3)',
+                    boxShadow:
+                      "0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 8px 20px -5px rgba(0, 0, 0, 0.3)",
                   }}
                   loading="eager"
                   draggable={false}
@@ -285,10 +311,7 @@ export function HeroSection() {
       {/* Hero content */}
       <div className="relative z-10 text-center px-6 max-w-5xl">
         {/* Status Badge */}
-        <div
-          ref={heroCopyRef}
-          className="hero-copy"
-        >
+        <div ref={heroCopyRef} className="hero-copy">
           <div className="nav-status justify-center mb-8">
             <div className="nav-dot" />
             <span>Drop 001: Live Now</span>
@@ -298,7 +321,12 @@ export function HeroSection() {
             <Link to="/products" className="btn-primary">
               SHOP NOW
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </Link>
             <a href="https://neoball.co" className="btn-secondary">
@@ -310,7 +338,11 @@ export function HeroSection() {
           <div className="trust-badges justify-center flex-wrap">
             <span>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
               </svg>
               90-Day Guarantee
             </span>
@@ -323,7 +355,11 @@ export function HeroSection() {
             </span>
             <span>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                  clipRule="evenodd"
+                />
               </svg>
               Secure Checkout
             </span>
@@ -334,19 +370,13 @@ export function HeroSection() {
         <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
           {/* Line 1: LOCK IN. */}
           <div className="overflow-hidden" style={{ lineHeight: 1.0 }}>
-            <div
-              ref={titleLine1Ref}
-              className="hero-title text-center"
-            >
+            <div ref={titleLine1Ref} className="hero-title text-center">
               LOCK IN.
             </div>
           </div>
           {/* Line 2: LEVEL UP. */}
           <div className="overflow-hidden" style={{ lineHeight: 1.0 }}>
-            <div
-              ref={titleLine2Ref}
-              className="hero-title text-cyan text-center"
-            >
+            <div ref={titleLine2Ref} className="hero-title text-cyan text-center">
               LEVEL UP.
             </div>
           </div>

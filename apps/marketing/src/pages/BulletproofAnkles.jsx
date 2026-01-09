@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useOnboarding } from '../context/OnboardingContext'
-import { Button, Card, Badge } from '../components/ui'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Badge, Button, Card } from "../components/ui";
+import { useOnboarding } from "../context/OnboardingContext";
 
 function BulletproofAnkles() {
-  const { data } = useOnboarding()
-  const [safetyOpen, setSafetyOpen] = useState(false)
+  const { data } = useOnboarding();
+  const [safetyOpen, setSafetyOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-black py-12">
@@ -13,7 +13,11 @@ function BulletproofAnkles() {
         {/* Breadcrumb */}
         <nav className="mb-8">
           <ol className="flex items-center gap-2 text-sm text-dark-text-tertiary">
-            <li><Link to="/" className="hover:text-white">Home</Link></li>
+            <li>
+              <Link to="/" className="hover:text-white">
+                Home
+              </Link>
+            </li>
             <li>/</li>
             <li className="text-white">Bulletproof Ankles</li>
           </ol>
@@ -21,7 +25,9 @@ function BulletproofAnkles() {
 
         {/* Header */}
         <header className="mb-10">
-          <Badge variant="cyan" className="mb-4">Free Protocol</Badge>
+          <Badge variant="cyan" className="mb-4">
+            Free Protocol
+          </Badge>
           <h1 className="text-4xl md:text-5xl font-yp-display uppercase tracking-wide text-white mb-4">
             Bulletproof Ankles
           </h1>
@@ -38,14 +44,22 @@ function BulletproofAnkles() {
           <h2 className="text-xl font-yp-display uppercase text-white mb-4">What You'll Build</h2>
           <ul className="space-y-3">
             {[
-              'Stronger foot-ankle connection',
-              'Better balance under load',
-              'Quieter, more controlled landings',
-              'Foundation for speed and cutting',
+              "Stronger foot-ankle connection",
+              "Better balance under load",
+              "Quieter, more controlled landings",
+              "Foundation for speed and cutting",
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-cyan-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 text-cyan-500 mt-0.5 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="text-dark-text-secondary">{item}</span>
               </li>
@@ -57,7 +71,13 @@ function BulletproofAnkles() {
         {data.ageBand && (
           <Card className="mb-8 border-cyan-500/30">
             <div className="flex items-center gap-3">
-              <Badge variant="cyan">{data.ageBand === 'under8' ? 'Under 8' : data.ageBand === '8-12' ? 'Ages 8-12' : '13+'}</Badge>
+              <Badge variant="cyan">
+                {data.ageBand === "under8"
+                  ? "Under 8"
+                  : data.ageBand === "8-12"
+                    ? "Ages 8-12"
+                    : "13+"}
+              </Badge>
               <span className="text-dark-text-secondary text-sm">
                 Intensity adjusted for this age group
               </span>
@@ -72,18 +92,33 @@ function BulletproofAnkles() {
             className="w-full flex items-center justify-between p-4 bg-black-50 border border-black-400 rounded-xl hover:border-black-300 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <svg className="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="w-5 h-5 text-warning"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
               <span className="font-medium text-white">Safety & Stop Rules</span>
             </div>
             <svg
-              className={`w-5 h-5 text-dark-text-secondary transition-transform ${safetyOpen ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 text-dark-text-secondary transition-transform ${safetyOpen ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
 
@@ -109,7 +144,8 @@ function BulletproofAnkles() {
                 </li>
               </ul>
               <p className="mt-4 text-dark-text-tertiary text-xs">
-                This protocol is for general athletic development. It is not medical advice. Consult a healthcare provider for injuries.
+                This protocol is for general athletic development. It is not medical advice. Consult
+                a healthcare provider for injuries.
               </p>
             </div>
           )}
@@ -131,7 +167,12 @@ function BulletproofAnkles() {
             className="opacity-50 cursor-not-allowed"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
             Save Your Streak (Create Profile)
           </Button>
@@ -145,14 +186,17 @@ function BulletproofAnkles() {
           <h2 className="text-xl font-yp-display uppercase text-white mb-4">What's in the Stack</h2>
           <div className="space-y-4">
             {[
-              { name: 'Tripod Foot Activation', duration: '60s', desc: 'Wake up the foot muscles' },
-              { name: 'Short Foot Holds', duration: '45s x 2', desc: 'Build arch strength' },
-              { name: 'Single Leg Balance', duration: '30s each', desc: 'Test your stability' },
-              { name: 'Ankle Circles', duration: '20 each way', desc: 'Improve range of motion' },
-              { name: 'Calf Raises (Slow)', duration: '10 reps', desc: 'Controlled loading' },
-              { name: 'Landing Prep', duration: '5 soft jumps', desc: 'Quiet landing practice' },
+              { name: "Tripod Foot Activation", duration: "60s", desc: "Wake up the foot muscles" },
+              { name: "Short Foot Holds", duration: "45s x 2", desc: "Build arch strength" },
+              { name: "Single Leg Balance", duration: "30s each", desc: "Test your stability" },
+              { name: "Ankle Circles", duration: "20 each way", desc: "Improve range of motion" },
+              { name: "Calf Raises (Slow)", duration: "10 reps", desc: "Controlled loading" },
+              { name: "Landing Prep", duration: "5 soft jumps", desc: "Quiet landing practice" },
             ].map((exercise, i) => (
-              <div key={i} className="flex items-center justify-between py-3 border-b border-black-400 last:border-0">
+              <div
+                key={i}
+                className="flex items-center justify-between py-3 border-b border-black-400 last:border-0"
+              >
                 <div>
                   <p className="font-medium text-white">{exercise.name}</p>
                   <p className="text-sm text-dark-text-tertiary">{exercise.desc}</p>
@@ -169,14 +213,12 @@ function BulletproofAnkles() {
             After completing the stack, take our 2-minute quiz to discover your athlete type.
           </p>
           <Link to="/quiz/athlete-type">
-            <Button variant="ghost">
-              Take the Athlete Type Quiz →
-            </Button>
+            <Button variant="ghost">Take the Athlete Type Quiz →</Button>
           </Link>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default BulletproofAnkles
+export default BulletproofAnkles;

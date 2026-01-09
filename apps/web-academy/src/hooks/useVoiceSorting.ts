@@ -289,7 +289,9 @@ export function useVoiceSorting() {
           cleanup();
           // Use interim transcript as fallback if no final results
           const result = finalTranscript.trim() || lastInterimTranscript.trim();
-          console.log(`[VoiceSorting] Hard timeout - final: "${finalTranscript}", interim: "${lastInterimTranscript}", using: "${result}"`);
+          console.log(
+            `[VoiceSorting] Hard timeout - final: "${finalTranscript}", interim: "${lastInterimTranscript}", using: "${result}"`,
+          );
           resolve(result);
         }, timeoutMs);
       } catch (error) {
@@ -359,7 +361,10 @@ export function useVoiceSorting() {
           ...s,
           waitingForInput: true,
           voiceFailures: s.voiceFailures + 1,
-          error: s.voiceFailures >= 1 ? "Having trouble? Just tap a button below." : "No response detected. Try again or tap a button.",
+          error:
+            s.voiceFailures >= 1
+              ? "Having trouble? Just tap a button below."
+              : "No response detected. Try again or tap a button.",
         }));
         return;
       }
@@ -381,7 +386,9 @@ export function useVoiceSorting() {
         ...s,
         waitingForInput: true,
         voiceFailures: s.voiceFailures + 1,
-        error: s.transcript ? `I heard "${s.transcript}". Pick one below.` : "Something went wrong. Tap a button below.",
+        error: s.transcript
+          ? `I heard "${s.transcript}". Pick one below.`
+          : "Something went wrong. Tap a button below.",
       }));
     }
   }, [state.step, listen, classify]);

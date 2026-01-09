@@ -4,12 +4,11 @@
 // Sponsor Report Theme: Same brand, calmer energy
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { StatTicker } from '@/components/ui/StatTicker';
-import { cn } from '@/lib/utils';
+import { motion } from "framer-motion";
+import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 interface AthleteData {
   name: string;
@@ -19,7 +18,7 @@ interface AthleteData {
   currentStreak: number;
   longestStreak: number;
   totalXP: number;
-  rank: 'Pup' | 'Hunter' | 'Alpha' | 'Apex';
+  rank: "Pup" | "Hunter" | "Alpha" | "Apex";
   lastActive: Date;
   weeklyActivity: boolean[]; // Last 7 days, true = completed
   engagedMinutes: number; // This week
@@ -43,7 +42,7 @@ export function ParentOverview({
   return (
     <motion.div
       className="min-h-screen px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -52,14 +51,11 @@ export function ParentOverview({
       <header className="mb-8">
         <h1
           className="font-bebas text-3xl tracking-wider mb-1"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           OVERVIEW
         </h1>
-        <p
-          className="text-sm"
-          style={{ color: 'var(--text-secondary)' }}
-        >
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
           Sponsor Report
         </p>
       </header>
@@ -81,28 +77,22 @@ export function ParentOverview({
         <button
           onClick={onViewSafety}
           className={cn(
-            'w-full py-4 px-5 rounded-lg text-left',
-            'flex items-center justify-between',
-            'transition-colors duration-200'
+            "w-full py-4 px-5 rounded-lg text-left",
+            "flex items-center justify-between",
+            "transition-colors duration-200",
           )}
           style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-default)',
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
           }}
         >
           <div className="flex items-center gap-3">
             <span className="text-xl">🛡️</span>
             <div>
-              <span
-                className="font-medium block"
-                style={{ color: 'var(--text-primary)' }}
-              >
+              <span className="font-medium block" style={{ color: "var(--text-primary)" }}>
                 Safety & Notes
               </span>
-              <span
-                className="text-sm"
-                style={{ color: 'var(--text-secondary)' }}
-              >
+              <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
                 Pain flags, what's normal
               </span>
             </div>
@@ -113,28 +103,22 @@ export function ParentOverview({
         <button
           onClick={onViewFamily}
           className={cn(
-            'w-full py-4 px-5 rounded-lg text-left',
-            'flex items-center justify-between',
-            'transition-colors duration-200'
+            "w-full py-4 px-5 rounded-lg text-left",
+            "flex items-center justify-between",
+            "transition-colors duration-200",
           )}
           style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-default)',
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
           }}
         >
           <div className="flex items-center gap-3">
             <span className="text-xl">👨‍👩‍👧</span>
             <div>
-              <span
-                className="font-medium block"
-                style={{ color: 'var(--text-primary)' }}
-              >
+              <span className="font-medium block" style={{ color: "var(--text-primary)" }}>
                 Family & Billing
               </span>
-              <span
-                className="text-sm"
-                style={{ color: 'var(--text-secondary)' }}
-              >
+              <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
                 Athletes, subscription
               </span>
             </div>
@@ -169,9 +153,9 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return 'Active now';
+    if (hours < 1) return "Active now";
     if (hours < 24) return `${hours}h ago`;
-    if (days === 1) return 'Yesterday';
+    if (days === 1) return "Yesterday";
     return `${days} days ago`;
   }, [athlete.lastActive]);
 
@@ -181,17 +165,17 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
     const diff = now.getTime() - athlete.lastActive.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (days === 0) return 'var(--accent-primary)';
-    if (days <= 2) return 'var(--accent-warning)';
-    return 'var(--accent-error)';
+    if (days === 0) return "var(--accent-primary)";
+    if (days <= 2) return "var(--accent-warning)";
+    return "var(--accent-error)";
   }, [athlete.lastActive]);
 
   return (
     <motion.div
       className="rounded-xl p-5"
       style={{
-        backgroundColor: 'var(--bg-secondary)',
-        border: '1px solid var(--border-default)',
+        backgroundColor: "var(--bg-secondary)",
+        border: "1px solid var(--border-default)",
       }}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -204,14 +188,14 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
           {/* Avatar */}
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-xl"
-            style={{ backgroundColor: 'var(--bg-tertiary)' }}
+            style={{ backgroundColor: "var(--bg-tertiary)" }}
           >
-            {athlete.avatar || '🐺'}
+            {athlete.avatar || "🐺"}
           </div>
           <div>
             <h3
               className="font-bebas text-xl tracking-wider"
-              style={{ color: 'var(--text-primary)' }}
+              style={{ color: "var(--text-primary)" }}
             >
               {athlete.name}
             </h3>
@@ -219,16 +203,13 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
               <span
                 className="text-xs font-medium px-2 py-0.5 rounded"
                 style={{
-                  backgroundColor: 'var(--bg-tertiary)',
-                  color: 'var(--text-secondary)',
+                  backgroundColor: "var(--bg-tertiary)",
+                  color: "var(--text-secondary)",
                 }}
               >
                 {athlete.rank}
               </span>
-              <span
-                className="text-xs"
-                style={{ color: statusColor }}
-              >
+              <span className="text-xs" style={{ color: statusColor }}>
                 {lastActiveText}
               </span>
             </div>
@@ -261,7 +242,7 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
           </svg>
           <span
             className="absolute inset-0 flex items-center justify-center text-xs font-bold"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
             {progressPercent}%
           </span>
@@ -273,30 +254,26 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
         <div className="flex items-center justify-between mb-2">
           <span
             className="text-xs uppercase tracking-wider"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: "var(--text-secondary)" }}
           >
             This Week
           </span>
-          <span
-            className="text-xs"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
             {athlete.engagedMinutes} engaged min
           </span>
         </div>
         <div className="flex gap-1">
-          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
+          {["M", "T", "W", "T", "F", "S", "S"].map((day, i) => (
             <div key={i} className="flex-1 text-center">
               <div
                 className={cn(
-                  'h-6 rounded-sm mb-1 transition-colors',
-                  athlete.weeklyActivity[i] ? 'bg-[var(--accent-primary)]' : 'bg-[var(--border-default)]'
+                  "h-6 rounded-sm mb-1 transition-colors",
+                  athlete.weeklyActivity[i]
+                    ? "bg-[var(--accent-primary)]"
+                    : "bg-[var(--border-default)]",
                 )}
               />
-              <span
-                className="text-[10px]"
-                style={{ color: 'var(--text-tertiary)' }}
-              >
+              <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
                 {day}
               </span>
             </div>
@@ -318,12 +295,12 @@ function AthleteCard({ athlete, onSelect, onViewProgress }: AthleteCardProps) {
           onViewProgress?.();
         }}
         className={cn(
-          'w-full py-2.5 rounded-lg text-sm font-medium',
-          'transition-colors duration-200'
+          "w-full py-2.5 rounded-lg text-sm font-medium",
+          "transition-colors duration-200",
         )}
         style={{
-          backgroundColor: 'var(--accent-primary)',
-          color: 'var(--bg-primary)',
+          backgroundColor: "var(--accent-primary)",
+          color: "var(--bg-primary)",
         }}
       >
         VIEW PROGRESS
@@ -348,22 +325,16 @@ function StatItem({ label, value, suffix, highlight }: StatItemProps) {
     <div className="text-center">
       <div
         className="font-bebas text-2xl"
-        style={{ color: highlight ? 'var(--accent-primary)' : 'var(--text-primary)' }}
+        style={{ color: highlight ? "var(--accent-primary)" : "var(--text-primary)" }}
       >
         {value.toLocaleString()}
         {suffix && (
-          <span
-            className="text-base ml-0.5"
-            style={{ color: 'var(--text-secondary)' }}
-          >
+          <span className="text-base ml-0.5" style={{ color: "var(--text-secondary)" }}>
             {suffix}
           </span>
         )}
       </div>
-      <div
-        className="text-xs uppercase tracking-wider"
-        style={{ color: 'var(--text-tertiary)' }}
-      >
+      <div className="text-xs uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>
         {label}
       </div>
     </div>
@@ -381,7 +352,7 @@ function ChevronRight() {
       height="20"
       viewBox="0 0 20 20"
       fill="none"
-      style={{ color: 'var(--text-tertiary)' }}
+      style={{ color: "var(--text-tertiary)" }}
     >
       <path
         d="M7.5 5L12.5 10L7.5 15"

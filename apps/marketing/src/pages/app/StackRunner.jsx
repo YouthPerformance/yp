@@ -1,42 +1,43 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Button, ProgressBar, Card } from '../../components/ui'
-import { useOnboarding } from '../../context/OnboardingContext'
-import { LANE_STACKS, getStack, getStackForLane } from '../../config/laneStacks'
-import analytics, { EVENTS } from '../../lib/analytics'
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, Card, ProgressBar } from "../../components/ui";
+import { getStack, getStackForLane } from "../../config/laneStacks";
+import { useOnboarding } from "../../context/OnboardingContext";
+import analytics, { EVENTS } from "../../lib/analytics";
 
 function StackRunner() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { data } = useOnboarding()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data } = useOnboarding();
 
   // Get stack from lane config or by ID, fallback to base stack
-  const stack = id === 'bulletproof-ankles' || id === 'lane'
-    ? getStackForLane(data.lane || 'base_lane')
-    : getStack(id) || getStackForLane('base_lane')
+  const stack =
+    id === "bulletproof-ankles" || id === "lane"
+      ? getStackForLane(data.lane || "base_lane")
+      : getStack(id) || getStackForLane("base_lane");
 
-  const [currentExercise, setCurrentExercise] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(stack.exercises[0].duration)
-  const [isRunning, setIsRunning] = useState(false)
-  const [isComplete, setIsComplete] = useState(false)
-  const [totalElapsed, setTotalElapsed] = useState(0)
+  const [currentExercise, setCurrentExercise] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(stack.exercises[0].duration);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [totalElapsed, setTotalElapsed] = useState(0);
 
-  const exercise = stack.exercises[currentExercise]
-  const totalDuration = stack.exercises.reduce((sum, ex) => sum + ex.duration, 0)
-  const hasStarted = useRef(false)
+  const exercise = stack.exercises[currentExercise];
+  const totalDuration = stack.exercises.reduce((sum, ex) => sum + ex.duration, 0);
+  const hasStarted = useRef(false);
 
   // Track stack start on first play
   useEffect(() => {
     if (isRunning && !hasStarted.current) {
-      hasStarted.current = true
+      hasStarted.current = true;
       analytics.track(EVENTS.STACK_RUN_START, {
         stack_id: stack.id,
         stack_name: stack.name,
         total_exercises: stack.exercises.length,
         total_duration: totalDuration,
-      })
+      });
     }
-  }, [isRunning, stack, totalDuration])
+  }, [isRunning, stack, totalDuration]);
 
   // Track exit if user leaves without completing
   useEffect(() => {
@@ -47,31 +48,31 @@ function StackRunner() {
           exercises_completed: currentExercise,
           total_exercises: stack.exercises.length,
           time_elapsed: totalElapsed,
-        })
+        });
       }
-    }
-  }, [])
+    };
+  }, [currentExercise, isComplete, stack.exercises.length, stack.id, totalElapsed]);
 
   // Timer logic
   useEffect(() => {
-    let interval
+    let interval;
     if (isRunning && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft((t) => t - 1)
-        setTotalElapsed((t) => t + 1)
-      }, 1000)
+        setTimeLeft((t) => t - 1);
+        setTotalElapsed((t) => t + 1);
+      }, 1000);
     } else if (isRunning && timeLeft === 0) {
       // Move to next exercise
       if (currentExercise < stack.exercises.length - 1) {
-        setCurrentExercise((c) => c + 1)
-        setTimeLeft(stack.exercises[currentExercise + 1].duration)
+        setCurrentExercise((c) => c + 1);
+        setTimeLeft(stack.exercises[currentExercise + 1].duration);
         // Play sound/vibrate
-        if (navigator.vibrate) navigator.vibrate(200)
+        if (navigator.vibrate) navigator.vibrate(200);
       } else {
         // Stack complete
-        setIsComplete(true)
-        setIsRunning(false)
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200])
+        setIsComplete(true);
+        setIsRunning(false);
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 
         // Track completion
         analytics.track(EVENTS.STACK_RUN_COMPLETE, {
@@ -79,40 +80,40 @@ function StackRunner() {
           stack_name: stack.name,
           exercises_completed: stack.exercises.length,
           total_time: totalElapsed + 1,
-        })
+        });
       }
     }
-    return () => clearInterval(interval)
-  }, [isRunning, timeLeft, currentExercise, stack.exercises])
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft, currentExercise, stack.exercises, stack.id, stack.name, totalElapsed]);
 
   const toggleRunning = () => {
-    setIsRunning(!isRunning)
-  }
+    setIsRunning(!isRunning);
+  };
 
   const nextExercise = useCallback(() => {
     if (currentExercise < stack.exercises.length - 1) {
-      const nextIdx = currentExercise + 1
-      setCurrentExercise(nextIdx)
-      setTimeLeft(stack.exercises[nextIdx].duration)
+      const nextIdx = currentExercise + 1;
+      setCurrentExercise(nextIdx);
+      setTimeLeft(stack.exercises[nextIdx].duration);
     } else {
-      setIsComplete(true)
-      setIsRunning(false)
+      setIsComplete(true);
+      setIsRunning(false);
     }
-  }, [currentExercise, stack.exercises])
+  }, [currentExercise, stack.exercises]);
 
   const prevExercise = useCallback(() => {
     if (currentExercise > 0) {
-      const prevIdx = currentExercise - 1
-      setCurrentExercise(prevIdx)
-      setTimeLeft(stack.exercises[prevIdx].duration)
+      const prevIdx = currentExercise - 1;
+      setCurrentExercise(prevIdx);
+      setTimeLeft(stack.exercises[prevIdx].duration);
     }
-  }, [currentExercise, stack.exercises])
+  }, [currentExercise, stack.exercises]);
 
   const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   // Completion screen - Parent-friendly copy
   if (isComplete) {
@@ -122,8 +123,18 @@ function StackRunner() {
           {/* Celebration */}
           <div className="mb-8">
             <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-cyan-500/20 flex items-center justify-center">
-              <svg className="w-10 h-10 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-10 h-10 text-cyan-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
             <h1 className="text-3xl font-yp-display uppercase text-white mb-2">
@@ -153,7 +164,7 @@ function StackRunner() {
             <Button
               size="lg"
               fullWidth
-              onClick={() => navigate('/save-profile')}
+              onClick={() => navigate("/save-profile")}
               className="shadow-glow-cyan"
             >
               Save Streak + Unlock the 7-Day Plan
@@ -162,7 +173,7 @@ function StackRunner() {
               variant="secondary"
               size="lg"
               fullWidth
-              onClick={() => navigate('/quiz/athlete-type')}
+              onClick={() => navigate("/quiz/athlete-type")}
             >
               <span className="flex items-center justify-center gap-2">
                 <span>🐺</span>
@@ -172,20 +183,18 @@ function StackRunner() {
           </div>
 
           {/* Trust line */}
-          <p className="text-dark-text-tertiary text-sm mt-4">
-            Saving takes 20 seconds. No spam.
-          </p>
+          <p className="text-dark-text-tertiary text-sm mt-4">Saving takes 20 seconds. No spam.</p>
 
           {/* Back link */}
           <button
-            onClick={() => navigate('/bulletproof-ankles')}
+            onClick={() => navigate("/bulletproof-ankles")}
             className="mt-6 text-dark-text-tertiary hover:text-dark-text-secondary text-sm transition-colors"
           >
             ← Back to Protocol
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -194,11 +203,16 @@ function StackRunner() {
       <header className="p-4 border-b border-black-400">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <button
-            onClick={() => navigate('/bulletproof-ankles')}
+            onClick={() => navigate("/bulletproof-ankles")}
             className="text-dark-text-secondary hover:text-white transition-colors"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
           <span className="text-dark-text-secondary text-sm">
@@ -212,11 +226,7 @@ function StackRunner() {
 
       {/* Progress bar */}
       <div className="px-4 py-2">
-        <ProgressBar
-          value={currentExercise + 1}
-          max={stack.exercises.length}
-          size="sm"
-        />
+        <ProgressBar value={currentExercise + 1} max={stack.exercises.length} size="sm" />
       </div>
 
       {/* Main content */}
@@ -232,19 +242,13 @@ function StackRunner() {
             <div className="text-7xl md:text-8xl font-yp-display text-cyan-500 mb-2">
               {formatTime(timeLeft)}
             </div>
-            {exercise.reps && (
-              <p className="text-dark-text-secondary">{exercise.reps}</p>
-            )}
+            {exercise.reps && <p className="text-dark-text-secondary">{exercise.reps}</p>}
           </div>
 
           {/* Instruction */}
           <Card className="mb-6 text-left">
-            <p className="text-dark-text-secondary mb-3">
-              {exercise.instruction}
-            </p>
-            <p className="text-cyan-500 font-medium">
-              Cue: {exercise.cue}
-            </p>
+            <p className="text-dark-text-secondary mb-3">{exercise.instruction}</p>
+            <p className="text-cyan-500 font-medium">Cue: {exercise.cue}</p>
           </Card>
 
           {/* Controls */}
@@ -255,7 +259,12 @@ function StackRunner() {
               className="p-3 rounded-full bg-black-200 text-dark-text-secondary hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
 
@@ -279,7 +288,12 @@ function StackRunner() {
               className="p-3 rounded-full bg-black-200 text-dark-text-secondary hover:text-white transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
@@ -302,27 +316,28 @@ function StackRunner() {
               <button
                 key={ex.id}
                 onClick={() => {
-                  setCurrentExercise(idx)
-                  setTimeLeft(ex.duration)
+                  setCurrentExercise(idx);
+                  setTimeLeft(ex.duration);
                 }}
                 className={`
                   flex-shrink-0 px-3 py-2 rounded-lg text-sm transition-colors
-                  ${idx === currentExercise
-                    ? 'bg-cyan-500/20 text-cyan-500 border border-cyan-500/50'
-                    : idx < currentExercise
-                    ? 'bg-black-200 text-dark-text-tertiary'
-                    : 'bg-black-100 text-dark-text-secondary hover:bg-black-200'
+                  ${
+                    idx === currentExercise
+                      ? "bg-cyan-500/20 text-cyan-500 border border-cyan-500/50"
+                      : idx < currentExercise
+                        ? "bg-black-200 text-dark-text-tertiary"
+                        : "bg-black-100 text-dark-text-secondary hover:bg-black-200"
                   }
                 `}
               >
-                {idx + 1}. {ex.name.split(' ').slice(0, 2).join(' ')}
+                {idx + 1}. {ex.name.split(" ").slice(0, 2).join(" ")}
               </button>
             ))}
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
-export default StackRunner
+export default StackRunner;

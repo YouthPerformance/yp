@@ -1,27 +1,27 @@
 // WolfGrow - Premier Landing Page
 // E14: Cinematic Apple/Nike style landing experience
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 import {
-  SmoothScroll,
-  FilmGrain,
-  CursorGlow,
-  Hero,
-  WolfBentoGrid,
-  Solution,
   Authority,
-  Results,
   Community,
+  CursorGlow,
+  FilmGrain,
   FooterCTA,
-} from '../components/wolf-grow'
-import ProblemSection from '../components/wolf-grow/ProblemSection'
-import analytics from '../lib/analytics'
+  Hero,
+  Results,
+  SmoothScroll,
+  Solution,
+  WolfBentoGrid,
+} from "../components/wolf-grow";
+import ProblemSection from "../components/wolf-grow/ProblemSection";
+import analytics from "../lib/analytics";
 
 function WolfGrow() {
   // Track page view
   useEffect(() => {
-    analytics.trackPageView('wolf_grow_landing')
-  }, [])
+    analytics.trackPageView("wolf_grow_landing");
+  }, []);
 
   return (
     <SmoothScroll>
@@ -47,13 +47,17 @@ function WolfGrow() {
               <span className="text-2xl">🐺</span>
               <span className="font-bebas text-xl text-white tracking-wider">WOLF GROW</span>
             </div>
-            <p className="text-gray-500 text-sm">
-              The Pro Academy in Your Pocket
-            </p>
+            <p className="text-gray-500 text-sm">The Pro Academy in Your Pocket</p>
             <div className="flex justify-center gap-6 mt-6 text-gray-600 text-sm">
-              <a href="/terms" className="hover:text-cyan-400 transition-colors">Terms</a>
-              <a href="/privacy" className="hover:text-cyan-400 transition-colors">Privacy</a>
-              <a href="/contact" className="hover:text-cyan-400 transition-colors">Contact</a>
+              <a href="/terms" className="hover:text-cyan-400 transition-colors">
+                Terms
+              </a>
+              <a href="/privacy" className="hover:text-cyan-400 transition-colors">
+                Privacy
+              </a>
+              <a href="/contact" className="hover:text-cyan-400 transition-colors">
+                Contact
+              </a>
             </div>
             <p className="text-gray-700 text-xs mt-6">
               © 2024 YouthPerformance. All rights reserved.
@@ -62,7 +66,7 @@ function WolfGrow() {
         </footer>
       </div>
     </SmoothScroll>
-  )
+  );
 }
 
-export default WolfGrow
+export default WolfGrow;

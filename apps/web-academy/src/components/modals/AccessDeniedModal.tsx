@@ -5,11 +5,11 @@
 // Intensity Budget: 10 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useHaptics } from '@/hooks/useHaptics';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
+import { useHaptics } from "@/hooks/useHaptics";
 
 interface AccessDeniedModalProps {
   isOpen: boolean;
@@ -22,19 +22,19 @@ export function AccessDeniedModal({
   isOpen,
   onClose,
   onAskSponsor,
-  contentTitle = 'Day 1: Diagnostic Scan',
+  contentTitle = "Day 1: Diagnostic Scan",
 }: AccessDeniedModalProps) {
   const { trigger } = useHaptics();
 
   // Haptic on open
   useEffect(() => {
     if (isOpen) {
-      trigger('impact_heavy');
+      trigger("impact_heavy");
     }
   }, [isOpen, trigger]);
 
   const handleAskSponsor = () => {
-    trigger('success_pattern');
+    trigger("success_pattern");
     onAskSponsor();
   };
 
@@ -45,7 +45,7 @@ export function AccessDeniedModal({
           {/* Backdrop */}
           <motion.div
             className="fixed inset-0 z-50"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -55,31 +55,28 @@ export function AccessDeniedModal({
           {/* Modal */}
           <motion.div
             className="fixed inset-x-4 top-1/2 z-50 max-w-sm mx-auto"
-            style={{ transform: 'translateY(-50%)' }}
+            style={{ transform: "translateY(-50%)" }}
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <div
               className="rounded-2xl p-8 text-center"
               style={{
-                backgroundColor: 'var(--bg-secondary)',
-                border: '1px solid var(--border-default)',
+                backgroundColor: "var(--bg-secondary)",
+                border: "1px solid var(--border-default)",
               }}
             >
               {/* Lock Icon with Animation */}
               <motion.div
                 className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center"
                 style={{
-                  backgroundColor: 'rgba(255, 68, 68, 0.15)',
-                  border: '2px solid #FF4444',
+                  backgroundColor: "rgba(255, 68, 68, 0.15)",
+                  border: "2px solid #FF4444",
                 }}
                 animate={{
-                  boxShadow: [
-                    '0 0 0 0 rgba(255, 68, 68, 0.4)',
-                    '0 0 0 20px rgba(255, 68, 68, 0)',
-                  ],
+                  boxShadow: ["0 0 0 0 rgba(255, 68, 68, 0.4)", "0 0 0 20px rgba(255, 68, 68, 0)"],
                 }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
@@ -95,7 +92,7 @@ export function AccessDeniedModal({
               {/* Title */}
               <motion.h2
                 className="font-bebas text-2xl tracking-wider mb-2"
-                style={{ color: '#FF4444' }}
+                style={{ color: "#FF4444" }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -106,7 +103,7 @@ export function AccessDeniedModal({
               {/* Subtitle */}
               <motion.p
                 className="text-sm mb-4"
-                style={{ color: 'var(--text-tertiary)' }}
+                style={{ color: "var(--text-tertiary)" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -118,8 +115,8 @@ export function AccessDeniedModal({
               <motion.div
                 className="rounded-xl p-4 mb-6"
                 style={{
-                  backgroundColor: 'var(--bg-tertiary)',
-                  border: '1px solid var(--border-default)',
+                  backgroundColor: "var(--bg-tertiary)",
+                  border: "1px solid var(--border-default)",
                 }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -127,14 +124,11 @@ export function AccessDeniedModal({
               >
                 <p
                   className="font-bebas text-lg tracking-wider"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: "var(--text-primary)" }}
                 >
                   {contentTitle}
                 </p>
-                <p
-                  className="text-xs mt-1"
-                  style={{ color: 'var(--text-tertiary)' }}
-                >
+                <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                   Unlock the 42-Day Reset to access this workout
                 </p>
               </motion.div>
@@ -144,8 +138,8 @@ export function AccessDeniedModal({
                 onClick={handleAskSponsor}
                 className="w-full py-4 rounded-xl font-bebas text-lg tracking-wider mb-3"
                 style={{
-                  backgroundColor: 'var(--accent-primary)',
-                  color: 'var(--bg-primary)',
+                  backgroundColor: "var(--accent-primary)",
+                  color: "var(--bg-primary)",
                 }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -160,11 +154,11 @@ export function AccessDeniedModal({
               <motion.button
                 onClick={onClose}
                 className="text-sm py-2"
-                style={{ color: 'var(--text-tertiary)' }}
+                style={{ color: "var(--text-tertiary)" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                whileHover={{ color: 'var(--text-secondary)' }}
+                whileHover={{ color: "var(--text-secondary)" }}
               >
                 Maybe later
               </motion.button>

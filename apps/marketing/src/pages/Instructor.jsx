@@ -1,50 +1,50 @@
-import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-const API_URL = 'http://localhost:3010/api'
+const API_URL = "http://localhost:3010/api";
 
 function Instructor() {
-  const { id } = useParams()
-  const [instructor, setInstructor] = useState(null)
-  const [courses, setCourses] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { id } = useParams();
+  const [instructor, setInstructor] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchInstructor()
-    fetchCourses()
-  }, [id])
+    fetchInstructor();
+    fetchCourses();
+  }, [fetchCourses, fetchInstructor]);
 
   const fetchInstructor = async () => {
     try {
-      const res = await fetch(`${API_URL}/instructors/${id}`)
-      if (!res.ok) throw new Error('Instructor not found')
-      const data = await res.json()
-      setInstructor(data)
+      const res = await fetch(`${API_URL}/instructors/${id}`);
+      if (!res.ok) throw new Error("Instructor not found");
+      const data = await res.json();
+      setInstructor(data);
     } catch (error) {
-      console.error('Failed to fetch instructor:', error)
+      console.error("Failed to fetch instructor:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch(`${API_URL}/instructors/${id}/courses`)
-      const data = await res.json()
-      setCourses(data)
+      const res = await fetch(`${API_URL}/instructors/${id}/courses`);
+      const data = await res.json();
+      setCourses(data);
     } catch (error) {
-      console.error('Failed to fetch courses:', error)
+      console.error("Failed to fetch courses:", error);
     }
-  }
+  };
 
   const formatDuration = (minutes) => {
-    if (!minutes) return '0 min'
-    const hours = Math.floor(minutes / 60)
+    if (!minutes) return "0 min";
+    const hours = Math.floor(minutes / 60);
     if (hours > 0) {
-      return `${hours} hour${hours > 1 ? 's' : ''}`
+      return `${hours} hour${hours > 1 ? "s" : ""}`;
     }
-    return `${minutes} min`
-  }
+    return `${minutes} min`;
+  };
 
   if (loading) {
     return (
@@ -63,7 +63,7 @@ function Instructor() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!instructor) {
@@ -71,13 +71,15 @@ function Instructor() {
       <div className="min-h-screen py-12 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-semibold mb-4">Instructor Not Found</h1>
-          <p className="text-text-secondary mb-6">The instructor you're looking for doesn't exist or has been removed.</p>
+          <p className="text-text-secondary mb-6">
+            The instructor you're looking for doesn't exist or has been removed.
+          </p>
           <Link to="/library" className="btn-primary">
             Browse Courses
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -85,7 +87,9 @@ function Instructor() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="text-sm text-text-secondary mb-8">
-          <Link to="/library" className="hover:text-primary transition-colors">Library</Link>
+          <Link to="/library" className="hover:text-primary transition-colors">
+            Library
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-text-primary">{instructor.name}</span>
         </nav>
@@ -103,7 +107,11 @@ function Instructor() {
             ) : (
               <div className="w-full h-full flex items-center justify-center text-text-muted">
                 <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
             )}
@@ -114,30 +122,39 @@ function Instructor() {
             <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-2">
               {instructor.name}
             </h1>
-            {instructor.title && (
-              <p className="text-primary text-lg mb-2">{instructor.title}</p>
-            )}
+            {instructor.title && <p className="text-primary text-lg mb-2">{instructor.title}</p>}
 
             {/* University Affiliations */}
-            {instructor.university_affiliations && instructor.university_affiliations.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                {instructor.university_affiliations.map((uni, i) => (
-                  <span key={i} className="flex items-center gap-1 text-text-secondary">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    {uni}
-                    {i < instructor.university_affiliations.length - 1 && <span className="mx-2">•</span>}
-                  </span>
-                ))}
-              </div>
-            )}
+            {instructor.university_affiliations &&
+              instructor.university_affiliations.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  {instructor.university_affiliations.map((uni, i) => (
+                    <span key={i} className="flex items-center gap-1 text-text-secondary">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        />
+                      </svg>
+                      {uni}
+                      {i < instructor.university_affiliations.length - 1 && (
+                        <span className="mx-2">•</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              )}
 
             {/* Credentials */}
             {instructor.credentials && (
-              <p className="text-text-muted text-sm mb-4 italic">
-                {instructor.credentials}
-              </p>
+              <p className="text-text-muted text-sm mb-4 italic">{instructor.credentials}</p>
             )}
 
             {/* Biography */}
@@ -170,7 +187,12 @@ function Instructor() {
                     aria-label="Website"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                      />
                     </svg>
                   </a>
                 )}
@@ -219,13 +241,19 @@ function Instructor() {
           </div>
           <div className="card p-4 text-center">
             <p className="text-3xl font-bold text-primary">
-              {Math.round(courses.reduce((sum, c) => sum + (c.total_duration_minutes || 0), 0) / 60) || courses.length * 6}
+              {Math.round(
+                courses.reduce((sum, c) => sum + (c.total_duration_minutes || 0), 0) / 60,
+              ) || courses.length * 6}
             </p>
             <p className="text-text-secondary text-sm">Hours of Content</p>
           </div>
           <div className="card p-4 text-center">
             <p className="text-3xl font-bold text-primary">
-              {(courses.reduce((sum, c) => sum + (c.total_duration_minutes || 0), 0) / 60 / courses.length || 6).toFixed(1)}
+              {(
+                courses.reduce((sum, c) => sum + (c.total_duration_minutes || 0), 0) /
+                  60 /
+                  courses.length || 6
+              ).toFixed(1)}
             </p>
             <p className="text-text-secondary text-sm">Avg Hours/Course</p>
           </div>
@@ -234,7 +262,7 @@ function Instructor() {
         {/* Courses Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-serif font-semibold mb-6">
-            Courses by {instructor.name.split(' ').pop()}
+            Courses by {instructor.name.split(" ").pop()}
           </h2>
 
           {courses.length === 0 ? (
@@ -258,16 +286,35 @@ function Instructor() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-text-muted">
-                        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          className="w-12 h-12"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                       </div>
                     )}
                     {/* Play icon overlay */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <div className="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center">
-                        <svg className="w-7 h-7 text-background ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-7 h-7 text-background ml-1"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
@@ -295,7 +342,8 @@ function Instructor() {
         <div className="card p-8 bg-gradient-to-br from-primary/10 to-background-surface border-primary/30 text-center">
           <h3 className="text-xl font-semibold mb-2">Learn from {instructor.name}</h3>
           <p className="text-text-secondary mb-6 max-w-xl mx-auto">
-            Get unlimited access to all courses by {instructor.name.split(' ')[0]} and 40+ other world-class professors.
+            Get unlimited access to all courses by {instructor.name.split(" ")[0]} and 40+ other
+            world-class professors.
           </p>
           <Link to="/pricing" className="btn-primary inline-block">
             Join the Academy - $399/year
@@ -303,7 +351,7 @@ function Instructor() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Instructor
+export default Instructor;

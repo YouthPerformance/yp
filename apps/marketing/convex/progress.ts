@@ -11,7 +11,7 @@ export const getLessonProgress = query({
     return await ctx.db
       .query("lessonProgress")
       .withIndex("by_profile_lesson", (q) =>
-        q.eq("profileId", args.profileId).eq("lessonId", args.lessonId)
+        q.eq("profileId", args.profileId).eq("lessonId", args.lessonId),
       )
       .first();
   },
@@ -27,7 +27,7 @@ export const getProgramProgress = query({
     return await ctx.db
       .query("lessonProgress")
       .withIndex("by_profile_program", (q) =>
-        q.eq("profileId", args.profileId).eq("programId", args.programId)
+        q.eq("profileId", args.profileId).eq("programId", args.programId),
       )
       .collect();
   },
@@ -48,7 +48,7 @@ export const updateLessonProgress = mutation({
     const existing = await ctx.db
       .query("lessonProgress")
       .withIndex("by_profile_lesson", (q) =>
-        q.eq("profileId", args.profileId).eq("lessonId", args.lessonId)
+        q.eq("profileId", args.profileId).eq("lessonId", args.lessonId),
       )
       .first();
 
@@ -88,7 +88,7 @@ export const markLessonComplete = mutation({
     const existing = await ctx.db
       .query("lessonProgress")
       .withIndex("by_profile_lesson", (q) =>
-        q.eq("profileId", args.profileId).eq("lessonId", args.lessonId)
+        q.eq("profileId", args.profileId).eq("lessonId", args.lessonId),
       )
       .first();
 
@@ -147,9 +147,7 @@ async function updateStreak(ctx: any, profileId: any) {
   }
 
   const lastDate = new Date(streak.lastActivityDate);
-  const dayDiff = Math.floor(
-    (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const dayDiff = Math.floor((now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
 
   if (streak.lastActivityDate === today) {
     // Already logged today, no change
@@ -245,15 +243,16 @@ export const getProgressSummary = query({
       .collect();
 
     // Get last session date
-    const lastRun = stackRuns.length > 0
-      ? stackRuns.reduce((latest, run) => run.completedAt > latest.completedAt ? run : latest)
-      : null;
+    const lastRun =
+      stackRuns.length > 0
+        ? stackRuns.reduce((latest, run) => (run.completedAt > latest.completedAt ? run : latest))
+        : null;
 
     return {
       currentStreak: streak?.currentStreak || 0,
       longestStreak: streak?.longestStreak || 0,
       totalSessions: stackRuns.length,
-      lastSessionDate: lastRun ? new Date(lastRun.completedAt).toISOString().split('T')[0] : null,
+      lastSessionDate: lastRun ? new Date(lastRun.completedAt).toISOString().split("T")[0] : null,
     };
   },
 });

@@ -9,25 +9,19 @@
  * Uses the "Slots Pattern" - pass anything into screenContent
  */
 
-import TiltedCard from './TiltedCard'
+import TiltedCard from "./TiltedCard";
 
 export default function PortalFrame({
   screenContent,
-  hologram = 'court',
+  hologram = "court",
   caption,
   chassisSrc = null, // CSS-only by default until PNG assets are added
-  className = ''
+  className = "",
 }) {
   return (
     <div className={`relative w-full max-w-md mx-auto group ${className}`}>
-
       {/* WRAPPER: The Physics Engine (Tilt Effect) */}
-      <TiltedCard
-        scaleOnHover={1.05}
-        rotateAmplitude={10}
-        className="relative z-10"
-      >
-
+      <TiltedCard scaleOnHover={1.05} rotateAmplitude={10} className="relative z-10">
         {/* LAYER 2: The Phone Chassis (Hardware) */}
         <div className="relative w-full aspect-[9/19] bg-transparent">
           {chassisSrc && (
@@ -37,7 +31,7 @@ export default function PortalFrame({
               className="absolute inset-0 w-full h-full object-contain z-20 pointer-events-none"
               onError={(e) => {
                 // Fallback to a CSS phone frame if image not found
-                e.target.style.display = 'none'
+                e.target.style.display = "none";
               }}
             />
           )}
@@ -54,12 +48,12 @@ export default function PortalFrame({
           </div>
 
           {/* LAYER 4: The Hologram (VFX) */}
-          {hologram === 'court' && (
+          {hologram === "court" && (
             <div
               className="absolute -right-16 top-16 w-48 h-48 z-30 opacity-60 pointer-events-none mix-blend-screen"
               style={{
-                animation: 'float 6s ease-in-out infinite',
-                filter: 'blur(0.5px)'
+                animation: "float 6s ease-in-out infinite",
+                filter: "blur(0.5px)",
               }}
             >
               <img
@@ -68,24 +62,24 @@ export default function PortalFrame({
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   // Fallback to CSS hologram
-                  e.target.style.display = 'none'
+                  e.target.style.display = "none";
                   e.target.parentElement.innerHTML = `
                     <div class="w-full h-full relative">
                       <div class="absolute inset-0 border border-cyan-500/30 rounded-lg transform rotate-12 skew-x-6"></div>
                       <div class="absolute inset-4 border border-cyan-500/20 rounded-lg transform rotate-6 skew-x-3"></div>
                       <div class="absolute inset-8 bg-cyan-500/10 rounded-lg"></div>
                     </div>
-                  `
+                  `;
                 }}
               />
             </div>
           )}
 
-          {hologram === 'data' && (
+          {hologram === "data" && (
             <div
               className="absolute -left-12 top-24 w-40 h-40 z-30 opacity-50 pointer-events-none mix-blend-screen"
               style={{
-                animation: 'float 8s ease-in-out infinite reverse'
+                animation: "float 8s ease-in-out infinite reverse",
               }}
             >
               <img
@@ -93,12 +87,11 @@ export default function PortalFrame({
                 alt="Data Cloud"
                 className="w-full h-full object-contain"
                 onError={(e) => {
-                  e.target.style.display = 'none'
+                  e.target.style.display = "none";
                 }}
               />
             </div>
           )}
-
         </div>
       </TiltedCard>
 
@@ -125,5 +118,5 @@ export default function PortalFrame({
         }
       `}</style>
     </div>
-  )
+  );
 }

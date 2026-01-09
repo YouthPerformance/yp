@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { ShardIcon } from './icons';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { ShardIcon } from "./icons";
 
 interface ShardRewardProps {
   /** Number of shards to show (+1, +2, etc) */
@@ -12,7 +12,7 @@ interface ShardRewardProps {
   /** Callback when animation completes */
   onComplete?: () => void;
   /** Position relative to trigger element */
-  position?: 'center' | 'top-right' | 'inline';
+  position?: "center" | "top-right" | "inline";
 }
 
 /**
@@ -21,12 +21,7 @@ interface ShardRewardProps {
  * Shows "+1" with shard icon floating up and fading out
  * Used after: Wolf Drop, level complete, quiz correct
  */
-export function ShardReward({
-  amount,
-  show,
-  onComplete,
-  position = 'center',
-}: ShardRewardProps) {
+export function ShardReward({ amount, show, onComplete, position = "center" }: ShardRewardProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -41,9 +36,9 @@ export function ShardReward({
   }, [show, onComplete]);
 
   const positionClasses = {
-    center: 'fixed inset-0 flex items-center justify-center pointer-events-none z-50',
-    'top-right': 'absolute -top-2 -right-2 pointer-events-none',
-    inline: 'inline-flex items-center',
+    center: "fixed inset-0 flex items-center justify-center pointer-events-none z-50",
+    "top-right": "absolute -top-2 -right-2 pointer-events-none",
+    inline: "inline-flex items-center",
   };
 
   return (
@@ -65,7 +60,7 @@ export function ShardReward({
             exit={{ scale: 0.8, y: -50, opacity: 0 }}
             transition={{
               duration: 1.2,
-              ease: 'easeOut',
+              ease: "easeOut",
             }}
           >
             <ShardIcon size={32} filled glowing />
@@ -73,7 +68,7 @@ export function ShardReward({
               className="text-2xl font-bold text-cyan-300"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: 'spring', damping: 8 }}
+              transition={{ delay: 0.1, type: "spring", damping: 8 }}
             >
               +{amount}
             </motion.span>
@@ -99,7 +94,7 @@ export function ShardReward({
               transition={{
                 duration: 0.8,
                 delay: 0.2 + i * 0.05,
-                ease: 'easeOut',
+                ease: "easeOut",
               }}
             />
           ))}

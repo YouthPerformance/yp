@@ -391,10 +391,7 @@ export default function ContentReviewDetailPage() {
           }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2
-              className="font-bebas text-xl tracking-wider"
-              style={{ color: "#00F6E0" }}
-            >
+            <h2 className="font-bebas text-xl tracking-wider" style={{ color: "#00F6E0" }}>
               UPDATED VERSION
             </h2>
             <div className="flex gap-2">
@@ -487,10 +484,7 @@ export default function ContentReviewDetailPage() {
             </button>
           </div>
         ) : (
-          <pre
-            className="whitespace-pre-wrap text-sm"
-            style={{ color: "var(--text-secondary)" }}
-          >
+          <pre className="whitespace-pre-wrap text-sm" style={{ color: "var(--text-secondary)" }}>
             {content.body}
           </pre>
         )}

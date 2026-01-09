@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { CrystalIcon } from './icons';
+import { motion } from "framer-motion";
+import { CrystalIcon } from "./icons";
 
 interface CrystalBadgeProps {
   /** Total crystal count */
@@ -11,7 +11,7 @@ interface CrystalBadgeProps {
   /** Show change animation (+1, -5, etc) */
   showChange?: number | null;
   /** Visual variant */
-  variant?: 'default' | 'gold' | 'rare';
+  variant?: "default" | "gold" | "rare";
 }
 
 /**
@@ -24,18 +24,17 @@ export function CrystalBadge({
   count,
   compact = false,
   showChange = null,
-  variant = 'default',
+  variant = "default",
 }: CrystalBadgeProps) {
   const iconSize = compact ? 18 : 28;
-  const textSize = compact ? 'text-sm' : 'text-xl';
+  const textSize = compact ? "text-sm" : "text-xl";
 
   return (
     <motion.div
       className={`
         inline-flex items-center gap-1.5 rounded-full
-        ${compact
-          ? 'bg-purple-950/50 px-2 py-0.5'
-          : 'bg-purple-950/70 px-3 py-1.5 backdrop-blur-sm'
+        ${
+          compact ? "bg-purple-950/50 px-2 py-0.5" : "bg-purple-950/70 px-3 py-1.5 backdrop-blur-sm"
         }
       `}
       whileHover={{ scale: 1.05 }}
@@ -60,10 +59,11 @@ export function CrystalBadge({
           exit={{ opacity: 0, y: -20 }}
           className={`
             text-xs font-bold
-            ${showChange > 0 ? 'text-green-400' : 'text-red-400'}
+            ${showChange > 0 ? "text-green-400" : "text-red-400"}
           `}
         >
-          {showChange > 0 ? '+' : ''}{showChange}
+          {showChange > 0 ? "+" : ""}
+          {showChange}
         </motion.span>
       )}
     </motion.div>

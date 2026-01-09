@@ -3,22 +3,22 @@
 // Preview workout before starting
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Play, Clock, Star, Dumbbell } from 'lucide-react';
-import { PROGRAM, getDay, getThemeColor, getThemeLabel } from '@/data/programs/basketball-chassis';
-import { useProgramAccess, isDayUnlocked } from '@/hooks/useProgramAccess';
-import { ExerciseList } from '@/components/programs/ExerciseList';
+import { motion } from "framer-motion";
+import { ArrowLeft, Clock, Dumbbell, Play, Star } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { ExerciseList } from "@/components/programs/ExerciseList";
+import { getDay, getThemeColor, getThemeLabel, PROGRAM } from "@/data/programs/basketball-chassis";
+import { isDayUnlocked, useProgramAccess } from "@/hooks/useProgramAccess";
 
 export default function DayPreviewPage() {
   const router = useRouter();
   const params = useParams();
   const dayNumber = parseInt(params.n as string, 10);
 
-  const { hasAccess, completedDays, isLoading } = useProgramAccess('basketball-chassis');
+  const { hasAccess, completedDays, isLoading } = useProgramAccess("basketball-chassis");
   const day = getDay(dayNumber);
 
   // Redirect if day is locked or invalid
@@ -26,12 +26,12 @@ export default function DayPreviewPage() {
     if (isLoading) return;
 
     if (!hasAccess) {
-      router.replace('/programs/basketball-chassis');
+      router.replace("/programs/basketball-chassis");
       return;
     }
 
     if (!day || !isDayUnlocked(dayNumber, completedDays)) {
-      router.replace('/programs/basketball-chassis');
+      router.replace("/programs/basketball-chassis");
     }
   }, [hasAccess, completedDays, dayNumber, day, isLoading, router]);
 
@@ -41,7 +41,7 @@ export default function DayPreviewPage() {
       <main className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-center">
           <div className="text-4xl mb-2">🏀</div>
-          <p style={{ color: 'var(--text-tertiary)' }}>Loading...</p>
+          <p style={{ color: "var(--text-tertiary)" }}>Loading...</p>
         </div>
       </main>
     );
@@ -54,9 +54,9 @@ export default function DayPreviewPage() {
     <main className="min-h-screen p-4 max-w-md mx-auto">
       {/* Back Button */}
       <motion.button
-        onClick={() => router.push('/programs/basketball-chassis')}
+        onClick={() => router.push("/programs/basketball-chassis")}
         className="flex items-center gap-2 mb-6 text-sm"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
       >
@@ -82,20 +82,20 @@ export default function DayPreviewPage() {
         </div>
 
         {/* Day Number */}
-        <p className="text-sm mb-2" style={{ color: 'var(--text-tertiary)' }}>
+        <p className="text-sm mb-2" style={{ color: "var(--text-tertiary)" }}>
           Day {dayNumber} of {PROGRAM.totalDays}
         </p>
 
         {/* Title */}
         <h1
           className="font-bebas text-4xl tracking-wider mb-2"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           {day.title.toUpperCase()}
         </h1>
 
         {/* Subtitle */}
-        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
           {day.subtitle}
         </p>
       </motion.div>
@@ -109,13 +109,13 @@ export default function DayPreviewPage() {
       >
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" style={{ color: themeColor }} />
-          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
             {day.duration} min
           </span>
         </div>
         <div className="flex items-center gap-2">
           <Dumbbell className="w-4 h-4" style={{ color: themeColor }} />
-          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
             {day.exercises.length} exercises
           </span>
         </div>
@@ -130,7 +130,7 @@ export default function DayPreviewPage() {
       >
         <h2
           className="font-bebas text-lg tracking-wider mb-3"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           EXERCISES
         </h2>
@@ -144,22 +144,22 @@ export default function DayPreviewPage() {
         transition={{ delay: 0.3 }}
         className="p-4 rounded-xl mb-6 flex items-center justify-between"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <div className="flex items-center gap-2">
-          <Star className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
-          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            {isCompleted ? 'Replay for practice' : 'Complete to earn'}
+          <Star className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
+          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            {isCompleted ? "Replay for practice" : "Complete to earn"}
           </span>
         </div>
         {!isCompleted && (
           <div className="flex items-center gap-3">
-            <span className="font-bebas text-lg" style={{ color: 'var(--accent-primary)' }}>
+            <span className="font-bebas text-lg" style={{ color: "var(--accent-primary)" }}>
               +{PROGRAM.xpPerDay} XP
             </span>
-            <span className="font-bebas text-lg" style={{ color: '#9C27B0' }}>
+            <span className="font-bebas text-lg" style={{ color: "#9C27B0" }}>
               +{PROGRAM.crystalsPerDay} 💎
             </span>
           </div>
@@ -175,13 +175,13 @@ export default function DayPreviewPage() {
         className="w-full py-4 rounded-xl font-bebas text-lg tracking-wider flex items-center justify-center gap-2"
         style={{
           backgroundColor: themeColor,
-          color: 'var(--bg-primary)',
+          color: "var(--bg-primary)",
         }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
         <Play className="w-5 h-5" fill="currentColor" />
-        {isCompleted ? 'REPLAY WORKOUT' : 'BEGIN WORKOUT'}
+        {isCompleted ? "REPLAY WORKOUT" : "BEGIN WORKOUT"}
       </motion.button>
     </main>
   );

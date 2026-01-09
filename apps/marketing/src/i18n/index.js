@@ -21,19 +21,19 @@
  *    // Returns: ["Stronger foot-ankle connection", ...]
  */
 
-import { createContext, useContext, useState, useCallback } from 'react'
-import en from './en.json'
+import { createContext, useCallback, useContext, useState } from "react";
+import en from "./en.json";
 
 // Available translations
 const translations = {
   en,
-}
+};
 
 // Default locale
-const DEFAULT_LOCALE = 'en'
+const DEFAULT_LOCALE = "en";
 
 // Context
-const I18nContext = createContext(null)
+const I18nContext = createContext(null);
 
 /**
  * Get a nested value from an object using dot notation
@@ -42,10 +42,10 @@ const I18nContext = createContext(null)
  * @returns {*} The value at the path, or the path itself if not found
  */
 function getNestedValue(obj, path) {
-  return path.split('.').reduce((current, key) => {
-    if (current === undefined || current === null) return undefined
-    return current[key]
-  }, obj)
+  return path.split(".").reduce((current, key) => {
+    if (current === undefined || current === null) return undefined;
+    return current[key];
+  }, obj);
 }
 
 /**
@@ -55,10 +55,10 @@ function getNestedValue(obj, path) {
  * @returns {string} The interpolated string
  */
 function interpolate(str, values = {}) {
-  if (typeof str !== 'string') return str
+  if (typeof str !== "string") return str;
   return str.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-    return values[key] !== undefined ? values[key] : match
-  })
+    return values[key] !== undefined ? values[key] : match;
+  });
 }
 
 /**
@@ -66,7 +66,7 @@ function interpolate(str, values = {}) {
  * Wrap your app with this to enable translations
  */
 export function I18nProvider({ children, initialLocale = DEFAULT_LOCALE }) {
-  const [locale, setLocale] = useState(initialLocale)
+  const [locale, setLocale] = useState(initialLocale);
 
   /**
    * Translation function
@@ -74,23 +74,26 @@ export function I18nProvider({ children, initialLocale = DEFAULT_LOCALE }) {
    * @param {Object} values - Optional interpolation values
    * @returns {*} The translated string or value
    */
-  const t = useCallback((key, values = {}) => {
-    const translation = translations[locale] || translations[DEFAULT_LOCALE]
-    const value = getNestedValue(translation, key)
+  const t = useCallback(
+    (key, values = {}) => {
+      const translation = translations[locale] || translations[DEFAULT_LOCALE];
+      const value = getNestedValue(translation, key);
 
-    if (value === undefined) {
-      console.warn(`Translation missing for key: ${key}`)
-      return key
-    }
+      if (value === undefined) {
+        console.warn(`Translation missing for key: ${key}`);
+        return key;
+      }
 
-    // If it's a string, interpolate values
-    if (typeof value === 'string') {
-      return interpolate(value, values)
-    }
+      // If it's a string, interpolate values
+      if (typeof value === "string") {
+        return interpolate(value, values);
+      }
 
-    // Return arrays and objects as-is
-    return value
-  }, [locale])
+      // Return arrays and objects as-is
+      return value;
+    },
+    [locale],
+  );
 
   /**
    * Change the current locale
@@ -98,31 +101,27 @@ export function I18nProvider({ children, initialLocale = DEFAULT_LOCALE }) {
    */
   const changeLocale = useCallback((newLocale) => {
     if (translations[newLocale]) {
-      setLocale(newLocale)
+      setLocale(newLocale);
       // Optionally persist to localStorage
-      localStorage.setItem('yp_locale', newLocale)
+      localStorage.setItem("yp_locale", newLocale);
     } else {
-      console.warn(`Locale not available: ${newLocale}`)
+      console.warn(`Locale not available: ${newLocale}`);
     }
-  }, [])
+  }, []);
 
   /**
    * Get all available locales
    */
-  const availableLocales = Object.keys(translations)
+  const availableLocales = Object.keys(translations);
 
   const value = {
     t,
     locale,
     changeLocale,
     availableLocales,
-  }
+  };
 
-  return (
-    <I18nContext.Provider value={value}>
-      {children}
-    </I18nContext.Provider>
-  )
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
 /**
@@ -130,29 +129,29 @@ export function I18nProvider({ children, initialLocale = DEFAULT_LOCALE }) {
  * @returns {{ t: Function, locale: string, changeLocale: Function, availableLocales: string[] }}
  */
 export function useTranslation() {
-  const context = useContext(I18nContext)
+  const context = useContext(I18nContext);
 
   // Fallback for when used outside provider (e.g., in tests)
   if (!context) {
     const t = (key, values = {}) => {
-      const value = getNestedValue(en, key)
-      if (value === undefined) return key
-      if (typeof value === 'string') return interpolate(value, values)
-      return value
-    }
+      const value = getNestedValue(en, key);
+      if (value === undefined) return key;
+      if (typeof value === "string") return interpolate(value, values);
+      return value;
+    };
     return {
       t,
       locale: DEFAULT_LOCALE,
       changeLocale: () => {},
       availableLocales: [DEFAULT_LOCALE],
-    }
+    };
   }
 
-  return context
+  return context;
 }
 
 // Export the raw translations for direct access if needed
-export { translations }
+export { translations };
 
 // Export default for convenience
-export default { I18nProvider, useTranslation, translations }
+export default { I18nProvider, useTranslation, translations };

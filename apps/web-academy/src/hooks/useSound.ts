@@ -4,11 +4,11 @@
 // Direction: Mechanical/Physical, NOT Digital/Arcade
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
-import { useHaptics } from './useHaptics';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useHaptics } from "./useHaptics";
 
 interface SoundOptions {
   volume?: number;
@@ -23,17 +23,17 @@ interface AudioCache {
 // Sound asset paths
 const SOUND_PATHS: Record<string, string> = {
   // Roll sounds (loopable)
-  'chain_wind.mp3': '/sounds/chain_wind.mp3',
-  'ratchet_soft.mp3': '/sounds/ratchet_soft.mp3',
+  "chain_wind.mp3": "/sounds/chain_wind.mp3",
+  "ratchet_soft.mp3": "/sounds/ratchet_soft.mp3",
 
   // Impact sounds
-  'plate_drop_heavy.mp3': '/sounds/plate_drop_heavy.mp3',
-  'plate_drop_medium.mp3': '/sounds/plate_drop_medium.mp3',
-  'locker_latch.mp3': '/sounds/locker_latch.mp3',
-  'soft_click.mp3': '/sounds/soft_click.mp3',
+  "plate_drop_heavy.mp3": "/sounds/plate_drop_heavy.mp3",
+  "plate_drop_medium.mp3": "/sounds/plate_drop_medium.mp3",
+  "locker_latch.mp3": "/sounds/locker_latch.mp3",
+  "soft_click.mp3": "/sounds/soft_click.mp3",
 
   // Special
-  'wolf_howl_distant.mp3': '/sounds/wolf_howl_distant.mp3',
+  "wolf_howl_distant.mp3": "/sounds/wolf_howl_distant.mp3",
 };
 
 export function useSound() {
@@ -54,17 +54,17 @@ export function useSound() {
     // Resume on user interaction (for autoplay policies)
     const handleInteraction = () => {
       initAudio();
-      if (audioContextRef.current?.state === 'suspended') {
+      if (audioContextRef.current?.state === "suspended") {
         audioContextRef.current.resume();
       }
     };
 
-    window.addEventListener('click', handleInteraction, { once: true });
-    window.addEventListener('touchstart', handleInteraction, { once: true });
+    window.addEventListener("click", handleInteraction, { once: true });
+    window.addEventListener("touchstart", handleInteraction, { once: true });
 
     return () => {
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
     };
   }, []);
 
@@ -103,7 +103,7 @@ export function useSound() {
       if (!theme.features.sounds || !isEnabled) {
         // Fallback to haptic boost
         if (options.volume && options.volume > 0.5) {
-          haptics.trigger('impact_medium', 'heavy');
+          haptics.trigger("impact_medium", "heavy");
         }
         return;
       }
@@ -111,7 +111,7 @@ export function useSound() {
       const buffer = await loadSound(soundName);
       if (!buffer || !audioContextRef.current) {
         // Fallback to haptic
-        haptics.trigger('impact_light', 'medium');
+        haptics.trigger("impact_light", "medium");
         return;
       }
 
@@ -143,10 +143,10 @@ export function useSound() {
       } catch (error) {
         console.warn(`Failed to play sound: ${soundName}`, error);
         // Fallback to haptic
-        haptics.trigger('impact_light', 'medium');
+        haptics.trigger("impact_light", "medium");
       }
     },
-    [theme.features.sounds, isEnabled, loadSound, haptics]
+    [theme.features.sounds, isEnabled, loadSound, haptics],
   );
 
   // Stop all sounds
@@ -164,11 +164,7 @@ export function useSound() {
 
   // Preload common sounds
   const preload = useCallback(async () => {
-    const commonSounds = [
-      'plate_drop_medium.mp3',
-      'locker_latch.mp3',
-      'soft_click.mp3',
-    ];
+    const commonSounds = ["plate_drop_medium.mp3", "locker_latch.mp3", "soft_click.mp3"];
 
     await Promise.all(commonSounds.map(loadSound));
   }, [loadSound]);

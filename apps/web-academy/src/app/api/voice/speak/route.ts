@@ -4,13 +4,13 @@
 // Target: <100ms time-to-first-byte
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 
 // Use global preview API for geo-optimized routing
-const ELEVENLABS_API_URL = 'https://api.elevenlabs.io/v1';
+const ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1";
 
 interface SpeakRequest {
   text: string;
@@ -27,32 +27,26 @@ export async function POST(request: NextRequest) {
     const { text, stability = 0.5, similarityBoost = 0.75 } = body;
 
     if (!text) {
-      return NextResponse.json(
-        { error: 'Missing text' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing text" }, { status: 400 });
     }
 
     if (!ELEVENLABS_API_KEY || !ELEVENLABS_VOICE_ID) {
-      return NextResponse.json(
-        { error: 'ElevenLabs not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "ElevenLabs not configured" }, { status: 500 });
     }
 
     // Use streaming endpoint with Flash v2.5 for lowest latency
     const response = await fetch(
       `${ELEVENLABS_API_URL}/text-to-speech/${ELEVENLABS_VOICE_ID}/stream`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': ELEVENLABS_API_KEY,
+          Accept: "audio/mpeg",
+          "Content-Type": "application/json",
+          "xi-api-key": ELEVENLABS_API_KEY,
         },
         body: JSON.stringify({
           text,
-          model_id: 'eleven_flash_v2_5', // Lowest latency model
+          model_id: "eleven_flash_v2_5", // Lowest latency model
           voice_settings: {
             stability,
             similarity_boost: similarityBoost,
@@ -62,15 +56,15 @@ export async function POST(request: NextRequest) {
           // Optimize for latency
           optimize_streaming_latency: 3, // Max latency optimization
         }),
-      }
+      },
     );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('[ElevenLabs] Error:', errorText);
+      console.error("[ElevenLabs] Error:", errorText);
       return NextResponse.json(
-        { error: 'TTS generation failed', details: errorText },
-        { status: response.status }
+        { error: "TTS generation failed", details: errorText },
+        { status: response.status },
       );
     }
 
@@ -80,18 +74,14 @@ export async function POST(request: NextRequest) {
     // Stream the audio response
     return new NextResponse(response.body, {
       headers: {
-        'Content-Type': 'audio/mpeg',
-        'Transfer-Encoding': 'chunked',
-        'X-TTFB-Ms': ttfb.toString(),
+        "Content-Type": "audio/mpeg",
+        "Transfer-Encoding": "chunked",
+        "X-TTFB-Ms": ttfb.toString(),
       },
     });
-
   } catch (error) {
-    console.error('[Speak] Error:', error);
-    return NextResponse.json(
-      { error: 'TTS failed', details: String(error) },
-      { status: 500 }
-    );
+    console.error("[Speak] Error:", error);
+    return NextResponse.json({ error: "TTS failed", details: String(error) }, { status: 500 });
   }
 }
 
@@ -103,25 +93,22 @@ export async function GET() {
   if (!ELEVENLABS_API_KEY || !ELEVENLABS_VOICE_ID) {
     return NextResponse.json({
       available: false,
-      error: 'ElevenLabs not configured',
+      error: "ElevenLabs not configured",
     });
   }
 
   try {
     // Check voice exists
-    const response = await fetch(
-      `${ELEVENLABS_API_URL}/voices/${ELEVENLABS_VOICE_ID}`,
-      {
-        headers: {
-          'xi-api-key': ELEVENLABS_API_KEY,
-        },
-      }
-    );
+    const response = await fetch(`${ELEVENLABS_API_URL}/voices/${ELEVENLABS_VOICE_ID}`, {
+      headers: {
+        "xi-api-key": ELEVENLABS_API_KEY,
+      },
+    });
 
     if (!response.ok) {
       return NextResponse.json({
         available: false,
-        error: 'Voice not found',
+        error: "Voice not found",
       });
     }
 
@@ -131,7 +118,7 @@ export async function GET() {
       available: true,
       voiceId: ELEVENLABS_VOICE_ID,
       voiceName: voice.name,
-      models: ['eleven_flash_v2_5', 'eleven_turbo_v2_5'],
+      models: ["eleven_flash_v2_5", "eleven_turbo_v2_5"],
     });
   } catch (error) {
     return NextResponse.json({

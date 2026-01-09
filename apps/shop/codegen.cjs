@@ -1,4 +1,4 @@
-const {getSchema, pluckConfig, preset} = require('@shopify/hydrogen-codegen');
+const { getSchema, pluckConfig, preset } = require("@shopify/hydrogen-codegen");
 
 /** @type {import('@graphql-codegen/cli').CodegenConfig} */
 module.exports = {
@@ -6,11 +6,10 @@ module.exports = {
   pluckConfig,
   concurrency: 1,
   generates: {
-    'storefrontapi.generated.d.ts': {
+    "storefrontapi.generated.d.ts": {
       preset,
-      schema: getSchema('storefront'),
-      documents: ['./*.{ts,tsx,js,jsx}', './app/**/*.{ts,tsx,js,jsx}'],
+      schema: getSchema("storefront"),
+      documents: ["./*.{ts,tsx,js,jsx}", "./app/**/*.{ts,tsx,js,jsx}"],
     },
   },
 };
-

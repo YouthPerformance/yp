@@ -3,9 +3,9 @@
 // Zustand store for Interactive Learning Module state
 // ═══════════════════════════════════════════════════════════
 
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { LearningSection, ContentMode } from '@/data/modules/types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { ContentMode, LearningSection } from "@/data/modules/types";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
@@ -55,7 +55,7 @@ interface ModuleActions {
     mode: ContentMode,
     sectionsUnlocked: Record<string, boolean>,
     answers: Record<string, { optionId: string; isCorrect: boolean; attempts: number }>,
-    crystalsEarned: number
+    crystalsEarned: number,
   ) => void;
 }
 
@@ -69,7 +69,7 @@ const initialState: ModuleState = {
   currentModule: null,
   currentSectionIndex: 0,
   currentCardIndex: 0,
-  mode: 'athlete',
+  mode: "athlete",
   xpEarned: 0,
   shardsEarned: 0,
   levelsCompleted: [],
@@ -91,7 +91,7 @@ export const useModuleStore = create<ModuleStore>()(
       // ─────────────────────────────────────────────────────────
 
       startModule: (moduleId: string, sections: LearningSection[]) => {
-        const firstSectionId = sections[0]?.id ?? '';
+        const firstSectionId = sections[0]?.id ?? "";
         set({
           currentModule: moduleId,
           currentSectionIndex: 0,
@@ -169,7 +169,7 @@ export const useModuleStore = create<ModuleStore>()(
 
       toggleMode: () => {
         set((state) => ({
-          mode: state.mode === 'athlete' ? 'parent' : 'athlete',
+          mode: state.mode === "athlete" ? "parent" : "athlete",
         }));
       },
 
@@ -233,7 +233,7 @@ export const useModuleStore = create<ModuleStore>()(
         mode: ContentMode,
         sectionsUnlocked: Record<string, boolean>,
         answers: Record<string, { optionId: string; isCorrect: boolean; attempts: number }>,
-        xpEarned: number
+        xpEarned: number,
       ) => {
         set({
           currentSectionIndex: sectionIndex,
@@ -246,11 +246,11 @@ export const useModuleStore = create<ModuleStore>()(
       },
     }),
     {
-      name: 'yp-module-store',
+      name: "yp-module-store",
       // Only persist mode preference
       partialize: (state) => ({ mode: state.mode }),
-    }
-  )
+    },
+  ),
 );
 
 // ─────────────────────────────────────────────────────────────

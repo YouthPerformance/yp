@@ -1,15 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+  if (typeof window === "undefined") return false;
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 }
 
 /**
  * WebGL noise background shader - creates a subtle animated grain/glow effect.
  * Adapted from Shopify Supply's Performance Pack.
  */
-export function WebGLNoise({ className = '' }: { className?: string }) {
+export function WebGLNoise({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function WebGLNoise({ className = '' }: { className?: string }) {
     if (!canvas) return;
 
     const reduce = prefersReducedMotion();
-    const gl = canvas.getContext('webgl2', { antialias: false, alpha: true });
+    const gl = canvas.getContext("webgl2", { antialias: false, alpha: true });
     if (!gl) return;
 
     const vertexSrc = `#version 300 es
@@ -113,15 +113,15 @@ void main() {
     gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      gl.STATIC_DRAW
+      gl.STATIC_DRAW,
     );
 
-    const locPos = gl.getAttribLocation(prog, 'a_pos');
+    const locPos = gl.getAttribLocation(prog, "a_pos");
     gl.enableVertexAttribArray(locPos);
     gl.vertexAttribPointer(locPos, 2, gl.FLOAT, false, 0, 0);
 
-    const uRes = gl.getUniformLocation(prog, 'u_res');
-    const uTime = gl.getUniformLocation(prog, 'u_time');
+    const uRes = gl.getUniformLocation(prog, "u_res");
+    const uTime = gl.getUniformLocation(prog, "u_time");
 
     let raf = 0;
     const t0 = performance.now();
@@ -166,5 +166,5 @@ void main() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className={className} aria-hidden="true" />;
+  return <canvas ref={canvasRef} className={className} />;
 }

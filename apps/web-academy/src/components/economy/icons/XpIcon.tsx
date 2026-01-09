@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { SVGProps } from 'react';
+import type { SVGProps } from "react";
 
 interface XpIconProps extends SVGProps<SVGSVGElement> {
   size?: number;
-  variant?: 'bolt' | 'star';
+  variant?: "bolt" | "star";
   animated?: boolean;
 }
 
@@ -16,16 +16,18 @@ interface XpIconProps extends SVGProps<SVGSVGElement> {
  */
 export function XpIcon({
   size = 24,
-  variant = 'bolt',
+  variant = "bolt",
   animated = false,
-  className = '',
+  className = "",
   ...props
 }: XpIconProps) {
-  const animationStyle = animated ? {
-    animation: 'xp-pulse 1.5s ease-in-out infinite',
-  } : {};
+  const animationStyle = animated
+    ? {
+        animation: "xp-pulse 1.5s ease-in-out infinite",
+      }
+    : {};
 
-  if (variant === 'star') {
+  if (variant === "star") {
     return (
       <svg
         width={size}
@@ -34,7 +36,7 @@ export function XpIcon({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={className}
-        style={{ filter: 'drop-shadow(0 0 3px #facc15)', ...animationStyle }}
+        style={{ filter: "drop-shadow(0 0 3px #facc15)", ...animationStyle }}
         {...props}
       >
         {/* 4-pointed star */}
@@ -64,7 +66,7 @@ export function XpIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      style={{ filter: 'drop-shadow(0 0 3px #facc15)', ...animationStyle }}
+      style={{ filter: "drop-shadow(0 0 3px #facc15)", ...animationStyle }}
       {...props}
     >
       {/* Lightning bolt main shape */}
@@ -77,11 +79,7 @@ export function XpIcon({
       />
 
       {/* Highlight streak */}
-      <path
-        d="M12 4L7 12H10L9 18L15 11H12L13 4H12Z"
-        fill="#fef9c3"
-        fillOpacity={0.6}
-      />
+      <path d="M12 4L7 12H10L9 18L15 11H12L13 4H12Z" fill="#fef9c3" fillOpacity={0.6} />
     </svg>
   );
 }

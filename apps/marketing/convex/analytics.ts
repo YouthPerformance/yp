@@ -57,10 +57,12 @@ export const storeQuizResponse = mutation({
   args: {
     profileId: v.optional(v.id("profiles")),
     anonymousId: v.optional(v.string()),
-    answers: v.array(v.object({
-      questionId: v.number(),
-      answer: v.string(),
-    })),
+    answers: v.array(
+      v.object({
+        questionId: v.number(),
+        answer: v.string(),
+      }),
+    ),
     scores: v.object({
       forceLeaker: v.number(),
       elasticity: v.number(),
@@ -160,12 +162,7 @@ export const getFunnelMetrics = query({
     // Get all events in date range
     const events = await ctx.db
       .query("analyticsEvents")
-      .filter((q) =>
-        q.and(
-          q.gte(q.field("createdAt"), start),
-          q.lte(q.field("createdAt"), end)
-        )
-      )
+      .filter((q) => q.and(q.gte(q.field("createdAt"), start), q.lte(q.field("createdAt"), end)))
       .collect();
 
     // Count events by type
@@ -177,22 +174,14 @@ export const getFunnelMetrics = query({
     // Get leads count
     const leads = await ctx.db
       .query("leads")
-      .filter((q) =>
-        q.and(
-          q.gte(q.field("createdAt"), start),
-          q.lte(q.field("createdAt"), end)
-        )
-      )
+      .filter((q) => q.and(q.gte(q.field("createdAt"), start), q.lte(q.field("createdAt"), end)))
       .collect();
 
     // Get quiz completions
     const quizzes = await ctx.db
       .query("quizResponses")
       .filter((q) =>
-        q.and(
-          q.gte(q.field("completedAt"), start),
-          q.lte(q.field("completedAt"), end)
-        )
+        q.and(q.gte(q.field("completedAt"), start), q.lte(q.field("completedAt"), end)),
       )
       .collect();
 

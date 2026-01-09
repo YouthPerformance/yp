@@ -4,17 +4,17 @@
 // Particles burst OUTWARD from center (not rain down)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { PARTICLE_PRESETS } from '@/lib/ticker-config';
-import { random, randomInt } from '@/lib/utils';
+import { motion } from "framer-motion";
+import { useMemo } from "react";
+import { PARTICLE_PRESETS } from "@/lib/ticker-config";
+import { random, randomInt } from "@/lib/utils";
 
 interface WolfParticlesProps {
   color?: string;
   intensity?: number;
-  variant?: 'celebration' | 'epic';
+  variant?: "celebration" | "epic";
 }
 
 interface Particle {
@@ -30,7 +30,7 @@ interface Particle {
 export function WolfParticles({
   color,
   intensity = 1,
-  variant = 'celebration',
+  variant = "celebration",
 }: WolfParticlesProps) {
   const preset = PARTICLE_PRESETS[variant];
   const particleColor = color || preset.color;
@@ -68,8 +68,8 @@ export function WolfParticles({
             width: particle.size,
             height: particle.size,
             backgroundColor: particleColor,
-            left: '50%',
-            top: '50%',
+            left: "50%",
+            top: "50%",
             marginLeft: -particle.size / 2,
             marginTop: -particle.size / 2,
             boxShadow: `0 0 ${particle.size * 2}px ${particleColor}`,
@@ -107,7 +107,7 @@ interface ConfettiProps {
 }
 
 export function Confetti({
-  colors = ['#00F6E0', '#FBBF24', '#FFFFFF'],
+  colors = ["#00F6E0", "#FBBF24", "#FFFFFF"],
   count = 50,
 }: ConfettiProps) {
   const confettiPieces = useMemo(() => {
@@ -130,8 +130,8 @@ export function Confetti({
           className="absolute w-3 h-3"
           style={{
             backgroundColor: piece.color,
-            left: '50%',
-            top: '50%',
+            left: "50%",
+            top: "50%",
           }}
           initial={{
             x: 0,

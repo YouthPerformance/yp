@@ -1,103 +1,103 @@
-import { useState, useEffect } from 'react'
-import { useUser } from '@clerk/clerk-react'
-import { useMutation, useQuery } from 'convex/react'
-import { api } from '../../convex/_generated/api'
-import { Button, Card, Input, Badge } from '../components/ui'
-import { useOnboarding } from '../context/OnboardingContext'
-import { generateWolfPrompt, PILLS_CONFIG } from '../config/interestPills'
+import { useUser } from "@clerk/clerk-react";
+import { useMutation, useQuery } from "convex/react";
+import { useEffect, useState } from "react";
+import { api } from "../../convex/_generated/api";
+import { Badge, Button, Card, Input } from "../components/ui";
+import { generateWolfPrompt } from "../config/interestPills";
+import { useOnboarding } from "../context/OnboardingContext";
 
 // Age band options
 const AGE_BANDS = [
-  { value: 'under8', label: 'Under 8', helper: 'Focus on play and movement' },
-  { value: '8-12', label: '8-12 years', helper: 'Building foundations' },
-  { value: '13+', label: '13+ years', helper: 'Performance training' },
-]
+  { value: "under8", label: "Under 8", helper: "Focus on play and movement" },
+  { value: "8-12", label: "8-12 years", helper: "Building foundations" },
+  { value: "13+", label: "13+ years", helper: "Performance training" },
+];
 
 // Space options
 const SPACES = [
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'driveway', label: 'Driveway / Backyard' },
-  { value: 'gym', label: 'Gym / Court' },
-  { value: 'field', label: 'Field' },
-]
+  { value: "apartment", label: "Apartment" },
+  { value: "driveway", label: "Driveway / Backyard" },
+  { value: "gym", label: "Gym / Court" },
+  { value: "field", label: "Field" },
+];
 
 // Pain flag options
 const PAIN_FLAGS = [
-  { value: 'none', label: 'No pain' },
-  { value: 'foot-ankle', label: 'Foot / Ankle' },
-  { value: 'knee-hip-back', label: 'Knee / Hip / Back' },
-  { value: 'not-sure', label: 'Not sure' },
-]
+  { value: "none", label: "No pain" },
+  { value: "foot-ankle", label: "Foot / Ankle" },
+  { value: "knee-hip-back", label: "Knee / Hip / Back" },
+  { value: "not-sure", label: "Not sure" },
+];
 
 function Settings() {
-  const { user } = useUser()
-  const { data, updateField } = useOnboarding()
+  const { user } = useUser();
+  const { data, updateField } = useOnboarding();
 
   // Convex queries and mutations
-  const email = user?.primaryEmailAddress?.emailAddress
-  const profile = useQuery(api.users.getByEmail, email ? { email } : 'skip')
+  const email = user?.primaryEmailAddress?.emailAddress;
+  const profile = useQuery(api.users.getByEmail, email ? { email } : "skip");
   const progressSummary = useQuery(
     api.progress.getProgressSummary,
-    profile?._id ? { profileId: profile._id } : 'skip'
-  )
-  const updateProfile = useMutation(api.users.updateProfile)
-  const updateWolfPrompt = useMutation(api.users.updateWolfPrompt)
+    profile?._id ? { profileId: profile._id } : "skip",
+  );
+  const updateProfile = useMutation(api.users.updateProfile);
+  const _updateWolfPrompt = useMutation(api.users.updateWolfPrompt);
 
   // Local state for form
-  const [childNickname, setChildNickname] = useState(data.childNickname || '')
-  const [ageBand, setAgeBand] = useState(data.ageBand || '8-12')
-  const [space, setSpace] = useState(data.space || 'driveway')
-  const [painFlag, setPainFlag] = useState(data.painFlag || 'none')
-  const [wolfPrompt, setWolfPrompt] = useState('')
-  const [trainingReminders, setTrainingReminders] = useState(true)
-  const [progressReports, setProgressReports] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
-  const [saveSuccess, setSaveSuccess] = useState(false)
+  const [childNickname, setChildNickname] = useState(data.childNickname || "");
+  const [ageBand, setAgeBand] = useState(data.ageBand || "8-12");
+  const [space, setSpace] = useState(data.space || "driveway");
+  const [painFlag, setPainFlag] = useState(data.painFlag || "none");
+  const [wolfPrompt, setWolfPrompt] = useState("");
+  const [trainingReminders, setTrainingReminders] = useState(true);
+  const [progressReports, setProgressReports] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Sync from profile when loaded
   useEffect(() => {
     if (profile) {
-      setChildNickname(profile.childNickname || data.childNickname || '')
-      setAgeBand(profile.ageBand || data.ageBand || '8-12')
-      setSpace(profile.space || data.space || 'driveway')
-      setPainFlag(profile.painFlag || data.painFlag || 'none')
-      setTrainingReminders(profile.trainingReminders ?? true)
-      setProgressReports(profile.progressReports ?? true)
+      setChildNickname(profile.childNickname || data.childNickname || "");
+      setAgeBand(profile.ageBand || data.ageBand || "8-12");
+      setSpace(profile.space || data.space || "driveway");
+      setPainFlag(profile.painFlag || data.painFlag || "none");
+      setTrainingReminders(profile.trainingReminders ?? true);
+      setProgressReports(profile.progressReports ?? true);
       if (profile.wolfPrompt) {
-        setWolfPrompt(profile.wolfPrompt)
+        setWolfPrompt(profile.wolfPrompt);
       }
     }
-  }, [profile])
+  }, [profile, data.ageBand, data.childNickname, data.painFlag, data.space]);
 
   // Generate Wolf prompt on mount or when data changes
   useEffect(() => {
     const prompt = generateWolfPrompt({
       ...data,
-      childNickname: childNickname || 'your athlete',
+      childNickname: childNickname || "your athlete",
       ageBand,
       space,
       painFlag,
-    })
-    setWolfPrompt(prompt)
-  }, [data, childNickname, ageBand, space, painFlag])
+    });
+    setWolfPrompt(prompt);
+  }, [data, childNickname, ageBand, space, painFlag]);
 
   // Sync local state with context
   useEffect(() => {
-    setChildNickname(data.childNickname || '')
-    setAgeBand(data.ageBand || '8-12')
-    setSpace(data.space || 'driveway')
-    setPainFlag(data.painFlag || 'none')
-  }, [data])
+    setChildNickname(data.childNickname || "");
+    setAgeBand(data.ageBand || "8-12");
+    setSpace(data.space || "driveway");
+    setPainFlag(data.painFlag || "none");
+  }, [data]);
 
   const handleSave = async () => {
-    setIsSaving(true)
-    setSaveSuccess(false)
+    setIsSaving(true);
+    setSaveSuccess(false);
 
     // Update context
-    updateField('childNickname', childNickname)
-    updateField('ageBand', ageBand)
-    updateField('space', space)
-    updateField('painFlag', painFlag)
+    updateField("childNickname", childNickname);
+    updateField("ageBand", ageBand);
+    updateField("space", space);
+    updateField("painFlag", painFlag);
 
     try {
       // Save to Convex if we have a profile
@@ -111,28 +111,28 @@ function Settings() {
           wolfPrompt,
           trainingReminders,
           progressReports,
-        })
+        });
       }
 
-      setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 3000)
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
-      console.error('Save error:', err)
+      console.error("Save error:", err);
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleResetWolfPrompt = () => {
     const defaultPrompt = generateWolfPrompt({
       ...data,
-      childNickname: childNickname || 'your athlete',
+      childNickname: childNickname || "your athlete",
       ageBand,
       space,
       painFlag,
-    })
-    setWolfPrompt(defaultPrompt)
-  }
+    });
+    setWolfPrompt(defaultPrompt);
+  };
 
   // Progress data from Convex
   const progressData = {
@@ -140,7 +140,7 @@ function Settings() {
     longestStreak: progressSummary?.longestStreak || 0,
     totalSessions: progressSummary?.totalSessions || 0,
     lastSessionDate: progressSummary?.lastSessionDate || null,
-  }
+  };
 
   return (
     <div className="min-h-screen bg-black py-12">
@@ -155,8 +155,10 @@ function Settings() {
             <h2 className="text-xl font-yp-display uppercase tracking-wide text-white">
               Athlete Profile
             </h2>
-            {data.role === 'parent' && (
-              <Badge variant="cyan" size="sm">Parent View</Badge>
+            {data.role === "parent" && (
+              <Badge variant="cyan" size="sm">
+                Parent View
+              </Badge>
             )}
           </div>
 
@@ -189,9 +191,10 @@ function Settings() {
                     onClick={() => setAgeBand(band.value)}
                     className={`
                       p-3 rounded-lg border text-left transition-colors
-                      ${ageBand === band.value
-                        ? 'border-cyan-500 bg-cyan-500/10 text-white'
-                        : 'border-black-400 bg-black-100 text-dark-text-secondary hover:border-black-300'
+                      ${
+                        ageBand === band.value
+                          ? "border-cyan-500 bg-cyan-500/10 text-white"
+                          : "border-black-400 bg-black-100 text-dark-text-secondary hover:border-black-300"
                       }
                     `}
                   >
@@ -212,7 +215,9 @@ function Settings() {
                 className="w-full bg-black-100 border border-black-400 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors"
               >
                 {SPACES.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -228,7 +233,9 @@ function Settings() {
                 className="w-full bg-black-100 border border-black-400 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors"
               >
                 {PAIN_FLAGS.map((p) => (
-                  <option key={p.value} value={p.value}>{p.label}</option>
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
                 ))}
               </select>
               <p className="text-dark-text-tertiary text-xs mt-1">
@@ -299,7 +306,9 @@ function Settings() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="text-center p-4 bg-black-100 rounded-lg">
               <p className="text-2xl font-yp-display text-cyan-500">{progressData.currentStreak}</p>
-              <p className="text-xs text-dark-text-tertiary uppercase tracking-wide">Current Streak</p>
+              <p className="text-xs text-dark-text-tertiary uppercase tracking-wide">
+                Current Streak
+              </p>
             </div>
             <div className="text-center p-4 bg-black-100 rounded-lg">
               <p className="text-2xl font-yp-display text-gold-500">{progressData.longestStreak}</p>
@@ -307,16 +316,22 @@ function Settings() {
             </div>
             <div className="text-center p-4 bg-black-100 rounded-lg">
               <p className="text-2xl font-yp-display text-white">{progressData.totalSessions}</p>
-              <p className="text-xs text-dark-text-tertiary uppercase tracking-wide">Total Sessions</p>
+              <p className="text-xs text-dark-text-tertiary uppercase tracking-wide">
+                Total Sessions
+              </p>
             </div>
             <div className="text-center p-4 bg-black-100 rounded-lg">
               <p className="text-lg font-medium text-white">
                 {progressData.lastSessionDate
-                  ? new Date(progressData.lastSessionDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                  : '--'
-                }
+                  ? new Date(progressData.lastSessionDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : "--"}
               </p>
-              <p className="text-xs text-dark-text-tertiary uppercase tracking-wide">Last Session</p>
+              <p className="text-xs text-dark-text-tertiary uppercase tracking-wide">
+                Last Session
+              </p>
             </div>
           </div>
 
@@ -336,11 +351,7 @@ function Settings() {
               <label className="block text-sm font-medium text-dark-text-secondary mb-2">
                 Email
               </label>
-              <Input
-                type="email"
-                value={user?.primaryEmailAddress?.emailAddress || ''}
-                disabled
-              />
+              <Input type="email" value={user?.primaryEmailAddress?.emailAddress || ""} disabled />
               <p className="text-dark-text-tertiary text-xs mt-1">
                 Email is managed through your account settings
               </p>
@@ -349,26 +360,34 @@ function Settings() {
             <div className="flex items-center justify-between py-2">
               <div>
                 <span className="text-white">Training reminders</span>
-                <p className="text-dark-text-tertiary text-sm">Get notified about training sessions</p>
+                <p className="text-dark-text-tertiary text-sm">
+                  Get notified about training sessions
+                </p>
               </div>
               <button
                 onClick={() => setTrainingReminders(!trainingReminders)}
-                className={`w-12 h-6 rounded-full relative transition-colors ${trainingReminders ? 'bg-cyan-500' : 'bg-black-400'}`}
+                className={`w-12 h-6 rounded-full relative transition-colors ${trainingReminders ? "bg-cyan-500" : "bg-black-400"}`}
               >
-                <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all ${trainingReminders ? 'right-1' : 'left-1'}`}></span>
+                <span
+                  className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all ${trainingReminders ? "right-1" : "left-1"}`}
+                ></span>
               </button>
             </div>
 
             <div className="flex items-center justify-between py-2">
               <div>
                 <span className="text-white">Progress reports</span>
-                <p className="text-dark-text-tertiary text-sm">Weekly summary of your child's training</p>
+                <p className="text-dark-text-tertiary text-sm">
+                  Weekly summary of your child's training
+                </p>
               </div>
               <button
                 onClick={() => setProgressReports(!progressReports)}
-                className={`w-12 h-6 rounded-full relative transition-colors ${progressReports ? 'bg-cyan-500' : 'bg-black-400'}`}
+                className={`w-12 h-6 rounded-full relative transition-colors ${progressReports ? "bg-cyan-500" : "bg-black-400"}`}
               >
-                <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all ${progressReports ? 'right-1' : 'left-1'}`}></span>
+                <span
+                  className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all ${progressReports ? "right-1" : "left-1"}`}
+                ></span>
               </button>
             </div>
           </div>
@@ -401,7 +420,9 @@ function Settings() {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-semibold text-white">Delete Account</p>
-              <p className="text-dark-text-secondary text-sm">Permanently delete your account and all data</p>
+              <p className="text-dark-text-secondary text-sm">
+                Permanently delete your account and all data
+              </p>
             </div>
             <Button variant="danger" size="sm">
               Delete Account
@@ -418,18 +439,16 @@ function Settings() {
             loading={isSaving}
             className="shadow-glow-cyan"
           >
-            {saveSuccess ? 'Saved!' : 'Save Changes'}
+            {saveSuccess ? "Saved!" : "Save Changes"}
           </Button>
 
           {saveSuccess && (
-            <p className="text-success text-center text-sm">
-              Your changes have been saved.
-            </p>
+            <p className="text-success text-center text-sm">Your changes have been saved.</p>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Settings
+export default Settings;

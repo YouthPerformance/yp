@@ -24,9 +24,7 @@ export function Philosophy() {
             <div className="text-center">
               <div className="w-48 h-48 rounded-full bg-gradient-to-br from-[#2a2a2a] to-[#0a0a0a] mx-auto flex items-center justify-center shadow-2xl glow">
                 <div className="text-center">
-                  <p className="font-bebas text-[28px] text-[var(--accent-primary)]">
-                    NEOBALL
-                  </p>
+                  <p className="font-bebas text-[28px] text-[var(--accent-primary)]">NEOBALL</p>
                   <p className="text-[10px] text-[var(--text-tertiary)] tracking-[2px] mt-1">
                     FOUNDERS EDITION
                   </p>
@@ -62,10 +60,7 @@ export function Philosophy() {
             {PHILOSOPHY.body}
           </p>
 
-          <Link
-            href={PHILOSOPHY.cta.href}
-            className="btn-primary text-sm tracking-wider"
-          >
+          <Link href={PHILOSOPHY.cta.href} className="btn-primary text-sm tracking-wider">
             {PHILOSOPHY.cta.label}
           </Link>
         </motion.div>

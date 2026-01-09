@@ -5,13 +5,13 @@
  * White text on black. Bebas Neue headers. Scroll-driven animations.
  */
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 // Animated text that fades in word by word
-function AnimatedParagraph({ children, className = '' }) {
-  const words = children.split(' ')
+function AnimatedParagraph({ children, className = "" }) {
+  const words = children.split(" ");
 
   return (
     <motion.p className={className}>
@@ -23,31 +23,31 @@ function AnimatedParagraph({ children, className = '' }) {
           transition={{
             duration: 0.5,
             delay: i * 0.03,
-            ease: [0.17, 0, 0, 1]
+            ease: [0.17, 0, 0, 1],
           }}
-          viewport={{ once: true, margin: '-10%' }}
+          viewport={{ once: true, margin: "-10%" }}
           className="inline-block mr-[0.25em]"
         >
           {word}
         </motion.span>
       ))}
     </motion.p>
-  )
+  );
 }
 
 // Section component with fade-in
-function ManifestoSection({ children, className = '' }) {
+function ManifestoSection({ children, className = "" }) {
   return (
     <motion.section
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.17, 0, 0, 1] }}
-      viewport={{ once: true, margin: '-5%' }}
+      viewport={{ once: true, margin: "-5%" }}
       className={`py-24 md:py-32 ${className}`}
     >
       {children}
     </motion.section>
-  )
+  );
 }
 
 // Big statement text
@@ -62,7 +62,7 @@ function Statement({ children }) {
     >
       {children}
     </motion.h2>
-  )
+  );
 }
 
 // Accent statement (cyan highlight)
@@ -77,7 +77,7 @@ function AccentStatement({ children }) {
     >
       {children}
     </motion.h3>
-  )
+  );
 }
 
 // Full-width image with parallax reveal
@@ -104,18 +104,18 @@ function ManifestoImage({ src, alt }) {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60" />
       </motion.div>
     </div>
-  )
+  );
 }
 
 export default function Mission() {
-  const containerRef = useRef(null)
+  const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start start', 'end end']
-  })
+    offset: ["start start", "end end"],
+  });
 
   // Progress bar at top
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <div ref={containerRef} className="min-h-screen bg-black text-white">
@@ -133,7 +133,7 @@ export default function Mission() {
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
+            backgroundSize: "60px 60px",
           }}
         />
 
@@ -175,19 +175,25 @@ export default function Mission() {
           <Statement>WE ARE WATCHING A GENERATION BREAK.</Statement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-8">
-            Look at the sidelines. Look at the injury reports. ACL tears. Achilles ruptures. Stress fractures. Athletes are bigger, faster, and stronger than ever before. And yet, they have never been more fragile.
+            Look at the sidelines. Look at the injury reports. ACL tears. Achilles ruptures. Stress
+            fractures. Athletes are bigger, faster, and stronger than ever before. And yet, they
+            have never been more fragile.
           </AnimatedParagraph>
 
           <AccentStatement>WHY?</AccentStatement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-8">
-            Because for twenty years, the industry sold you a lie. They told you power comes from muscles. They told you protection comes from foam. They told you the foot is a dumb block of bone meant to be taped, braced, and silenced.
+            Because for twenty years, the industry sold you a lie. They told you power comes from
+            muscles. They told you protection comes from foam. They told you the foot is a dumb
+            block of bone meant to be taped, braced, and silenced.
           </AnimatedParagraph>
 
           <Statement>THEY WERE WRONG.</Statement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-12">
-            While they were building bigger engines, they forgot the tires. While they were obsessing over the output, they severed the input. They treated the human body like a collection of parts. They treated you like a Piston.
+            While they were building bigger engines, they forgot the tires. While they were
+            obsessing over the output, they severed the input. They treated the human body like a
+            collection of parts. They treated you like a Piston.
           </AnimatedParagraph>
 
           <motion.p
@@ -230,9 +236,9 @@ export default function Mission() {
             <span
               className="inline-block font-bebas text-sm tracking-[0.2em] uppercase px-3 py-1 mb-4"
               style={{
-                background: 'rgba(0,0,0,0.8)',
-                border: '1px solid #FF0000',
-                color: '#FF0000'
+                background: "rgba(0,0,0,0.8)",
+                border: "1px solid #FF0000",
+                color: "#FF0000",
               }}
             >
               SENSORY DEPRIVATION
@@ -240,17 +246,21 @@ export default function Mission() {
           </motion.div>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-8">
-            Modern shoes are sensory deprivation chambers. Thick foam. Rigid plastic. Narrow toe boxes. They blindfold your feet.
+            Modern shoes are sensory deprivation chambers. Thick foam. Rigid plastic. Narrow toe
+            boxes. They blindfold your feet.
           </AnimatedParagraph>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-12">
-            When your brain cannot feel the ground, it panics. It throttles your speed. It destabilizes your ankles. It puts a governor on your engine to protect you from what it cannot see.
+            When your brain cannot feel the ground, it panics. It throttles your speed. It
+            destabilizes your ankles. It puts a governor on your engine to protect you from what it
+            cannot see.
           </AnimatedParagraph>
 
           <AccentStatement>YOU CANNOT DOMINATE WHAT YOU CANNOT FEEL.</AccentStatement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-300 leading-loose">
-            We built stronger engines and bolted them onto flat tires. The result? Glass Cannons standing on wet cardboard.
+            We built stronger engines and bolted them onto flat tires. The result? Glass Cannons
+            standing on wet cardboard.
           </AnimatedParagraph>
         </div>
       </ManifestoSection>
@@ -276,17 +286,20 @@ export default function Mission() {
           <Statement>WEAK FEET DON'T EAT.</Statement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-8">
-            Strength does not fall from the sky. It rises from the ground. Every sprint, every cut, every dunk starts with a single micro-second of truth: The contact point.
+            Strength does not fall from the sky. It rises from the ground. Every sprint, every cut,
+            every dunk starts with a single micro-second of truth: The contact point.
           </AnimatedParagraph>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-12">
-            If the foot collapses, the knee twists. If the arch leaks, the power dies. If the foundation lies, the roof pays the bill.
+            If the foot collapses, the knee twists. If the arch leaks, the power dies. If the
+            foundation lies, the roof pays the bill.
           </AnimatedParagraph>
 
           <AccentStatement>WE ARE FLIPPING THE PYRAMID.</AccentStatement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-300 leading-loose">
-            No more heavy lifts on weak arches. No more "vertical jump programs" on unstable ankles. We do not train the athlete until we train the sensor.
+            No more heavy lifts on weak arches. No more "vertical jump programs" on unstable ankles.
+            We do not train the athlete until we train the sensor.
           </AnimatedParagraph>
         </div>
       </ManifestoSection>
@@ -312,17 +325,20 @@ export default function Mission() {
           <Statement>BIOLOGY OVER TECHNOLOGY.</Statement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-8">
-            Your foot is an architectural marvel. 26 Bones. 33 Joints. 200,000 Nerve Endings. It is designed to be a Spring, not a strut.
+            Your foot is an architectural marvel. 26 Bones. 33 Joints. 200,000 Nerve Endings. It is
+            designed to be a Spring, not a strut.
           </AnimatedParagraph>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-12">
-            A Piston burns fuel to move. It grinds. It overheats. It breaks. A Spring recycles energy. It absorbs. It recoils. It flows.
+            A Piston burns fuel to move. It grinds. It overheats. It breaks. A Spring recycles
+            energy. It absorbs. It recoils. It flows.
           </AnimatedParagraph>
 
           <AccentStatement>PISTONS PUSH. SPRINGS FLY.</AccentStatement>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-300 leading-loose">
-            We are deleting the old operating system. We are restoring the Tripod. We are tensioning the Arch. We are turning the Big Toe into a crowbar.
+            We are deleting the old operating system. We are restoring the Tripod. We are tensioning
+            the Arch. We are turning the Big Toe into a crowbar.
           </AnimatedParagraph>
         </div>
       </ManifestoSection>
@@ -352,7 +368,8 @@ export default function Mission() {
           </AnimatedParagraph>
 
           <AnimatedParagraph className="text-xl md:text-2xl text-gray-200 leading-loose mb-12">
-            We are shifting the battlefield from the weight room to the floor. We are rejecting the brace. We are re-sensitizing the human machine.
+            We are shifting the battlefield from the weight room to the floor. We are rejecting the
+            brace. We are re-sensitizing the human machine.
           </AnimatedParagraph>
 
           <motion.div
@@ -377,7 +394,8 @@ export default function Mission() {
             viewport={{ once: true }}
             className="font-bebas text-6xl md:text-8xl lg:text-9xl tracking-wider text-white uppercase leading-none mb-12"
           >
-            LOCK IN.<br />
+            LOCK IN.
+            <br />
             <span className="text-cyan-400">LEVEL UP.</span>
           </motion.h2>
 
@@ -416,7 +434,8 @@ export default function Mission() {
               to="/shop"
               className="inline-block w-full md:w-auto px-12 py-6 bg-[#00F0FF] hover:bg-white text-black font-bebas text-3xl tracking-widest uppercase transition-all duration-300 shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:shadow-[0_0_40px_rgba(0,240,255,0.6)]"
               style={{
-                clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)'
+                clipPath:
+                  "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
               }}
             >
               JOIN THE RESISTANCE
@@ -437,5 +456,5 @@ export default function Mission() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

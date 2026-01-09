@@ -4,15 +4,15 @@
 // Intensity Budget: 50 points (1 EPIC moment)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { StatTicker } from '@/components/ui/StatTicker';
-import { WolfParticles } from '@/components/effects/WolfParticles';
-import { useSound } from '@/hooks/useSound';
-import { useHaptics } from '@/hooks/useHaptics';
-import { cn } from '@/lib/utils';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { WolfParticles } from "@/components/effects/WolfParticles";
+import { StatTicker } from "@/components/ui/StatTicker";
+import { useHaptics } from "@/hooks/useHaptics";
+import { useSound } from "@/hooks/useSound";
+import { cn } from "@/lib/utils";
 
 interface StrikeWODVictoryProps {
   bossName: string;
@@ -20,7 +20,7 @@ interface StrikeWODVictoryProps {
   baseXP: number;
   streakMultiplier: number;
   finalXP: number;
-  cardRarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  cardRarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
   cardName: string;
   cardPreviewUrl?: string;
   onViewCard?: () => void;
@@ -28,20 +28,20 @@ interface StrikeWODVictoryProps {
 }
 
 type AnimationPhase =
-  | 'entering'
-  | 'boss-defeated'
-  | 'base-xp'
-  | 'multiplier'
-  | 'final-xp'
-  | 'card-reveal'
-  | 'complete';
+  | "entering"
+  | "boss-defeated"
+  | "base-xp"
+  | "multiplier"
+  | "final-xp"
+  | "card-reveal"
+  | "complete";
 
 const RARITY_CONFIG = {
-  common: { color: '#A0A0A0', glow: 'rgba(160, 160, 160, 0.3)' },
-  uncommon: { color: '#10B981', glow: 'rgba(16, 185, 129, 0.3)' },
-  rare: { color: '#3B82F6', glow: 'rgba(59, 130, 246, 0.3)' },
-  epic: { color: '#8B5CF6', glow: 'rgba(139, 92, 246, 0.3)' },
-  legendary: { color: '#FBBF24', glow: 'rgba(251, 191, 36, 0.4)' },
+  common: { color: "#A0A0A0", glow: "rgba(160, 160, 160, 0.3)" },
+  uncommon: { color: "#10B981", glow: "rgba(16, 185, 129, 0.3)" },
+  rare: { color: "#3B82F6", glow: "rgba(59, 130, 246, 0.3)" },
+  epic: { color: "#8B5CF6", glow: "rgba(139, 92, 246, 0.3)" },
+  legendary: { color: "#FBBF24", glow: "rgba(251, 191, 36, 0.4)" },
 };
 
 export function StrikeWODVictory({
@@ -56,7 +56,7 @@ export function StrikeWODVictory({
   onViewCard,
   onContinue,
 }: StrikeWODVictoryProps) {
-  const [phase, setPhase] = useState<AnimationPhase>('entering');
+  const [phase, setPhase] = useState<AnimationPhase>("entering");
   const [showParticles, setShowParticles] = useState(false);
   const sound = useSound();
   const haptics = useHaptics();
@@ -68,30 +68,34 @@ export function StrikeWODVictory({
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     // Phase 1: Screen fade in (300ms)
-    timers.push(setTimeout(() => {
-      setPhase('boss-defeated');
-      haptics.trigger('impact_heavy');
-      sound.play('plate_drop_heavy.mp3', { volume: 0.8 });
-    }, 300));
+    timers.push(
+      setTimeout(() => {
+        setPhase("boss-defeated");
+        haptics.trigger("impact_heavy");
+        sound.play("plate_drop_heavy.mp3", { volume: 0.8 });
+      }, 300),
+    );
 
     // Phase 2: Boss Defeated header (1500ms)
-    timers.push(setTimeout(() => setPhase('base-xp'), 1800));
+    timers.push(setTimeout(() => setPhase("base-xp"), 1800));
 
     // Phase 3: Base XP ticker (3000ms - slower for drama)
-    timers.push(setTimeout(() => setPhase('multiplier'), 4800));
+    timers.push(setTimeout(() => setPhase("multiplier"), 4800));
 
     // Phase 4: Multiplier calculation (1000ms)
-    timers.push(setTimeout(() => setPhase('final-xp'), 5800));
+    timers.push(setTimeout(() => setPhase("final-xp"), 5800));
 
     // Phase 5: Final XP (1500ms)
-    timers.push(setTimeout(() => {
-      setPhase('card-reveal');
-      setShowParticles(true);
-      haptics.trigger('impact_medium');
-    }, 7300));
+    timers.push(
+      setTimeout(() => {
+        setPhase("card-reveal");
+        setShowParticles(true);
+        haptics.trigger("impact_medium");
+      }, 7300),
+    );
 
     // Phase 6: Complete (after card reveal)
-    timers.push(setTimeout(() => setPhase('complete'), 9000));
+    timers.push(setTimeout(() => setPhase("complete"), 9000));
 
     return () => timers.forEach(clearTimeout);
   }, [haptics, sound]);
@@ -99,7 +103,7 @@ export function StrikeWODVictory({
   return (
     <motion.div
       className="fixed inset-0 flex flex-col items-center justify-center px-6"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -115,38 +119,38 @@ export function StrikeWODVictory({
 
       {/* Boss Defeated Header */}
       <AnimatePresence>
-        {phase !== 'entering' && (
+        {phase !== "entering" && (
           <motion.div
             className="flex flex-col items-center mb-8"
             initial={{ opacity: 0, scale: 0.5, y: -50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{
-              type: 'spring',
+              type: "spring",
               stiffness: 200,
               damping: 15,
             }}
           >
             <motion.h1
               className="font-bebas text-5xl tracking-wider text-center"
-              style={{ color: 'var(--accent-primary)' }}
+              style={{ color: "var(--accent-primary)" }}
               animate={{
                 textShadow: [
-                  '0 0 20px rgba(0, 246, 224, 0.5)',
-                  '0 0 40px rgba(0, 246, 224, 0.8)',
-                  '0 0 20px rgba(0, 246, 224, 0.5)',
+                  "0 0 20px rgba(0, 246, 224, 0.5)",
+                  "0 0 40px rgba(0, 246, 224, 0.8)",
+                  "0 0 20px rgba(0, 246, 224, 0.5)",
                 ],
               }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
             >
               BOSS DEFEATED
             </motion.h1>
             <motion.p
               className="text-lg mt-2"
-              style={{ color: 'var(--text-secondary)' }}
+              style={{ color: "var(--text-secondary)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -159,7 +163,7 @@ export function StrikeWODVictory({
 
       {/* Base XP Ticker */}
       <AnimatePresence>
-        {['base-xp', 'multiplier', 'final-xp', 'card-reveal', 'complete'].includes(phase) && (
+        {["base-xp", "multiplier", "final-xp", "card-reveal", "complete"].includes(phase) && (
           <motion.div
             className="mb-4"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -180,35 +184,29 @@ export function StrikeWODVictory({
 
       {/* Multiplier Display */}
       <AnimatePresence>
-        {['multiplier', 'final-xp', 'card-reveal', 'complete'].includes(phase) && (
+        {["multiplier", "final-xp", "card-reveal", "complete"].includes(phase) && (
           <motion.div
             className="flex items-center gap-3 mb-4"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              type: 'spring',
+              type: "spring",
               stiffness: 400,
               damping: 20,
             }}
           >
-            <span
-              className="font-bebas text-3xl"
-              style={{ color: 'var(--text-secondary)' }}
-            >
+            <span className="font-bebas text-3xl" style={{ color: "var(--text-secondary)" }}>
               ×
             </span>
             <motion.span
               className="font-bebas text-4xl"
-              style={{ color: 'var(--accent-gold)' }}
+              style={{ color: "var(--accent-gold)" }}
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 0.3 }}
             >
               {streakMultiplier.toFixed(2)}
             </motion.span>
-            <span
-              className="text-sm"
-              style={{ color: 'var(--text-tertiary)' }}
-            >
+            <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
               streak bonus
             </span>
           </motion.div>
@@ -217,7 +215,7 @@ export function StrikeWODVictory({
 
       {/* Final XP Ticker */}
       <AnimatePresence>
-        {['final-xp', 'card-reveal', 'complete'].includes(phase) && (
+        {["final-xp", "card-reveal", "complete"].includes(phase) && (
           <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: 20 }}
@@ -237,7 +235,7 @@ export function StrikeWODVictory({
 
       {/* Rare Card Earned */}
       <AnimatePresence>
-        {['card-reveal', 'complete'].includes(phase) && (
+        {["card-reveal", "complete"].includes(phase) && (
           <motion.div
             className="flex flex-col items-center mb-8"
             initial={{ opacity: 0, y: 30 }}
@@ -248,7 +246,7 @@ export function StrikeWODVictory({
             <motion.div
               className="relative w-48 h-64 rounded-xl mb-4 overflow-hidden"
               style={{
-                backgroundColor: 'var(--bg-secondary)',
+                backgroundColor: "var(--bg-secondary)",
                 border: `2px solid ${rarityConfig.color}`,
                 boxShadow: `0 0 30px ${rarityConfig.glow}`,
               }}
@@ -262,15 +260,11 @@ export function StrikeWODVictory({
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
             >
               {cardPreviewUrl ? (
-                <img
-                  src={cardPreviewUrl}
-                  alt={cardName}
-                  className="w-full h-full object-cover"
-                />
+                <img src={cardPreviewUrl} alt={cardName} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <span className="text-6xl">🐺</span>
@@ -281,7 +275,8 @@ export function StrikeWODVictory({
               <motion.div
                 className="absolute inset-0"
                 style={{
-                  background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%)',
+                  background:
+                    "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%)",
                 }}
                 animate={{ x: [-200, 200] }}
                 transition={{
@@ -312,10 +307,7 @@ export function StrikeWODVictory({
               >
                 {cardRarity.toUpperCase()} CARD EARNED!
               </motion.span>
-              <span
-                className="text-lg font-medium"
-                style={{ color: 'var(--text-primary)' }}
-              >
+              <span className="text-lg font-medium" style={{ color: "var(--text-primary)" }}>
                 {cardName}
               </span>
             </motion.div>
@@ -325,7 +317,7 @@ export function StrikeWODVictory({
 
       {/* Action Buttons */}
       <AnimatePresence>
-        {phase === 'complete' && (
+        {phase === "complete" && (
           <motion.div
             className="flex flex-col gap-3 w-full max-w-xs"
             initial={{ opacity: 0, y: 20 }}
@@ -335,12 +327,12 @@ export function StrikeWODVictory({
             <button
               onClick={onViewCard}
               className={cn(
-                'py-4 rounded-lg font-semibold text-lg',
-                'transition-transform hover:scale-105 active:scale-95'
+                "py-4 rounded-lg font-semibold text-lg",
+                "transition-transform hover:scale-105 active:scale-95",
               )}
               style={{
                 backgroundColor: rarityConfig.color,
-                color: '#000000',
+                color: "#000000",
               }}
             >
               VIEW YOUR CARD
@@ -348,13 +340,13 @@ export function StrikeWODVictory({
             <button
               onClick={onContinue}
               className={cn(
-                'py-4 rounded-lg font-semibold text-lg',
-                'transition-transform hover:scale-105 active:scale-95'
+                "py-4 rounded-lg font-semibold text-lg",
+                "transition-transform hover:scale-105 active:scale-95",
               )}
               style={{
-                backgroundColor: 'transparent',
-                border: '1px solid var(--border-default)',
-                color: 'var(--text-primary)',
+                backgroundColor: "transparent",
+                border: "1px solid var(--border-default)",
+                color: "var(--text-primary)",
               }}
             >
               CONTINUE

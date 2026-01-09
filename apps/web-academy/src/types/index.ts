@@ -2,5 +2,5 @@
 // TYPES INDEX
 // ═══════════════════════════════════════════════════════════
 
-export * from './ticker';
-export * from './theme';
+export * from "./theme";
+export * from "./ticker";

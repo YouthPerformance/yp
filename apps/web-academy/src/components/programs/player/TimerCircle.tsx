@@ -3,9 +3,9 @@
 // Circular progress timer visualization
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface TimerCircleProps {
   timeLeft: number;
@@ -27,7 +27,7 @@ export function TimerCircle({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -60,15 +60,12 @@ export function TimerCircle({
             strokeDasharray: circumference,
             strokeDashoffset: circumference * (1 - progress),
           }}
-          transition={{ duration: 0.5, ease: 'linear' }}
+          transition={{ duration: 0.5, ease: "linear" }}
         />
       </svg>
 
       {/* Time Display */}
-      <span
-        className="font-bebas text-4xl"
-        style={{ color: 'var(--text-primary)' }}
-      >
+      <span className="font-bebas text-4xl" style={{ color: "var(--text-primary)" }}>
         {formatTime(timeLeft)}
       </span>
     </div>

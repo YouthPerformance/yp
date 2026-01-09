@@ -11,7 +11,7 @@
  * - #2E1A25 (Bruised Purple - Pain/dissonance)
  */
 
-import Iridescence from '../../components/Iridescence'
+import Iridescence from "../../components/Iridescence";
 
 function OilSpill() {
   // Convert hex to RGB (0-1 range)
@@ -19,7 +19,7 @@ function OilSpill() {
   // #112226 -> RGB(17, 34, 38) -> [0.067, 0.133, 0.149]
   // #2E1A25 -> RGB(46, 26, 37) -> [0.18, 0.102, 0.145]
   // Blended murky color for the shader
-  const murkyColor = [0.12, 0.11, 0.15] // Dark cyan-purple blend
+  const murkyColor = [0.12, 0.11, 0.15]; // Dark cyan-purple blend
 
   return (
     <div className="relative min-h-screen bg-[#08090A] overflow-hidden">
@@ -27,8 +27,8 @@ function OilSpill() {
       <div className="absolute inset-0">
         <Iridescence
           color={murkyColor}
-          speed={0.5}      // Slow and oozing - feels heavy/stuck
-          amplitude={0.2}  // Low movement - stagnant pool of bad advice
+          speed={0.5} // Slow and oozing - feels heavy/stuck
+          amplitude={0.2} // Low movement - stagnant pool of bad advice
           mouseReact={true}
         />
       </div>
@@ -37,7 +37,7 @@ function OilSpill() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at center, transparent 0%, #000000 90%)'
+          background: "radial-gradient(circle at center, transparent 0%, #000000 90%)",
         }}
       />
 
@@ -52,8 +52,8 @@ function OilSpill() {
         </h1>
 
         <p className="text-xl text-dark-text-secondary max-w-2xl mb-8">
-          Bad advice. Fragmented training. No real foundation.
-          Parents are spending thousands on programs that don't work.
+          Bad advice. Fragmented training. No real foundation. Parents are spending thousands on
+          programs that don't work.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 max-w-4xl">
@@ -76,7 +76,7 @@ function OilSpill() {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-export default OilSpill
+export default OilSpill;

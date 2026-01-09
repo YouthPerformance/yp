@@ -37,8 +37,7 @@ export const metadata: Metadata = {
     site: "@yikibooki",
     creator: "@adampharrington",
     title: "Adam Harrington — NBA Skills Development Coach",
-    description:
-      "Train with the coach behind Kevin Durant's MVP season.",
+    description: "Train with the coach behind Kevin Durant's MVP season.",
     images: ["/images/adam/adam-twitter.jpg"],
   },
   alternates: {
@@ -50,11 +49,7 @@ export const metadata: Metadata = {
 // LAYOUT - Uses global YP design tokens
 // ─────────────────────────────────────────────────────────────
 
-export default function AdamLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdamLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{

@@ -5,17 +5,17 @@
 // Based on: docs/ux-research/stat-ticker-ux-spec.md
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { motion, useSpring, useTransform, AnimatePresence } from 'framer-motion';
-import { useTheme, useUserMode } from '@/contexts/ThemeContext';
-import { useSound } from '@/hooks/useSound';
-import { useHaptics } from '@/hooks/useHaptics';
-import { TICKER_CONFIGS } from '@/lib/ticker-config';
-import { WolfParticles } from '@/components/effects/WolfParticles';
-import { cn } from '@/lib/utils';
-import type { StatTickerProps, TickerVariant, TickerConfig } from '@/types/ticker';
+import { AnimatePresence, motion, useSpring, useTransform } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import { WolfParticles } from "@/components/effects/WolfParticles";
+import { useTheme, useUserMode } from "@/contexts/ThemeContext";
+import { useHaptics } from "@/hooks/useHaptics";
+import { useSound } from "@/hooks/useSound";
+import { TICKER_CONFIGS } from "@/lib/ticker-config";
+import { cn } from "@/lib/utils";
+import type { StatTickerProps, TickerConfig, TickerVariant } from "@/types/ticker";
 
 // ─────────────────────────────────────────────────────────────
 // MAIN COMPONENT
@@ -26,7 +26,7 @@ export function StatTicker({
   previousValue = 0,
   variant,
   label,
-  suffix = '',
+  suffix = "",
   showDelta = false,
   onComplete,
   className,
@@ -43,15 +43,15 @@ export function StatTicker({
 
   // Override to PROFESSIONAL in parent mode
   const effectiveVariant: TickerVariant = useMemo(() => {
-    return userMode === 'PARENT' ? 'PROFESSIONAL' : variant;
+    return userMode === "PARENT" ? "PROFESSIONAL" : variant;
   }, [userMode, variant]);
 
   const config = useMemo(() => TICKER_CONFIGS[effectiveVariant], [effectiveVariant]);
 
   // Check reduced motion preference
   const prefersReducedMotion = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }, []);
 
   // Adjust config for reduced motion
@@ -109,10 +109,7 @@ export function StatTicker({
 
       // Haptic feedback
       if (adjustedConfig.hapticPattern && theme.features.haptics) {
-        haptics.trigger(
-          adjustedConfig.hapticPattern as any,
-          adjustedConfig.hapticIntensity
-        );
+        haptics.trigger(adjustedConfig.hapticPattern as any, adjustedConfig.hapticIntensity);
       }
 
       // Trigger particles
@@ -140,7 +137,7 @@ export function StatTicker({
   useEffect(() => {
     setHasAnimated(false);
     setTriggerParticles(false);
-  }, [value]);
+  }, []);
 
   // ─────────────────────────────────────────────────────────────
   // RENDER
@@ -148,17 +145,16 @@ export function StatTicker({
 
   return (
     <div
-      className={cn(
-        'relative flex flex-col items-center',
-        className
-      )}
+      className={cn("relative flex flex-col items-center", className)}
       role="status"
       aria-live="polite"
       aria-atomic="true"
     >
       {/* Screen reader only */}
       <span className="sr-only">
-        {label}: {showDelta && value > 0 ? '+' : ''}{value}{suffix}
+        {label}: {showDelta && value > 0 ? "+" : ""}
+        {value}
+        {suffix}
       </span>
 
       {/* Particles Layer */}
@@ -167,7 +163,7 @@ export function StatTicker({
           <WolfParticles
             color={adjustedConfig.particleColor}
             intensity={adjustedConfig.glowIntensity}
-            variant={effectiveVariant === 'EPIC' ? 'epic' : 'celebration'}
+            variant={effectiveVariant === "EPIC" ? "epic" : "celebration"}
           />
         )}
       </AnimatePresence>
@@ -186,7 +182,7 @@ export function StatTicker({
           }}
           transition={{
             duration: adjustedConfig.duration / 1000,
-            ease: 'easeOut',
+            ease: "easeOut",
           }}
         />
       )}
@@ -234,12 +230,12 @@ export function StatTicker({
 
         {/* Main Number */}
         <motion.div
-          initial={{ scale: 1, filter: 'blur(0px)' }}
+          initial={{ scale: 1, filter: "blur(0px)" }}
           animate={{
             scale: [1, adjustedConfig.overshoot, 1],
             filter: adjustedConfig.motionBlur
-              ? ['blur(8px)', 'blur(2px)', 'blur(0px)']
-              : 'blur(0px)',
+              ? ["blur(8px)", "blur(2px)", "blur(0px)"]
+              : "blur(0px)",
           }}
           transition={{
             duration: adjustedConfig.duration / 1000,
@@ -261,7 +257,7 @@ export function StatTicker({
       {/* Label */}
       <motion.span
         className="mt-2 text-xs tracking-[0.2em] uppercase"
-        style={{ color: 'var(--text-secondary)' }}
+        style={{ color: "var(--text-secondary)" }}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.3 }}
@@ -293,15 +289,10 @@ function NumberDisplay({
 }: NumberDisplayProps) {
   return (
     <motion.span
-      className={cn(
-        'font-bebas text-5xl tabular-nums',
-        isPrimary && 'text-[var(--text-primary)]'
-      )}
+      className={cn("font-bebas text-5xl tabular-nums", isPrimary && "text-[var(--text-primary)]")}
     >
       <motion.span>{value}</motion.span>
-      {suffix && (
-        <span className="text-3xl ml-1 opacity-80">{suffix}</span>
-      )}
+      {suffix && <span className="text-3xl ml-1 opacity-80">{suffix}</span>}
     </motion.span>
   );
 }

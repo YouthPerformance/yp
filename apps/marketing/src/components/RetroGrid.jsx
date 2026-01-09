@@ -3,7 +3,7 @@
  * Layer 1 of the Portal Frame architecture
  */
 
-export default function RetroGrid({ className = '' }) {
+export default function RetroGrid({ className = "" }) {
   return (
     <div className={`retro-grid-container ${className}`}>
       {/* Horizon line glow */}
@@ -66,5 +66,5 @@ export default function RetroGrid({ className = '' }) {
         }
       `}</style>
     </div>
-  )
+  );
 }

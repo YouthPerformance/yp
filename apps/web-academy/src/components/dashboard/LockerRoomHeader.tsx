@@ -4,12 +4,12 @@
 // Adapted from yp-academy for barefoot-app styling
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Settings, Users } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Settings, Users } from "lucide-react";
 
-export type Rank = 'pup' | 'hunter' | 'alpha' | 'apex';
+export type Rank = "pup" | "hunter" | "alpha" | "apex";
 
 interface LockerRoomHeaderProps {
   userName: string;
@@ -22,15 +22,15 @@ interface LockerRoomHeaderProps {
 }
 
 const RANK_CONFIG: Record<Rank, { label: string; color: string; emoji: string }> = {
-  pup: { label: 'Pup', color: '#9CA3AF', emoji: '🐺' },
-  hunter: { label: 'Hunter', color: 'var(--accent-primary)', emoji: '🐺' },
-  alpha: { label: 'Alpha', color: 'var(--accent-gold)', emoji: '🐺' },
-  apex: { label: 'Apex', color: '#EF4444', emoji: '🐺' },
+  pup: { label: "Pup", color: "#9CA3AF", emoji: "🐺" },
+  hunter: { label: "Hunter", color: "var(--accent-primary)", emoji: "🐺" },
+  alpha: { label: "Alpha", color: "var(--accent-gold)", emoji: "🐺" },
+  apex: { label: "Apex", color: "#EF4444", emoji: "🐺" },
 };
 
 export function LockerRoomHeader({
   userName,
-  avatarColor = '#00F6E0',
+  avatarColor = "#00F6E0",
   rank,
   sport,
   age,
@@ -62,8 +62,8 @@ export function LockerRoomHeader({
           <div
             className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full"
             style={{
-              backgroundColor: '#10B981',
-              border: '2px solid var(--bg-primary)',
+              backgroundColor: "#10B981",
+              border: "2px solid var(--bg-primary)",
             }}
           />
         </motion.div>
@@ -72,13 +72,13 @@ export function LockerRoomHeader({
         <div>
           <h1
             className="font-bebas text-xl tracking-wider"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
             {userName.toUpperCase()}
           </h1>
           <div
             className="flex items-center gap-2 text-xs"
-            style={{ color: 'var(--text-tertiary)' }}
+            style={{ color: "var(--text-tertiary)" }}
           >
             <span
               className="px-1.5 py-0.5 rounded text-[10px] font-medium"
@@ -105,12 +105,12 @@ export function LockerRoomHeader({
           onClick={onParentModeClick}
           className="flex items-center gap-1.5 px-3 py-2 rounded-full transition-colors"
           style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-default)',
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
           }}
         >
-          <Users className="w-4 h-4" style={{ color: 'var(--accent-primary)' }} />
-          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+          <Users className="w-4 h-4" style={{ color: "var(--accent-primary)" }} />
+          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
             Parent
           </span>
         </motion.button>
@@ -122,11 +122,11 @@ export function LockerRoomHeader({
           onClick={onSettingsClick}
           className="p-2 rounded-full transition-colors"
           style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-default)',
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
           }}
         >
-          <Settings className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+          <Settings className="w-5 h-5" style={{ color: "var(--text-secondary)" }} />
         </motion.button>
       </div>
     </motion.header>

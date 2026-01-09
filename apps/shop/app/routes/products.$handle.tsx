@@ -1,42 +1,40 @@
-import {useState, useEffect, useRef} from 'react';
-import type {LoaderFunctionArgs, MetaFunction} from '@shopify/remix-oxygen';
-import {useLoaderData, useFetcher, useNavigate} from '@remix-run/react';
-import {Image, Money} from '@shopify/hydrogen';
-import type {ProductQuery} from 'storefrontapi.generated';
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import { Image, Money } from "@shopify/hydrogen";
+import type { LoaderFunctionArgs, MetaFunction } from "@shopify/remix-oxygen";
+import { useEffect, useRef, useState } from "react";
+import type { ProductQuery } from "storefrontapi.generated";
 
 // Extract the variant type from the generated types
-type ProductVariant = NonNullable<
-  ProductQuery['product']
->['variants']['nodes'][number];
+type ProductVariant = NonNullable<ProductQuery["product"]>["variants"]["nodes"][number];
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    {title: `${data?.product.title || 'Product'} | YP Shop`},
-    {description: data?.product.description || ''},
+    { title: `${data?.product.title || "Product"} | YP Shop` },
+    { description: data?.product.description || "" },
   ];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
-  const {handle} = params;
-  const {storefront} = context;
+export async function loader({ params, context }: LoaderFunctionArgs) {
+  const { handle } = params;
+  const { storefront } = context;
 
   if (!handle) {
-    throw new Response('Product handle is required', {status: 400});
+    throw new Response("Product handle is required", { status: 400 });
   }
 
-  const {product} = await storefront.query(PRODUCT_QUERY, {
-    variables: {handle},
+  const { product } = await storefront.query(PRODUCT_QUERY, {
+    variables: { handle },
   });
 
   if (!product) {
-    throw new Response('Not found', {status: 404});
+    throw new Response("Not found", { status: 404 });
   }
 
-  return {product};
+  return { product };
 }
 
 // FAQ Item Component
-function FAQItem({question, answer}: {question: string; answer: string}) {
+function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -47,21 +45,19 @@ function FAQItem({question, answer}: {question: string; answer: string}) {
       >
         <span className="text-white font-medium pr-4">{question}</span>
         <span
-          className={`text-cyan transition-transform duration-300 ${
-            isOpen ? 'rotate-45' : ''
-          }`}
+          className={`text-cyan transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}
         >
           +
         </span>
       </button>
       <div
         className={`overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-96 pb-5' : 'max-h-0'
+          isOpen ? "max-h-96 pb-5" : "max-h-0"
         }`}
       >
         <p
           className="text-gray-400 text-sm leading-relaxed"
-          dangerouslySetInnerHTML={{__html: answer}}
+          dangerouslySetInnerHTML={{ __html: answer }}
         />
       </div>
     </div>
@@ -85,7 +81,7 @@ function SilenceIndicator() {
                 className="w-[3px] rounded-sm animate-pulse"
                 style={{
                   height: h,
-                  background: 'linear-gradient(to top, #ff4444, #ff8844)',
+                  background: "linear-gradient(to top, #ff4444, #ff8844)",
                   animationDelay: `${i * 0.05}s`,
                 }}
               />
@@ -102,10 +98,7 @@ function SilenceIndicator() {
           </span>
           <div className="flex items-center gap-[3px] h-8">
             {[4, 4, 4, 4, 4].map((_, i) => (
-              <div
-                key={i}
-                className="w-[3px] h-1 rounded-sm bg-cyan opacity-80"
-              />
+              <div key={i} className="w-[3px] h-1 rounded-sm bg-cyan opacity-80" />
             ))}
           </div>
         </div>
@@ -115,31 +108,27 @@ function SilenceIndicator() {
         <span className="font-mono text-[10px] tracking-widest uppercase text-white/50">
           Noise Level
         </span>
-        <span className="font-mono text-sm font-bold text-cyan tracking-wide">
-          35dB
-        </span>
+        <span className="font-mono text-sm font-bold text-cyan tracking-wide">35dB</span>
       </div>
     </div>
   );
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
-  const {title, description, featuredImage, variants, handle} = product;
+  const { product } = useLoaderData<typeof loader>();
+  const { title, description, featuredImage, variants, handle } = product;
 
   // Check if this is the NeoBall product for special styling
   const isNeoBall =
-    handle?.toLowerCase().includes('neoball') ||
-    handle?.toLowerCase() === 'n' ||
-    title?.toLowerCase().includes('neoball');
+    handle?.toLowerCase().includes("neoball") ||
+    handle?.toLowerCase() === "n" ||
+    title?.toLowerCase().includes("neoball");
 
   // Initialize with the first variant
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
-    variants.nodes[0],
-  );
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(variants.nodes[0]);
 
   // Cart fetcher for add to cart
-  const fetcher = useFetcher<{success?: boolean; errors?: string[]}>();
+  const fetcher = useFetcher<{ success?: boolean; errors?: string[] }>();
   const navigate = useNavigate();
 
   // Sticky bar visibility
@@ -147,7 +136,7 @@ export default function Product() {
   const buyBoxRef = useRef<HTMLDivElement>(null);
 
   // Determine loading and success states
-  const isAddingToCart = fetcher.state !== 'idle';
+  const isAddingToCart = fetcher.state !== "idle";
   const addToCartSuccess = fetcher.data?.success === true;
 
   // Show success toast
@@ -161,7 +150,7 @@ export default function Product() {
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [addToCartSuccess, fetcher.data]);
+  }, [addToCartSuccess]);
 
   // Sticky bar observer
   useEffect(() => {
@@ -169,7 +158,7 @@ export default function Product() {
       ([entry]) => {
         setShowStickyBar(!entry.isIntersecting);
       },
-      {threshold: 0, rootMargin: '-100px 0px 0px 0px'},
+      { threshold: 0, rootMargin: "-100px 0px 0px 0px" },
     );
 
     if (buyBoxRef.current) {
@@ -185,29 +174,29 @@ export default function Product() {
   // FAQ Data for NeoBall
   const faqData = [
     {
-      question: 'Is it actually silent? (My neighbors hate me)',
+      question: "Is it actually silent? (My neighbors hate me)",
       answer:
-        'Yes. We use <strong>GhostCore open-cell technology</strong>. It dissipates sound waves as heat rather than noise. It registers at ~35dB (whisper volume) compared to ~85dB for a standard leather ball.',
+        "Yes. We use <strong>GhostCore open-cell technology</strong>. It dissipates sound waves as heat rather than noise. It registers at ~35dB (whisper volume) compared to ~85dB for a standard leather ball.",
     },
     {
-      question: 'Does it feel like a cheap foam toy?',
+      question: "Does it feel like a cheap foam toy?",
       answer:
-        'No. Cheap foam is light (200g). The Neoball is <strong>Regulation Weight (600g for Size 7)</strong>. It is engineered to mimic the exact energy return of an inflated ball. Your muscle memory will transfer 1:1 to the court.',
+        "No. Cheap foam is light (200g). The Neoball is <strong>Regulation Weight (600g for Size 7)</strong>. It is engineered to mimic the exact energy return of an inflated ball. Your muscle memory will transfer 1:1 to the court.",
     },
     {
-      question: 'How do I access the Training App?',
+      question: "How do I access the Training App?",
       answer:
-        'Inside your Founders Box, you will find a <strong>Laser-Etched Black Card</strong>. Scan the QR code on the back to instantly unlock your Lifetime Membership. No monthly fees.',
+        "Inside your Founders Box, you will find a <strong>Laser-Etched Black Card</strong>. Scan the QR code on the back to instantly unlock your Lifetime Membership. No monthly fees.",
     },
     {
       question: "What's the difference between Size 6 and Size 7?",
       answer:
-        '<strong>Size 7</strong> is the official men\'s regulation size (29.5" circumference). <strong>Size 6</strong> is the women\'s/youth regulation size (28.5" circumference). Both have the same premium construction and silent technology.',
+        "<strong>Size 7</strong> is the official men's regulation size (29.5\" circumference). <strong>Size 6</strong> is the women's/youth regulation size (28.5\" circumference). Both have the same premium construction and silent technology.",
     },
     {
-      question: 'Can I use it outside?',
+      question: "Can I use it outside?",
       answer:
-        'Yes, but we recommend <strong>indoor use for maximum durability</strong>. The surface is designed for hardwood, tile, and smooth garage floors. Outdoor concrete will wear it faster, but it can handle light outdoor sessions.',
+        "Yes, but we recommend <strong>indoor use for maximum durability</strong>. The surface is designed for hardwood, tile, and smooth garage floors. Outdoor concrete will wear it faster, but it can handle light outdoor sessions.",
     },
   ];
 
@@ -281,7 +270,7 @@ export default function Product() {
               {/* Tagline */}
               <p className="text-gray-400 text-base mb-6 leading-relaxed">
                 {description ||
-                  'The world\'s best silent basketball. GhostCore technology - 98% energy return, 35dB quieter. Play anytime, anywhere.'}
+                  "The world's best silent basketball. GhostCore technology - 98% energy return, 35dB quieter. Play anytime, anywhere."}
               </p>
 
               {/* Silence Indicator */}
@@ -291,7 +280,7 @@ export default function Product() {
               {variants.nodes.length > 1 && (
                 <div className="mt-8 mb-6">
                   <h3 className="font-mono text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-3">
-                    {variants.nodes[0]?.selectedOptions?.[0]?.name || 'Size'}
+                    {variants.nodes[0]?.selectedOptions?.[0]?.name || "Size"}
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
                     {variants.nodes.map((variant: ProductVariant) => {
@@ -306,27 +295,27 @@ export default function Product() {
                           disabled={!variantAvailable}
                           className={`p-4 rounded-xl border-2 transition-all text-left ${
                             isSelected
-                              ? 'border-white bg-white text-wolf-black'
+                              ? "border-white bg-white text-wolf-black"
                               : variantAvailable
-                                ? 'border-white/10 bg-panel hover:border-white/30 text-white'
-                                : 'border-white/5 bg-panel/50 text-gray-600 cursor-not-allowed'
+                                ? "border-white/10 bg-panel hover:border-white/30 text-white"
+                                : "border-white/5 bg-panel/50 text-gray-600 cursor-not-allowed"
                           }`}
                         >
                           <span
-                            className={`font-display text-xl ${isSelected ? 'text-wolf-black' : ''}`}
+                            className={`font-display text-xl ${isSelected ? "text-wolf-black" : ""}`}
                           >
                             {variant.title}
                           </span>
-                          {variant.title === 'Size 7' && (
+                          {variant.title === "Size 7" && (
                             <span
-                              className={`block text-[11px] font-bold mt-1 ${isSelected ? 'text-wolf-black/60' : 'text-gray-500'}`}
+                              className={`block text-[11px] font-bold mt-1 ${isSelected ? "text-wolf-black/60" : "text-gray-500"}`}
                             >
                               MEN'S REGULATION
                             </span>
                           )}
-                          {variant.title === 'Size 6' && (
+                          {variant.title === "Size 6" && (
                             <span
-                              className={`block text-[11px] font-bold mt-1 ${isSelected ? 'text-wolf-black/60' : 'text-gray-500'}`}
+                              className={`block text-[11px] font-bold mt-1 ${isSelected ? "text-wolf-black/60" : "text-gray-500"}`}
                             >
                               WOMEN'S / YOUTH
                             </span>
@@ -352,9 +341,7 @@ export default function Product() {
                   {/* Header */}
                   <div className="flex justify-between items-start mb-5 pb-4 border-b border-white/10">
                     <div>
-                      <h3 className="font-display text-2xl italic text-cyan">
-                        D1 Blueprint
-                      </h3>
+                      <h3 className="font-display text-2xl italic text-cyan">D1 Blueprint</h3>
                       <span className="text-[10px] font-bold text-green-400 uppercase tracking-widest">
                         $50 Value Included
                       </span>
@@ -363,9 +350,7 @@ export default function Product() {
                       <div className="font-mono text-3xl font-bold text-white">
                         <Money data={selectedVariant.price} />
                       </div>
-                      <span className="text-[10px] text-gray-500">
-                        was $139.99
-                      </span>
+                      <span className="text-[10px] text-gray-500">was $139.99</span>
                     </div>
                   </div>
 
@@ -384,19 +369,19 @@ export default function Product() {
                   <div className="space-y-3 mb-6">
                     {[
                       {
-                        icon: '🏀',
-                        title: 'Silent GhostCore Ball',
-                        desc: 'Regulation weight, 35dB quiet',
+                        icon: "🏀",
+                        title: "Silent GhostCore Ball",
+                        desc: "Regulation weight, 35dB quiet",
                       },
                       {
-                        icon: '📱',
-                        title: 'YP Academy Lifetime Access',
-                        desc: 'D1 training programs included',
+                        icon: "📱",
+                        title: "YP Academy Lifetime Access",
+                        desc: "D1 training programs included",
                       },
                       {
-                        icon: '🎯',
-                        title: '10-Day Foundations Program',
-                        desc: 'Guided handle transformation',
+                        icon: "🎯",
+                        title: "10-Day Foundations Program",
+                        desc: "Guided handle transformation",
                       },
                     ].map((feature, i) => (
                       <div key={i} className="flex gap-3 items-start">
@@ -404,12 +389,8 @@ export default function Product() {
                           {feature.icon}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-white">
-                            {feature.title}
-                          </p>
-                          <p className="text-[11px] text-gray-500">
-                            {feature.desc}
-                          </p>
+                          <p className="text-sm font-bold text-white">{feature.title}</p>
+                          <p className="text-[11px] text-gray-500">{feature.desc}</p>
                         </div>
                       </div>
                     ))}
@@ -418,11 +399,7 @@ export default function Product() {
                   {/* Add to Cart */}
                   <fetcher.Form method="post" action="/cart">
                     <input type="hidden" name="action" value="ADD_TO_CART" />
-                    <input
-                      type="hidden"
-                      name="merchandiseId"
-                      value={selectedVariant.id}
-                    />
+                    <input type="hidden" name="merchandiseId" value={selectedVariant.id} />
                     <input type="hidden" name="quantity" value="1" />
 
                     <button
@@ -430,22 +407,18 @@ export default function Product() {
                       disabled={!isAvailable || isAddingToCart}
                       className={`w-full py-4 font-display text-xl tracking-wider rounded-xl transition-all ${
                         isAvailable
-                          ? 'bg-cyan text-wolf-black shadow-[0_0_20px_rgba(0,246,224,0.4)] hover:bg-white hover:scale-[1.02]'
-                          : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                      } ${isAddingToCart ? 'opacity-80' : ''}`}
+                          ? "bg-cyan text-wolf-black shadow-[0_0_20px_rgba(0,246,224,0.4)] hover:bg-white hover:scale-[1.02]"
+                          : "bg-gray-700 text-gray-400 cursor-not-allowed"
+                      } ${isAddingToCart ? "opacity-80" : ""}`}
                     >
-                      {isAddingToCart
-                        ? 'ADDING...'
-                        : isAvailable
-                          ? 'ADD TO CART'
-                          : 'SOLD OUT'}
+                      {isAddingToCart ? "ADDING..." : isAvailable ? "ADD TO CART" : "SOLD OUT"}
                     </button>
                   </fetcher.Form>
 
                   {/* View Cart after success */}
                   {showSuccess && (
                     <button
-                      onClick={() => navigate('/cart')}
+                      onClick={() => navigate("/cart")}
                       className="w-full py-3 mt-3 border border-green-500/30 text-green-400 font-bold rounded-xl hover:bg-green-500/10 transition-colors flex items-center justify-center gap-2"
                     >
                       <svg
@@ -468,9 +441,7 @@ export default function Product() {
                   {/* Error */}
                   {fetcher.data?.errors && fetcher.data.errors.length > 0 && (
                     <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                      <p className="text-red-400 text-sm">
-                        {fetcher.data.errors.join(', ')}
-                      </p>
+                      <p className="text-red-400 text-sm">{fetcher.data.errors.join(", ")}</p>
                     </div>
                   )}
                 </div>
@@ -484,11 +455,8 @@ export default function Product() {
                     Foundations 10 Guarantee
                   </p>
                   <p className="text-xs text-gray-400">
-                    Complete the program. If your handle isn't tighter,{' '}
-                    <strong className="text-white">
-                      keep the ball + full refund
-                    </strong>
-                    .
+                    Complete the program. If your handle isn't tighter,{" "}
+                    <strong className="text-white">keep the ball + full refund</strong>.
                   </p>
                 </div>
               )}
@@ -496,16 +464,14 @@ export default function Product() {
               {/* Trust chips */}
               {isNeoBall && (
                 <div className="flex gap-2 justify-center mt-4 flex-wrap">
-                  {['Free Shipping', '30-Day Returns', 'Lifetime Warranty'].map(
-                    (chip) => (
-                      <span
-                        key={chip}
-                        className="font-mono text-[10px] tracking-widest uppercase text-white/70 px-3 py-2 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-sm"
-                      >
-                        {chip}
-                      </span>
-                    ),
-                  )}
+                  {["Free Shipping", "30-Day Returns", "Lifetime Warranty"].map((chip) => (
+                    <span
+                      key={chip}
+                      className="font-mono text-[10px] tracking-widest uppercase text-white/70 px-3 py-2 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-sm"
+                    >
+                      {chip}
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
@@ -516,9 +482,7 @@ export default function Product() {
         {isNeoBall && (
           <section className="py-20 px-6 bg-wolf-black">
             <div className="max-w-3xl mx-auto">
-              <h2 className="font-display text-4xl text-center mb-8">
-                TOY VS. TOOL
-              </h2>
+              <h2 className="font-display text-4xl text-center mb-8">TOY VS. TOOL</h2>
               <div className="overflow-hidden rounded-2xl border border-white/[0.08]">
                 <table className="w-full border-collapse">
                   <thead className="bg-panel">
@@ -536,22 +500,15 @@ export default function Product() {
                   </thead>
                   <tbody>
                     {[
-                      ['Bounce Height', '98% Return', 'Dead / Low'],
-                      ['Weight', 'Regulation (22oz)', 'Light (8oz)'],
-                      ['Sound Level', '35 Decibels', 'Varies'],
-                      ['App Access', 'INCLUDED', 'None'],
+                      ["Bounce Height", "98% Return", "Dead / Low"],
+                      ["Weight", "Regulation (22oz)", "Light (8oz)"],
+                      ["Sound Level", "35 Decibels", "Varies"],
+                      ["App Access", "INCLUDED", "None"],
                     ].map(([feature, neo, foam], i) => (
-                      <tr
-                        key={i}
-                        className="border-t border-white/[0.08] bg-black/30"
-                      >
+                      <tr key={i} className="border-t border-white/[0.08] bg-black/30">
                         <td className="p-4 text-sm text-gray-500">{feature}</td>
-                        <td className="p-4 text-sm text-cyan font-bold">
-                          {neo}
-                        </td>
-                        <td className="p-4 text-sm text-gray-500 opacity-50">
-                          {foam}
-                        </td>
+                        <td className="p-4 text-sm text-cyan font-bold">{neo}</td>
+                        <td className="p-4 text-sm text-gray-500 opacity-50">{foam}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -587,31 +544,27 @@ export default function Product() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-black/40 border border-white/[0.08] rounded-2xl p-8 text-left">
                 {[
                   {
-                    step: '01',
-                    title: 'LOCK IN.',
+                    step: "01",
+                    title: "LOCK IN.",
                     desc: 'Complete the 10-Day "Foundations" Program inside the YP App using your new Stealth Ball.',
                   },
                   {
-                    step: '02',
-                    title: 'LEVEL UP.',
+                    step: "02",
+                    title: "LEVEL UP.",
                     desc: "If your handle isn't tighter, send us your completion log.",
                   },
                   {
-                    step: '03',
-                    title: 'OR CASH OUT.',
-                    desc: 'We credit you 100% of the purchase price. You keep the ball. No shipping back.',
+                    step: "03",
+                    title: "OR CASH OUT.",
+                    desc: "We credit you 100% of the purchase price. You keep the ball. No shipping back.",
                   },
                 ].map((item, i) => (
                   <div key={i} className="px-4">
                     <span className="font-mono text-[10px] font-bold text-cyan uppercase tracking-widest">
                       Step {item.step}
                     </span>
-                    <h3 className="font-display text-2xl mt-2 mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-gray-400 leading-relaxed">
-                      {item.desc}
-                    </p>
+                    <h3 className="font-display text-2xl mt-2 mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -632,16 +585,10 @@ export default function Product() {
         {isNeoBall && (
           <section className="py-20 px-6 bg-wolf-black">
             <div className="max-w-3xl mx-auto">
-              <h2 className="font-display text-4xl text-center mb-12">
-                PROTOCOL SPECS
-              </h2>
+              <h2 className="font-display text-4xl text-center mb-12">PROTOCOL SPECS</h2>
               <div className="bg-panel border border-white/[0.08] rounded-2xl p-6 sm:p-8">
                 {faqData.map((item, i) => (
-                  <FAQItem
-                    key={i}
-                    question={item.question}
-                    answer={item.answer}
-                  />
+                  <FAQItem key={i} question={item.question} answer={item.answer} />
                 ))}
               </div>
             </div>
@@ -652,7 +599,7 @@ export default function Product() {
       {/* Sticky Buy Bar */}
       <div
         className={`fixed bottom-0 left-0 right-0 z-50 bg-wolf-black/95 backdrop-blur-lg border-t border-white/[0.08] p-4 transition-transform duration-400 ${
-          showStickyBar ? 'translate-y-0' : 'translate-y-full'
+          showStickyBar ? "translate-y-0" : "translate-y-full"
         }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -672,11 +619,7 @@ export default function Product() {
 
             <fetcher.Form method="post" action="/cart" className="flex-1 sm:flex-none">
               <input type="hidden" name="action" value="ADD_TO_CART" />
-              <input
-                type="hidden"
-                name="merchandiseId"
-                value={selectedVariant.id}
-              />
+              <input type="hidden" name="merchandiseId" value={selectedVariant.id} />
               <input type="hidden" name="quantity" value="1" />
 
               <button
@@ -684,15 +627,11 @@ export default function Product() {
                 disabled={!isAvailable || isAddingToCart}
                 className={`w-full sm:w-auto px-8 py-3 font-display text-lg tracking-wider rounded-xl transition-all ${
                   isAvailable
-                    ? 'bg-cyan text-wolf-black shadow-[0_0_20px_rgba(0,246,224,0.4)] hover:bg-white'
-                    : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                    ? "bg-cyan text-wolf-black shadow-[0_0_20px_rgba(0,246,224,0.4)] hover:bg-white"
+                    : "bg-gray-700 text-gray-400 cursor-not-allowed"
                 }`}
               >
-                {isAddingToCart
-                  ? 'ADDING...'
-                  : isAvailable
-                    ? 'ADD TO CART'
-                    : 'SOLD OUT'}
+                {isAddingToCart ? "ADDING..." : isAvailable ? "ADD TO CART" : "SOLD OUT"}
               </button>
             </fetcher.Form>
           </div>

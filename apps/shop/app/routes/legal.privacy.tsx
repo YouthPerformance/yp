@@ -1,11 +1,8 @@
-import type {MetaFunction} from '@shopify/remix-oxygen';
-import {Link} from '@remix-run/react';
+import { Link } from "@remix-run/react";
+import type { MetaFunction } from "@shopify/remix-oxygen";
 
 export const meta: MetaFunction = () => {
-  return [
-    {title: 'Privacy Policy | YP Shop'},
-    {description: 'Privacy Policy for YP Shop'},
-  ];
+  return [{ title: "Privacy Policy | YP Shop" }, { description: "Privacy Policy for YP Shop" }];
 };
 
 export default function PrivacyPage() {
@@ -15,10 +12,7 @@ export default function PrivacyPage() {
       <nav className="border-b border-glow sticky top-0 bg-wolf-black/90 backdrop-blur-sm z-40 mb-12">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center gap-6">
-            <Link
-              to="/legal/terms"
-              className="hero-subtitle hover:text-cyan transition-colors"
-            >
+            <Link to="/legal/terms" className="hero-subtitle hover:text-cyan transition-colors">
               Terms of Service
             </Link>
             <Link
@@ -38,26 +32,22 @@ export default function PrivacyPage() {
           <h1 className="font-display text-5xl md:text-6xl tracking-wider text-white mb-4">
             Privacy Policy
           </h1>
-          <p className="font-mono text-sm text-dim">
-            Last Updated: [Date]
-          </p>
+          <p className="font-mono text-sm text-dim">Last Updated: [Date]</p>
         </header>
 
         {/* Content */}
         <article className="space-y-10 text-muted leading-relaxed">
           <section>
-            <h2 className="font-display text-2xl tracking-wide text-white mb-4">
-              1. Introduction
-            </h2>
+            <h2 className="font-display text-2xl tracking-wide text-white mb-4">1. Introduction</h2>
             <p className="mb-4">
-              Youth Performance ("YP Shop", "we", "our", or "us") is committed to protecting
-              your privacy. This Privacy Policy explains how we collect, use, disclose,
-              and safeguard your information when you use our online store and services
-              (collectively, the "Services").
+              Youth Performance ("YP Shop", "we", "our", or "us") is committed to protecting your
+              privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard
+              your information when you use our online store and services (collectively, the
+              "Services").
             </p>
             <p>
-              Please read this Privacy Policy carefully. By using our Services, you consent
-              to the collection and use of your information as described in this policy.
+              Please read this Privacy Policy carefully. By using our Services, you consent to the
+              collection and use of your information as described in this policy.
             </p>
           </section>
 
@@ -66,10 +56,10 @@ export default function PrivacyPage() {
               2. Information We Collect
             </h2>
 
-            <h3 className="text-xl font-semibold text-white mt-6 mb-3">
-              Personal Information
-            </h3>
-            <p className="mb-4">We may collect personal information that you provide directly to us, including:</p>
+            <h3 className="text-xl font-semibold text-white mt-6 mb-3">Personal Information</h3>
+            <p className="mb-4">
+              We may collect personal information that you provide directly to us, including:
+            </p>
             <ul className="list-disc pl-6 space-y-2 mb-6">
               <li>Name and contact information (email address, phone number)</li>
               <li>Shipping and billing address</li>
@@ -81,7 +71,9 @@ export default function PrivacyPage() {
             <h3 className="text-xl font-semibold text-white mt-6 mb-3">
               Automatically Collected Information
             </h3>
-            <p className="mb-4">We automatically collect certain information when you visit our store:</p>
+            <p className="mb-4">
+              We automatically collect certain information when you visit our store:
+            </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Device information (device type, operating system, browser)</li>
               <li>Log data (IP address, access times, pages viewed)</li>
@@ -127,20 +119,18 @@ export default function PrivacyPage() {
               5. Data Security
             </h2>
             <p className="mb-4">
-              We use industry-standard security measures to protect your personal information.
-              Our store is built on Shopify, which employs robust security protocols
-              including SSL encryption for all data transmission.
+              We use industry-standard security measures to protect your personal information. Our
+              store is built on Shopify, which employs robust security protocols including SSL
+              encryption for all data transmission.
             </p>
-            <p>
-              [Additional security details to be added by legal counsel]
-            </p>
+            <p>[Additional security details to be added by legal counsel]</p>
           </section>
 
           <section>
-            <h2 className="font-display text-2xl tracking-wide text-white mb-4">
-              6. Your Rights
-            </h2>
-            <p className="mb-4">Depending on your location, you may have rights regarding your personal information:</p>
+            <h2 className="font-display text-2xl tracking-wide text-white mb-4">6. Your Rights</h2>
+            <p className="mb-4">
+              Depending on your location, you may have rights regarding your personal information:
+            </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Access and receive a copy of your data</li>
               <li>Correct inaccurate information</li>
@@ -158,9 +148,9 @@ export default function PrivacyPage() {
               7. Cookies and Tracking
             </h2>
             <p>
-              We use cookies and similar technologies to enhance your shopping experience,
-              remember your preferences, and analyze site traffic. You can manage cookie
-              preferences through your browser settings.
+              We use cookies and similar technologies to enhance your shopping experience, remember
+              your preferences, and analyze site traffic. You can manage cookie preferences through
+              your browser settings.
             </p>
           </section>
 
@@ -169,9 +159,9 @@ export default function PrivacyPage() {
               8. Third-Party Links
             </h2>
             <p>
-              Our store may contain links to third-party websites. We are not responsible
-              for the privacy practices of these external sites. We encourage you to
-              review their privacy policies before providing any personal information.
+              Our store may contain links to third-party websites. We are not responsible for the
+              privacy practices of these external sites. We encourage you to review their privacy
+              policies before providing any personal information.
             </p>
           </section>
 
@@ -180,23 +170,19 @@ export default function PrivacyPage() {
               9. Changes to This Policy
             </h2>
             <p>
-              We may update this Privacy Policy from time to time. We will notify you of
-              any material changes by posting the new policy on this page and updating
-              the "Last Updated" date.
+              We may update this Privacy Policy from time to time. We will notify you of any
+              material changes by posting the new policy on this page and updating the "Last
+              Updated" date.
             </p>
           </section>
 
           <section>
-            <h2 className="font-display text-2xl tracking-wide text-white mb-4">
-              10. Contact Us
-            </h2>
+            <h2 className="font-display text-2xl tracking-wide text-white mb-4">10. Contact Us</h2>
             <p className="mb-4">
-              If you have any questions about this Privacy Policy or our privacy practices,
-              please contact us at:
+              If you have any questions about this Privacy Policy or our privacy practices, please
+              contact us at:
             </p>
-            <p className="font-mono text-cyan">
-              legal@youthperformance.com
-            </p>
+            <p className="font-mono text-cyan">legal@youthperformance.com</p>
           </section>
         </article>
 
@@ -215,9 +201,7 @@ export default function PrivacyPage() {
                 legal@youthperformance.com
               </a>
             </div>
-            <p className="text-dim">
-              Youth Performance
-            </p>
+            <p className="text-dim">Youth Performance</p>
           </div>
         </footer>
       </div>

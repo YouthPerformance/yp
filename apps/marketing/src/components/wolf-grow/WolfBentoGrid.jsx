@@ -2,63 +2,64 @@
 // "James Scott" Manifesto Voice - Hard Truths & Biological Reality
 // Features: Scanner Effect, Glow Borders, 3D Tilt
 
-import { useRef, useState } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { EASE, COLORS } from './motion'
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
+import { EASE } from "./motion";
 
 // Spring config for tilt effect
 const springConfig = {
   damping: 30,
   stiffness: 150,
-  mass: 1.5
-}
+  mass: 1.5,
+};
 
 // Tiltable Card wrapper with glow border
-function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = false }) {
-  const ref = useRef(null)
-  const [isHovered, setIsHovered] = useState(false)
+function TiltCard({ children, className = "", glowColor = "cyan", hasScanner = false }) {
+  const ref = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const rotateX = useSpring(useMotionValue(0), springConfig)
-  const rotateY = useSpring(useMotionValue(0), springConfig)
-  const scale = useSpring(1, springConfig)
+  const rotateX = useSpring(useMotionValue(0), springConfig);
+  const rotateY = useSpring(useMotionValue(0), springConfig);
+  const scale = useSpring(1, springConfig);
 
   // Scanner position for the scanning effect
-  const scannerY = useSpring(useMotionValue(0), { damping: 50, stiffness: 80 })
+  const scannerY = useSpring(useMotionValue(0), { damping: 50, stiffness: 80 });
 
   function handleMouse(e) {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
-    const offsetX = e.clientX - rect.left - rect.width / 2
-    const offsetY = e.clientY - rect.top - rect.height / 2
-    const rotationX = (offsetY / (rect.height / 2)) * -8
-    const rotationY = (offsetX / (rect.width / 2)) * 8
-    rotateX.set(rotationX)
-    rotateY.set(rotationY)
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    const rotationX = (offsetY / (rect.height / 2)) * -8;
+    const rotationY = (offsetX / (rect.width / 2)) * 8;
+    rotateX.set(rotationX);
+    rotateY.set(rotationY);
   }
 
   function handleMouseEnter() {
-    setIsHovered(true)
-    scale.set(1.02)
+    setIsHovered(true);
+    scale.set(1.02);
     // Start scanner animation
     if (hasScanner) {
-      scannerY.set(100)
+      scannerY.set(100);
     }
   }
 
   function handleMouseLeave() {
-    setIsHovered(false)
-    scale.set(1)
-    rotateX.set(0)
-    rotateY.set(0)
+    setIsHovered(false);
+    scale.set(1);
+    rotateX.set(0);
+    rotateY.set(0);
     if (hasScanner) {
-      scannerY.set(0)
+      scannerY.set(0);
     }
   }
 
   const glowStyles = {
-    cyan: 'shadow-[0_0_30px_rgba(0,255,255,0.15)] hover:shadow-[0_0_50px_rgba(0,255,255,0.25)]',
-    emerald: 'shadow-[0_0_30px_rgba(16,185,129,0.15)] hover:shadow-[0_0_50px_rgba(16,185,129,0.25)]',
-  }
+    cyan: "shadow-[0_0_30px_rgba(0,255,255,0.15)] hover:shadow-[0_0_50px_rgba(0,255,255,0.25)]",
+    emerald:
+      "shadow-[0_0_30px_rgba(16,185,129,0.15)] hover:shadow-[0_0_50px_rgba(16,185,129,0.25)]",
+  };
 
   return (
     <motion.div
@@ -66,7 +67,7 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
       className={`relative cursor-pointer ${className}`}
       style={{
         perspective: 1000,
-        transformStyle: 'preserve-3d',
+        transformStyle: "preserve-3d",
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
@@ -83,7 +84,7 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
           rotateX,
           rotateY,
           scale,
-          transformStyle: 'preserve-3d',
+          transformStyle: "preserve-3d",
         }}
       >
         {/* Glow border overlay */}
@@ -91,10 +92,11 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
           className={`
             absolute inset-0 rounded-2xl pointer-events-none z-10
             transition-opacity duration-300
-            ${isHovered ? 'opacity-100' : 'opacity-0'}
+            ${isHovered ? "opacity-100" : "opacity-0"}
           `}
           style={{
-            background: 'linear-gradient(135deg, rgba(0,255,255,0.1) 0%, transparent 50%, rgba(0,255,255,0.05) 100%)',
+            background:
+              "linear-gradient(135deg, rgba(0,255,255,0.1) 0%, transparent 50%, rgba(0,255,255,0.05) 100%)",
           }}
         />
 
@@ -103,9 +105,9 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
           <motion.div
             className="absolute left-0 right-0 h-1 z-20 pointer-events-none"
             style={{
-              top: useTransform(scannerY, [0, 100], ['0%', '100%']),
-              background: 'linear-gradient(90deg, transparent, rgba(0,255,255,0.8), transparent)',
-              boxShadow: '0 0 20px rgba(0,255,255,0.5), 0 0 40px rgba(0,255,255,0.3)',
+              top: useTransform(scannerY, [0, 100], ["0%", "100%"]),
+              background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.8), transparent)",
+              boxShadow: "0 0 20px rgba(0,255,255,0.5), 0 0 40px rgba(0,255,255,0.3)",
               opacity: isHovered ? 1 : 0,
             }}
           />
@@ -114,7 +116,7 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
         {children}
       </motion.div>
     </motion.div>
-  )
+  );
 }
 
 // Slot 1: THE ENGINE - Large Vertical
@@ -128,7 +130,16 @@ function EngineSlot() {
         {/* Icon */}
         <div className="relative flex items-center gap-3 mb-6">
           <div className="h-12 w-12 rounded-xl ring-1 flex items-center justify-center bg-cyan-500/10 ring-cyan-500/30">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-cyan-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M12 2v4" />
               <path d="m6.8 14-3.5 2" />
               <path d="m20.7 16-3.5-2" />
@@ -153,11 +164,10 @@ function EngineSlot() {
 
         {/* Body - Manifesto voice */}
         <p className="text-neutral-300 leading-relaxed max-w-2xl">
-          Traditional training is dumb. It treats your athlete like a static machine.
-          The Wolf is a living algorithm that adapts to their biology in real-time.
-          If they are stiff, we release. If they are weak, we reload.
-          It's not just a workout app; it's a sniper rifle against mediocrity.
-          We don't just train the body; we re-code the operating system.
+          Traditional training is dumb. It treats your athlete like a static machine. The Wolf is a
+          living algorithm that adapts to their biology in real-time. If they are stiff, we release.
+          If they are weak, we reload. It's not just a workout app; it's a sniper rifle against
+          mediocrity. We don't just train the body; we re-code the operating system.
         </p>
 
         {/* App UI Visualization */}
@@ -174,8 +184,8 @@ function EngineSlot() {
                 <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
                   <motion.div
                     className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300"
-                    initial={{ width: '0%' }}
-                    whileInView={{ width: '78%' }}
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: "78%" }}
                     transition={{ duration: 1.5, ease: EASE.reveal }}
                     viewport={{ once: true }}
                   />
@@ -198,7 +208,7 @@ function EngineSlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // Slot 2: THE SCIENCE - Small Square with Scanner
@@ -210,10 +220,33 @@ function ScienceSlot() {
         <div className="absolute inset-0 opacity-20">
           <svg viewBox="0 0 200 200" className="w-full h-full">
             {/* Simplified foot fascia diagram */}
-            <ellipse cx="100" cy="100" rx="60" ry="80" fill="none" stroke="rgba(0,255,255,0.3)" strokeWidth="1" />
-            <path d="M60 60 Q100 40 140 60" fill="none" stroke="rgba(0,255,255,0.4)" strokeWidth="0.5" />
-            <path d="M50 100 Q100 80 150 100" fill="none" stroke="rgba(0,255,255,0.4)" strokeWidth="0.5" />
-            <path d="M55 140 Q100 120 145 140" fill="none" stroke="rgba(0,255,255,0.4)" strokeWidth="0.5" />
+            <ellipse
+              cx="100"
+              cy="100"
+              rx="60"
+              ry="80"
+              fill="none"
+              stroke="rgba(0,255,255,0.3)"
+              strokeWidth="1"
+            />
+            <path
+              d="M60 60 Q100 40 140 60"
+              fill="none"
+              stroke="rgba(0,255,255,0.4)"
+              strokeWidth="0.5"
+            />
+            <path
+              d="M50 100 Q100 80 150 100"
+              fill="none"
+              stroke="rgba(0,255,255,0.4)"
+              strokeWidth="0.5"
+            />
+            <path
+              d="M55 140 Q100 120 145 140"
+              fill="none"
+              stroke="rgba(0,255,255,0.4)"
+              strokeWidth="0.5"
+            />
             {/* Glowing fascia points */}
             <circle cx="70" cy="70" r="3" fill="rgba(0,255,255,0.6)" />
             <circle cx="130" cy="70" r="3" fill="rgba(0,255,255,0.6)" />
@@ -226,7 +259,14 @@ function ScienceSlot() {
         <div className="relative z-10">
           {/* Icon */}
           <div className="h-10 w-10 rounded-xl ring-1 flex items-center justify-center bg-cyan-500/10 ring-cyan-500/30 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-cyan-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M12 2a10 10 0 1 0 10 10H12V2z" />
               <path d="M12 2a10 10 0 0 1 10 10" />
               <circle cx="12" cy="12" r="6" />
@@ -246,16 +286,22 @@ function ScienceSlot() {
 
           {/* Body */}
           <p className="text-neutral-400 text-sm leading-relaxed">
-            The industry sold you cushioning. They sold you weakness.
-            They turned your athlete's feet into numb, fragile blocks of bone.
-            We delete the 'Piston' mechanics that cause ACL tears and install the 'Spring.'
-            Pure, elastic power.
+            The industry sold you cushioning. They sold you weakness. They turned your athlete's
+            feet into numb, fragile blocks of bone. We delete the 'Piston' mechanics that cause ACL
+            tears and install the 'Spring.' Pure, elastic power.
           </p>
 
           {/* Tag */}
           <div className="mt-4">
             <span className="inline-flex items-center gap-1.5 text-[11px] bg-cyan-500/10 rounded-full px-3 py-1 ring-1 text-cyan-300 ring-cyan-500/30">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3 h-3"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
               BIOMETRIC ANALYSIS
@@ -264,7 +310,7 @@ function ScienceSlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // Slot 3: THE COMMUNITY - Small Square with Globe
@@ -275,15 +321,48 @@ function CommunitySlot() {
         {/* Mini Globe visualization */}
         <div className="absolute -right-10 -top-10 w-40 h-40 opacity-30">
           <svg viewBox="0 0 100 100" className="w-full h-full">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(0,255,255,0.3)" strokeWidth="0.5" />
-            <ellipse cx="50" cy="50" rx="40" ry="15" fill="none" stroke="rgba(0,255,255,0.2)" strokeWidth="0.5" />
-            <ellipse cx="50" cy="50" rx="15" ry="40" fill="none" stroke="rgba(0,255,255,0.2)" strokeWidth="0.5" />
+            <circle
+              cx="50"
+              cy="50"
+              r="40"
+              fill="none"
+              stroke="rgba(0,255,255,0.3)"
+              strokeWidth="0.5"
+            />
+            <ellipse
+              cx="50"
+              cy="50"
+              rx="40"
+              ry="15"
+              fill="none"
+              stroke="rgba(0,255,255,0.2)"
+              strokeWidth="0.5"
+            />
+            <ellipse
+              cx="50"
+              cy="50"
+              rx="15"
+              ry="40"
+              fill="none"
+              stroke="rgba(0,255,255,0.2)"
+              strokeWidth="0.5"
+            />
             {/* Connection arcs */}
             <path d="M20 30 Q50 20 80 35" fill="none" stroke="rgba(0,255,255,0.5)" strokeWidth="1">
-              <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite" />
+              <animate
+                attributeName="stroke-opacity"
+                values="0.3;0.8;0.3"
+                dur="2s"
+                repeatCount="indefinite"
+              />
             </path>
             <path d="M25 70 Q50 80 75 65" fill="none" stroke="rgba(0,255,255,0.5)" strokeWidth="1">
-              <animate attributeName="stroke-opacity" values="0.5;0.3;0.5" dur="2.5s" repeatCount="indefinite" />
+              <animate
+                attributeName="stroke-opacity"
+                values="0.5;0.3;0.5"
+                dur="2.5s"
+                repeatCount="indefinite"
+              />
             </path>
             {/* City points */}
             <circle cx="30" cy="35" r="2" fill="rgba(0,255,255,0.8)">
@@ -301,7 +380,14 @@ function CommunitySlot() {
         <div className="relative z-10">
           {/* Icon */}
           <div className="h-10 w-10 rounded-xl ring-1 flex items-center justify-center bg-cyan-500/10 ring-cyan-500/30 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-cyan-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <circle cx="12" cy="12" r="10" />
               <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
               <path d="M2 12h20" />
@@ -320,9 +406,9 @@ function CommunitySlot() {
 
           {/* Body */}
           <p className="text-neutral-400 text-sm leading-relaxed">
-            Being the best in your zip code is a trap. It breeds complacency.
-            We drop your athlete into a live ecosystem of killers from Shanghai to Los Angeles.
-            The Wolf Pack doesn't care about your feelings; it cares about your rank.
+            Being the best in your zip code is a trap. It breeds complacency. We drop your athlete
+            into a live ecosystem of killers from Shanghai to Los Angeles. The Wolf Pack doesn't
+            care about your feelings; it cares about your rank.
           </p>
 
           {/* Live indicator */}
@@ -336,7 +422,7 @@ function CommunitySlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // Slot 4: THE ROI - Wide Rectangle
@@ -370,7 +456,14 @@ function ROISlot() {
           <div className="flex-1">
             {/* Icon */}
             <div className="h-10 w-10 rounded-xl ring-1 flex items-center justify-center bg-emerald-500/10 ring-emerald-500/30 mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-emerald-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             </div>
@@ -387,9 +480,9 @@ function ROISlot() {
 
             {/* Body */}
             <p className="text-neutral-400 text-sm md:text-base leading-relaxed max-w-xl">
-              You are investing thousands in travel teams and gear, but ignoring the engine.
-              This dashboard is your weekly truth serum. We track Durability, Consistency, and Biological ROI.
-              You will know—down to the rep—if your investment is compounding or crashing.
+              You are investing thousands in travel teams and gear, but ignoring the engine. This
+              dashboard is your weekly truth serum. We track Durability, Consistency, and Biological
+              ROI. You will know—down to the rep—if your investment is compounding or crashing.
               Trust is good. Data is better.
             </p>
           </div>
@@ -397,7 +490,9 @@ function ROISlot() {
           {/* Mini Dashboard */}
           <div className="flex-shrink-0 w-full md:w-64">
             <div className="bg-neutral-900/80 rounded-xl border border-neutral-800 p-4">
-              <div className="text-[10px] text-neutral-500 mb-3 uppercase tracking-wider">Parent Dashboard</div>
+              <div className="text-[10px] text-neutral-500 mb-3 uppercase tracking-wider">
+                Parent Dashboard
+              </div>
               <div className="space-y-3">
                 <div>
                   <div className="flex justify-between text-xs mb-1">
@@ -407,8 +502,8 @@ function ROISlot() {
                   <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-emerald-500"
-                      initial={{ width: '0%' }}
-                      whileInView={{ width: '87%' }}
+                      initial={{ width: "0%" }}
+                      whileInView={{ width: "87%" }}
                       transition={{ duration: 1, delay: 0.2 }}
                       viewport={{ once: true }}
                     />
@@ -422,8 +517,8 @@ function ROISlot() {
                   <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-cyan-500"
-                      initial={{ width: '0%' }}
-                      whileInView={{ width: '72%' }}
+                      initial={{ width: "0%" }}
+                      whileInView={{ width: "72%" }}
                       transition={{ duration: 1, delay: 0.4 }}
                       viewport={{ once: true }}
                     />
@@ -437,8 +532,8 @@ function ROISlot() {
                   <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-purple-500"
-                      initial={{ width: '0%' }}
-                      whileInView={{ width: '94%' }}
+                      initial={{ width: "0%" }}
+                      whileInView={{ width: "94%" }}
                       transition={{ duration: 1, delay: 0.6 }}
                       viewport={{ once: true }}
                     />
@@ -449,7 +544,14 @@ function ROISlot() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-neutral-500">Weekly Report</span>
                   <span className="text-xs text-emerald-400 flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-3 w-3"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M18 15l-6-6-6 6" />
                     </svg>
                     Compounding
@@ -461,7 +563,7 @@ function ROISlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // Main Bento Grid Component
@@ -483,8 +585,8 @@ export function WolfBentoGrid() {
           Hard Truths. Biological Reality.
         </h2>
         <p className="text-lg md:text-xl max-w-3xl mt-4 text-neutral-400">
-          We don't sell features. We diagnose the disease and offer the cure.
-          This is the anti-fragile system that turns potential into power.
+          We don't sell features. We diagnose the disease and offer the cure. This is the
+          anti-fragile system that turns potential into power.
         </p>
       </motion.div>
 
@@ -523,12 +625,10 @@ export function WolfBentoGrid() {
         transition={{ duration: 0.8, delay: 0.4 }}
         viewport={{ once: true }}
       >
-        <p className="text-neutral-500 text-sm italic">
-          "We sharpen the blade. You point it."
-        </p>
+        <p className="text-neutral-500 text-sm italic">"We sharpen the blade. You point it."</p>
       </motion.div>
     </section>
-  )
+  );
 }
 
-export default WolfBentoGrid
+export default WolfBentoGrid;

@@ -1,79 +1,37 @@
-// ═══════════════════════════════════════════════════════════
+// ===================================================================
 // CONVEX CLIENT PROVIDER
-// Wraps app with Clerk + Convex authentication
-// ═══════════════════════════════════════════════════════════
+// Wraps app with Convex for real-time data
+// Auth: BetterAuth (replaced Clerk for performance)
+// ===================================================================
 
 "use client";
 
-import { ClerkProvider, useAuth } from "@clerk/nextjs";
-import { ConvexReactClient } from "convex/react";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { ConvexProvider, ConvexReactClient } from "convex/react";
 import type { ReactNode } from "react";
+
+// ---------------------------------------------------------------
+// CONVEX CLIENT (Singleton)
+// ---------------------------------------------------------------
 
 // Initialize Convex client - guard against undefined URL during build
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
 const convex = convexUrl ? new ConvexReactClient(convexUrl) : null;
 
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 // PROVIDER COMPONENT
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 
 interface ConvexClientProviderProps {
   children: ReactNode;
 }
 
 export function ConvexClientProvider({ children }: ConvexClientProviderProps) {
-  const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
   // During build/SSG when env vars are missing, return children without providers
-  if (!clerkKey) {
+  if (!convex) {
     return <>{children}</>;
   }
 
-  const clerkAppearance = {
-    // Match our dark theme
-    variables: {
-      colorPrimary: "#00F6E0",
-      colorBackground: "#0A0A0A",
-      colorInputBackground: "#1A1A1A",
-      colorInputText: "#FFFFFF",
-      colorText: "#FFFFFF",
-      colorTextSecondary: "#A0A0A0",
-      borderRadius: "12px",
-    },
-    elements: {
-      formButtonPrimary: {
-        backgroundColor: "#00F6E0",
-        color: "#000000",
-        fontFamily: "var(--font-bebas)",
-        letterSpacing: "0.1em",
-        "&:hover": {
-          backgroundColor: "#00D4C4",
-        },
-      },
-      card: {
-        backgroundColor: "#0A0A0A",
-        border: "1px solid #2A2A2A",
-      },
-    },
-  };
-
-  // If Convex URL is missing, wrap with Clerk only
-  if (!convex) {
-    return (
-      <ClerkProvider publishableKey={clerkKey} appearance={clerkAppearance}>
-        {children}
-      </ClerkProvider>
-    );
-  }
-
-  return (
-    <ClerkProvider publishableKey={clerkKey} appearance={clerkAppearance}>
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        {children}
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
-  );
+  return <ConvexProvider client={convex}>{children}</ConvexProvider>;
 }
 
 export default ConvexClientProvider;

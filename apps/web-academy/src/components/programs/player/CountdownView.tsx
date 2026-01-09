@@ -3,10 +3,10 @@
 // 3-2-1 countdown before workout starts
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface CountdownViewProps {
   onComplete: () => void;
@@ -57,7 +57,7 @@ export function CountdownView({ onComplete, workoutTitle }: CountdownViewProps) 
             fill="none"
             initial={{ pathLength: 1 }}
             animate={{ pathLength: count / 3 }}
-            transition={{ duration: 1, ease: 'linear' }}
+            transition={{ duration: 1, ease: "linear" }}
             strokeLinecap="round"
           />
         </svg>
@@ -71,9 +71,9 @@ export function CountdownView({ onComplete, workoutTitle }: CountdownViewProps) 
             exit={{ scale: 1.5, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="text-8xl font-bebas font-bold"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
-            {count || 'GO!'}
+            {count || "GO!"}
           </motion.span>
         </AnimatePresence>
       </div>
@@ -82,11 +82,11 @@ export function CountdownView({ onComplete, workoutTitle }: CountdownViewProps) 
       <div className="text-center px-12">
         <h1
           className="font-bebas text-5xl uppercase leading-none mb-2"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           {workoutTitle}
         </h1>
-        <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+        <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
           Get ready...
         </p>
       </div>

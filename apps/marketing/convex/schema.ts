@@ -10,21 +10,48 @@ export default defineSchema({
     // Child/Athlete info
     childNickname: v.optional(v.string()),
     ageBand: v.optional(v.union(v.literal("under8"), v.literal("8-12"), v.literal("13+"))),
-    sport: v.optional(v.union(v.literal("basketball"), v.literal("barefoot"), v.literal("both"), v.literal("other"))),
-    space: v.optional(v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field"))),
-    painFlag: v.optional(v.union(v.literal("none"), v.literal("foot-ankle"), v.literal("knee-hip-back"), v.literal("not-sure"))),
+    sport: v.optional(
+      v.union(
+        v.literal("basketball"),
+        v.literal("barefoot"),
+        v.literal("both"),
+        v.literal("other"),
+      ),
+    ),
+    space: v.optional(
+      v.union(v.literal("apartment"), v.literal("driveway"), v.literal("gym"), v.literal("field")),
+    ),
+    painFlag: v.optional(
+      v.union(
+        v.literal("none"),
+        v.literal("foot-ankle"),
+        v.literal("knee-hip-back"),
+        v.literal("not-sure"),
+      ),
+    ),
     // Goals from interest pills (array of goal objects)
-    goals: v.optional(v.array(v.object({
-      id: v.string(),
-      label: v.string(),
-      tag: v.string(),
-    }))),
+    goals: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          label: v.string(),
+          tag: v.string(),
+        }),
+      ),
+    ),
     // Lane routing result
     lane: v.optional(v.string()),
     // Wolf coach prompt
     wolfPrompt: v.optional(v.string()),
     // Quiz identity
-    athleteIdentity: v.optional(v.union(v.literal("force-leaker"), v.literal("elasticity-block"), v.literal("absorption-deficit"), v.literal("control-gap"))),
+    athleteIdentity: v.optional(
+      v.union(
+        v.literal("force-leaker"),
+        v.literal("elasticity-block"),
+        v.literal("absorption-deficit"),
+        v.literal("control-gap"),
+      ),
+    ),
     // UTM tracking
     utmSource: v.optional(v.string()),
     utmMedium: v.optional(v.string()),
@@ -45,7 +72,12 @@ export default defineSchema({
     type: v.union(v.literal("tripwire"), v.literal("academy")),
     stripeCustomerId: v.optional(v.string()),
     stripeSubscriptionId: v.optional(v.string()),
-    status: v.union(v.literal("active"), v.literal("canceled"), v.literal("past_due"), v.literal("trialing")),
+    status: v.union(
+      v.literal("active"),
+      v.literal("canceled"),
+      v.literal("past_due"),
+      v.literal("trialing"),
+    ),
     currentPeriodStart: v.optional(v.number()),
     currentPeriodEnd: v.optional(v.number()),
     createdAt: v.number(),
@@ -62,8 +94,7 @@ export default defineSchema({
     totalLessons: v.number(),
     accessLevel: v.union(v.literal("free"), v.literal("tripwire"), v.literal("academy")),
     createdAt: v.number(),
-  })
-    .index("by_slug", ["slug"]),
+  }).index("by_slug", ["slug"]),
 
   // Program weeks
   weeks: defineTable({
@@ -71,8 +102,7 @@ export default defineSchema({
     weekNumber: v.number(),
     title: v.string(),
     description: v.string(),
-  })
-    .index("by_program", ["programId"]),
+  }).index("by_program", ["programId"]),
 
   // Individual lessons
   lessons: defineTable({
@@ -117,21 +147,31 @@ export default defineSchema({
     description: v.string(),
     duration: v.optional(v.string()),
     // New format exercises
-    exercises: v.optional(v.array(v.object({
-      name: v.string(),
-      duration: v.number(),
-      instruction: v.string(),
-      cue: v.string(),
-      reps: v.optional(v.string()),
-    }))),
+    exercises: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          duration: v.number(),
+          instruction: v.string(),
+          cue: v.string(),
+          reps: v.optional(v.string()),
+        }),
+      ),
+    ),
     // Old format steps (references drills)
-    steps: v.optional(v.array(v.object({
-      drillId: v.string(),
-      durationSec: v.number(),
-      order: v.number(),
-      note: v.optional(v.string()),
-    }))),
-    accessLevel: v.optional(v.union(v.literal("free"), v.literal("tripwire"), v.literal("academy"))),
+    steps: v.optional(
+      v.array(
+        v.object({
+          drillId: v.string(),
+          durationSec: v.number(),
+          order: v.number(),
+          note: v.optional(v.string()),
+        }),
+      ),
+    ),
+    accessLevel: v.optional(
+      v.union(v.literal("free"), v.literal("tripwire"), v.literal("academy")),
+    ),
     // Metadata
     ageBands: v.optional(v.array(v.string())),
     difficulty: v.optional(v.string()),
@@ -158,8 +198,7 @@ export default defineSchema({
     // Timestamps
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
-  })
-    .index("by_slug", ["slug"]),
+  }).index("by_slug", ["slug"]),
 
   // Stack run completions
   stackRuns: defineTable({
@@ -181,8 +220,7 @@ export default defineSchema({
     longestStreak: v.number(),
     lastActivityDate: v.string(), // YYYY-MM-DD format
     updatedAt: v.number(),
-  })
-    .index("by_profile", ["profileId"]),
+  }).index("by_profile", ["profileId"]),
 
   // Analytics events
   analyticsEvents: defineTable({
@@ -217,10 +255,12 @@ export default defineSchema({
   quizResponses: defineTable({
     profileId: v.optional(v.id("profiles")),
     anonymousId: v.optional(v.string()),
-    answers: v.array(v.object({
-      questionId: v.number(),
-      answer: v.string(),
-    })),
+    answers: v.array(
+      v.object({
+        questionId: v.number(),
+        answer: v.string(),
+      }),
+    ),
     scores: v.object({
       forceLeaker: v.number(),
       elasticity: v.number(),

@@ -2,22 +2,22 @@
 // ONBOARDING SCREENS EXPORTS
 // ═══════════════════════════════════════════════════════════
 
-// Entry screens
-export { Splash } from './Splash';
-export { RoleSelection } from './RoleSelection';
-export { ProgramSelection } from './ProgramSelection';
+export { AddAthlete } from "./AddAthlete";
+export { AthleteProfile } from "./AthleteProfile";
+export { AthleteReady } from "./AthleteReady";
 
 // Athlete flow
-export { AthleteWelcome } from './AthleteWelcome';
-export { ParentCodeEntry } from './ParentCodeEntry';
-export { AthleteProfile } from './AthleteProfile';
-export { AvatarSelect } from './AvatarSelect';
-export { NotificationPermission } from './NotificationPermission';
-export { AthleteReady } from './AthleteReady';
+export { AthleteWelcome } from "./AthleteWelcome";
+export { AvatarSelect } from "./AvatarSelect";
+export { NotificationPermission } from "./NotificationPermission";
+export { ParentCodeEntry } from "./ParentCodeEntry";
+export { ParentReady } from "./ParentReady";
+export { ParentSignup } from "./ParentSignup";
 
 // Parent flow
-export { ParentWelcome } from './ParentWelcome';
-export { ParentSignup } from './ParentSignup';
-export { SubscriptionSelect } from './SubscriptionSelect';
-export { AddAthlete } from './AddAthlete';
-export { ParentReady } from './ParentReady';
+export { ParentWelcome } from "./ParentWelcome";
+export { ProgramSelection } from "./ProgramSelection";
+export { RoleSelection } from "./RoleSelection";
+// Entry screens
+export { Splash } from "./Splash";
+export { SubscriptionSelect } from "./SubscriptionSelect";

@@ -7,8 +7,8 @@ var config = {
       proxyExternalRequest: "fetch",
       incrementalCache: "dummy",
       tagCache: "dummy",
-      queue: "dummy"
-    }
+      queue: "dummy",
+    },
   },
   edgeExternals: ["node:crypto"],
   middleware: {
@@ -19,11 +19,9 @@ var config = {
       proxyExternalRequest: "fetch",
       incrementalCache: "dummy",
       tagCache: "dummy",
-      queue: "dummy"
-    }
-  }
+      queue: "dummy",
+    },
+  },
 };
 var open_next_config_default = config;
-export {
-  open_next_config_default as default
-};
+export { open_next_config_default as default };

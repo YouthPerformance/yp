@@ -4,10 +4,9 @@
 // Ported from yp-academy/StatsBar.tsx
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface StatsBarProps {
   level: number;
@@ -36,8 +35,8 @@ export function StatsBar({
         transition={{ delay: 0.2 }}
         className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <StatItem icon="⚡" value={level} label="LVL" color="var(--accent-primary)" />
@@ -54,8 +53,8 @@ export function StatsBar({
       transition={{ delay: 0.2 }}
       className="rounded-2xl p-4"
       style={{
-        backgroundColor: 'var(--bg-secondary)',
-        border: '1px solid var(--border-default)',
+        backgroundColor: "var(--bg-secondary)",
+        border: "1px solid var(--border-default)",
       }}
     >
       <div className="flex items-center justify-between gap-4">
@@ -79,24 +78,21 @@ export function StatsBar({
                 stroke="var(--accent-primary)"
                 strokeWidth="4"
                 strokeLinecap="round"
-                initial={{ strokeDasharray: '0 150.8' }}
+                initial={{ strokeDasharray: "0 150.8" }}
                 animate={{ strokeDasharray: `${xpProgress * 1.508} 150.8` }}
-                transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
+                transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
               <span
                 className="font-mono text-xl font-bold"
-                style={{ color: 'var(--text-primary)' }}
+                style={{ color: "var(--text-primary)" }}
               >
                 {level}
               </span>
             </div>
           </div>
-          <span
-            className="text-xs mt-1"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <span className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
             Level
           </span>
         </div>
@@ -104,29 +100,23 @@ export function StatsBar({
         {/* XP Progress */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
-            <span
-              className="text-xs"
-              style={{ color: 'var(--text-tertiary)' }}
-            >
+            <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
               XP
             </span>
-            <span
-              className="text-xs font-mono"
-              style={{ color: 'var(--accent-primary)' }}
-            >
+            <span className="text-xs font-mono" style={{ color: "var(--accent-primary)" }}>
               {xp.toLocaleString()}/{xpToNextLevel.toLocaleString()}
             </span>
           </div>
           <div
             className="h-2 rounded-full overflow-hidden"
-            style={{ backgroundColor: 'var(--border-default)' }}
+            style={{ backgroundColor: "var(--border-default)" }}
           >
             <motion.div
               className="h-full rounded-full"
-              style={{ backgroundColor: 'var(--accent-primary)' }}
+              style={{ backgroundColor: "var(--accent-primary)" }}
               initial={{ width: 0 }}
               animate={{ width: `${xpProgress}%` }}
-              transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
             />
           </div>
         </div>
@@ -137,15 +127,12 @@ export function StatsBar({
             <span className="text-lg">🔥</span>
             <span
               className="font-mono text-xl font-bold"
-              style={{ color: 'var(--accent-warning)' }}
+              style={{ color: "var(--accent-warning)" }}
             >
               {streak}
             </span>
           </div>
-          <span
-            className="text-xs"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
             Streak
           </span>
         </div>
@@ -154,17 +141,11 @@ export function StatsBar({
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1">
             <span className="text-lg">💎</span>
-            <span
-              className="font-mono text-xl font-bold"
-              style={{ color: '#FFD700' }}
-            >
+            <span className="font-mono text-xl font-bold" style={{ color: "#FFD700" }}>
               {crystals}
             </span>
           </div>
-          <span
-            className="text-xs"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
             Crystals
           </span>
         </div>
@@ -188,16 +169,10 @@ function StatItem({
     <div className="flex items-center gap-2">
       <span className="text-lg">{icon}</span>
       <div>
-        <span
-          className="font-mono text-lg font-bold block"
-          style={{ color }}
-        >
+        <span className="font-mono text-lg font-bold block" style={{ color }}>
           {value}
         </span>
-        <span
-          className="text-xs"
-          style={{ color: 'var(--text-tertiary)' }}
-        >
+        <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
           {label}
         </span>
       </div>

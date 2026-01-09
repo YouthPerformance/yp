@@ -3,42 +3,42 @@
 // View and edit a single content campaign
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '@yp/alpha/convex/_generated/api';
-import { Id } from '@yp/alpha/convex/_generated/dataModel';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { api } from "@yp/alpha/convex/_generated/api";
+import type { Id } from "@yp/alpha/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 // Platform icons/labels
 const PLATFORMS = {
-  BLOG: { icon: '📝', label: 'Blog Post', color: '#4CAF50' },
-  LINKEDIN: { icon: '💼', label: 'LinkedIn', color: '#0077B5' },
-  TWITTER: { icon: '🐦', label: 'Twitter/X', color: '#1DA1F2' },
-  INSTAGRAM: { icon: '📸', label: 'Instagram', color: '#E4405F' },
+  BLOG: { icon: "📝", label: "Blog Post", color: "#4CAF50" },
+  LINKEDIN: { icon: "💼", label: "LinkedIn", color: "#0077B5" },
+  TWITTER: { icon: "🐦", label: "Twitter/X", color: "#1DA1F2" },
+  INSTAGRAM: { icon: "📸", label: "Instagram", color: "#E4405F" },
 };
 
 // Status colors
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  DRAFT: { bg: 'rgba(255, 193, 7, 0.2)', text: '#FFC107' },
-  READY: { bg: 'rgba(0, 246, 224, 0.2)', text: '#00F6E0' },
-  PUBLISHED: { bg: 'rgba(76, 175, 80, 0.2)', text: '#4CAF50' },
-  FAILED: { bg: 'rgba(244, 67, 54, 0.2)', text: '#F44336' },
+  DRAFT: { bg: "rgba(255, 193, 7, 0.2)", text: "#FFC107" },
+  READY: { bg: "rgba(0, 246, 224, 0.2)", text: "#00F6E0" },
+  PUBLISHED: { bg: "rgba(76, 175, 80, 0.2)", text: "#4CAF50" },
+  FAILED: { bg: "rgba(244, 67, 54, 0.2)", text: "#F44336" },
 };
 
-type Platform = 'BLOG' | 'LINKEDIN' | 'TWITTER' | 'INSTAGRAM';
+type Platform = "BLOG" | "LINKEDIN" | "TWITTER" | "INSTAGRAM";
 
 export default function CampaignDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const campaignId = params.id as Id<'campaigns'>;
+  const campaignId = params.id as Id<"campaigns">;
 
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('BLOG');
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>("BLOG");
   const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState('');
+  const [editedContent, setEditedContent] = useState("");
 
   // Fetch campaign with assets
   const campaign = useQuery(api.campaigns.getCampaign, { campaignId });
@@ -49,7 +49,7 @@ export default function CampaignDetailPage() {
   const deleteCampaign = useMutation(api.campaigns.deleteCampaign);
 
   // Handle status change
-  const handleStatusChange = async (newStatus: 'DRAFT' | 'READY' | 'PUBLISHED' | 'FAILED') => {
+  const handleStatusChange = async (newStatus: "DRAFT" | "READY" | "PUBLISHED" | "FAILED") => {
     await updateStatus({ campaignId, status: newStatus });
   };
 
@@ -75,14 +75,14 @@ export default function CampaignDetailPage() {
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    setEditedContent('');
+    setEditedContent("");
   };
 
   // Handle delete
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this campaign? This cannot be undone.')) {
+    if (confirm("Are you sure you want to delete this campaign? This cannot be undone.")) {
       await deleteCampaign({ campaignId });
-      router.push('/admin/campaigns');
+      router.push("/admin/campaigns");
     }
   };
 
@@ -96,12 +96,12 @@ export default function CampaignDetailPage() {
 
   // Format date
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(timestamp).toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -113,14 +113,14 @@ export default function CampaignDetailPage() {
           <div className="relative w-10 h-10">
             <div
               className="absolute inset-0 border-2 rounded-full"
-              style={{ borderColor: 'var(--accent-primary)', opacity: 0.2 }}
+              style={{ borderColor: "var(--accent-primary)", opacity: 0.2 }}
             />
             <div
               className="absolute inset-0 border-2 border-transparent rounded-full animate-spin"
-              style={{ borderTopColor: 'var(--accent-primary)' }}
+              style={{ borderTopColor: "var(--accent-primary)" }}
             />
           </div>
-          <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+          <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
             Loading campaign...
           </span>
         </div>
@@ -135,14 +135,14 @@ export default function CampaignDetailPage() {
         <span className="text-4xl mb-4">🔍</span>
         <p
           className="font-bebas text-xl tracking-wider mb-4"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           CAMPAIGN NOT FOUND
         </p>
         <Link
           href="/admin/campaigns"
           className="text-sm"
-          style={{ color: 'var(--accent-primary)' }}
+          style={{ color: "var(--accent-primary)" }}
         >
           ← Back to Campaigns
         </Link>
@@ -160,7 +160,7 @@ export default function CampaignDetailPage() {
       <Link
         href="/admin/campaigns"
         className="inline-flex items-center gap-2 text-sm"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
       >
         ← Back to Campaigns
       </Link>
@@ -169,8 +169,8 @@ export default function CampaignDetailPage() {
       <div
         className="p-6 rounded-xl"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <div className="flex items-start justify-between gap-4 mb-4">
@@ -180,10 +180,11 @@ export default function CampaignDetailPage() {
               <span
                 className="px-2 py-1 rounded text-xs font-medium"
                 style={{
-                  backgroundColor: campaign.author === 'ADAM'
-                    ? 'rgba(0, 246, 224, 0.2)'
-                    : 'rgba(156, 39, 176, 0.2)',
-                  color: campaign.author === 'ADAM' ? '#00F6E0' : '#9C27B0',
+                  backgroundColor:
+                    campaign.author === "ADAM"
+                      ? "rgba(0, 246, 224, 0.2)"
+                      : "rgba(156, 39, 176, 0.2)",
+                  color: campaign.author === "ADAM" ? "#00F6E0" : "#9C27B0",
                 }}
               >
                 {campaign.author}
@@ -202,13 +203,13 @@ export default function CampaignDetailPage() {
             {/* Title */}
             <h1
               className="font-bebas text-3xl tracking-wider mb-2"
-              style={{ color: 'var(--text-primary)' }}
+              style={{ color: "var(--text-primary)" }}
             >
               {campaign.title}
             </h1>
 
             {/* Meta */}
-            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
               Created {formatDate(campaign.createdAt)}
               {campaign.publishedAt && ` • Published ${formatDate(campaign.publishedAt)}`}
             </p>
@@ -222,9 +223,9 @@ export default function CampaignDetailPage() {
               onChange={(e) => handleStatusChange(e.target.value as any)}
               className="px-3 py-2 rounded-lg text-sm"
               style={{
-                backgroundColor: 'var(--bg-tertiary)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border-default)',
+                backgroundColor: "var(--bg-tertiary)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border-default)",
               }}
             >
               <option value="DRAFT">Draft</option>
@@ -238,8 +239,8 @@ export default function CampaignDetailPage() {
               onClick={handleDelete}
               className="px-3 py-2 rounded-lg text-sm transition-colors"
               style={{
-                backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                color: '#F44336',
+                backgroundColor: "rgba(244, 67, 54, 0.2)",
+                color: "#F44336",
               }}
             >
               Delete
@@ -249,14 +250,11 @@ export default function CampaignDetailPage() {
 
         {/* Raw Input */}
         {campaign.rawInput && (
-          <div
-            className="p-4 rounded-lg"
-            style={{ backgroundColor: 'var(--bg-tertiary)' }}
-          >
-            <p className="text-xs mb-2" style={{ color: 'var(--text-tertiary)' }}>
+          <div className="p-4 rounded-lg" style={{ backgroundColor: "var(--bg-tertiary)" }}>
+            <p className="text-xs mb-2" style={{ color: "var(--text-tertiary)" }}>
               Original Input
             </p>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
               {campaign.rawInput}
             </p>
           </div>
@@ -277,11 +275,9 @@ export default function CampaignDetailPage() {
               }}
               className="px-4 py-3 rounded-xl flex items-center gap-2 transition-all whitespace-nowrap"
               style={{
-                backgroundColor: isActive
-                  ? 'var(--bg-secondary)'
-                  : 'transparent',
-                border: `1px solid ${isActive ? config.color : 'var(--border-default)'}`,
-                color: isActive ? config.color : 'var(--text-secondary)',
+                backgroundColor: isActive ? "var(--bg-secondary)" : "transparent",
+                border: `1px solid ${isActive ? config.color : "var(--border-default)"}`,
+                color: isActive ? config.color : "var(--text-secondary)",
               }}
             >
               <span>{config.icon}</span>
@@ -298,7 +294,7 @@ export default function CampaignDetailPage() {
         animate={{ opacity: 1, y: 0 }}
         className="rounded-xl overflow-hidden"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
+          backgroundColor: "var(--bg-secondary)",
           border: `1px solid ${platformConfig.color}`,
         }}
       >
@@ -306,20 +302,17 @@ export default function CampaignDetailPage() {
         <div
           className="px-4 py-3 flex items-center justify-between"
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
             borderBottom: `1px solid var(--border-default)`,
           }}
         >
           <div className="flex items-center gap-2">
             <span>{platformConfig.icon}</span>
-            <span
-              className="font-bebas tracking-wider"
-              style={{ color: platformConfig.color }}
-            >
+            <span className="font-bebas tracking-wider" style={{ color: platformConfig.color }}>
               {platformConfig.label.toUpperCase()}
             </span>
             {currentAsset?.title && (
-              <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+              <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
                 • {currentAsset.title}
               </span>
             )}
@@ -332,8 +325,8 @@ export default function CampaignDetailPage() {
                   onClick={handleCancelEdit}
                   className="px-3 py-1.5 rounded-lg text-sm"
                   style={{
-                    backgroundColor: 'var(--bg-tertiary)',
-                    color: 'var(--text-secondary)',
+                    backgroundColor: "var(--bg-tertiary)",
+                    color: "var(--text-secondary)",
                   }}
                 >
                   Cancel
@@ -343,7 +336,7 @@ export default function CampaignDetailPage() {
                   className="px-3 py-1.5 rounded-lg text-sm"
                   style={{
                     backgroundColor: platformConfig.color,
-                    color: 'white',
+                    color: "white",
                   }}
                 >
                   Save
@@ -355,8 +348,8 @@ export default function CampaignDetailPage() {
                   onClick={handleCopy}
                   className="px-3 py-1.5 rounded-lg text-sm"
                   style={{
-                    backgroundColor: 'var(--bg-tertiary)',
-                    color: 'var(--text-secondary)',
+                    backgroundColor: "var(--bg-tertiary)",
+                    color: "var(--text-secondary)",
                   }}
                 >
                   📋 Copy
@@ -366,7 +359,7 @@ export default function CampaignDetailPage() {
                   className="px-3 py-1.5 rounded-lg text-sm"
                   style={{
                     backgroundColor: platformConfig.color,
-                    color: 'white',
+                    color: "white",
                   }}
                 >
                   ✏️ Edit
@@ -385,21 +378,21 @@ export default function CampaignDetailPage() {
                 onChange={(e) => setEditedContent(e.target.value)}
                 className="w-full h-96 p-4 rounded-lg text-sm resize-none"
                 style={{
-                  backgroundColor: 'var(--bg-tertiary)',
-                  color: 'var(--text-primary)',
-                  border: '1px solid var(--border-default)',
+                  backgroundColor: "var(--bg-tertiary)",
+                  color: "var(--text-primary)",
+                  border: "1px solid var(--border-default)",
                 }}
               />
             ) : (
               <pre
                 className="whitespace-pre-wrap text-sm font-sans"
-                style={{ color: 'var(--text-primary)' }}
+                style={{ color: "var(--text-primary)" }}
               >
                 {currentAsset.body}
               </pre>
             )
           ) : (
-            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
               No content available for this platform
             </p>
           )}

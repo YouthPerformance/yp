@@ -3,11 +3,11 @@
 // Collect name, age, and favorite sports
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useOnboarding } from '@/contexts/OnboardingContext';
-import { AthleteProfile } from '@/components/screens/onboarding';
+import { useRouter } from "next/navigation";
+import { AthleteProfile } from "@/components/screens/onboarding";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -16,13 +16,13 @@ export default function ProfilePage() {
   return (
     <AthleteProfile
       onContinue={() => {
-        if (data.role === 'athlete') {
-          router.push('/code');
+        if (data.role === "athlete") {
+          router.push("/code");
         } else {
-          router.push('/avatar');
+          router.push("/avatar");
         }
       }}
-      onBack={() => router.push('/role')}
+      onBack={() => router.push("/role")}
     />
   );
 }

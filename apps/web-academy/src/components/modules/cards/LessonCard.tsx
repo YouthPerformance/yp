@@ -3,11 +3,10 @@
 // Displays educational content in Athlete or Parent mode
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import type { LessonCard as LessonCardType, ContentMode } from '@/data/modules/types';
+import Image from "next/image";
+import type { ContentMode, LessonCard as LessonCardType } from "@/data/modules/types";
 
 interface LessonCardProps {
   card: LessonCardType;
@@ -33,7 +32,7 @@ export function LessonCard({ card, mode }: LessonCardProps) {
         )}
 
         {/* Media */}
-        {content.mediaType === 'image' && content.mediaUrl && (
+        {content.mediaType === "image" && content.mediaUrl && (
           <div className="mt-6 rounded-xl overflow-hidden border border-border-subtle">
             <div className="relative aspect-video bg-bg-tertiary">
               <Image
@@ -52,7 +51,7 @@ export function LessonCard({ card, mode }: LessonCardProps) {
           </div>
         )}
 
-        {content.mediaType === 'video' && content.mediaUrl && (
+        {content.mediaType === "video" && content.mediaUrl && (
           <div className="mt-6 rounded-xl overflow-hidden border border-border-subtle">
             <video
               src={content.mediaUrl}
@@ -71,9 +70,7 @@ export function LessonCard({ card, mode }: LessonCardProps) {
 
       {/* Swipe indicator */}
       <div className="mt-6 text-center">
-        <p className="text-sm text-text-tertiary uppercase tracking-widest">
-          Swipe up to continue
-        </p>
+        <p className="text-sm text-text-tertiary uppercase tracking-widest">Swipe up to continue</p>
         <div className="mt-2 animate-bounce">
           <svg
             className="w-6 h-6 mx-auto text-accent-primary"

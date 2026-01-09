@@ -25,9 +25,7 @@ export function Family() {
         </div>
 
         {/* Family Text */}
-        <p className="text-[17px] leading-[1.9] text-[var(--text-secondary)]">
-          {FAMILY.text}
-        </p>
+        <p className="text-[17px] leading-[1.9] text-[var(--text-secondary)]">{FAMILY.text}</p>
       </motion.div>
     </section>
   );

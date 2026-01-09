@@ -1,19 +1,20 @@
-// ═══════════════════════════════════════════════════════════
+// ===================================================================
 // USER CONTEXT
 // Provides user data from Convex throughout the app
-// ═══════════════════════════════════════════════════════════
+// Now powered by BetterAuth (replacing Clerk)
+// ===================================================================
 
 "use client";
 
-import { useAuth, useUser as useClerkUser } from "@clerk/nextjs";
 import { api } from "@yp/alpha/convex/_generated/api";
 import type { Id } from "@yp/alpha/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
+import { useSession } from "@/lib/auth";
 
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 // TYPES
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 
 export type Role = "athlete" | "parent";
 export type Rank = "pup" | "hunter" | "alpha" | "apex";
@@ -22,7 +23,8 @@ export type SubscriptionStatus = "free" | "pro";
 
 export interface ConvexUser {
   _id: Id<"users">;
-  clerkId: string;
+  authUserId?: string;
+  clerkId?: string; // Deprecated: kept for migration
   email: string;
   name: string;
   role: Role;
@@ -66,6 +68,9 @@ export interface UserContextValue {
   user: ConvexUser | null;
   enrollment: Enrollment | null;
 
+  // Auth session (from BetterAuth)
+  session: { user: { id: string; email: string; name?: string } } | null;
+
   // Derived values
   currentDay: number;
   level: number;
@@ -95,15 +100,15 @@ export type AuthState =
   | "signed-in-with-user"
   | "error";
 
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 // CONTEXT
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 
 const UserContext = createContext<UserContextValue | null>(null);
 
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 // PROVIDER
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
 
 interface UserProviderProps {
   children: ReactNode;
@@ -115,6 +120,7 @@ const defaultContextValue: UserContextValue = {
   isSignedIn: false,
   user: null,
   enrollment: null,
+  session: null,
   currentDay: 1,
   level: 1,
   xpToNextLevel: 1000,
@@ -136,18 +142,70 @@ export function UserProvider({ children }: UserProviderProps) {
     return <UserContext.Provider value={defaultContextValue}>{children}</UserContext.Provider>;
   }
 
-  // Client-side rendering with actual Clerk hooks
+  // Client-side rendering with BetterAuth hooks
   return <UserProviderClient>{children}</UserProviderClient>;
 }
 
-// Separate component that uses Clerk hooks - only rendered on client
+// Separate component that uses BetterAuth hooks - only rendered on client
 function UserProviderClient({ children }: UserProviderProps) {
   const [authState, setAuthState] = useState<AuthState>("loading");
-  const { isLoaded: clerkLoaded, isSignedIn, user: clerkUser } = useClerkUser();
-  const { userId: clerkId } = useAuth();
 
-  // Fetch user from Convex
-  const convexUser = useQuery(api.users.getByClerkId, clerkId ? { clerkId } : "skip");
+  // BetterAuth session hook
+  const { data: session, isPending: sessionLoading } = useSession();
+
+  // Get authUserId from session
+  const authUserId = session?.user?.id ?? null;
+  const authEmail = session?.user?.email ?? null;
+
+  // PERFORMANCE: Use getOrCreateFromAuth - single mutation handles lookup + migration + linking
+  const getOrCreateUser = useMutation(api.users.getOrCreateFromAuth);
+  const createUserMutation = useMutation(api.users.createFromAuth);
+
+  // User lookup by email (fallback for migration)
+  const convexUserByEmail = useQuery(
+    api.users.getByEmail,
+    authEmail ? { email: authEmail } : "skip",
+  );
+
+  // State for the resolved user
+  const [convexUser, setConvexUser] = useState<ConvexUser | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
+
+  // Fetch user when session changes
+  useEffect(() => {
+    async function resolveUser() {
+      if (!authUserId || !authEmail) {
+        setConvexUser(null);
+        setUserLoading(false);
+        return;
+      }
+
+      try {
+        // This single call handles:
+        // 1. Lookup by authUserId (fastest)
+        // 2. Fallback lookup by email (migration)
+        // 3. Auto-link if found by email
+        const result = await getOrCreateUser({
+          authUserId,
+          email: authEmail,
+          name: session?.user?.name,
+        });
+
+        setConvexUser(result as ConvexUser | null);
+      } catch (error) {
+        console.error("[UserContext] Failed to resolve user:", error);
+        setConvexUser(null);
+      } finally {
+        setUserLoading(false);
+      }
+    }
+
+    if (sessionLoading) {
+      setUserLoading(true);
+    } else {
+      resolveUser();
+    }
+  }, [authUserId, authEmail, sessionLoading, getOrCreateUser, session?.user?.name]);
 
   // Fetch current enrollment
   const enrollment = useQuery(
@@ -155,27 +213,18 @@ function UserProviderClient({ children }: UserProviderProps) {
     convexUser?._id ? { userId: convexUser._id } : "skip",
   );
 
-  // Create user mutation
-  const createUserMutation = useMutation(api.users.create);
-
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
   // AUTH STATE MANAGEMENT
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
 
   useEffect(() => {
-    if (!clerkLoaded) {
+    if (sessionLoading || userLoading) {
       setAuthState("loading");
       return;
     }
 
-    if (!isSignedIn) {
+    if (!session) {
       setAuthState("signed-out");
-      return;
-    }
-
-    if (convexUser === undefined) {
-      // Query still loading
-      setAuthState("loading");
       return;
     }
 
@@ -185,21 +234,21 @@ function UserProviderClient({ children }: UserProviderProps) {
     }
 
     setAuthState("signed-in-with-user");
-  }, [clerkLoaded, isSignedIn, convexUser]);
+  }, [sessionLoading, userLoading, session, convexUser]);
 
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
   // CREATE USER
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
 
   const createUser = async (data: CreateUserData): Promise<Id<"users"> | null> => {
-    if (!clerkId || !clerkUser?.primaryEmailAddress?.emailAddress) {
+    if (!authUserId || !authEmail) {
       return null;
     }
 
     try {
       const userId = await createUserMutation({
-        clerkId,
-        email: clerkUser.primaryEmailAddress.emailAddress,
+        authUserId,
+        email: authEmail,
         name: data.name,
         role: data.role,
         avatarColor: data.avatarColor,
@@ -208,41 +257,50 @@ function UserProviderClient({ children }: UserProviderProps) {
         parentCode: data.parentCode,
       });
 
+      // Refetch user
+      const result = await getOrCreateUser({
+        authUserId,
+        email: authEmail,
+      });
+      setConvexUser(result as ConvexUser | null);
+
       return userId;
-    } catch (_error) {
-      // Silently fail - the UI will handle the error state
+    } catch (error) {
+      console.error("[UserContext] Failed to create user:", error);
       return null;
     }
   };
 
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
   // DERIVED VALUES
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
 
   const currentDay = enrollment?.currentDay ?? 1;
 
   // Level calculation (1000 XP per level)
   const xp = convexUser?.xpTotal ?? 0;
   const level = Math.floor(xp / 1000) + 1;
-  const _xpInLevel = xp % 1000;
   const xpToNextLevel = 1000;
 
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
   // CONTEXT VALUE
-  // ─────────────────────────────────────────────────────────
+  // ---------------------------------------------------------------
 
   const value: UserContextValue = {
-    isLoaded: clerkLoaded && convexUser !== undefined,
-    isSignedIn: isSignedIn ?? false,
-    user: convexUser ?? null,
+    isLoaded: !sessionLoading && !userLoading,
+    isSignedIn: !!session,
+    user: convexUser,
     enrollment: enrollment ?? null,
+    session: session as UserContextValue["session"],
     currentDay,
     level,
     xpToNextLevel,
     createUser,
-    refetch: () => {
-      // Convex queries auto-refetch on data changes
-      // This is a no-op placeholder for future use
+    refetch: async () => {
+      if (authUserId && authEmail) {
+        const result = await getOrCreateUser({ authUserId, email: authEmail });
+        setConvexUser(result as ConvexUser | null);
+      }
     },
     authState,
   };
@@ -250,9 +308,9 @@ function UserProviderClient({ children }: UserProviderProps) {
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
-// ─────────────────────────────────────────────────────────────
-// HOOK
-// ─────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------
+// HOOKS
+// ---------------------------------------------------------------
 
 export function useUserContext() {
   const context = useContext(UserContext);

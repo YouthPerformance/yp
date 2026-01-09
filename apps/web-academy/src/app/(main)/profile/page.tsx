@@ -3,48 +3,47 @@
 // User settings and stats
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { useClerk } from '@clerk/nextjs';
+import { motion } from "framer-motion";
 import {
-  Settings,
   Bell,
-  CreditCard,
-  LogOut,
-  ChevronRight,
-  Trophy,
-  Flame,
   Calendar,
-  Sun,
-  Moon,
+  ChevronRight,
+  CreditCard,
   FileText,
+  Flame,
+  LogOut,
+  Moon,
+  Settings,
   Shield,
-} from 'lucide-react';
-import Link from 'next/link';
-import { useUserContext } from '@/contexts/UserContext';
-import { useTheme } from '@/contexts/ThemeContext';
+  Sun,
+  Trophy,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useUserContext } from "@/contexts/UserContext";
+import { signOut } from "@/lib/auth";
 
 // Wolf color to hex mapping
 const WOLF_COLORS: Record<string, string> = {
-  cyan: '#00F6E0',
-  gold: '#FFD700',
-  purple: '#9B30FF',
-  green: '#10B981',
-  red: '#DC143C',
+  cyan: "#00F6E0",
+  gold: "#FFD700",
+  purple: "#9B30FF",
+  green: "#10B981",
+  red: "#DC143C",
 };
 
 const RANK_CONFIG = {
-  pup: { label: 'Pup', color: '#9CA3AF' },
-  hunter: { label: 'Hunter', color: '#00F6E0' },
-  alpha: { label: 'Alpha', color: '#FFD700' },
-  apex: { label: 'Apex', color: '#EF4444' },
+  pup: { label: "Pup", color: "#9CA3AF" },
+  hunter: { label: "Hunter", color: "#00F6E0" },
+  alpha: { label: "Alpha", color: "#FFD700" },
+  apex: { label: "Apex", color: "#EF4444" },
 };
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { signOut } = useClerk();
   const { user, enrollment, level, isLoaded } = useUserContext();
   const { isLightMode, toggleLightDark } = useTheme();
 
@@ -57,18 +56,18 @@ export default function ProfilePage() {
         <div className="relative w-10 h-10">
           <div
             className="absolute inset-0 border-2 rounded-full"
-            style={{ borderColor: 'var(--accent-primary)', opacity: 0.2 }}
+            style={{ borderColor: "var(--accent-primary)", opacity: 0.2 }}
           />
           <div
             className="absolute inset-0 border-2 border-transparent rounded-full animate-spin"
-            style={{ borderTopColor: 'var(--accent-primary)' }}
+            style={{ borderTopColor: "var(--accent-primary)" }}
           />
         </div>
         <span
           className="text-xs tracking-[0.2em] uppercase"
           style={{
-            fontFamily: 'var(--font-loading)',
-            color: 'var(--text-tertiary)'
+            fontFamily: "var(--font-loading)",
+            color: "var(--text-tertiary)",
           }}
         >
           Loading
@@ -79,30 +78,36 @@ export default function ProfilePage() {
 
   // User data with fallbacks
   const userData = {
-    name: user?.name || 'Athlete',
-    avatarColor: WOLF_COLORS[user?.avatarColor || 'cyan'] || '#00F6E0',
-    rank: user?.rank || 'pup',
+    name: user?.name || "Athlete",
+    avatarColor: WOLF_COLORS[user?.avatarColor || "cyan"] || "#00F6E0",
+    rank: user?.rank || "pup",
     age: user?.age || 14,
-    sport: user?.sport || 'Training',
+    sport: user?.sport || "Training",
     level: level,
     totalXP: user?.xpTotal || 0,
     daysCompleted: enrollment?.currentDay || 1,
     bestStreak: user?.streakBest || 0,
-    subscriptionStatus: user?.subscriptionStatus || 'free',
+    subscriptionStatus: user?.subscriptionStatus || "free",
   };
 
   const rankConfig = RANK_CONFIG[userData.rank as keyof typeof RANK_CONFIG] || RANK_CONFIG.pup;
 
   const menuItems = [
-    { icon: Bell, label: 'Notifications', href: '#' },
-    { icon: CreditCard, label: 'Subscription', href: '#' },
-    { icon: Settings, label: 'Settings', href: '#' },
+    { icon: Bell, label: "Notifications", href: "#" },
+    { icon: CreditCard, label: "Subscription", href: "#" },
+    { icon: Settings, label: "Settings", href: "#" },
   ];
 
   const legalLinks = [
-    { icon: FileText, label: 'Terms of Service', href: '/legal/terms' },
-    { icon: Shield, label: 'Privacy Policy', href: '/legal/privacy' },
+    { icon: FileText, label: "Terms of Service", href: "/legal/terms" },
+    { icon: Shield, label: "Privacy Policy", href: "/legal/privacy" },
   ];
+
+  const handleSignOut = async () => {
+    localStorage.removeItem("barefoot_onboarding_state");
+    await signOut();
+    router.push("/");
+  };
 
   return (
     <main className="p-4 max-w-md mx-auto">
@@ -123,10 +128,7 @@ export default function ProfilePage() {
           <span className="text-5xl">🐺</span>
         </div>
 
-        <h1
-          className="font-bebas text-3xl tracking-wider"
-          style={{ color: 'var(--text-primary)' }}
-        >
+        <h1 className="font-bebas text-3xl tracking-wider" style={{ color: "var(--text-primary)" }}>
           {userData.name.toUpperCase()}
         </h1>
 
@@ -140,12 +142,12 @@ export default function ProfilePage() {
           >
             {rankConfig.label}
           </span>
-          <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+          <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
             Level {userData.level}
           </span>
         </div>
 
-        <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>
+        <p className="text-sm mt-2" style={{ color: "var(--text-tertiary)" }}>
           {userData.sport} · Age {userData.age}
         </p>
       </motion.div>
@@ -169,43 +171,35 @@ export default function ProfilePage() {
           label="Days Done"
           color="var(--accent-gold)"
         />
-        <StatCard
-          icon={Flame}
-          value={userData.bestStreak}
-          label="Best Streak"
-          color="#EF4444"
-        />
+        <StatCard icon={Flame} value={userData.bestStreak} label="Best Streak" color="#EF4444" />
       </motion.div>
 
       {/* Subscription Status */}
-      {userData.subscriptionStatus === 'free' && (
+      {userData.subscriptionStatus === "free" && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="mb-6 p-4 rounded-xl"
           style={{
-            backgroundColor: 'rgba(255, 215, 0, 0.1)',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
+            backgroundColor: "rgba(255, 215, 0, 0.1)",
+            border: "1px solid rgba(255, 215, 0, 0.3)",
           }}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p
-                className="font-bebas tracking-wider"
-                style={{ color: 'var(--accent-gold)' }}
-              >
+              <p className="font-bebas tracking-wider" style={{ color: "var(--accent-gold)" }}>
                 FREE PLAN
               </p>
-              <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+              <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
                 Upgrade to unlock all features
               </p>
             </div>
             <motion.button
               className="px-4 py-2 rounded-lg font-bebas tracking-wider"
               style={{
-                backgroundColor: 'var(--accent-gold)',
-                color: 'var(--bg-primary)',
+                backgroundColor: "var(--accent-gold)",
+                color: "var(--bg-primary)",
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -227,33 +221,33 @@ export default function ProfilePage() {
           onClick={toggleLightDark}
           className="w-full p-4 rounded-xl flex items-center justify-between"
           style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-default)',
+            backgroundColor: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
           }}
           whileHover={{ x: 4 }}
           whileTap={{ scale: 0.98 }}
         >
           <div className="flex items-center gap-3">
             {isLightMode ? (
-              <Moon className="w-5 h-5" style={{ color: 'var(--accent-primary)' }} />
+              <Moon className="w-5 h-5" style={{ color: "var(--accent-primary)" }} />
             ) : (
-              <Sun className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
+              <Sun className="w-5 h-5" style={{ color: "var(--accent-gold)" }} />
             )}
-            <span style={{ color: 'var(--text-primary)' }}>
-              {isLightMode ? 'Dark Mode' : 'Light Mode'}
+            <span style={{ color: "var(--text-primary)" }}>
+              {isLightMode ? "Dark Mode" : "Light Mode"}
             </span>
           </div>
           <div
             className="w-12 h-6 rounded-full relative transition-colors"
             style={{
-              backgroundColor: isLightMode ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
+              backgroundColor: isLightMode ? "var(--accent-primary)" : "var(--bg-tertiary)",
             }}
           >
             <motion.div
               className="w-5 h-5 rounded-full absolute top-0.5"
-              style={{ backgroundColor: 'var(--bg-secondary)' }}
-              animate={{ left: isLightMode ? '26px' : '2px' }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              style={{ backgroundColor: "var(--bg-secondary)" }}
+              animate={{ left: isLightMode ? "26px" : "2px" }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
           </div>
         </motion.button>
@@ -266,22 +260,22 @@ export default function ProfilePage() {
         transition={{ delay: 0.3 }}
         className="space-y-2 mb-6"
       >
-        {menuItems.map((item, i) => (
+        {menuItems.map((item) => (
           <motion.button
             key={item.label}
             className="w-full p-4 rounded-xl flex items-center justify-between"
             style={{
-              backgroundColor: 'var(--bg-secondary)',
-              border: '1px solid var(--border-default)',
+              backgroundColor: "var(--bg-secondary)",
+              border: "1px solid var(--border-default)",
             }}
             whileHover={{ x: 4 }}
             whileTap={{ scale: 0.98 }}
           >
             <div className="flex items-center gap-3">
-              <item.icon className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
-              <span style={{ color: 'var(--text-primary)' }}>{item.label}</span>
+              <item.icon className="w-5 h-5" style={{ color: "var(--text-secondary)" }} />
+              <span style={{ color: "var(--text-primary)" }}>{item.label}</span>
             </div>
-            <ChevronRight className="w-5 h-5" style={{ color: 'var(--text-tertiary)' }} />
+            <ChevronRight className="w-5 h-5" style={{ color: "var(--text-tertiary)" }} />
           </motion.button>
         ))}
       </motion.div>
@@ -295,29 +289,26 @@ export default function ProfilePage() {
       >
         <p
           className="text-xs uppercase tracking-wider mb-2 px-1"
-          style={{ color: 'var(--text-tertiary)' }}
+          style={{ color: "var(--text-tertiary)" }}
         >
           Legal
         </p>
         {legalLinks.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-          >
+          <Link key={item.label} href={item.href}>
             <motion.div
               className="w-full p-4 rounded-xl flex items-center justify-between"
               style={{
-                backgroundColor: 'var(--bg-secondary)',
-                border: '1px solid var(--border-default)',
+                backgroundColor: "var(--bg-secondary)",
+                border: "1px solid var(--border-default)",
               }}
               whileHover={{ x: 4 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center gap-3">
-                <item.icon className="w-5 h-5" style={{ color: 'var(--text-tertiary)' }} />
-                <span style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
+                <item.icon className="w-5 h-5" style={{ color: "var(--text-tertiary)" }} />
+                <span style={{ color: "var(--text-secondary)" }}>{item.label}</span>
               </div>
-              <ChevronRight className="w-5 h-5" style={{ color: 'var(--text-tertiary)' }} />
+              <ChevronRight className="w-5 h-5" style={{ color: "var(--text-tertiary)" }} />
             </motion.div>
           </Link>
         ))}
@@ -330,14 +321,11 @@ export default function ProfilePage() {
         transition={{ delay: 0.4 }}
         className="w-full p-4 rounded-xl flex items-center justify-center gap-2"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--accent-error)',
-          color: 'var(--accent-error)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--accent-error)",
+          color: "var(--accent-error)",
         }}
-        onClick={async () => {
-          localStorage.removeItem('barefoot_onboarding_state');
-          await signOut({ redirectUrl: '/' });
-        }}
+        onClick={handleSignOut}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -363,15 +351,15 @@ function StatCard({
     <div
       className="p-4 rounded-xl text-center"
       style={{
-        backgroundColor: 'var(--bg-secondary)',
-        border: '1px solid var(--border-default)',
+        backgroundColor: "var(--bg-secondary)",
+        border: "1px solid var(--border-default)",
       }}
     >
       <Icon className="w-5 h-5 mx-auto mb-2" style={{ color }} />
       <p className="font-mono text-xl font-bold" style={{ color }}>
         {value}
       </p>
-      <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+      <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
         {label}
       </p>
     </div>

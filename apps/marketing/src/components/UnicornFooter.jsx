@@ -1,27 +1,28 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react";
 
-function UnicornFooter({ className = '' }) {
-  const containerRef = useRef(null)
-  const sceneRef = useRef(null)
+function UnicornFooter({ className = "" }) {
+  const containerRef = useRef(null);
+  const sceneRef = useRef(null);
 
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
 
     const initUnicorn = async () => {
       // Check if script already loaded
       if (!window.UnicornStudio) {
-        const script = document.createElement('script')
-        script.src = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js'
-        script.async = true
+        const script = document.createElement("script");
+        script.src =
+          "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
+        script.async = true;
 
         await new Promise((resolve, reject) => {
-          script.onload = resolve
-          script.onerror = reject
-          document.head.appendChild(script)
-        })
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
       }
 
-      if (!isMounted || !containerRef.current || !window.UnicornStudio) return
+      if (!isMounted || !containerRef.current || !window.UnicornStudio) return;
 
       try {
         // Use addScene with filePath to load from public folder
@@ -30,41 +31,41 @@ function UnicornFooter({ className = '' }) {
           fps: 60,
           scale: 1,
           dpi: 1.5,
-          filePath: '/unicorn-footer.json',
+          filePath: "/unicorn-footer.json",
           interactivity: {
             mouse: {
               disableMobile: false,
             },
           },
-        })
-        sceneRef.current = scene
+        });
+        sceneRef.current = scene;
       } catch (err) {
-        console.error('Unicorn Studio init error:', err)
+        console.error("Unicorn Studio init error:", err);
       }
-    }
+    };
 
-    initUnicorn()
+    initUnicorn();
 
     return () => {
-      isMounted = false
+      isMounted = false;
       if (sceneRef.current && window.UnicornStudio) {
-        window.UnicornStudio.destroy(sceneRef.current)
+        window.UnicornStudio.destroy(sceneRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <div
       ref={containerRef}
       className={`unicorn-footer ${className}`}
       style={{
-        width: '100%',
-        height: '400px',
-        position: 'relative',
-        overflow: 'hidden'
+        width: "100%",
+        height: "400px",
+        position: "relative",
+        overflow: "hidden",
       }}
     />
-  )
+  );
 }
 
-export default UnicornFooter
+export default UnicornFooter;

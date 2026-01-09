@@ -1,61 +1,61 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
-  { text: 'Building your Athlete Profile...', duration: 1500 },
-  { text: 'Locking in Week 1 Protocol...', duration: 1500 },
-  { text: 'Calibrating your Barefoot Reset plan...', duration: 1500 },
-  { text: 'Welcome to the Pack.', duration: 2000, isFinal: true },
-]
+  { text: "Building your Athlete Profile...", duration: 1500 },
+  { text: "Locking in Week 1 Protocol...", duration: 1500 },
+  { text: "Calibrating your Barefoot Reset plan...", duration: 1500 },
+  { text: "Welcome to the Pack.", duration: 2000, isFinal: true },
+];
 
 function VelvetRopeOverlay({ onComplete }) {
-  const navigate = useNavigate()
-  const [currentStep, setCurrentStep] = useState(0)
-  const [showSkip, setShowSkip] = useState(false)
-  const [isExiting, setIsExiting] = useState(false)
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [showSkip, setShowSkip] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   // Show skip button after 2 seconds
   useEffect(() => {
-    const timer = setTimeout(() => setShowSkip(true), 2000)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setShowSkip(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Progress through steps
   useEffect(() => {
-    if (currentStep >= steps.length) return
+    if (currentStep >= steps.length) return;
 
     const timer = setTimeout(() => {
       if (currentStep < steps.length - 1) {
-        setCurrentStep((s) => s + 1)
+        setCurrentStep((s) => s + 1);
       } else {
         // Final step - wait then complete
-        setTimeout(() => handleComplete(), 1000)
+        setTimeout(() => handleComplete(), 1000);
       }
-    }, steps[currentStep].duration)
+    }, steps[currentStep].duration);
 
-    return () => clearTimeout(timer)
-  }, [currentStep])
+    return () => clearTimeout(timer);
+  }, [currentStep, handleComplete]);
 
   const handleComplete = () => {
-    setIsExiting(true)
+    setIsExiting(true);
     setTimeout(() => {
-      if (onComplete) onComplete()
-      navigate('/app/programs/barefoot-reset')
-    }, 500)
-  }
+      if (onComplete) onComplete();
+      navigate("/app/programs/barefoot-reset");
+    }, 500);
+  };
 
   const handleSkip = () => {
-    handleComplete()
-  }
+    handleComplete();
+  };
 
-  const step = steps[currentStep]
+  const step = steps[currentStep];
 
   return (
     <div
       className={`
         fixed inset-0 z-50 bg-black flex items-center justify-center
         transition-opacity duration-500
-        ${isExiting ? 'opacity-0' : 'opacity-100'}
+        ${isExiting ? "opacity-0" : "opacity-100"}
       `}
     >
       {/* Animated background */}
@@ -79,7 +79,7 @@ function VelvetRopeOverlay({ onComplete }) {
             className={`
               text-xl md:text-2xl font-yp-display uppercase tracking-wide
               transition-all duration-500
-              ${step.isFinal ? 'text-cyan-500 scale-110' : 'text-white'}
+              ${step.isFinal ? "text-cyan-500 scale-110" : "text-white"}
             `}
             key={currentStep}
           >
@@ -96,8 +96,8 @@ function VelvetRopeOverlay({ onComplete }) {
                   key={idx}
                   className={`
                     w-2 h-2 rounded-full transition-all duration-300
-                    ${idx <= currentStep ? 'bg-cyan-500' : 'bg-black-400'}
-                    ${idx === currentStep ? 'scale-125' : ''}
+                    ${idx <= currentStep ? "bg-cyan-500" : "bg-black-400"}
+                    ${idx === currentStep ? "scale-125" : ""}
                   `}
                 />
               ))}
@@ -121,9 +121,7 @@ function VelvetRopeOverlay({ onComplete }) {
                 </svg>
               ))}
             </div>
-            <p className="text-dark-text-secondary">
-              Your journey starts now.
-            </p>
+            <p className="text-dark-text-secondary">Your journey starts now.</p>
           </div>
         )}
 
@@ -138,7 +136,7 @@ function VelvetRopeOverlay({ onComplete }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export default VelvetRopeOverlay
+export default VelvetRopeOverlay;

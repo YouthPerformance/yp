@@ -1,13 +1,13 @@
-import {Link} from '@remix-run/react';
-import type {ReactNode} from 'react';
-import {Header} from '@yp/ui';
+import { Link } from "@remix-run/react";
+import { Header } from "@yp/ui";
+import type { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;
   cartCount?: number;
 }
 
-export function Layout({children, cartCount = 0}: LayoutProps) {
+export function Layout({ children, cartCount = 0 }: LayoutProps) {
   return (
     <div className="min-h-screen bg-wolf-black text-white">
       <Header
@@ -19,7 +19,7 @@ export function Layout({children, cartCount = 0}: LayoutProps) {
           { label: "NEOBALL", href: "https://neoball.co" },
         ]}
       />
-      <main style={{paddingTop: '64px'}}>{children}</main>
+      <main style={{ paddingTop: "64px" }}>{children}</main>
       <Footer />
     </div>
   );

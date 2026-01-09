@@ -5,66 +5,67 @@
  * 4-slot bento grid with provocative anti-industry messaging
  */
 
-import { useRef, useState, Suspense, lazy } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { EASE, COLORS } from './motion'
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { lazy, Suspense, useRef, useState } from "react";
+import { EASE } from "./motion";
 
 // Lazy load the lightweight cobe globe
-const TrainingGlobe = lazy(() => import('../../tests/TrainingGlobe'))
+const TrainingGlobe = lazy(() => import("../../tests/TrainingGlobe"));
 
 // Spring config for tilt effect
 const springConfig = {
   damping: 30,
   stiffness: 150,
-  mass: 1.5
-}
+  mass: 1.5,
+};
 
 // Tiltable Card wrapper with glow border
-function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = false }) {
-  const ref = useRef(null)
-  const [isHovered, setIsHovered] = useState(false)
+function TiltCard({ children, className = "", glowColor = "cyan", hasScanner = false }) {
+  const ref = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const rotateX = useSpring(useMotionValue(0), springConfig)
-  const rotateY = useSpring(useMotionValue(0), springConfig)
-  const scale = useSpring(1, springConfig)
+  const rotateX = useSpring(useMotionValue(0), springConfig);
+  const rotateY = useSpring(useMotionValue(0), springConfig);
+  const scale = useSpring(1, springConfig);
 
-  const scannerY = useSpring(useMotionValue(0), { damping: 50, stiffness: 80 })
+  const scannerY = useSpring(useMotionValue(0), { damping: 50, stiffness: 80 });
 
   function handleMouse(e) {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
-    const offsetX = e.clientX - rect.left - rect.width / 2
-    const offsetY = e.clientY - rect.top - rect.height / 2
-    const rotationX = (offsetY / (rect.height / 2)) * -8
-    const rotationY = (offsetX / (rect.width / 2)) * 8
-    rotateX.set(rotationX)
-    rotateY.set(rotationY)
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    const rotationX = (offsetY / (rect.height / 2)) * -8;
+    const rotationY = (offsetX / (rect.width / 2)) * 8;
+    rotateX.set(rotationX);
+    rotateY.set(rotationY);
   }
 
   function handleMouseEnter() {
-    setIsHovered(true)
-    scale.set(1.02)
+    setIsHovered(true);
+    scale.set(1.02);
     if (hasScanner) {
-      scannerY.set(100)
+      scannerY.set(100);
     }
   }
 
   function handleMouseLeave() {
-    setIsHovered(false)
-    scale.set(1)
-    rotateX.set(0)
-    rotateY.set(0)
+    setIsHovered(false);
+    scale.set(1);
+    rotateX.set(0);
+    rotateY.set(0);
     if (hasScanner) {
-      scannerY.set(0)
+      scannerY.set(0);
     }
   }
 
   const glowStyles = {
-    cyan: 'shadow-[0_0_30px_rgba(0,255,255,0.15)] hover:shadow-[0_0_50px_rgba(0,255,255,0.25)]',
-    red: 'shadow-[0_0_30px_rgba(239,68,68,0.15)] hover:shadow-[0_0_50px_rgba(239,68,68,0.25)]',
-    emerald: 'shadow-[0_0_30px_rgba(16,185,129,0.15)] hover:shadow-[0_0_50px_rgba(16,185,129,0.25)]',
-    amber: 'shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:shadow-[0_0_50px_rgba(245,158,11,0.25)]',
-  }
+    cyan: "shadow-[0_0_30px_rgba(0,255,255,0.15)] hover:shadow-[0_0_50px_rgba(0,255,255,0.25)]",
+    red: "shadow-[0_0_30px_rgba(239,68,68,0.15)] hover:shadow-[0_0_50px_rgba(239,68,68,0.25)]",
+    emerald:
+      "shadow-[0_0_30px_rgba(16,185,129,0.15)] hover:shadow-[0_0_50px_rgba(16,185,129,0.25)]",
+    amber: "shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:shadow-[0_0_50px_rgba(245,158,11,0.25)]",
+  };
 
   return (
     <motion.div
@@ -72,7 +73,7 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
       className={`relative cursor-pointer ${className}`}
       style={{
         perspective: 1000,
-        transformStyle: 'preserve-3d',
+        transformStyle: "preserve-3d",
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
@@ -89,7 +90,7 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
           rotateX,
           rotateY,
           scale,
-          transformStyle: 'preserve-3d',
+          transformStyle: "preserve-3d",
         }}
       >
         {/* Glow border overlay */}
@@ -97,10 +98,11 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
           className={`
             absolute inset-0 rounded-2xl pointer-events-none z-10
             transition-opacity duration-300
-            ${isHovered ? 'opacity-100' : 'opacity-0'}
+            ${isHovered ? "opacity-100" : "opacity-0"}
           `}
           style={{
-            background: 'linear-gradient(135deg, rgba(0,255,255,0.1) 0%, transparent 50%, rgba(0,255,255,0.05) 100%)',
+            background:
+              "linear-gradient(135deg, rgba(0,255,255,0.1) 0%, transparent 50%, rgba(0,255,255,0.05) 100%)",
           }}
         />
 
@@ -109,9 +111,9 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
           <motion.div
             className="absolute left-0 right-0 h-1 z-20 pointer-events-none"
             style={{
-              top: useTransform(scannerY, [0, 100], ['0%', '100%']),
-              background: 'linear-gradient(90deg, transparent, rgba(0,255,255,0.8), transparent)',
-              boxShadow: '0 0 20px rgba(0,255,255,0.5), 0 0 40px rgba(0,255,255,0.3)',
+              top: useTransform(scannerY, [0, 100], ["0%", "100%"]),
+              background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.8), transparent)",
+              boxShadow: "0 0 20px rgba(0,255,255,0.5), 0 0 40px rgba(0,255,255,0.3)",
               opacity: isHovered ? 1 : 0,
             }}
           />
@@ -120,7 +122,7 @@ function TiltCard({ children, className = '', glowColor = 'cyan', hasScanner = f
         {children}
       </motion.div>
     </motion.div>
-  )
+  );
 }
 
 // SLOT 1: THE ENGINE - "THE $200 LIE" - Large Vertical Left
@@ -134,11 +136,22 @@ function EngineSlot() {
         {/* Icon - Dollar/Warning */}
         <div className="relative flex items-center gap-3 mb-6">
           <div className="h-12 w-12 rounded-xl ring-1 flex items-center justify-center bg-red-500/10 ring-red-500/30">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-red-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
           </div>
-          <span className="text-xs font-medium text-red-400/70 uppercase tracking-widest">The Industry Lie</span>
+          <span className="text-xs font-medium text-red-400/70 uppercase tracking-widest">
+            The Industry Lie
+          </span>
         </div>
 
         {/* Headline */}
@@ -153,10 +166,10 @@ function EngineSlot() {
 
         {/* Body - Manifesto voice */}
         <p className="text-neutral-300 leading-relaxed text-base md:text-lg flex-grow">
-          For 20 years, the industry told you that "More Support" meant "More Safety." They lied.
-          By locking your athlete's foot in a rigid, cushioned coffin, you are shutting down their body's
-          natural shock absorbers. The result? A generation of fragile "Pistons" and an epidemic of ACL tears.
-          We are here to delete the programming that is breaking your child.
+          For 20 years, the industry told you that "More Support" meant "More Safety." They lied. By
+          locking your athlete's foot in a rigid, cushioned coffin, you are shutting down their
+          body's natural shock absorbers. The result? A generation of fragile "Pistons" and an
+          epidemic of ACL tears. We are here to delete the programming that is breaking your child.
         </p>
 
         {/* Visual: Shoefoot image */}
@@ -177,19 +190,19 @@ function EngineSlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // SLOT 2: THE SCIENCE - "THE SILENT KILLER" - Small Square Top Right
 function ScienceSlot() {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <TiltCard className="h-full" glowColor="cyan" hasScanner={true}>
       <div
         className="relative h-full bg-[#0a0a0a] p-6 transition-shadow duration-500"
         style={{
-          boxShadow: isHovered ? '0 0 30px rgba(0, 255, 255, 0.4)' : 'none'
+          boxShadow: isHovered ? "0 0 30px rgba(0, 255, 255, 0.4)" : "none",
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -206,8 +219,9 @@ function ScienceSlot() {
           <div
             className="absolute inset-0 transition-opacity duration-500"
             style={{
-              background: 'linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.6) 40%, rgba(10,10,10,0.3) 100%)',
-              opacity: isHovered ? 0.4 : 0.9
+              background:
+                "linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.6) 40%, rgba(10,10,10,0.3) 100%)",
+              opacity: isHovered ? 0.4 : 0.9,
             }}
           />
         </div>
@@ -218,7 +232,14 @@ function ScienceSlot() {
         >
           {/* Icon */}
           <div className="h-10 w-10 rounded-xl ring-1 flex items-center justify-center bg-cyan-500/10 ring-cyan-500/30 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-cyan-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
             </svg>
           </div>
@@ -235,15 +256,23 @@ function ScienceSlot() {
 
           {/* Body */}
           <p className="text-neutral-400 text-sm leading-relaxed flex-grow">
-            Force has to go somewhere. When the foot is asleep (due to modern shoes), the shock bypasses the
-            "Spring" and slams directly into the knee and lower back. We don't build muscle; we wake up the nerves.
-            We turn the foot back into a sensory weapon that absorbs force before it touches the ACL.
+            Force has to go somewhere. When the foot is asleep (due to modern shoes), the shock
+            bypasses the "Spring" and slams directly into the knee and lower back. We don't build
+            muscle; we wake up the nerves. We turn the foot back into a sensory weapon that absorbs
+            force before it touches the ACL.
           </p>
 
           {/* Tag */}
           <div className="mt-4">
             <span className="inline-flex items-center gap-1.5 text-[11px] bg-cyan-500/10 rounded-full px-3 py-1 ring-1 text-cyan-300 ring-cyan-500/30">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3 h-3"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v6l4 2" />
               </svg>
@@ -253,7 +282,7 @@ function ScienceSlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // SLOT 3: THE GLOBAL NETWORK - "JOIN THE GLOBAL 1%" - Small Square Mid Right
@@ -263,9 +292,11 @@ function GlobalNetworkSlot() {
       <div className="relative h-full bg-[#0a0a0a] overflow-hidden min-h-[320px]">
         {/* Cobe Globe Background */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <Suspense fallback={
-            <div className="w-16 h-16 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin" />
-          }>
+          <Suspense
+            fallback={
+              <div className="w-16 h-16 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin" />
+            }
+          >
             <div className="w-[280px] h-[280px] opacity-70">
               <TrainingGlobe />
             </div>
@@ -278,7 +309,14 @@ function GlobalNetworkSlot() {
         <div className="relative z-10 h-full flex flex-col p-6 justify-end">
           {/* Icon */}
           <div className="h-10 w-10 rounded-xl ring-1 flex items-center justify-center bg-cyan-500/10 ring-cyan-500/30 mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-cyan-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <circle cx="12" cy="12" r="10" />
               <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
               <path d="M2 12h20" />
@@ -297,9 +335,9 @@ function GlobalNetworkSlot() {
 
           {/* Body */}
           <p className="text-neutral-400 text-xs leading-relaxed">
-            Talent dies in isolation. We connect your athlete to a live ecosystem of killers worldwide.
-            The Protocol is active in 12 languages. When you join the Pack, you tap into military-grade
-            training infrastructure used by the world's future elite.
+            Talent dies in isolation. We connect your athlete to a live ecosystem of killers
+            worldwide. The Protocol is active in 12 languages. When you join the Pack, you tap into
+            military-grade training infrastructure used by the world's future elite.
           </p>
 
           {/* Live indicator */}
@@ -313,7 +351,7 @@ function GlobalNetworkSlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // SLOT 4: THE ROI - "THE DURABILITY INDEX" - Wide Rectangle Bottom
@@ -347,7 +385,14 @@ function ROISlot() {
           <div className="flex-1">
             {/* Icon */}
             <div className="h-10 w-10 rounded-xl ring-1 flex items-center justify-center bg-amber-500/10 ring-amber-500/30 mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-amber-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <path d="M3 3v18h18" />
                 <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
               </svg>
@@ -365,17 +410,19 @@ function ROISlot() {
 
             {/* Body */}
             <p className="text-neutral-400 text-sm md:text-base leading-relaxed max-w-xl">
-              You can't manage what you don't measure. While other parents hope for the best,
-              you will track your athlete's "Spring Stiffness" and "Durability Rating" weekly.
-              This isn't just training; it is risk management for your athlete's future.
-              Stop guessing. Start verifying.
+              You can't manage what you don't measure. While other parents hope for the best, you
+              will track your athlete's "Spring Stiffness" and "Durability Rating" weekly. This
+              isn't just training; it is risk management for your athlete's future. Stop guessing.
+              Start verifying.
             </p>
           </div>
 
           {/* Mini Dashboard */}
           <div className="flex-shrink-0 w-full md:w-64">
             <div className="bg-neutral-900/80 rounded-xl border border-neutral-800 p-4">
-              <div className="text-[10px] text-neutral-500 mb-3 uppercase tracking-wider">Durability Dashboard</div>
+              <div className="text-[10px] text-neutral-500 mb-3 uppercase tracking-wider">
+                Durability Dashboard
+              </div>
               <div className="space-y-3">
                 <div>
                   <div className="flex justify-between text-xs mb-1">
@@ -385,8 +432,8 @@ function ROISlot() {
                   <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-amber-500"
-                      initial={{ width: '0%' }}
-                      whileInView={{ width: '78%' }}
+                      initial={{ width: "0%" }}
+                      whileInView={{ width: "78%" }}
                       transition={{ duration: 1, delay: 0.2 }}
                       viewport={{ once: true }}
                     />
@@ -400,8 +447,8 @@ function ROISlot() {
                   <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-emerald-500"
-                      initial={{ width: '0%' }}
-                      whileInView={{ width: '85%' }}
+                      initial={{ width: "0%" }}
+                      whileInView={{ width: "85%" }}
                       transition={{ duration: 1, delay: 0.4 }}
                       viewport={{ once: true }}
                     />
@@ -415,8 +462,8 @@ function ROISlot() {
                   <div className="h-1.5 bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-cyan-500"
-                      initial={{ width: '100%' }}
-                      whileInView={{ width: '53%' }}
+                      initial={{ width: "100%" }}
+                      whileInView={{ width: "53%" }}
                       transition={{ duration: 1.2, delay: 0.6 }}
                       viewport={{ once: true }}
                     />
@@ -427,7 +474,14 @@ function ROISlot() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-neutral-500">Weekly Report</span>
                   <span className="text-xs text-emerald-400 flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-3 w-3"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M18 15l-6-6-6 6" />
                     </svg>
                     Risk Dropping
@@ -439,7 +493,7 @@ function ROISlot() {
         </div>
       </div>
     </TiltCard>
-  )
+  );
 }
 
 // Main Problem Bento Grid Component
@@ -450,7 +504,7 @@ export default function ProblemSection() {
       <div
         className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, #050505 0%, transparent 100%)'
+          background: "linear-gradient(to bottom, #050505 0%, transparent 100%)",
         }}
       />
 
@@ -470,8 +524,8 @@ export default function ProblemSection() {
             The Industry vs. Reality
           </h2>
           <p className="text-lg md:text-xl max-w-3xl mt-4 text-neutral-400">
-            They sold you "protection" while programming fragility into your athlete's body.
-            It's time to see what's really happening.
+            They sold you "protection" while programming fragility into your athlete's body. It's
+            time to see what's really happening.
           </p>
         </motion.div>
 
@@ -514,5 +568,5 @@ export default function ProblemSection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,40 +1,40 @@
 // Results - The Comparison Slider
 // E14-6: Before/after drag slider with heavy physics
 
-import { useState, useRef } from 'react'
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
-import { EASE } from './motion'
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
+import { EASE } from "./motion";
 
 export function Results() {
-  const containerRef = useRef(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const x = useMotionValue(0.5) // 0 to 1, starts at middle
+  const containerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const x = useMotionValue(0.5); // 0 to 1, starts at middle
 
   // Calculate label opacities based on slider position
-  const leftOpacity = useTransform(x, [0, 0.5, 1], [1, 0.3, 0.1])
-  const rightOpacity = useTransform(x, [0, 0.5, 1], [0.1, 0.3, 1])
-  const clipPath = useTransform(x, (val) => `inset(0 ${(1 - val) * 100}% 0 0)`)
+  const leftOpacity = useTransform(x, [0, 0.5, 1], [1, 0.3, 0.1]);
+  const rightOpacity = useTransform(x, [0, 0.5, 1], [0.1, 0.3, 1]);
+  const clipPath = useTransform(x, (val) => `inset(0 ${(1 - val) * 100}% 0 0)`);
 
-  const handleDrag = (e, info) => {
-    if (!containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
-    const newX = Math.max(0, Math.min(1, (info.point.x - rect.left) / rect.width))
+  const handleDrag = (_e, info) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const newX = Math.max(0, Math.min(1, (info.point.x - rect.left) / rect.width));
 
     // Add resistance - makes it feel "heavy"
-    const dampened = x.get() + (newX - x.get()) * 0.3
-    x.set(dampened)
-  }
+    const dampened = x.get() + (newX - x.get()) * 0.3;
+    x.set(dampened);
+  };
 
   const handleDragEnd = () => {
-    setIsDragging(false)
+    setIsDragging(false);
     // Snap to nearest third with spring
-    const current = x.get()
-    const snapPoints = [0.25, 0.5, 0.75]
+    const current = x.get();
+    const snapPoints = [0.25, 0.5, 0.75];
     const nearest = snapPoints.reduce((prev, curr) =>
-      Math.abs(curr - current) < Math.abs(prev - current) ? curr : prev
-    )
-    animate(x, nearest, { type: 'spring', stiffness: 300, damping: 30 })
-  }
+      Math.abs(curr - current) < Math.abs(prev - current) ? curr : prev,
+    );
+    animate(x, nearest, { type: "spring", stiffness: 300, damping: 30 });
+  };
 
   return (
     <section className="relative py-32 bg-[#050505]">
@@ -143,7 +143,7 @@ export function Results() {
         </motion.blockquote>
       </div>
     </section>
-  )
+  );
 }
 
-export default Results
+export default Results;

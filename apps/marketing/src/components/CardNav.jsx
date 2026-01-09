@@ -6,70 +6,70 @@
  * With thumbnails, icons, badges, and external link chips
  */
 
-import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 // Room configuration matching drake2 design
 const ROOMS = [
   {
-    key: 'performance',
-    title: 'Performance Center',
-    subtitle: 'Academy + Barefoot Reset',
-    href: '/start',
-    thumb: '/images/thumb-gym.webp',
-    icon: '/images/performanceicon.webp',
-    state: 'trial',
-    accent: 'emerald'
+    key: "performance",
+    title: "Performance Center",
+    subtitle: "Academy + Barefoot Reset",
+    href: "/start",
+    thumb: "/images/thumb-gym.webp",
+    icon: "/images/performanceicon.webp",
+    state: "trial",
+    accent: "emerald",
   },
   {
-    key: 'courts',
-    title: 'Courts',
-    subtitle: 'NeoBall + Spotify Unlocked',
-    href: 'https://neoball.co',
+    key: "courts",
+    title: "Courts",
+    subtitle: "NeoBall + Spotify Unlocked",
+    href: "https://neoball.co",
     external: true,
-    thumb: '/images/thumb-court.webp',
-    icon: '/images/courticon.webp',
-    state: 'redeem',
-    accent: 'cyan'
+    thumb: "/images/thumb-court.webp",
+    icon: "/images/courticon.webp",
+    state: "redeem",
+    accent: "cyan",
   },
   {
-    key: 'library',
-    title: 'Library',
-    subtitle: 'Playbook + Personalized Content',
-    href: '/library',
-    thumb: '/images/thumb-library.webp',
-    icon: '/images/libraryicon.webp',
-    state: 'open',
-    accent: 'amber'
-  }
-]
+    key: "library",
+    title: "Library",
+    subtitle: "Playbook + Personalized Content",
+    href: "/library",
+    thumb: "/images/thumb-library.webp",
+    icon: "/images/libraryicon.webp",
+    state: "open",
+    accent: "amber",
+  },
+];
 
 // Badge labels by state
 const badgeLabel = (state) => {
-  if (state === 'trial') return 'Start trial'
-  if (state === 'redeem') return 'Redeem'
-  return 'Open'
-}
+  if (state === "trial") return "Start trial";
+  if (state === "redeem") return "Redeem";
+  return "Open";
+};
 
 // Accent colors
 const accentStyles = {
   emerald: {
-    badge: 'border-amber-500/30 bg-amber-500/10 text-amber-400',
-    glow: 'hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]'
+    badge: "border-amber-500/30 bg-amber-500/10 text-amber-400",
+    glow: "hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]",
   },
   cyan: {
-    badge: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-400',
-    glow: 'hover:border-cyan-500/40 hover:shadow-[0_0_30px_rgba(0,246,224,0.2)]'
+    badge: "border-cyan-500/30 bg-cyan-500/10 text-cyan-400",
+    glow: "hover:border-cyan-500/40 hover:shadow-[0_0_30px_rgba(0,246,224,0.2)]",
   },
   amber: {
-    badge: 'border-cyan-500/20 bg-cyan-500/8 text-white/90',
-    glow: 'hover:border-amber-500/40 hover:shadow-[0_0_30px_rgba(251,191,36,0.2)]'
-  }
-}
+    badge: "border-cyan-500/20 bg-cyan-500/8 text-white/90",
+    glow: "hover:border-amber-500/40 hover:shadow-[0_0_30px_rgba(251,191,36,0.2)]",
+  },
+};
 
 // Single Room Card
 function RoomCard({ room, index, onClose }) {
-  const styles = accentStyles[room.accent]
+  const styles = accentStyles[room.accent];
 
   const cardClasses = `
     group block relative overflow-hidden rounded-2xl
@@ -78,12 +78,12 @@ function RoomCard({ room, index, onClose }) {
     transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
     hover:-translate-y-0.5 active:scale-[0.99]
     ${styles.glow}
-  `
+  `;
 
-  const CardWrapper = room.external ? 'a' : Link
+  const CardWrapper = room.external ? "a" : Link;
   const cardProps = room.external
-    ? { href: room.href, target: '_blank', rel: 'noopener noreferrer', onClick: onClose }
-    : { to: room.href, onClick: onClose }
+    ? { href: room.href, target: "_blank", rel: "noopener noreferrer", onClick: onClose }
+    : { to: room.href, onClick: onClose };
 
   return (
     <motion.div
@@ -92,31 +92,19 @@ function RoomCard({ room, index, onClose }) {
       exit={{ opacity: 0, y: 10 }}
       transition={{ delay: index * 0.08, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
     >
-      <CardWrapper
-        {...cardProps}
-        className={cardClasses}
-        style={{ padding: '12px' }}
-      >
+      <CardWrapper {...cardProps} className={cardClasses} style={{ padding: "12px" }}>
         {/* Thumbnail */}
         <div
           className="relative w-full rounded-xl overflow-hidden mb-3"
-          style={{ aspectRatio: '16/9' }}
+          style={{ aspectRatio: "16/9" }}
         >
-          <img
-            src={room.thumb}
-            alt=""
-            className="w-full h-full object-cover"
-          />
+          <img src={room.thumb} alt="" className="w-full h-full object-cover" />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
 
           {/* Icon chip - bottom left */}
           <div className="absolute left-2 bottom-2 w-[38px] h-[38px] rounded-[14px] grid place-items-center bg-gradient-to-b from-[#141414]/95 to-[#0a0a0a]/90 border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-[10px]">
-            <img
-              src={room.icon}
-              alt=""
-              className="w-[34px] h-[34px] object-cover rounded-[10px]"
-            />
+            <img src={room.icon} alt="" className="w-[34px] h-[34px] object-cover rounded-[10px]" />
           </div>
 
           {/* External chip - top right */}
@@ -140,17 +128,17 @@ function RoomCard({ room, index, onClose }) {
           <h3 className="font-bebas text-lg tracking-wide uppercase text-white leading-tight">
             {room.title}
           </h3>
-          <p className="mt-1.5 text-xs text-white/65">
-            {room.subtitle}
-          </p>
+          <p className="mt-1.5 text-xs text-white/65">{room.subtitle}</p>
 
           {/* Meta row */}
           <div className="flex items-center justify-between gap-3 mt-3">
-            <span className={`
+            <span
+              className={`
               inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full
               text-[11px] tracking-wide uppercase
               border ${styles.badge}
-            `}>
+            `}
+            >
               {badgeLabel(room.state)}
             </span>
             <span className="text-xs text-white/55 flex items-center gap-1.5">
@@ -160,7 +148,7 @@ function RoomCard({ room, index, onClose }) {
         </div>
       </CardWrapper>
     </motion.div>
-  )
+  );
 }
 
 export default function CardNav({ isOpen, onClose }) {
@@ -198,7 +186,13 @@ export default function CardNav({ isOpen, onClose }) {
                   onClick={onClose}
                   className="p-2 -mr-2 text-neutral-500 hover:text-white transition-colors"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
                     <path d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -208,12 +202,7 @@ export default function CardNav({ isOpen, onClose }) {
               <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {ROOMS.map((room, index) => (
-                    <RoomCard
-                      key={room.key}
-                      room={room}
-                      index={index}
-                      onClose={onClose}
-                    />
+                    <RoomCard key={room.key} room={room} index={index} onClose={onClose} />
                   ))}
                 </div>
 
@@ -235,5 +224,5 @@ export default function CardNav({ isOpen, onClose }) {
         </>
       )}
     </AnimatePresence>
-  )
+  );
 }

@@ -14,13 +14,13 @@
  * - Higher amplitude for distortion
  */
 
-import Iridescence from '../../components/Iridescence'
+import Iridescence from "../../components/Iridescence";
 
 function FogNoise() {
   // Dark teal/cyan fog color
   // #003333 -> RGB(0, 51, 51) -> [0, 0.2, 0.2]
   // With gunmetal undertones
-  const fogColor = [0.05, 0.18, 0.18] // Very dark teal
+  const fogColor = [0.05, 0.18, 0.18]; // Very dark teal
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
@@ -28,8 +28,8 @@ function FogNoise() {
       <div className="absolute inset-0">
         <Iridescence
           color={fogColor}
-          speed={0.8}      // Faster - lots of swirls and chaos
-          amplitude={0.4}  // Higher - more distortion
+          speed={0.8} // Faster - lots of swirls and chaos
+          amplitude={0.4} // Higher - more distortion
           mouseReact={true}
         />
       </div>
@@ -38,7 +38,8 @@ function FogNoise() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.7) 50%, #000000 85%)'
+          background:
+            "radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.7) 50%, #000000 85%)",
         }}
       />
 
@@ -46,7 +47,7 @@ function FogNoise() {
       <div
         className="absolute inset-0 pointer-events-none opacity-20"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}
       />
 
@@ -61,8 +62,8 @@ function FogNoise() {
         </h1>
 
         <p className="text-xl text-dark-text-secondary max-w-2xl mb-8">
-          YouTube videos. Instagram trainers. Conflicting advice from coaches.
-          Parents are drowning in noise with no clear path forward.
+          YouTube videos. Instagram trainers. Conflicting advice from coaches. Parents are drowning
+          in noise with no clear path forward.
         </p>
 
         <div className="mt-12 max-w-2xl">
@@ -91,7 +92,7 @@ function FogNoise() {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-export default FogNoise
+export default FogNoise;

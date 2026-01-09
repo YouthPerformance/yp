@@ -1,25 +1,25 @@
 // Community - The Pack
 // E14-7: UGC collage with global connection visualization
 
-import { motion } from 'framer-motion'
-import { EASE, staggerContainer } from './motion'
+import { motion } from "framer-motion";
+import { EASE, staggerContainer } from "./motion";
 
 const UGC_GRID = [
-  { id: 1, aspect: 'square', delay: 0 },
-  { id: 2, aspect: 'portrait', delay: 0.1 },
-  { id: 3, aspect: 'square', delay: 0.2 },
-  { id: 4, aspect: 'landscape', delay: 0.15 },
-  { id: 5, aspect: 'square', delay: 0.25 },
-  { id: 6, aspect: 'portrait', delay: 0.3 },
-]
+  { id: 1, aspect: "square", delay: 0 },
+  { id: 2, aspect: "portrait", delay: 0.1 },
+  { id: 3, aspect: "square", delay: 0.2 },
+  { id: 4, aspect: "landscape", delay: 0.15 },
+  { id: 5, aspect: "square", delay: 0.25 },
+  { id: 6, aspect: "portrait", delay: 0.3 },
+];
 
 const GLOBAL_DOTS = [
-  { x: '20%', y: '30%', label: 'USA' },
-  { x: '48%', y: '25%', label: 'UK' },
-  { x: '75%', y: '35%', label: 'China' },
-  { x: '55%', y: '45%', label: 'UAE' },
-  { x: '85%', y: '60%', label: 'AUS' },
-]
+  { x: "20%", y: "30%", label: "USA" },
+  { x: "48%", y: "25%", label: "UK" },
+  { x: "75%", y: "35%", label: "China" },
+  { x: "55%", y: "45%", label: "UAE" },
+  { x: "85%", y: "60%", label: "AUS" },
+];
 
 export function Community() {
   return (
@@ -28,7 +28,16 @@ export function Community() {
       <div className="absolute inset-0 opacity-10">
         <svg viewBox="0 0 100 50" className="w-full h-full" preserveAspectRatio="none">
           {/* Simplified world outline */}
-          <ellipse cx="50" cy="25" rx="45" ry="20" fill="none" stroke="currentColor" strokeWidth="0.2" className="text-cyan-400" />
+          <ellipse
+            cx="50"
+            cy="25"
+            rx="45"
+            ry="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.2"
+            className="text-cyan-400"
+          />
         </svg>
       </div>
 
@@ -40,7 +49,7 @@ export function Community() {
           whileInView={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.5 + i * 0.1, duration: 0.5 }}
           viewport={{ once: true }}
-          className={`absolute ${i > 2 ? 'hidden md:block' : ''}`}
+          className={`absolute ${i > 2 ? "hidden md:block" : ""}`}
           style={{ left: dot.x, top: dot.y }}
         >
           <motion.div
@@ -106,12 +115,15 @@ export function Community() {
               transition={{ delay: item.delay, duration: 0.6, ease: EASE.reveal }}
               viewport={{ once: true }}
               className={`relative rounded-xl overflow-hidden bg-gray-900 ${
-                item.aspect === 'portrait' ? 'row-span-2' :
-                item.aspect === 'landscape' ? 'col-span-2' : ''
+                item.aspect === "portrait"
+                  ? "row-span-2"
+                  : item.aspect === "landscape"
+                    ? "col-span-2"
+                    : ""
               }`}
               style={{
-                aspectRatio: item.aspect === 'portrait' ? '3/4' :
-                             item.aspect === 'landscape' ? '16/9' : '1/1',
+                aspectRatio:
+                  item.aspect === "portrait" ? "3/4" : item.aspect === "landscape" ? "16/9" : "1/1",
               }}
             >
               {/* Placeholder for UGC */}
@@ -137,8 +149,8 @@ export function Community() {
           viewport={{ once: true }}
           className="text-center text-gray-300 text-lg max-w-2xl mx-auto"
         >
-          YP is more than an app. It is a global tribe of young athletes who have
-          decided to stop waiting for a miracle and start doing the work.
+          YP is more than an app. It is a global tribe of young athletes who have decided to stop
+          waiting for a miracle and start doing the work.
         </motion.p>
 
         <motion.p
@@ -153,7 +165,7 @@ export function Community() {
         </motion.p>
       </div>
     </section>
-  )
+  );
 }
 
-export default Community
+export default Community;

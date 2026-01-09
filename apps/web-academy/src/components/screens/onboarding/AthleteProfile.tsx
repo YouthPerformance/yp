@@ -4,11 +4,11 @@
 // Intensity Budget: 5 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useOnboarding } from '@/contexts/OnboardingContext';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 interface AthleteProfileProps {
   onContinue: () => void;
@@ -18,19 +18,19 @@ interface AthleteProfileProps {
 const AGES = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 
 const SPORTS = [
-  { id: 'basketball', label: 'Basketball', icon: '🏀' },
-  { id: 'soccer', label: 'Soccer', icon: '⚽' },
-  { id: 'football', label: 'Football', icon: '🏈' },
-  { id: 'baseball', label: 'Baseball', icon: '⚾' },
-  { id: 'volleyball', label: 'Volleyball', icon: '🏐' },
-  { id: 'track', label: 'Track & Field', icon: '🏃' },
-  { id: 'tennis', label: 'Tennis', icon: '🎾' },
-  { id: 'other', label: 'Other', icon: '🏅' },
+  { id: "basketball", label: "Basketball", icon: "🏀" },
+  { id: "soccer", label: "Soccer", icon: "⚽" },
+  { id: "football", label: "Football", icon: "🏈" },
+  { id: "baseball", label: "Baseball", icon: "⚾" },
+  { id: "volleyball", label: "Volleyball", icon: "🏐" },
+  { id: "track", label: "Track & Field", icon: "🏃" },
+  { id: "tennis", label: "Tennis", icon: "🎾" },
+  { id: "other", label: "Other", icon: "🏅" },
 ];
 
 export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
   const { data, updateAthleteData } = useOnboarding();
-  const [name, setName] = useState(data.athleteName || '');
+  const [name, setName] = useState(data.athleteName || "");
   const [age, setAge] = useState<number | null>(data.athleteAge);
   const [sports, setSports] = useState<string[]>(data.sports || []);
   const [errors, setErrors] = useState<{ name?: string; age?: string }>({});
@@ -39,13 +39,13 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
     const newErrors: { name?: string; age?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Please enter your name';
+      newErrors.name = "Please enter your name";
     } else if (name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
+      newErrors.name = "Name must be at least 2 characters";
     }
 
     if (!age) {
-      newErrors.age = 'Please select your age';
+      newErrors.age = "Please select your age";
     }
 
     setErrors(newErrors);
@@ -65,10 +65,8 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
 
   // Toggle sport selection (multi-select)
   const toggleSport = (sportId: string) => {
-    setSports(prev =>
-      prev.includes(sportId)
-        ? prev.filter(s => s !== sportId)
-        : [...prev, sportId]
+    setSports((prev) =>
+      prev.includes(sportId) ? prev.filter((s) => s !== sportId) : [...prev, sportId],
     );
   };
 
@@ -77,7 +75,7 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
   return (
     <motion.div
       className="min-h-screen flex flex-col px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -86,10 +84,10 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
       <motion.button
         onClick={onBack}
         className="flex items-center gap-2 mb-8 text-sm self-start"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        whileHover={{ color: 'var(--text-primary)' }}
+        whileHover={{ color: "var(--text-primary)" }}
       >
         ← Back
       </motion.button>
@@ -105,7 +103,7 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
         >
           <label
             className="font-bebas text-xl tracking-wider block mb-3"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
             WHAT'S YOUR NAME?
           </label>
@@ -114,19 +112,19 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
             value={name}
             onChange={(e) => {
               setName(e.target.value);
-              setErrors(prev => ({ ...prev, name: undefined }));
+              setErrors((prev) => ({ ...prev, name: undefined }));
             }}
             placeholder="First name"
             maxLength={20}
             className="w-full px-4 py-4 rounded-xl text-lg outline-none transition-all"
             style={{
-              backgroundColor: 'var(--bg-secondary)',
-              border: `2px solid ${errors.name ? 'var(--accent-error)' : 'var(--border-default)'}`,
-              color: 'var(--text-primary)',
+              backgroundColor: "var(--bg-secondary)",
+              border: `2px solid ${errors.name ? "var(--accent-error)" : "var(--border-default)"}`,
+              color: "var(--text-primary)",
             }}
           />
           {errors.name && (
-            <p className="text-sm mt-2" style={{ color: 'var(--accent-error)' }}>
+            <p className="text-sm mt-2" style={{ color: "var(--accent-error)" }}>
               {errors.name}
             </p>
           )}
@@ -141,7 +139,7 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
         >
           <label
             className="font-bebas text-xl tracking-wider block mb-3"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
             HOW OLD ARE YOU?
           </label>
@@ -151,13 +149,13 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
                 key={a}
                 onClick={() => {
                   setAge(a);
-                  setErrors(prev => ({ ...prev, age: undefined }));
+                  setErrors((prev) => ({ ...prev, age: undefined }));
                 }}
                 className="w-12 h-12 rounded-xl font-mono text-lg transition-all"
                 style={{
-                  backgroundColor: age === a ? 'var(--accent-primary)' : 'var(--bg-secondary)',
-                  color: age === a ? 'var(--bg-primary)' : 'var(--text-secondary)',
-                  border: `2px solid ${age === a ? 'var(--accent-primary)' : 'var(--border-default)'}`,
+                  backgroundColor: age === a ? "var(--accent-primary)" : "var(--bg-secondary)",
+                  color: age === a ? "var(--bg-primary)" : "var(--text-secondary)",
+                  border: `2px solid ${age === a ? "var(--accent-primary)" : "var(--border-default)"}`,
                 }}
               >
                 {a}
@@ -165,7 +163,7 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
             ))}
           </div>
           {errors.age && (
-            <p className="text-sm mt-2" style={{ color: 'var(--accent-error)' }}>
+            <p className="text-sm mt-2" style={{ color: "var(--accent-error)" }}>
               {errors.age}
             </p>
           )}
@@ -180,7 +178,7 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
           <div className="flex items-center justify-between mb-1">
             <label
               className="font-bebas text-xl tracking-wider"
-              style={{ color: 'var(--text-primary)' }}
+              style={{ color: "var(--text-primary)" }}
             >
               FAVORITE SPORTS
             </label>
@@ -188,18 +186,15 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
               <span
                 className="text-xs px-2 py-1 rounded-full"
                 style={{
-                  backgroundColor: 'var(--accent-primary)20',
-                  color: 'var(--accent-primary)',
+                  backgroundColor: "var(--accent-primary)20",
+                  color: "var(--accent-primary)",
                 }}
               >
                 {sports.length} selected
               </span>
             )}
           </div>
-          <p
-            className="text-sm mb-3"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <p className="text-sm mb-3" style={{ color: "var(--text-tertiary)" }}>
             Optional · Pick all that apply
           </p>
           <div className="grid grid-cols-4 gap-2">
@@ -211,15 +206,15 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
                   onClick={() => toggleSport(s.id)}
                   className="relative flex flex-col items-center p-3 rounded-xl transition-all"
                   style={{
-                    backgroundColor: isSelected ? 'var(--accent-primary)20' : 'var(--bg-secondary)',
-                    border: `2px solid ${isSelected ? 'var(--accent-primary)' : 'var(--border-default)'}`,
+                    backgroundColor: isSelected ? "var(--accent-primary)20" : "var(--bg-secondary)",
+                    border: `2px solid ${isSelected ? "var(--accent-primary)" : "var(--border-default)"}`,
                   }}
                 >
                   <span className="text-2xl mb-1">{s.icon}</span>
                   <span
                     className="text-xs"
                     style={{
-                      color: isSelected ? 'var(--accent-primary)' : 'var(--text-tertiary)',
+                      color: isSelected ? "var(--accent-primary)" : "var(--text-tertiary)",
                     }}
                   >
                     {s.label}
@@ -227,11 +222,13 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
                   {isSelected && (
                     <motion.div
                       className="absolute top-1 right-1 w-4 h-4 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: 'var(--accent-primary)' }}
+                      style={{ backgroundColor: "var(--accent-primary)" }}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                     >
-                      <span className="text-[10px]" style={{ color: 'var(--bg-primary)' }}>✓</span>
+                      <span className="text-[10px]" style={{ color: "var(--bg-primary)" }}>
+                        ✓
+                      </span>
                     </motion.div>
                   )}
                 </button>
@@ -247,8 +244,8 @@ export function AthleteProfile({ onContinue, onBack }: AthleteProfileProps) {
         disabled={!isValid}
         className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider transition-all"
         style={{
-          backgroundColor: isValid ? 'var(--accent-primary)' : 'var(--bg-secondary)',
-          color: isValid ? 'var(--bg-primary)' : 'var(--text-tertiary)',
+          backgroundColor: isValid ? "var(--accent-primary)" : "var(--bg-secondary)",
+          color: isValid ? "var(--bg-primary)" : "var(--text-tertiary)",
           opacity: isValid ? 1 : 0.5,
         }}
         initial={{ opacity: 0, y: 20 }}

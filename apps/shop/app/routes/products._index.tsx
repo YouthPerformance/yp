@@ -1,22 +1,22 @@
-import {useState, useCallback} from 'react';
-import type {LoaderFunctionArgs, MetaFunction} from '@shopify/remix-oxygen';
-import {useLoaderData, Link} from '@remix-run/react';
-import {ProductCard, QuickViewModal} from '~/components/ProductCard';
-import {ShopAllButton} from '~/components/ShopAllButton';
+import { Link, useLoaderData } from "@remix-run/react";
+import type { LoaderFunctionArgs, MetaFunction } from "@shopify/remix-oxygen";
+import { useCallback, useState } from "react";
+import { ProductCard, QuickViewModal } from "~/components/ProductCard";
+import { ShopAllButton } from "~/components/ShopAllButton";
 
 export const meta: MetaFunction = () => {
   return [
-    {title: 'All Products | YP Shop'},
-    {description: 'Browse all YP training gear and equipment.'},
+    { title: "All Products | YP Shop" },
+    { description: "Browse all YP training gear and equipment." },
   ];
 };
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { storefront } = context;
 
-  const {products} = await storefront.query(ALL_PRODUCTS_QUERY);
+  const { products } = await storefront.query(ALL_PRODUCTS_QUERY);
 
-  return {products: products.nodes};
+  return { products: products.nodes };
 }
 
 // Type for quick view product
@@ -29,7 +29,7 @@ interface QuickViewProduct {
 }
 
 export default function Products() {
-  const {products} = useLoaderData<typeof loader>();
+  const { products } = useLoaderData<typeof loader>();
 
   // Quick View Modal State
   const [quickViewProduct, setQuickViewProduct] = useState<QuickViewProduct | null>(null);
@@ -91,9 +91,7 @@ export default function Products() {
 
         {products.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-gray-400 text-lg">
-              No products available yet. Check back soon!
-            </p>
+            <p className="text-gray-400 text-lg">No products available yet. Check back soon!</p>
           </div>
         )}
 

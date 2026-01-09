@@ -9,9 +9,9 @@
 import { motion } from "framer-motion";
 import { Mail, Sparkles, Trophy, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { ContentMode, TeaserModule } from "@/data/modules/types";
 import { EmailCaptureModal } from "@/components/modals/EmailCaptureModal";
 import { UpsellModal } from "@/components/modals/UpsellModal";
+import type { ContentMode, TeaserModule } from "@/data/modules/types";
 
 interface TeaserCompletionCardProps {
   module: TeaserModule;
@@ -110,10 +110,7 @@ export function TeaserCompletionCard({
             Score
           </p>
         </div>
-        <div
-          className="w-px"
-          style={{ backgroundColor: "var(--border-default)" }}
-        />
+        <div className="w-px" style={{ backgroundColor: "var(--border-default)" }} />
         <div className="text-center">
           <p className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
             {timeString}
@@ -194,7 +191,10 @@ export function TeaserCompletionCard({
       >
         {/* Headline */}
         <div className="text-center mb-4">
-          <h3 className="text-xl font-bebas uppercase tracking-wide mb-1" style={{ color: "var(--text-primary)" }}>
+          <h3
+            className="text-xl font-bebas uppercase tracking-wide mb-1"
+            style={{ color: "var(--text-primary)" }}
+          >
             {conversion.headline}
           </h3>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
@@ -279,10 +279,7 @@ export function TeaserCompletionCard({
       />
 
       {/* Upsell Modal */}
-      <UpsellModal
-        isOpen={showUpsellModal}
-        onClose={() => setShowUpsellModal(false)}
-      />
+      <UpsellModal isOpen={showUpsellModal} onClose={() => setShowUpsellModal(false)} />
     </div>
   );
 }
@@ -298,9 +295,7 @@ function ConfettiEffect() {
     delay: Math.random() * 0.5,
     duration: 2 + Math.random() * 2,
     size: 6 + Math.random() * 8,
-    color: ["var(--accent-cyan)", "var(--accent-gold)", "#ffffff"][
-      Math.floor(Math.random() * 3)
-    ],
+    color: ["var(--accent-cyan)", "var(--accent-gold)", "#ffffff"][Math.floor(Math.random() * 3)],
   }));
 
   return (

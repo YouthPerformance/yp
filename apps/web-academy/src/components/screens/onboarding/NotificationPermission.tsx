@@ -5,11 +5,11 @@
 // Intensity Budget: 5 points
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useOnboarding } from '@/contexts/OnboardingContext';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 interface NotificationPermissionProps {
   onContinue: () => void;
@@ -25,12 +25,12 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
 
     try {
       // Check if notifications are supported
-      if ('Notification' in window) {
+      if ("Notification" in window) {
         const permission = await Notification.requestPermission();
-        updateAthleteData({ notificationsEnabled: permission === 'granted' });
+        updateAthleteData({ notificationsEnabled: permission === "granted" });
       }
     } catch (error) {
-      console.error('Notification permission error:', error);
+      console.error("Notification permission error:", error);
     }
 
     setIsRequesting(false);
@@ -45,7 +45,7 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
   return (
     <motion.div
       className="min-h-screen flex flex-col px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -54,10 +54,10 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
       <motion.button
         onClick={onBack}
         className="flex items-center gap-2 mb-8 text-sm self-start"
-        style={{ color: 'var(--text-tertiary)' }}
+        style={{ color: "var(--text-tertiary)" }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        whileHover={{ color: 'var(--text-primary)' }}
+        whileHover={{ color: "var(--text-primary)" }}
       >
         ← Back
       </motion.button>
@@ -73,12 +73,9 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
         >
           <motion.div
             className="w-24 h-24 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--accent-primary)20' }}
+            style={{ backgroundColor: "var(--accent-primary)20" }}
             animate={{
-              boxShadow: [
-                '0 0 0 0 rgba(0, 246, 224, 0.4)',
-                '0 0 0 20px rgba(0, 246, 224, 0)',
-              ],
+              boxShadow: ["0 0 0 0 rgba(0, 246, 224, 0.4)", "0 0 0 20px rgba(0, 246, 224, 0)"],
             }}
             transition={{
               duration: 1.5,
@@ -93,7 +90,7 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
         {/* Title */}
         <motion.h1
           className="font-bebas text-3xl tracking-wider mb-4"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -104,7 +101,7 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
         {/* Description */}
         <motion.p
           className="text-base mb-8 max-w-xs"
-          style={{ color: 'var(--text-secondary)' }}
+          style={{ color: "var(--text-secondary)" }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -120,19 +117,13 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
           transition={{ delay: 0.4 }}
         >
           {[
-            { icon: '🔥', text: 'Streak reminders' },
-            { icon: '🏆', text: 'Achievement alerts' },
-            { icon: '⚡', text: 'XP bonus notifications' },
+            { icon: "🔥", text: "Streak reminders" },
+            { icon: "🏆", text: "Achievement alerts" },
+            { icon: "⚡", text: "XP bonus notifications" },
           ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 justify-center"
-            >
+            <div key={i} className="flex items-center gap-3 justify-center">
               <span className="text-xl">{item.icon}</span>
-              <span
-                className="text-sm"
-                style={{ color: 'var(--text-tertiary)' }}
-              >
+              <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
                 {item.text}
               </span>
             </div>
@@ -147,8 +138,8 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
           disabled={isRequesting}
           className="w-full py-4 rounded-2xl font-bebas text-xl tracking-wider"
           style={{
-            backgroundColor: 'var(--accent-primary)',
-            color: 'var(--bg-primary)',
+            backgroundColor: "var(--accent-primary)",
+            color: "var(--bg-primary)",
           }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -156,17 +147,17 @@ export function NotificationPermission({ onContinue, onBack }: NotificationPermi
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          {isRequesting ? 'ENABLING...' : 'ENABLE NOTIFICATIONS'}
+          {isRequesting ? "ENABLING..." : "ENABLE NOTIFICATIONS"}
         </motion.button>
 
         <motion.button
           onClick={skipNotifications}
           className="w-full py-3 text-sm"
-          style={{ color: 'var(--text-tertiary)' }}
+          style={{ color: "var(--text-tertiary)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          whileHover={{ color: 'var(--text-secondary)' }}
+          whileHover={{ color: "var(--text-secondary)" }}
         >
           Maybe later
         </motion.button>

@@ -5,7 +5,10 @@ import { ATHLETES } from "../constants";
 
 export function AthletesSection() {
   return (
-    <section id="athletes" className="bg-[var(--bg-secondary)] py-24 px-[60px] border-y border-[var(--border-default)]">
+    <section
+      id="athletes"
+      className="bg-[var(--bg-secondary)] py-24 px-[60px] border-y border-[var(--border-default)]"
+    >
       <div className="max-w-[1000px] mx-auto">
         {/* Header */}
         <motion.div
@@ -18,9 +21,7 @@ export function AthletesSection() {
           <p className="text-[11px] tracking-[4px] text-[var(--accent-primary)] uppercase mb-4">
             {ATHLETES.label}
           </p>
-          <h2 className="font-bebas text-[var(--text-primary)] text-[38px]">
-            {ATHLETES.title}
-          </h2>
+          <h2 className="font-bebas text-[var(--text-primary)] text-[38px]">{ATHLETES.title}</h2>
         </motion.div>
 
         {/* Athletes Grid */}

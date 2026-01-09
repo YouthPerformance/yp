@@ -3,10 +3,10 @@
 // Animated crystal gain feedback
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface CrystalRewardProps {
   amount: number;
@@ -31,7 +31,7 @@ export function CrystalReward({ amount, show, onComplete }: CrystalRewardProps) 
           initial={{ opacity: 0, scale: 0.5, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: -30 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50
                      flex flex-col items-center gap-2 pointer-events-none"
         >
@@ -44,7 +44,7 @@ export function CrystalReward({ amount, show, onComplete }: CrystalRewardProps) 
             animate={{ rotate: 15 }}
             transition={{
               repeat: 2,
-              repeatType: 'reverse',
+              repeatType: "reverse",
               duration: 0.15,
             }}
             className="text-6xl"
@@ -101,7 +101,7 @@ function CrystalParticles() {
           transition={{
             duration: 0.8,
             delay: p.delay,
-            ease: 'easeOut',
+            ease: "easeOut",
           }}
           className="absolute left-1/2 top-1/2 w-2 h-2 -ml-1 -mt-1
                      bg-accent-primary rounded-full"
@@ -121,7 +121,7 @@ interface CrystalCounterProps {
   className?: string;
 }
 
-export function CrystalCounter({ count, className = '' }: CrystalCounterProps) {
+export function CrystalCounter({ count, className = "" }: CrystalCounterProps) {
   const [displayCount, setDisplayCount] = useState(count);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -174,7 +174,7 @@ export function FloatingCrystal({ amount }: FloatingCrystalProps) {
     >
       <motion.span
         animate={{ y: [0, -2, 0] }}
-        transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
         💎
       </motion.span>

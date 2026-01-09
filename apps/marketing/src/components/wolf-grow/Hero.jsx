@@ -1,12 +1,12 @@
 // Hero - The Initiation
 // E14-2: Cinematic hero with clip-path text reveal
 
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { EASE, clipReveal, fadeUp, scaleUp, staggerContainer } from './motion'
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { clipReveal, fadeUp, scaleUp, staggerContainer } from "./motion";
 
 export function Hero() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#050505]">
@@ -62,8 +62,8 @@ export function Hero() {
           transition={{ delay: 0.6 }}
           className="mt-6 md:mt-8 text-lg md:text-xl text-gray-300 max-w-xl font-light leading-relaxed"
         >
-          The world's first AI-native training system. Master the 15-minute daily habits
-          used by pros to build speed, durability, and elite movement.
+          The world's first AI-native training system. Master the 15-minute daily habits used by
+          pros to build speed, durability, and elite movement.
         </motion.p>
 
         {/* Velvet Rope */}
@@ -81,7 +81,7 @@ export function Hero() {
           transition={{ delay: 0.8 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate('/start')}
+          onClick={() => navigate("/start")}
           className="mt-8 md:mt-10 px-8 md:px-10 py-4 md:py-5 bg-[#00F6E0] hover:bg-[#00DCCE] active:bg-[#00BFB0] text-[#000000] font-semibold text-base md:text-lg rounded-full relative overflow-hidden group shadow-[0_0_24px_rgba(0,246,224,0.5)] hover:shadow-[0_0_40px_rgba(0,246,224,0.6)] transition-all duration-200"
         >
           <span className="relative z-10 tracking-wide">START THE 6 WEEKS CHALLENGE</span>
@@ -98,7 +98,7 @@ export function Hero() {
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2"
           >
             <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full" />
@@ -106,7 +106,7 @@ export function Hero() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }
 
-export default Hero
+export default Hero;

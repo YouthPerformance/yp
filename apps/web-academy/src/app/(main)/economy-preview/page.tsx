@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
-  ShardIcon,
-  CrystalIcon,
-  XpIcon,
   CreditIcon,
-  ShardMeter,
   CrystalBadge,
+  CrystalIcon,
+  ShardIcon,
+  ShardMeter,
   ShardReward,
+  XpIcon,
   XpReward,
-} from '@/components/economy';
+} from "@/components/economy";
 
 /**
  * Economy Preview Page
@@ -40,9 +40,7 @@ export default function EconomyPreviewPage() {
     <div className="min-h-screen bg-slate-950 p-8 text-white">
       <div className="mx-auto max-w-4xl space-y-12">
         <header>
-          <h1 className="text-3xl font-bold text-cyan-400">
-            Economy v2 Asset Preview
-          </h1>
+          <h1 className="text-3xl font-bold text-cyan-400">Economy v2 Asset Preview</h1>
           <p className="mt-2 text-slate-400">
             Placeholder SVGs and components for Wolf Pack Economy
           </p>
@@ -182,9 +180,7 @@ export default function EconomyPreviewPage() {
 
         {/* Reward Animations */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-purple-400">
-            Reward Animations
-          </h2>
+          <h2 className="text-xl font-semibold text-purple-400">Reward Animations</h2>
 
           <div className="flex gap-4 rounded-lg bg-slate-900 p-6">
             <button
@@ -216,33 +212,39 @@ export default function EconomyPreviewPage() {
 
         {/* Color Reference */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-purple-400">
-            Color Reference
-          </h2>
+          <h2 className="text-xl font-semibold text-purple-400">Color Reference</h2>
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="flex flex-col gap-2">
               <div className="h-12 rounded bg-[#00f0ff]" />
               <span className="text-xs text-slate-400">
-                Shard Cyan<br />#00f0ff
+                Shard Cyan
+                <br />
+                #00f0ff
               </span>
             </div>
             <div className="flex flex-col gap-2">
               <div className="h-12 rounded bg-[#a855f7]" />
               <span className="text-xs text-slate-400">
-                Crystal Purple<br />#a855f7
+                Crystal Purple
+                <br />
+                #a855f7
               </span>
             </div>
             <div className="flex flex-col gap-2">
               <div className="h-12 rounded bg-[#facc15]" />
               <span className="text-xs text-slate-400">
-                XP Yellow<br />#facc15
+                XP Yellow
+                <br />
+                #facc15
               </span>
             </div>
             <div className="flex flex-col gap-2">
               <div className="h-12 rounded bg-[#3b82f6]" />
               <span className="text-xs text-slate-400">
-                Credit Blue<br />#3b82f6
+                Credit Blue
+                <br />
+                #3b82f6
               </span>
             </div>
           </div>
@@ -250,25 +252,21 @@ export default function EconomyPreviewPage() {
 
         {/* Usage Notes */}
         <section className="rounded-lg border border-slate-800 bg-slate-900/50 p-6">
-          <h2 className="mb-4 text-xl font-semibold text-purple-400">
-            Developer Notes
-          </h2>
+          <h2 className="mb-4 text-xl font-semibold text-purple-400">Developer Notes</h2>
           <div className="space-y-2 text-sm text-slate-400">
             <p>
-              <strong className="text-white">Import:</strong>{' '}
+              <strong className="text-white">Import:</strong>{" "}
               <code className="rounded bg-slate-800 px-1">
                 {'import { ShardIcon, CrystalBadge } from "@/components/economy"'}
               </code>
             </p>
             <p>
-              <strong className="text-white">Files:</strong>{' '}
-              <code className="rounded bg-slate-800 px-1">
-                src/components/economy/
-              </code>
+              <strong className="text-white">Files:</strong>{" "}
+              <code className="rounded bg-slate-800 px-1">src/components/economy/</code>
             </p>
             <p>
-              <strong className="text-white">Status:</strong> Placeholder SVGs.
-              Replace with designer assets when ready.
+              <strong className="text-white">Status:</strong> Placeholder SVGs. Replace with
+              designer assets when ready.
             </p>
           </div>
         </section>

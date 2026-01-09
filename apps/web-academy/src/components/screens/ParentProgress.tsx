@@ -4,17 +4,16 @@
 // "Sponsor Report" Theme - Same brand, calmer energy
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { StatTicker } from '@/components/ui/StatTicker';
-import { cn } from '@/lib/utils';
+import { motion } from "framer-motion";
+import { useMemo } from "react";
+import { StatTicker } from "@/components/ui/StatTicker";
 
 interface SkillData {
   name: string;
   score: number;
-  trend: 'up' | 'down' | 'stable';
+  trend: "up" | "down" | "stable";
   description: string;
 }
 
@@ -30,7 +29,7 @@ interface ParentProgressProps {
   previousDurabilityScore: number;
   weeklyData: WeeklyDataPoint[];
   skills: SkillData[];
-  phase: 'Foundation' | 'Build' | 'Peak';
+  phase: "Foundation" | "Build" | "Peak";
   weekNumber: number;
   onBack?: () => void;
 }
@@ -60,7 +59,7 @@ export function ParentProgress({
   return (
     <motion.div
       className="min-h-screen px-6 py-8"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
+      style={{ backgroundColor: "var(--bg-primary)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -70,21 +69,18 @@ export function ParentProgress({
         <button
           onClick={onBack}
           className="p-2 rounded-lg transition-colors"
-          style={{ backgroundColor: 'var(--bg-secondary)' }}
+          style={{ backgroundColor: "var(--bg-secondary)" }}
         >
           <BackArrow />
         </button>
         <div>
           <h1
             className="font-bebas text-2xl tracking-wider"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: "var(--text-primary)" }}
           >
             {athleteName.toUpperCase()}'S PROGRESS
           </h1>
-          <p
-            className="text-sm"
-            style={{ color: 'var(--text-secondary)' }}
-          >
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
             Week {weekNumber} · {phase} Phase
           </p>
         </div>
@@ -94,21 +90,18 @@ export function ParentProgress({
       <section
         className="rounded-xl p-6 mb-6"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <div className="flex items-center justify-between mb-4">
           <h2
             className="text-sm font-semibold uppercase tracking-wider"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: "var(--text-secondary)" }}
           >
             Durability Score
           </h2>
-          <TrendBadge
-            current={durabilityScore}
-            previous={previousDurabilityScore}
-          />
+          <TrendBadge current={durabilityScore} previous={previousDurabilityScore} />
         </div>
 
         <div className="flex items-end gap-6">
@@ -124,26 +117,23 @@ export function ParentProgress({
           <div className="flex-1 pb-2">
             <div
               className="h-3 rounded-full overflow-hidden"
-              style={{ backgroundColor: 'var(--border-default)' }}
+              style={{ backgroundColor: "var(--border-default)" }}
             >
               <motion.div
                 className="h-full rounded-full"
-                style={{ backgroundColor: 'var(--accent-primary)' }}
+                style={{ backgroundColor: "var(--accent-primary)" }}
                 initial={{ width: 0 }}
                 animate={{ width: `${durabilityScore}%` }}
-                transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
+                transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
               />
             </div>
           </div>
         </div>
 
         {/* Disclaimer */}
-        <p
-          className="text-xs mt-4 italic"
-          style={{ color: 'var(--text-tertiary)' }}
-        >
-          Estimates training consistency, not injury prediction. Consult a
-          healthcare provider for medical advice.
+        <p className="text-xs mt-4 italic" style={{ color: "var(--text-tertiary)" }}>
+          Estimates training consistency, not injury prediction. Consult a healthcare provider for
+          medical advice.
         </p>
       </section>
 
@@ -151,21 +141,18 @@ export function ParentProgress({
       <section
         className="rounded-xl p-6 mb-6"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <div className="flex items-center justify-between mb-4">
           <h2
             className="text-sm font-semibold uppercase tracking-wider"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: "var(--text-secondary)" }}
           >
             Weekly Activity
           </h2>
-          <span
-            className="text-sm"
-            style={{ color: 'var(--text-tertiary)' }}
-          >
+          <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
             {weeklyStats.totalMinutes} min total
           </span>
         </div>
@@ -178,8 +165,8 @@ export function ParentProgress({
                 className="w-full rounded-t-sm"
                 style={{
                   backgroundColor: day.completed
-                    ? 'var(--accent-primary)'
-                    : 'var(--border-default)',
+                    ? "var(--accent-primary)"
+                    : "var(--border-default)",
                 }}
                 initial={{ height: 0 }}
                 animate={{
@@ -197,7 +184,7 @@ export function ParentProgress({
             <div
               key={i}
               className="flex-1 text-center text-xs"
-              style={{ color: 'var(--text-tertiary)' }}
+              style={{ color: "var(--text-tertiary)" }}
             >
               {day.day}
             </div>
@@ -209,13 +196,13 @@ export function ParentProgress({
       <section
         className="rounded-xl p-6"
         style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
+          backgroundColor: "var(--bg-secondary)",
+          border: "1px solid var(--border-default)",
         }}
       >
         <h2
           className="text-sm font-semibold uppercase tracking-wider mb-4"
-          style={{ color: 'var(--text-secondary)' }}
+          style={{ color: "var(--text-secondary)" }}
         >
           Skill Focus
         </h2>
@@ -242,12 +229,12 @@ interface SkillRowProps {
 function SkillRow({ skill, index }: SkillRowProps) {
   const trendIcon = useMemo(() => {
     switch (skill.trend) {
-      case 'up':
-        return { symbol: '↑', color: 'var(--accent-primary)' };
-      case 'down':
-        return { symbol: '↓', color: 'var(--accent-warning)' };
+      case "up":
+        return { symbol: "↑", color: "var(--accent-primary)" };
+      case "down":
+        return { symbol: "↓", color: "var(--accent-warning)" };
       default:
-        return { symbol: '→', color: 'var(--text-tertiary)' };
+        return { symbol: "→", color: "var(--text-tertiary)" };
     }
   }, [skill.trend]);
 
@@ -258,17 +245,11 @@ function SkillRow({ skill, index }: SkillRowProps) {
       transition={{ delay: index * 0.1 }}
     >
       <div className="flex items-center justify-between mb-1">
-        <span
-          className="text-sm font-medium"
-          style={{ color: 'var(--text-primary)' }}
-        >
+        <span className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
           {skill.name}
         </span>
         <div className="flex items-center gap-2">
-          <span
-            className="text-sm font-mono"
-            style={{ color: 'var(--text-primary)' }}
-          >
+          <span className="text-sm font-mono" style={{ color: "var(--text-primary)" }}>
             {skill.score}%
           </span>
           <span style={{ color: trendIcon.color }}>{trendIcon.symbol}</span>
@@ -278,21 +259,18 @@ function SkillRow({ skill, index }: SkillRowProps) {
       {/* Progress bar */}
       <div
         className="h-2 rounded-full overflow-hidden mb-1"
-        style={{ backgroundColor: 'var(--border-default)' }}
+        style={{ backgroundColor: "var(--border-default)" }}
       >
         <motion.div
           className="h-full rounded-full"
-          style={{ backgroundColor: 'var(--accent-primary)' }}
+          style={{ backgroundColor: "var(--accent-primary)" }}
           initial={{ width: 0 }}
           animate={{ width: `${skill.score}%` }}
           transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
         />
       </div>
 
-      <p
-        className="text-xs"
-        style={{ color: 'var(--text-tertiary)' }}
-      >
+      <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
         {skill.description}
       </p>
     </motion.div>
@@ -318,8 +296,8 @@ function TrendBadge({ current, previous }: TrendBadgeProps) {
       <span
         className="text-xs px-2 py-1 rounded-full"
         style={{
-          backgroundColor: 'var(--bg-tertiary)',
-          color: 'var(--text-secondary)',
+          backgroundColor: "var(--bg-tertiary)",
+          color: "var(--text-secondary)",
         }}
       >
         No change
@@ -331,13 +309,12 @@ function TrendBadge({ current, previous }: TrendBadgeProps) {
     <span
       className="text-xs px-2 py-1 rounded-full font-medium"
       style={{
-        backgroundColor: isPositive
-          ? 'rgba(0, 191, 176, 0.15)'
-          : 'rgba(245, 158, 11, 0.15)',
-        color: isPositive ? 'var(--accent-primary)' : 'var(--accent-warning)',
+        backgroundColor: isPositive ? "rgba(0, 191, 176, 0.15)" : "rgba(245, 158, 11, 0.15)",
+        color: isPositive ? "var(--accent-primary)" : "var(--accent-warning)",
       }}
     >
-      {isPositive ? '+' : ''}{diff} pts
+      {isPositive ? "+" : ""}
+      {diff} pts
     </span>
   );
 }
@@ -353,7 +330,7 @@ function BackArrow() {
       height="20"
       viewBox="0 0 20 20"
       fill="none"
-      style={{ color: 'var(--text-primary)' }}
+      style={{ color: "var(--text-primary)" }}
     >
       <path
         d="M12.5 15L7.5 10L12.5 5"

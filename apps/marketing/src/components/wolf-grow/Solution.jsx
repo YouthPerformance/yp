@@ -1,52 +1,52 @@
 // Solution - The Exploded Phone
 // E14-4: Apple-style exploded view with scroll-linked parallax
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { EASE } from './motion'
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { EASE } from "./motion";
 
 const FEATURES = [
   {
-    title: 'Scientific Structure',
-    desc: 'No random workouts. A progressive curriculum.',
-    icon: '📊',
+    title: "Scientific Structure",
+    desc: "No random workouts. A progressive curriculum.",
+    icon: "📊",
   },
   {
-    title: 'Gamified Growth',
-    desc: 'Earn badges. Climb the leaderboard. Stay locked in.',
-    icon: '🎮',
+    title: "Gamified Growth",
+    desc: "Earn badges. Climb the leaderboard. Stay locked in.",
+    icon: "🎮",
   },
   {
-    title: 'Visual Proof',
-    desc: 'Track their progress in real-time.',
-    icon: '📈',
+    title: "Visual Proof",
+    desc: "Track their progress in real-time.",
+    icon: "📈",
   },
-]
+];
 
 const LAYERS = [
-  { label: 'Video Layer', color: 'from-cyan-500/20 to-cyan-500/5' },
-  { label: 'Data Layer', color: 'from-purple-500/20 to-purple-500/5' },
-  { label: 'Community Layer', color: 'from-green-500/20 to-green-500/5' },
-]
+  { label: "Video Layer", color: "from-cyan-500/20 to-cyan-500/5" },
+  { label: "Data Layer", color: "from-purple-500/20 to-purple-500/5" },
+  { label: "Community Layer", color: "from-green-500/20 to-green-500/5" },
+];
 
 export function Solution() {
-  const sectionRef = useRef(null)
+  const sectionRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
+    offset: ["start end", "end start"],
+  });
 
   // Layer transforms - expand outward on scroll
-  const layer1Y = useTransform(scrollYProgress, [0.2, 0.6], [0, -80])
-  const layer2Y = useTransform(scrollYProgress, [0.2, 0.6], [0, -160])
-  const layer3Y = useTransform(scrollYProgress, [0.2, 0.6], [0, -240])
+  const layer1Y = useTransform(scrollYProgress, [0.2, 0.6], [0, -80]);
+  const layer2Y = useTransform(scrollYProgress, [0.2, 0.6], [0, -160]);
+  const layer3Y = useTransform(scrollYProgress, [0.2, 0.6], [0, -240]);
 
-  const layer1Scale = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.95])
-  const layer2Scale = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.9])
-  const layer3Scale = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.85])
+  const layer1Scale = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.95]);
+  const layer2Scale = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.9]);
+  const layer3Scale = useTransform(scrollYProgress, [0.2, 0.6], [1, 0.85]);
 
-  const phoneRotate = useTransform(scrollYProgress, [0.2, 0.6], [0, -5])
+  const phoneRotate = useTransform(scrollYProgress, [0.2, 0.6], [0, -5]);
 
   return (
     <section
@@ -79,10 +79,11 @@ export function Solution() {
               className="text-gray-300 text-lg leading-relaxed mb-8"
             >
               We replaced the drive to the gym with consistency.
-              <br /><br />
-              YP isn't just "drills." It is a complete athletic operating system.
-              Our AI-native platform delivers the exact warm-ups, plyometrics, and
-              barefoot durability work used by NBA and Premier League athletes.
+              <br />
+              <br />
+              YP isn't just "drills." It is a complete athletic operating system. Our AI-native
+              platform delivers the exact warm-ups, plyometrics, and barefoot durability work used
+              by NBA and Premier League athletes.
             </motion.p>
 
             {/* Features */}
@@ -125,7 +126,9 @@ export function Solution() {
               className={`hidden md:flex absolute w-[260px] h-[520px] rounded-[40px] bg-gradient-to-b ${LAYERS[2].color} border border-white/10 backdrop-blur-sm`}
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs text-white/40 uppercase tracking-wider">{LAYERS[2].label}</span>
+                <span className="text-xs text-white/40 uppercase tracking-wider">
+                  {LAYERS[2].label}
+                </span>
               </div>
             </motion.div>
 
@@ -135,7 +138,9 @@ export function Solution() {
               className={`hidden md:flex absolute w-[260px] h-[520px] rounded-[40px] bg-gradient-to-b ${LAYERS[1].color} border border-white/10 backdrop-blur-sm`}
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs text-white/40 uppercase tracking-wider">{LAYERS[1].label}</span>
+                <span className="text-xs text-white/40 uppercase tracking-wider">
+                  {LAYERS[1].label}
+                </span>
               </div>
             </motion.div>
 
@@ -145,7 +150,9 @@ export function Solution() {
               className={`hidden md:flex absolute w-[260px] h-[520px] rounded-[40px] bg-gradient-to-b ${LAYERS[0].color} border border-white/10 backdrop-blur-sm`}
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs text-white/40 uppercase tracking-wider">{LAYERS[0].label}</span>
+                <span className="text-xs text-white/40 uppercase tracking-wider">
+                  {LAYERS[0].label}
+                </span>
               </div>
             </motion.div>
 
@@ -190,7 +197,7 @@ export function Solution() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default Solution
+export default Solution;

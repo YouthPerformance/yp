@@ -1,18 +1,18 @@
 // FooterCTA - The Grand Slam Offer
 // E14-8: Clean conversion section with glowing offer box
 
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { EASE } from './motion'
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { EASE } from "./motion";
 
 const OFFER_STACK = [
-  { item: 'Bulletproof Ankles Protocol', value: '$97' },
-  { item: 'Athlete Identity Quiz', value: 'Priceless' },
-  { item: '6 Weeks Challenge Program', value: 'Included' },
-]
+  { item: "Bulletproof Ankles Protocol", value: "$97" },
+  { item: "Athlete Identity Quiz", value: "Priceless" },
+  { item: "6 Weeks Challenge Program", value: "Included" },
+];
 
 export function FooterCTA() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <section className="relative py-32 bg-[#050505]">
@@ -80,7 +80,9 @@ export function FooterCTA() {
               viewport={{ once: true }}
               className="text-center mb-8"
             >
-              <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">Your Price Today</p>
+              <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">
+                Your Price Today
+              </p>
               <p className="text-5xl font-bebas text-white">
                 FREE <span className="text-cyan-400">TO START</span>
               </p>
@@ -94,7 +96,7 @@ export function FooterCTA() {
               viewport={{ once: true }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/start')}
+              onClick={() => navigate("/start")}
               className="w-full py-5 bg-[#00F6E0] hover:bg-[#00DCCE] active:bg-[#00BFB0] text-[#000000] font-semibold text-xl rounded-xl relative overflow-hidden group shadow-[0_0_24px_rgba(0,246,224,0.5)] hover:shadow-[0_0_40px_rgba(0,246,224,0.6)] transition-all duration-200"
             >
               <span className="relative z-10">START THE 6 WEEKS CHALLENGE</span>
@@ -132,7 +134,7 @@ export function FooterCTA() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
 
-export default FooterCTA
+export default FooterCTA;

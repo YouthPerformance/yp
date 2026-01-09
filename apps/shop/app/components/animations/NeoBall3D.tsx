@@ -38,7 +38,7 @@ interface NeoBall3DProps {
   impulse?: number;
   className?: string;
   sectionStart?: number; // Scroll progress (0-1) when ball section enters view
-  sectionEnd?: number;   // Scroll progress (0-1) when ball section exits view
+  sectionEnd?: number; // Scroll progress (0-1) when ball section exits view
 }
 
 export function NeoBall3D({

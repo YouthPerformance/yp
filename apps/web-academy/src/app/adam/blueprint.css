@@ -10,8 +10,8 @@
 
 .blueprint-theme {
   /* Core Palette */
-  --bp-navy-deep: #0A1628;
-  --bp-navy-mid: #0F1D32;
+  --bp-navy-deep: #0a1628;
+  --bp-navy-mid: #0f1d32;
   --bp-navy-light: #162540;
 
   /* Wireframe / Schematic Colors */
@@ -20,13 +20,13 @@
   --bp-wire-subtle: rgba(255, 255, 255, 0.15);
 
   /* Accent - YP Teal (Brand Aligned) */
-  --bp-accent: #00F6E0;
+  --bp-accent: #00f6e0;
   --bp-accent-glow: rgba(0, 246, 224, 0.4);
   --bp-accent-dim: rgba(0, 246, 224, 0.2);
 
   /* Alert / Highlight */
-  --bp-highlight: #FF6B6B;
-  --bp-gold: #FFE66D;
+  --bp-highlight: #ff6b6b;
+  --bp-gold: #ffe66d;
 
   /* Glass Effects */
   --bp-glass-bg: rgba(15, 29, 50, 0.7);
@@ -43,9 +43,9 @@
    ───────────────────────────────────────────────────────────── */
 
 .blueprint-theme {
-  --bp-font-display: 'Space Grotesk', 'Inter', sans-serif;
-  --bp-font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
-  --bp-font-body: 'Inter', system-ui, sans-serif;
+  --bp-font-display: "Space Grotesk", "Inter", sans-serif;
+  --bp-font-mono: "JetBrains Mono", "SF Mono", "Consolas", monospace;
+  --bp-font-body: "Inter", system-ui, sans-serif;
 }
 
 .bp-mono {
@@ -72,11 +72,7 @@
 }
 
 .bp-glass-panel {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 29, 50, 0.8) 0%,
-    rgba(10, 22, 40, 0.6) 100%
-  );
+  background: linear-gradient(135deg, rgba(15, 29, 50, 0.8) 0%, rgba(10, 22, 40, 0.6) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -103,18 +99,14 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--bp-accent),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--bp-accent), transparent);
   opacity: 0.5;
   animation: scanLine 4s ease-in-out infinite;
 }
 
 @keyframes scanLine {
-  0%, 100% {
+  0%,
+  100% {
     top: 0;
     opacity: 0;
   }
@@ -324,11 +316,7 @@
 
 .bp-document {
   position: relative;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
   border: 1px solid var(--bp-glass-border);
   border-radius: 8px;
   overflow: hidden;
@@ -395,7 +383,8 @@
 }
 
 @keyframes waveform {
-  0%, 100% {
+  0%,
+  100% {
     height: 20%;
   }
   50% {

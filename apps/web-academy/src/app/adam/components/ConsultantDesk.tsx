@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
-import { Play, Pause, Volume2, FileText, TrendingUp, Target, Zap } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { FileText, Pause, Play, Target, TrendingUp, Volume2, Zap } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 // Insight markers that appear on hover
 const INSIGHTS = [
@@ -67,7 +67,7 @@ export function ConsultantDesk() {
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const _audioRef = useRef<HTMLAudioElement | null>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
 
   // Simulate audio playback (replace with real audio later)
@@ -89,7 +89,7 @@ export function ConsultantDesk() {
             }
             return 0;
           }
-          return prev + (100 / 300); // 30 seconds at 100ms intervals
+          return prev + 100 / 300; // 30 seconds at 100ms intervals
         });
       }, 100);
     }
@@ -148,15 +148,11 @@ export function ConsultantDesk() {
             className="bp-display text-4xl lg:text-5xl mb-4"
             style={{ color: "rgba(255, 255, 255, 0.95)" }}
           >
-            The Consultant&apos;s{" "}
-            <span style={{ color: "#00F6E0" }}>Desk</span>
+            The Consultant&apos;s <span style={{ color: "#00F6E0" }}>Desk</span>
           </h2>
-          <p
-            className="text-lg max-w-2xl mx-auto"
-            style={{ color: "rgba(255, 255, 255, 0.6)" }}
-          >
-            Real-time insights from the front office. Hover to reveal the trends
-            shaping tomorrow&apos;s game.
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: "rgba(255, 255, 255, 0.6)" }}>
+            Real-time insights from the front office. Hover to reveal the trends shaping
+            tomorrow&apos;s game.
           </p>
         </motion.div>
 
@@ -174,19 +170,13 @@ export function ConsultantDesk() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <div
-              className="bp-glass-panel relative overflow-hidden"
-              style={{ minHeight: "450px" }}
-            >
+            <div className="bp-glass-panel relative overflow-hidden" style={{ minHeight: "450px" }}>
               {/* Document Header */}
               <div
                 className="flex items-center gap-3 px-6 py-4"
                 style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)" }}
               >
-                <FileText
-                  className="w-5 h-5"
-                  style={{ color: "#00F6E0" }}
-                />
+                <FileText className="w-5 h-5" style={{ color: "#00F6E0" }} />
                 <div>
                   <p
                     className="bp-mono text-sm font-semibold"
@@ -194,10 +184,7 @@ export function ConsultantDesk() {
                   >
                     SCOUTING_REPORT_2026.pdf
                   </p>
-                  <p
-                    className="bp-mono text-[10px]"
-                    style={{ color: "rgba(255, 255, 255, 0.4)" }}
-                  >
+                  <p className="bp-mono text-[10px]" style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     CLASSIFICATION: STRATEGIC • LAST UPDATED: 48H AGO
                   </p>
                 </div>
@@ -278,14 +265,12 @@ export function ConsultantDesk() {
                             style={{
                               background: "rgba(10, 22, 40, 0.95)",
                               border: "1px solid rgba(0, 246, 224, 0.3)",
-                              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 246, 224, 0.15)",
+                              boxShadow:
+                                "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 246, 224, 0.15)",
                             }}
                           >
                             <div className="flex items-center gap-2 mb-1">
-                              <Icon
-                                className="w-3 h-3"
-                                style={{ color: "#00F6E0" }}
-                              />
+                              <Icon className="w-3 h-3" style={{ color: "#00F6E0" }} />
                               <span
                                 className="bp-mono text-[9px] tracking-wider"
                                 style={{ color: "#00F6E0" }}
@@ -337,10 +322,7 @@ export function ConsultantDesk() {
                         >
                           CLASSIFIED INTELLIGENCE
                         </p>
-                        <p
-                          className="bp-mono text-sm"
-                          style={{ color: "#00F6E0" }}
-                        >
+                        <p className="bp-mono text-sm" style={{ color: "#00F6E0" }}>
                           Hover to reveal insights
                         </p>
                       </div>
@@ -350,25 +332,31 @@ export function ConsultantDesk() {
               </div>
 
               {/* AR Corner Brackets */}
-              <div className="absolute top-2 left-2 w-6 h-6 border-l-2 border-t-2" style={{ borderColor: "rgba(0, 246, 224, 0.4)" }} />
-              <div className="absolute top-2 right-2 w-6 h-6 border-r-2 border-t-2" style={{ borderColor: "rgba(0, 246, 224, 0.4)" }} />
-              <div className="absolute bottom-2 left-2 w-6 h-6 border-l-2 border-b-2" style={{ borderColor: "rgba(0, 246, 224, 0.4)" }} />
-              <div className="absolute bottom-2 right-2 w-6 h-6 border-r-2 border-b-2" style={{ borderColor: "rgba(0, 246, 224, 0.4)" }} />
+              <div
+                className="absolute top-2 left-2 w-6 h-6 border-l-2 border-t-2"
+                style={{ borderColor: "rgba(0, 246, 224, 0.4)" }}
+              />
+              <div
+                className="absolute top-2 right-2 w-6 h-6 border-r-2 border-t-2"
+                style={{ borderColor: "rgba(0, 246, 224, 0.4)" }}
+              />
+              <div
+                className="absolute bottom-2 left-2 w-6 h-6 border-l-2 border-b-2"
+                style={{ borderColor: "rgba(0, 246, 224, 0.4)" }}
+              />
+              <div
+                className="absolute bottom-2 right-2 w-6 h-6 border-r-2 border-b-2"
+                style={{ borderColor: "rgba(0, 246, 224, 0.4)" }}
+              />
             </div>
           </div>
 
           {/* Audio Note Panel */}
           <div className="lg:col-span-2">
-            <div
-              className="bp-glass-panel h-full p-6 flex flex-col"
-              style={{ minHeight: "450px" }}
-            >
+            <div className="bp-glass-panel h-full p-6 flex flex-col" style={{ minHeight: "450px" }}>
               {/* Audio Header */}
               <div className="flex items-center gap-3 mb-6">
-                <Volume2
-                  className="w-5 h-5"
-                  style={{ color: "#00F6E0" }}
-                />
+                <Volume2 className="w-5 h-5" style={{ color: "#00F6E0" }} />
                 <div>
                   <p
                     className="bp-mono text-sm font-semibold"
@@ -376,10 +364,7 @@ export function ConsultantDesk() {
                   >
                     VOICE NOTE
                   </p>
-                  <p
-                    className="bp-mono text-[10px]"
-                    style={{ color: "rgba(255, 255, 255, 0.4)" }}
-                  >
+                  <p className="bp-mono text-[10px]" style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                     ADAM HARRINGTON • 0:30
                   </p>
                 </div>
@@ -395,12 +380,14 @@ export function ConsultantDesk() {
                         key={i}
                         className="w-[6px] rounded-full"
                         style={{
-                          background: i / WAVEFORM_BARS < audioProgress / 100
-                            ? "#00F6E0"
-                            : "rgba(0, 246, 224, 0.3)",
-                          boxShadow: i / WAVEFORM_BARS < audioProgress / 100
-                            ? "0 0 8px rgba(0, 246, 224, 0.5)"
-                            : "none",
+                          background:
+                            i / WAVEFORM_BARS < audioProgress / 100
+                              ? "#00F6E0"
+                              : "rgba(0, 246, 224, 0.3)",
+                          boxShadow:
+                            i / WAVEFORM_BARS < audioProgress / 100
+                              ? "0 0 8px rgba(0, 246, 224, 0.5)"
+                              : "none",
                         }}
                         animate={{
                           height: `${getWaveformHeight(i)}%`,
@@ -449,9 +436,7 @@ export function ConsultantDesk() {
                 onClick={toggleAudio}
                 className="w-full mt-6 flex items-center justify-center gap-3 py-4 rounded-lg transition-all duration-200"
                 style={{
-                  background: isPlaying
-                    ? "rgba(0, 246, 224, 0.15)"
-                    : "rgba(0, 246, 224, 1)",
+                  background: isPlaying ? "rgba(0, 246, 224, 0.15)" : "rgba(0, 246, 224, 1)",
                   color: isPlaying ? "#00F6E0" : "#0A1628",
                   border: isPlaying ? "1px solid rgba(0, 246, 224, 0.3)" : "none",
                 }}
@@ -459,9 +444,7 @@ export function ConsultantDesk() {
                 {isPlaying ? (
                   <>
                     <Pause className="w-5 h-5" />
-                    <span className="bp-mono text-sm font-semibold tracking-wider">
-                      PAUSE
-                    </span>
+                    <span className="bp-mono text-sm font-semibold tracking-wider">PAUSE</span>
                   </>
                 ) : (
                   <>
@@ -482,8 +465,8 @@ export function ConsultantDesk() {
                   className="text-sm italic leading-relaxed"
                   style={{ color: "rgba(255, 255, 255, 0.6)" }}
                 >
-                  &ldquo;The game moves in cycles. The teams that win are the
-                  ones who see the next cycle coming...&rdquo;
+                  &ldquo;The game moves in cycles. The teams that win are the ones who see the next
+                  cycle coming...&rdquo;
                 </p>
                 <p
                   className="bp-mono text-[10px] mt-3"
@@ -510,18 +493,10 @@ export function ConsultantDesk() {
             { label: "SKILL FORECASTS", value: "200+", sublabel: "DELIVERED" },
             { label: "FRONT OFFICE CLIENTS", value: "6", sublabel: "NBA TEAMS" },
           ].map((stat, i) => (
-            <div
-              key={i}
-              className="bp-glass-panel p-5 text-center"
-            >
+            <div key={i} className="bp-glass-panel p-5 text-center">
               <p className="bp-readout text-[10px] mb-2">{stat.label}</p>
-              <p className="bp-readout-value bp-readout-accent text-3xl">
-                {stat.value}
-              </p>
-              <p
-                className="bp-mono text-[10px] mt-1"
-                style={{ color: "rgba(255, 255, 255, 0.4)" }}
-              >
+              <p className="bp-readout-value bp-readout-accent text-3xl">{stat.value}</p>
+              <p className="bp-mono text-[10px] mt-1" style={{ color: "rgba(255, 255, 255, 0.4)" }}>
                 {stat.sublabel}
               </p>
             </div>

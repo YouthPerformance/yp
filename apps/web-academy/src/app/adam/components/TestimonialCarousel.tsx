@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { TESTIMONIALS } from "../constants";
 
 export function TestimonialCarousel() {
@@ -18,9 +18,7 @@ export function TestimonialCarousel() {
   return (
     <section className="py-24 px-[60px] bg-[var(--bg-primary)] relative">
       {/* Large quote mark background */}
-      <div
-        className="absolute top-20 left-1/2 -translate-x-1/2 text-[180px] text-[var(--accent-primary)] opacity-10 leading-none pointer-events-none select-none font-bebas"
-      >
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 text-[180px] text-[var(--accent-primary)] opacity-10 leading-none pointer-events-none select-none font-bebas">
         &ldquo;
       </div>
 

@@ -1,62 +1,60 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { useUI } from '../context/UIContext'
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useUI } from "../context/UIContext";
 
 export default function SearchOverlay() {
-  const { isSearchOpen, closeSearch } = useUI()
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const inputRef = useRef(null)
+  const { isSearchOpen, closeSearch } = useUI();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef(null);
 
   // Focus input when opened
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
-      inputRef.current.focus()
+      inputRef.current.focus();
     }
-  }, [isSearchOpen])
+  }, [isSearchOpen]);
 
   // Clear on close
   useEffect(() => {
     if (!isSearchOpen) {
-      setQuery('')
-      setResults([])
+      setQuery("");
+      setResults([]);
     }
-  }, [isSearchOpen])
+  }, [isSearchOpen]);
 
   // Debounced search
   useEffect(() => {
     if (!query.trim()) {
-      setResults([])
-      return
+      setResults([]);
+      return;
     }
 
     const timer = setTimeout(async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Mock results
       const mockResults = [
-        { id: 1, title: 'R3 Foundations', type: 'Program', url: '/courses/1' },
-        { id: 2, title: 'Speed & Agility', type: 'Program', url: '/courses/2' },
-        { id: 3, title: 'Foot Strength Basics', type: 'Session', url: '/courses/3' },
-      ].filter(item =>
-        item.title.toLowerCase().includes(query.toLowerCase())
-      )
+        { id: 1, title: "R3 Foundations", type: "Program", url: "/courses/1" },
+        { id: 2, title: "Speed & Agility", type: "Program", url: "/courses/2" },
+        { id: 3, title: "Foot Strength Basics", type: "Session", url: "/courses/3" },
+      ].filter((item) => item.title.toLowerCase().includes(query.toLowerCase()));
 
-      setResults(mockResults)
-      setIsLoading(false)
-    }, 300)
+      setResults(mockResults);
+      setIsLoading(false);
+    }, 300);
 
-    return () => clearTimeout(timer)
-  }, [query])
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const handleResultClick = () => {
-    closeSearch()
-  }
+    closeSearch();
+  };
 
-  if (!isSearchOpen) return null
+  if (!isSearchOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50">
@@ -126,8 +124,12 @@ export default function SearchOverlay() {
                         </svg>
                       </div>
                       <div>
-                        <p className="font-yp-body text-yp-body-md text-dark-text-primary font-medium">{result.title}</p>
-                        <p className="font-yp-body text-yp-body-sm text-dark-text-tertiary">{result.type}</p>
+                        <p className="font-yp-body text-yp-body-md text-dark-text-primary font-medium">
+                          {result.title}
+                        </p>
+                        <p className="font-yp-body text-yp-body-sm text-dark-text-tertiary">
+                          {result.type}
+                        </p>
                       </div>
                     </div>
                     <svg
@@ -136,7 +138,12 @@ export default function SearchOverlay() {
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   </Link>
                 ))}
@@ -147,15 +154,21 @@ export default function SearchOverlay() {
           {/* Empty state */}
           {query && !isLoading && results.length === 0 && (
             <div className="p-8 text-center">
-              <p className="font-yp-body text-yp-body-md text-dark-text-secondary">No results found for "{query}"</p>
-              <p className="font-yp-body text-yp-body-sm text-dark-text-tertiary mt-1">Try a different search term</p>
+              <p className="font-yp-body text-yp-body-md text-dark-text-secondary">
+                No results found for "{query}"
+              </p>
+              <p className="font-yp-body text-yp-body-sm text-dark-text-tertiary mt-1">
+                Try a different search term
+              </p>
             </div>
           )}
 
           {/* Quick links when empty */}
           {!query && (
             <div className="p-4">
-              <p className="font-yp-body text-label-md text-dark-text-tertiary uppercase tracking-caps mb-3">Quick Links</p>
+              <p className="font-yp-body text-label-md text-dark-text-tertiary uppercase tracking-caps mb-3">
+                Quick Links
+              </p>
               <div className="space-y-1">
                 <Link
                   to="/library"
@@ -184,5 +197,5 @@ export default function SearchOverlay() {
         </div>
       </div>
     </div>
-  )
+  );
 }

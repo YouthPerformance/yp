@@ -3,18 +3,12 @@
 // Dual-Mode System: Athlete (Kids) vs Parent (Sponsor Report)
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react';
-import type { Theme, ThemeMode } from '@/types/theme';
-import { themes, generateCSSVariables } from '@/lib/theme-config';
+import type React from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { generateCSSVariables, themes } from "@/lib/theme-config";
+import type { Theme, ThemeMode } from "@/types/theme";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -29,21 +23,21 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 // Storage key for persisting mode preference
-const STORAGE_KEY = 'bfr-theme-mode';
+const STORAGE_KEY = "bfr-theme-mode";
 
 interface ThemeProviderProps {
   children: React.ReactNode;
   defaultMode?: ThemeMode;
 }
 
-export function ThemeProvider({ children, defaultMode = 'athlete' }: ThemeProviderProps) {
+export function ThemeProvider({ children, defaultMode = "athlete" }: ThemeProviderProps) {
   const [mode, setModeState] = useState<ThemeMode>(defaultMode);
 
   // Load persisted mode on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-      if (stored && (stored === 'athlete' || stored === 'athlete-light' || stored === 'parent')) {
+      if (stored && (stored === "athlete" || stored === "athlete-light" || stored === "parent")) {
         setModeState(stored);
       }
     }
@@ -52,26 +46,26 @@ export function ThemeProvider({ children, defaultMode = 'athlete' }: ThemeProvid
   // Persist mode changes
   const setMode = useCallback((newMode: ThemeMode) => {
     setModeState(newMode);
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, newMode);
     }
   }, []);
 
   // Toggle between athlete and parent modes
   const toggleMode = useCallback(() => {
-    if (mode === 'parent') {
-      setMode('athlete');
+    if (mode === "parent") {
+      setMode("athlete");
     } else {
-      setMode('parent');
+      setMode("parent");
     }
   }, [mode, setMode]);
 
   // Toggle light/dark within athlete mode
   const toggleLightDark = useCallback(() => {
-    if (mode === 'athlete') {
-      setMode('athlete-light');
-    } else if (mode === 'athlete-light') {
-      setMode('athlete');
+    if (mode === "athlete") {
+      setMode("athlete-light");
+    } else if (mode === "athlete-light") {
+      setMode("athlete");
     }
     // Parent mode stays as-is (already light)
   }, [mode, setMode]);
@@ -81,7 +75,7 @@ export function ThemeProvider({ children, defaultMode = 'athlete' }: ThemeProvid
 
   // Apply CSS variables to document
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const cssVars = generateCSSVariables(theme);
       const root = document.documentElement;
 
@@ -101,24 +95,20 @@ export function ThemeProvider({ children, defaultMode = 'athlete' }: ThemeProvid
       setMode,
       toggleMode,
       toggleLightDark,
-      isParentMode: mode === 'parent',
-      isLightMode: mode === 'athlete-light' || mode === 'parent',
+      isParentMode: mode === "parent",
+      isLightMode: mode === "athlete-light" || mode === "parent",
     }),
-    [theme, mode, setMode, toggleMode, toggleLightDark]
+    [theme, mode, setMode, toggleMode, toggleLightDark],
   );
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {
   const context = useContext(ThemeContext);
 
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
 
   return context;
@@ -131,5 +121,5 @@ export function useTheme() {
 
 export function useUserMode() {
   const { mode } = useTheme();
-  return mode === 'parent' ? 'PARENT' : 'ATHLETE';
+  return mode === "parent" ? "PARENT" : "ATHLETE";
 }

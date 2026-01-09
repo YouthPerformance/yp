@@ -22,7 +22,13 @@ interface CardSwiperProps {
   module: LearningModule | TeaserModule;
   sections: LearningSection[];
   mode: ContentMode;
-  onComplete: (stats: { score: number; totalChecks: number; xp: number; time: number; shards?: number }) => void;
+  onComplete: (stats: {
+    score: number;
+    totalChecks: number;
+    xp: number;
+    time: number;
+    shards?: number;
+  }) => void;
 }
 
 const SWIPE_THRESHOLD = 50;
