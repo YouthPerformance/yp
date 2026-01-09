@@ -646,4 +646,154 @@ export default defineSchema({
     .index("by_token", ["token"])
     .index("by_order", ["orderId"])
     .index("by_status", ["status"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // VIRAL WAITLIST SYSTEM
+  // NeoBall pre-launch waitlist with referral mechanics
+  // ═══════════════════════════════════════════════════════════
+  waitlistEntries: defineTable({
+    // Contact
+    email: v.string(),
+
+    // Product preference
+    size: v.union(v.literal("6"), v.literal("7")),
+
+    // Referral system
+    referralCode: v.string(), // Unique code for sharing (nanoid)
+    referredBy: v.optional(v.string()), // referralCode of who referred them
+    referralCount: v.number(), // Number of people they've referred
+
+    // Position tracking
+    // Effective position = basePosition - (referralCount * 10)
+    basePosition: v.number(), // Original signup order (immutable)
+
+    // Source tracking
+    source: v.string(), // "neoball-waitlist"
+
+    // Timestamps
+    joinedAt: v.number(),
+
+    // Email sent tracking
+    confirmationSentAt: v.optional(v.number()),
+
+    // Metadata
+    metadata: v.optional(v.any()), // UTM params, user agent, etc.
+  })
+    .index("by_email", ["email"])
+    .index("by_referral_code", ["referralCode"])
+    .index("by_base_position", ["basePosition"])
+    .index("by_referral_count", ["referralCount"])
+    .index("by_joined", ["joinedAt"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // PLAYBOOK CONTENT FACTORY
+  // AI-generated content with expert voice iteration
+  // ═══════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────
+  // PLAYBOOK CONTENT TABLE
+  // Stores AI-generated pages for James/Adam review
+  // ─────────────────────────────────────────────────────────────
+  playbook_content: defineTable({
+    // Identity
+    slug: v.string(), // URL-safe slug: "barefoot-for-golf"
+
+    contentType: v.union(
+      v.literal("pillar"), // 2,500-4,000 word comprehensive guides
+      v.literal("topic"), // 1,200-2,000 word sub-topic pages
+      v.literal("qa"), // 800-1,200 word parent Q&A
+      v.literal("drill"), // 400-600 word drill cards
+    ),
+
+    // Ownership
+    author: v.union(v.literal("JAMES"), v.literal("ADAM"), v.literal("YP"), v.literal("TEAM_YP")),
+
+    // Categorization
+    category: v.string(), // "basketball", "barefoot-training", etc.
+    subcategory: v.optional(v.string()), // "shooting", "injury-rehab", etc.
+
+    // Target (for age/sport specific content)
+    targetAge: v.optional(v.number()), // 8, 9, 10, etc.
+    targetSport: v.optional(v.string()), // "golf", "soccer", etc.
+
+    // Content
+    title: v.string(),
+    frontmatter: v.any(), // All metadata (directAnswer, keywords, keyTakeaways, etc.)
+    body: v.string(), // MDX/Markdown content
+
+    // Workflow status
+    status: v.union(
+      v.literal("DRAFT"), // Just generated, awaiting review
+      v.literal("IN_REVIEW"), // Expert is looking at it
+      v.literal("CHANGES_REQUESTED"), // Expert wants edits
+      v.literal("APPROVED"), // Ready to export
+      v.literal("PUBLISHED"), // Exported to Git/Playbook
+    ),
+
+    // Version tracking
+    version: v.number(), // Current version number
+    parentVersion: v.optional(v.id("playbook_content")), // Previous version ID
+
+    // Iteration feedback
+    iterationNotes: v.optional(v.string()), // Voice feedback transcript
+    changesRequested: v.optional(v.string()), // What the expert wanted changed
+
+    // Approval tracking
+    approvedAt: v.optional(v.number()),
+    approvedBy: v.optional(v.string()), // "JAMES" or "ADAM"
+    approverNotes: v.optional(v.string()),
+
+    // Publishing
+    publishedAt: v.optional(v.number()),
+    gitPrUrl: v.optional(v.string()), // PR URL for tracking
+
+    // Generation metadata
+    generationModel: v.optional(v.string()), // "claude-sonnet-4-5-..."
+    promptTokens: v.optional(v.number()),
+    completionTokens: v.optional(v.number()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_author", ["author"])
+    .index("by_status", ["status"])
+    .index("by_author_status", ["author", "status"])
+    .index("by_category", ["category"])
+    .index("by_content_type", ["contentType"])
+    .index("by_created", ["createdAt"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // EXPERT VOICE EXAMPLES TABLE
+  // Stores approved/rejected examples for voice learning
+  // ─────────────────────────────────────────────────────────────
+  expert_voice_examples: defineTable({
+    // Which expert's voice
+    expert: v.union(v.literal("JAMES"), v.literal("ADAM"), v.literal("TEAM_YP")),
+
+    // Example type
+    exampleType: v.union(
+      v.literal("approved"), // Content they liked
+      v.literal("rejected"), // Content they didn't like
+    ),
+
+    // The content
+    contentSnippet: v.string(), // Up to ~500 chars of example text
+    fullContentId: v.optional(v.id("playbook_content")), // Reference to full content
+
+    // Context
+    category: v.string(), // For category-specific learning
+    contentType: v.string(), // "pillar", "topic", "qa", "drill"
+
+    // Feedback (for rejected)
+    feedback: v.optional(v.string()), // Why they rejected it
+    correctedVersion: v.optional(v.string()), // What they changed it to
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_expert", ["expert"])
+    .index("by_expert_type", ["expert", "exampleType"])
+    .index("by_expert_category", ["expert", "category"]),
 });

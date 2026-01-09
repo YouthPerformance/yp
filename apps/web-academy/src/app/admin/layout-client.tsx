@@ -12,7 +12,10 @@ import { ConvexClientProvider } from "@/components/providers";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProvider } from "@/contexts/UserContext";
 
-const NAV_ITEMS = [{ href: "/admin/campaigns", label: "Campaigns", icon: "📝" }];
+const NAV_ITEMS = [
+  { href: "/admin/campaigns", label: "Campaigns", icon: "📝" },
+  { href: "/admin/content-review", label: "Content Review", icon: "📚" },
+];
 
 interface AdminLayoutClientProps {
   children: React.ReactNode;
