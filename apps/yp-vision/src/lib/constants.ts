@@ -22,14 +22,11 @@ export const UNIT_ECONOMICS = {
 export const INVESTOR_QA: Record<string, string> = {
   retention:
     "We retain 88% of users after 3 months. Hardware owners churn 4x less than app-only users. The ball creates stickiness—it's sitting in their garage, reminding them to train.",
-  cac:
-    "Blended CAC is $42. Organic is $18 (TikTok virality), paid is $65. LTV is $380. We're profitable on first purchase and expand through subscriptions.",
-  moat:
-    "Three layers: 1) Hardware lock-in (they own the ball), 2) Data moat (millions of training sessions powering our AI), 3) Brand (Wolf Pack identity). Competitors can copy the ball, not the community.",
+  cac: "Blended CAC is $42. Organic is $18 (TikTok virality), paid is $65. LTV is $380. We're profitable on first purchase and expand through subscriptions.",
+  moat: "Three layers: 1) Hardware lock-in (they own the ball), 2) Data moat (millions of training sessions powering our AI), 3) Brand (Wolf Pack identity). Competitors can copy the ball, not the community.",
   market:
     "Youth sports training is a $40B market. We're targeting the 'serious recreational' segment—kids who want to go pro but whose families can't afford $200/hr trainers.",
-  team:
-    "Founded by D1 athletes and ex-Peloton engineers. We've built consumer hardware before and know how to create cult brands in fitness.",
+  team: "Founded by D1 athletes and ex-Peloton engineers. We've built consumer hardware before and know how to create cult brands in fitness.",
 };
 
 export const LIVE_TICKER_ITEMS = [

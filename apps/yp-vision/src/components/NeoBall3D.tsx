@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, Suspense } from "react";
+import { ContactShadows, Environment, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
 import { motion } from "framer-motion";
+import { Suspense, useRef } from "react";
 
 function Ball() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,12 +21,7 @@ function Ball() {
   return (
     <mesh ref={meshRef} castShadow>
       <sphereGeometry args={[1.5, 64, 64]} />
-      <meshStandardMaterial
-        color="#1a1a1a"
-        roughness={0.8}
-        metalness={0.1}
-        envMapIntensity={0.5}
-      />
+      <meshStandardMaterial color="#1a1a1a" roughness={0.8} metalness={0.1} envMapIntensity={0.5} />
     </mesh>
   );
 }
@@ -43,21 +38,9 @@ function Scene() {
         color="#00ff88"
         castShadow
       />
-      <spotLight
-        position={[-5, 3, -5]}
-        angle={0.3}
-        penumbra={1}
-        intensity={0.5}
-        color="#00d4ff"
-      />
+      <spotLight position={[-5, 3, -5]} angle={0.3} penumbra={1} intensity={0.5} color="#00d4ff" />
       <Ball />
-      <ContactShadows
-        position={[0, -1.8, 0]}
-        opacity={0.4}
-        scale={10}
-        blur={2}
-        far={4}
-      />
+      <ContactShadows position={[0, -1.8, 0]} opacity={0.4} scale={10} blur={2} far={4} />
       <Environment preset="night" />
       <OrbitControls
         enableZoom={false}
@@ -76,11 +59,7 @@ export function NeoBall3D() {
     <section className="section bg-wolf-black relative">
       {/* 3D Canvas */}
       <div className="absolute inset-0 z-0">
-        <Canvas
-          shadows
-          camera={{ position: [0, 0, 5], fov: 50 }}
-          className="touch-none"
-        >
+        <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }} className="touch-none">
           <Suspense fallback={null}>
             <Scene />
           </Suspense>
@@ -98,9 +77,7 @@ export function NeoBall3D() {
           <p className="text-wolf-neon font-mono text-sm tracking-[0.3em] uppercase mb-4">
             The Hardware
           </p>
-          <h2 className="font-display text-4xl md:text-6xl font-bold mb-4">
-            NEOBALL
-          </h2>
+          <h2 className="font-display text-4xl md:text-6xl font-bold mb-4">NEOBALL</h2>
           <p className="text-gray-400 text-lg md:text-xl max-w-xl mx-auto">
             The silent training ball that enters the home.
             <br />

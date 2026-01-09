@@ -1,0 +1,121 @@
+---
+/**
+ * Checkbox Component
+ * YP Design System - Playbook
+ *
+ * @prop label - Checkbox label
+ * @prop checked - Checked state
+ * @prop disabled - Disabled state
+ * @prop name - Input name
+ * @prop value - Input value
+ */
+
+interface Props {
+  label?: string;
+  checked?: boolean;
+  disabled?: boolean;
+  name?: string;
+  value?: string;
+  id?: string;
+  class?: string;
+}
+
+const {
+  label,
+  checked = false,
+  disabled = false,
+  name,
+  value,
+  id,
+  class: className = "",
+} = Astro.props;
+
+const inputId = id || `checkbox-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<label class={`checkbox-wrapper ${disabled ? 'disabled' : ''} ${className}`}>
+  <input
+    type="checkbox"
+    id={inputId}
+    name={name}
+    value={value}
+    checked={checked}
+    disabled={disabled}
+    class="checkbox-input"
+  />
+  <span class="checkbox-box">
+    <svg class="checkbox-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  {label && <span class="checkbox-label">{label}</span>}
+</label>
+
+<style>
+  .checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .checkbox-wrapper.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .checkbox-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .checkbox-box {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--border-default);
+    background-color: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 200ms ease;
+  }
+
+  .checkbox-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+    color: var(--bg-primary);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 200ms ease;
+  }
+
+  /* Hover */
+  .checkbox-wrapper:not(.disabled):hover .checkbox-box {
+    border-color: var(--accent-primary);
+  }
+
+  /* Focus */
+  .checkbox-input:focus-visible + .checkbox-box {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  /* Checked */
+  .checkbox-input:checked + .checkbox-box {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+  }
+
+  .checkbox-input:checked + .checkbox-box .checkbox-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .checkbox-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+</style>

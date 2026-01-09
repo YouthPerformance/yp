@@ -1,12 +1,12 @@
 ---
-import '@/styles/global.css';
+import "@/styles/global.css";
 
 interface Props {
   title: string;
   description: string;
   canonical?: string;
   ogImage?: string;
-  theme?: 'basketball' | 'barefoot';
+  theme?: "athlete" | "athlete-light" | "parent";
   author?: string;
   publishedDate?: Date;
   updatedDate?: Date;
@@ -17,20 +17,20 @@ const {
   title,
   description,
   canonical,
-  ogImage = '/images/og-default.jpg',
-  theme = 'basketball',
+  ogImage = "/images/og-default.jpg",
+  theme = "athlete",
   author,
   publishedDate,
   updatedDate,
   keywords = [],
 } = Astro.props;
 
-const siteUrl = 'https://playbook.youthperformance.com';
+const siteUrl = "https://playbook.youthperformance.com";
 const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString();
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme={theme}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,14 +62,50 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/favicon.png">
 
-  <!-- Fonts -->
+  <!-- Fonts - Bebas Neue + Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+  <!-- Theme Script - Runs before paint to prevent flash -->
+  <script is:inline>
+    (function() {
+      const savedTheme = localStorage.getItem('yp-theme');
+      const validThemes = ['athlete', 'athlete-light', 'parent'];
+      if (savedTheme && validThemes.includes(savedTheme)) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    })();
+  </script>
+
   <slot name="head" />
 </head>
-<body class={theme === 'barefoot' ? 'bg-earth' : 'bg-paper'}>
+<body>
   <slot />
+
+  <!-- Theme Switcher Script -->
+  <script is:inline>
+    window.setTheme = function(theme) {
+      const validThemes = ['athlete', 'athlete-light', 'parent'];
+      if (validThemes.includes(theme)) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('yp-theme', theme);
+        // Dispatch custom event for components to react
+        window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+      }
+    };
+
+    window.getTheme = function() {
+      return document.documentElement.getAttribute('data-theme') || 'athlete';
+    };
+
+    window.cycleTheme = function() {
+      const themes = ['athlete', 'athlete-light', 'parent'];
+      const current = window.getTheme();
+      const currentIndex = themes.indexOf(current);
+      const nextIndex = (currentIndex + 1) % themes.length;
+      window.setTheme(themes[nextIndex]);
+    };
+  </script>
 
   <slot name="scripts" />
 </body>

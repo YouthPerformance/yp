@@ -1,0 +1,47 @@
+{
+  "title": "Fix the 'Chicken Wing' (Elbow Flare)",
+  "slug": "chicken-wing-fix",
+  "category": "shooting",
+  "cluster": "shooting-mechanics",
+  "sport": "basketball",
+  "author": "adam-harrington",
+  "ageMin": 8,
+  "ageMax": 16,
+  "duration": "5 min",
+  "reps": "10 shots x 3 sets",
+  "difficulty": "beginner",
+  "tags": ["shooting", "form-correction", "mechanics", "elbow-flare", "chicken-wing"],
+  "description": "The #1 mechanical flaw in youth shooting. Fix the flaring elbow to straighten your shot path and increase accuracy.",
+  "coachNote": "Adam's Take: Your elbow points where the ball goes. If it points right, you miss right. We fix this by shooting 'one-handed form' close to a wall. The wall doesn't lie—it gives you instant feedback that no coach can replicate.",
+  "steps": [
+    {
+      "title": "Wall Shooting (Form)",
+      "instruction": "Stand 6 inches from a wall with your shooting side facing it. Practice your shooting motion—if your elbow flares, you'll hit the wall. The wall forces the tuck.",
+      "durationSeconds": 60
+    },
+    {
+      "title": "The Guide Hand Shadow",
+      "instruction": "Shadow shoot without a ball. Focus ONLY on your elbow staying under your wrist throughout the entire motion. Freeze at the top of your release and check your elbow position.",
+      "durationSeconds": 60
+    },
+    {
+      "title": "One-Hand Form Shooting",
+      "instruction": "Close range, one hand only (no guide hand). Shoot 10 reps focusing on keeping your elbow pointed at the rim. No guide hand = pure shooting mechanics.",
+      "durationSeconds": 90
+    },
+    {
+      "title": "Feet Position Check",
+      "instruction": "Turn your feet 10-15 degrees toward your shooting side (right-handers turn slightly right). This naturally aligns your hip and shoulder, reducing elbow flare.",
+      "durationSeconds": 30
+    }
+  ],
+  "coachingCues": [
+    "Elbow should be under the ball, not beside it",
+    "Your shooting hand index finger should be in the CENTER of the ball",
+    "A slight foot turn (10-15 degrees) is legal and helps alignment",
+    "Check your guide hand—if the thumb is pushing, the elbow will flare"
+  ],
+  "commonMistake": "Keeping feet perfectly square to the basket",
+  "mistakeFix": "Turn your lead foot 10-15 degrees toward your shooting hand side. This opens your hip and naturally brings the elbow in.",
+  "relatedDrills": ["gooseneck-release", "one-hand-form-shooting"]
+}

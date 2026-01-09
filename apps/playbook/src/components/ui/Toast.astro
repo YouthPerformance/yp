@@ -1,0 +1,120 @@
+---
+/**
+ * Toast Component
+ * YP Design System - Playbook
+ *
+ * Static toast - use with JS to show/hide
+ * Or use the ToastContainer for auto-dismiss toasts
+ *
+ * @prop variant - 'success' | 'warning' | 'error' | 'info'
+ * @prop message - Toast message
+ * @prop dismissible - Show dismiss button
+ * @prop id - Toast ID for JS targeting
+ */
+
+interface Props {
+  variant?: "success" | "warning" | "error" | "info";
+  message: string;
+  dismissible?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const { variant = "info", message, dismissible = true, id, class: className = "" } = Astro.props;
+
+// Variant styles
+const variantStyles = {
+  success: {
+    bg: "bg-[var(--state-success)]",
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  },
+  warning: {
+    bg: "bg-[var(--state-warning)]",
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 7V10M10 13H10.01M3.07 17H16.93C18.14 17 18.93 15.71 18.33 14.64L11.4 2.72C10.8 1.66 9.2 1.66 8.6 2.72L1.67 14.64C1.07 15.71 1.86 17 3.07 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  },
+  error: {
+    bg: "bg-[var(--state-error)]",
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 7V10M10 13H10.01M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  },
+  info: {
+    bg: "bg-[var(--accent-primary)]",
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 14V10M10 6H10.01M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  },
+};
+
+const style = variantStyles[variant];
+const textColor = variant === "warning" ? "text-black" : "text-white";
+---
+
+<div
+  id={id}
+  class={`toast ${style.bg} ${textColor} ${className}`}
+  role="alert"
+  aria-live="polite"
+>
+  <span class="toast-icon" set:html={style.icon} />
+  <span class="toast-message">{message}</span>
+  {dismissible && (
+    <button
+      type="button"
+      class="toast-dismiss"
+      aria-label="Dismiss"
+      onclick={id ? `document.getElementById('${id}').remove()` : 'this.parentElement.remove()'}
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  )}
+</div>
+
+<style>
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    animation: toast-in 300ms ease;
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .toast-icon {
+    flex-shrink: 0;
+    display: flex;
+  }
+
+  .toast-message {
+    flex: 1;
+  }
+
+  .toast-dismiss {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: transparent;
+    border: none;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 200ms ease;
+  }
+
+  .toast-dismiss:hover {
+    opacity: 1;
+  }
+</style>

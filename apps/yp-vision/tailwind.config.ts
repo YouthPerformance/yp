@@ -23,9 +23,9 @@ const config: Config = {
         body: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       animation: {
-        "ticker": "ticker 30s linear infinite",
+        ticker: "ticker 30s linear infinite",
         "fade-up": "fade-up 0.8s ease-out forwards",
-        "glow": "glow 2s ease-in-out infinite alternate",
+        glow: "glow 2s ease-in-out infinite alternate",
       },
       keyframes: {
         ticker: {

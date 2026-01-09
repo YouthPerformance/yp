@@ -2,6 +2,8 @@
 /**
  * ExpertBox - Author attribution for E-E-A-T
  * Shows the expert's credentials prominently.
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Props {
   name: string;
@@ -9,32 +11,33 @@ interface Props {
   tagline?: string;
   credentials: string;
   badgeText?: string;
-  theme?: 'basketball' | 'barefoot';
+  class?: string;
 }
 
-const { name, initials, tagline, credentials, badgeText = 'Expert Author', theme = 'basketball' } = Astro.props;
-
-const avatarGradient = theme === 'barefoot'
-  ? 'from-moss to-bark'
-  : 'from-trust-blue to-ink';
-
-const badgeColor = theme === 'barefoot' ? 'bg-copper' : 'bg-gold';
+const {
+  name,
+  initials,
+  tagline,
+  credentials,
+  badgeText = "Expert Author",
+  class: className = "",
+} = Astro.props;
 ---
 
-<div class="expert-box">
-  <div class={`w-[72px] h-[72px] rounded-full bg-gradient-to-br ${avatarGradient} flex items-center justify-center font-display font-bold text-2xl text-white flex-shrink-0`}>
+<div class={`expert-box ${className}`}>
+  <div class="expert-avatar flex items-center justify-center font-bebas text-display-md text-black flex-shrink-0">
     {initials}
   </div>
   <div class="flex-1">
-    <div class="font-display font-semibold text-lg text-bark mb-0.5">{name}</div>
+    <div class="font-bebas text-display-xs mb-0.5" style="color: var(--text-primary);">{name}</div>
     {tagline && (
-      <div class="font-mono text-[0.7rem] text-copper uppercase tracking-wide mb-0.5">
+      <div class="font-mono text-label uppercase tracking-wide mb-0.5" style="color: var(--accent-primary);">
         {tagline}
       </div>
     )}
-    <div class="text-sm text-bark-muted leading-snug">{credentials}</div>
+    <div class="text-body-sm leading-snug" style="color: var(--text-secondary);">{credentials}</div>
   </div>
-  <span class={`${badgeColor} text-white px-3 py-1 rounded-full font-mono text-[0.65rem] uppercase tracking-wide whitespace-nowrap`}>
+  <span class="expert-badge">
     {badgeText}
   </span>
 </div>

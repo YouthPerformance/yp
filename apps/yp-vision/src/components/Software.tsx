@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle, Flame, Play, Trophy } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Play, CheckCircle, Flame, Trophy } from "lucide-react";
 
 const WORKOUTS = [
   { name: "Vertical Jump 101", duration: "12 min", xp: 150 },
@@ -28,9 +28,7 @@ export function Software() {
           <p className="text-wolf-blue font-mono text-sm tracking-[0.3em] uppercase mb-4">
             The Software
           </p>
-          <h2 className="font-display text-4xl md:text-6xl font-bold mb-4">
-            YP ACADEMY
-          </h2>
+          <h2 className="font-display text-4xl md:text-6xl font-bold mb-4">YP ACADEMY</h2>
           <p className="text-gray-400 text-lg max-w-md">
             Hardware enters the home.
             <br />
@@ -79,7 +77,9 @@ export function Software() {
                 </div>
 
                 {/* Today's Stack */}
-                <p className="text-gray-400 text-xs uppercase tracking-wider mb-3">Today&apos;s Stack</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wider mb-3">
+                  Today&apos;s Stack
+                </p>
 
                 <div className="space-y-2">
                   {WORKOUTS.map((workout, i) => (
@@ -99,7 +99,9 @@ export function Software() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-white text-sm font-medium">{workout.name}</p>
-                          <p className="text-gray-500 text-xs">{workout.duration} • {workout.xp} XP</p>
+                          <p className="text-gray-500 text-xs">
+                            {workout.duration} • {workout.xp} XP
+                          </p>
                         </div>
                         {activeWorkout === i && isPlaying ? (
                           <CheckCircle className="w-5 h-5 text-wolf-neon" />

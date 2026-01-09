@@ -1,6 +1,8 @@
 ---
 /**
  * FAQSection - Collapsible FAQ list for AEO
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface FAQ {
   question: string;
@@ -11,17 +13,16 @@ interface Props {
   faqs: FAQ[];
   title?: string;
   subtitle?: string;
-  theme?: 'basketball' | 'barefoot';
+  class?: string;
 }
 
-const { faqs, title = 'Frequently Asked Questions', subtitle, theme = 'basketball' } = Astro.props;
-const bgColor = theme === 'barefoot' ? 'bg-earth-dark' : 'bg-paper-dark';
+const { faqs, title = "Frequently Asked Questions", subtitle, class: className = "" } = Astro.props;
 ---
 
-<section id="faq" class={`${bgColor} py-12 px-6 mt-8`}>
-  <div class="text-center max-w-[600px] mx-auto mb-8">
-    <h2 class="font-display text-2xl mb-2">{title}</h2>
-    {subtitle && <p class="text-ink-muted text-[0.95rem]">{subtitle}</p>}
+<section id="faq" class={`py-6 px-3 mt-4 rounded-xl ${className}`} style="background-color: var(--bg-tertiary);">
+  <div class="text-center max-w-[600px] mx-auto mb-4">
+    <h2 class="font-bebas text-display-md mb-1" style="color: var(--text-primary);">{title}</h2>
+    {subtitle && <p class="text-body-sm" style="color: var(--text-muted);">{subtitle}</p>}
   </div>
 
   <div class="max-w-[700px] mx-auto">
@@ -29,7 +30,7 @@ const bgColor = theme === 'barefoot' ? 'bg-earth-dark' : 'bg-paper-dark';
       <details class="faq-item group">
         <summary class="faq-question list-none">
           <span class="flex-1">{faq.question}</span>
-          <span class="font-mono text-xl text-gold group-open:rotate-45 transition-transform">+</span>
+          <span class="font-mono text-display-xs group-open:rotate-45 transition-transform" style="color: var(--accent-gold);">+</span>
         </summary>
         <div class="faq-answer">{faq.answer}</div>
       </details>

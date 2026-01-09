@@ -1,6 +1,8 @@
 ---
 /**
  * RelatedGrid - Related content links at bottom of articles
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface RelatedItem {
   title: string;
@@ -12,25 +14,26 @@ interface RelatedItem {
 interface Props {
   items: RelatedItem[];
   title?: string;
+  class?: string;
 }
 
-const { items, title = 'Continue Reading' } = Astro.props;
+const { items, title = "Continue Reading", class: className = "" } = Astro.props;
 ---
 
-<section class="py-12 px-6 bg-white">
+<section class={`py-6 px-3 rounded-xl ${className}`} style="background-color: var(--bg-secondary);">
   <div class="container-article">
-    <div class="font-mono text-xs uppercase tracking-widest text-ink-muted mb-6">
+    <div class="font-mono text-label uppercase tracking-widest mb-3" style="color: var(--text-muted);">
       {title}
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[900px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-[900px] mx-auto">
       {items.map((item) => (
         <a href={item.url} class="related-card">
-          <div class="w-12 h-12 bg-gold rounded-md flex items-center justify-center text-2xl flex-shrink-0">
+          <div class="w-8 h-8 rounded-md flex items-center justify-center text-display-xs flex-shrink-0" style="background: var(--gradient-gold);">
             {item.icon}
           </div>
           <div>
-            <h3 class="font-display text-[0.95rem] mb-0.5">{item.title}</h3>
-            <p class="text-sm text-ink-muted">{item.description}</p>
+            <h3 class="font-bebas text-body-md mb-0.5" style="color: var(--text-primary);">{item.title}</h3>
+            <p class="text-body-sm" style="color: var(--text-muted);">{item.description}</p>
           </div>
         </a>
       ))}

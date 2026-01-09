@@ -1,28 +1,25 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Hero } from "@/components/Hero";
-import { Software } from "@/components/Software";
-import { Metrics } from "@/components/Metrics";
 import { ChatDemo } from "@/components/ChatDemo";
-import { Financials } from "@/components/Financials";
 import { CTA } from "@/components/CTA";
+import { Financials } from "@/components/Financials";
+import { Hero } from "@/components/Hero";
+import { Metrics } from "@/components/Metrics";
+import { Software } from "@/components/Software";
 
 // Dynamic import for 3D component to avoid SSR issues
-const NeoBall3D = dynamic(
-  () => import("@/components/NeoBall3D").then((mod) => mod.NeoBall3D),
-  {
-    ssr: false,
-    loading: () => (
-      <section className="section bg-wolf-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-2 border-wolf-neon border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500 text-sm">Loading 3D Experience...</p>
-        </div>
-      </section>
-    ),
-  }
-);
+const NeoBall3D = dynamic(() => import("@/components/NeoBall3D").then((mod) => mod.NeoBall3D), {
+  ssr: false,
+  loading: () => (
+    <section className="section bg-wolf-black flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-2 border-wolf-neon border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-gray-500 text-sm">Loading 3D Experience...</p>
+      </div>
+    </section>
+  ),
+});
 
 export default function Home() {
   return (

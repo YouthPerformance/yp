@@ -1,42 +1,255 @@
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLOBAL CSS - YouthPerformance Playbook
+   YP Design System v2.0 - Wolf Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Google Fonts - Bebas Neue (Display) + Inter (Body) */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   THEME VARIABLES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ATHLETE DARK (Default) - The Wolf's Domain */
+:root {
+  /* Background */
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #141414;
+  --bg-elevated: #1a1a1a;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-tertiary: #737373;
+  --text-muted: #525252;
+
+  /* Border */
+  --border-default: #262626;
+  --border-subtle: #1a1a1a;
+  --border-strong: #404040;
+
+  /* Accent - Wolf Cyan */
+  --accent-primary: #00f6e0;
+  --accent-primary-hover: #00d4c4;
+  --accent-primary-rgb: 0, 246, 224;
+
+  /* Accent - Spotlight Gold */
+  --accent-gold: #fbbf24;
+  --accent-gold-hover: #f59e0b;
+  --accent-gold-rgb: 251, 191, 36;
+
+  /* State */
+  --state-success: #22c55e;
+  --state-warning: #f59e0b;
+  --state-error: #ef4444;
+  --state-info: #3b82f6;
+
+  /* Glass */
+  --glass-bg: rgba(0, 0, 0, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Gradients */
+  --gradient-cyan: linear-gradient(135deg, #00f6e0 0%, #00d4c4 100%);
+  --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-dark: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
+}
+
+/* ATHLETE LIGHT - Warm White Training */
+[data-theme="athlete-light"] {
+  /* Background */
+  --bg-primary: #fffdf8;
+  --bg-secondary: #f5f3ee;
+  --bg-tertiary: #ebe8e1;
+  --bg-elevated: #ffffff;
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-secondary: #525252;
+  --text-tertiary: #737373;
+  --text-muted: #a3a3a3;
+
+  /* Border */
+  --border-default: #e5e2db;
+  --border-subtle: #ebe8e1;
+  --border-strong: #d4d1ca;
+
+  /* Accent - Deep Cyan for contrast */
+  --accent-primary: #0891b2;
+  --accent-primary-hover: #0e7490;
+  --accent-primary-rgb: 8, 145, 178;
+
+  /* Accent - Rich Gold */
+  --accent-gold: #d97706;
+  --accent-gold-hover: #b45309;
+  --accent-gold-rgb: 217, 119, 6;
+
+  /* State */
+  --state-success: #16a34a;
+  --state-warning: #d97706;
+  --state-error: #dc2626;
+  --state-info: #2563eb;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.05);
+
+  /* Gradients */
+  --gradient-cyan: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+  --gradient-gold: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --gradient-dark: linear-gradient(180deg, #f5f3ee 0%, #fffdf8 100%);
+}
+
+/* PARENT MODE - Calm Professional */
+[data-theme="parent"] {
+  /* Background */
+  --bg-primary: #fafafa;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e5e5e5;
+  --bg-elevated: #ffffff;
+
+  /* Text */
+  --text-primary: #171717;
+  --text-secondary: #404040;
+  --text-tertiary: #737373;
+  --text-muted: #a3a3a3;
+
+  /* Border */
+  --border-default: #e5e5e5;
+  --border-subtle: #f5f5f5;
+  --border-strong: #d4d4d4;
+
+  /* Accent - Trust Blue */
+  --accent-primary: #2563eb;
+  --accent-primary-hover: #1d4ed8;
+  --accent-primary-rgb: 37, 99, 235;
+
+  /* Accent - Warm Amber */
+  --accent-gold: #d97706;
+  --accent-gold-hover: #b45309;
+  --accent-gold-rgb: 217, 119, 6;
+
+  /* State */
+  --state-success: #16a34a;
+  --state-warning: #d97706;
+  --state-error: #dc2626;
+  --state-info: #2563eb;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.05);
+
+  /* Gradients */
+  --gradient-cyan: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --gradient-gold: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --gradient-dark: linear-gradient(180deg, #f5f5f5 0%, #fafafa 100%);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
+
 @layer base {
   html {
     @apply scroll-smooth;
+    color-scheme: dark;
+  }
+
+  [data-theme="athlete-light"] html,
+  [data-theme="parent"] html {
+    color-scheme: light;
   }
 
   body {
-    @apply font-body text-[19px] leading-relaxed text-bark bg-earth;
+    @apply font-inter text-body-md antialiased;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-semibold;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bebas tracking-wide;
+    color: var(--text-primary);
+  }
+
+  h1 {
+    @apply text-display-xl;
+  }
+  h2 {
+    @apply text-display-lg;
+  }
+  h3 {
+    @apply text-display-md;
+  }
+  h4 {
+    @apply text-display-sm;
+  }
+  h5 {
+    @apply text-display-xs;
   }
 
   a {
-    @apply transition-colors duration-200;
+    color: var(--accent-primary);
+    @apply transition-colors duration-normal;
+  }
+
+  a:hover {
+    color: var(--accent-primary-hover);
+  }
+
+  ::selection {
+    background-color: rgba(var(--accent-primary-rgb), 0.3);
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENT STYLES
+   ───────────────────────────────────────────────────────────────────────────── */
 
 @layer components {
   /* Container */
   .container-article {
-    @apply max-w-[800px] mx-auto px-6;
+    @apply max-w-article mx-auto px-3;
   }
 
-  /* Direct Answer Box - THE AEO MONEY SHOT */
+  .container-content {
+    @apply max-w-content mx-auto px-3;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     DIRECT ANSWER - THE AEO MONEY SHOT
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .direct-answer {
-    @apply bg-white border-l-4 border-gold px-6 py-5 mb-6 text-lg leading-relaxed shadow-card;
+    @apply px-3 py-2.5 mb-3 text-body-lg leading-relaxed rounded-lg;
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--accent-primary);
   }
 
-  /* Key Takeaways */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     KEY TAKEAWAYS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .key-takeaways {
-    @apply bg-trust-blue text-white p-6 rounded-md mb-6;
+    @apply p-3 rounded-lg mb-3;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--accent-primary-rgb), 0.15) 0%,
+      rgba(var(--accent-primary-rgb), 0.05) 100%
+    );
+    border: 1px solid rgba(var(--accent-primary-rgb), 0.2);
   }
 
   .key-takeaways ul {
@@ -44,137 +257,383 @@
   }
 
   .key-takeaways li {
-    @apply relative pl-6 mb-2 text-[0.95rem];
+    @apply relative pl-3 mb-1 text-body-sm;
+    color: var(--text-primary);
   }
 
   .key-takeaways li::before {
-    content: '✓';
-    @apply absolute left-0 text-gold-light font-bold;
+    content: "✓";
+    @apply absolute left-0 font-bold;
+    color: var(--accent-gold);
   }
 
-  /* Expert Box */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     EXPERT BOX
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .expert-box {
-    @apply flex items-center gap-4 p-4 bg-white rounded-md shadow-card;
+    @apply flex items-center gap-2 p-2 rounded-lg;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-default);
   }
 
-  /* Coach Voice Callout */
+  .expert-avatar {
+    @apply w-12 h-12 rounded-full;
+    background: var(--gradient-cyan);
+  }
+
+  .expert-badge {
+    @apply text-label uppercase tracking-widest px-1 py-0.5 rounded;
+    background-color: var(--accent-gold);
+    color: #000000;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     COACH VOICE CALLOUT
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .coach-voice {
-    @apply border-l-4 px-6 py-5 my-6 rounded-r-md;
+    @apply px-3 py-2.5 my-3 rounded-r-lg;
+    border-left: 4px solid var(--accent-primary);
+    background: linear-gradient(
+      135deg,
+      rgba(var(--accent-primary-rgb), 0.1) 0%,
+      rgba(var(--accent-gold-rgb), 0.05) 100%
+    );
   }
 
-  .coach-voice.barefoot {
-    @apply border-moss bg-gradient-to-br from-moss/10 to-copper/5;
+  .coach-voice blockquote {
+    @apply text-body-lg italic;
+    color: var(--text-primary);
   }
 
-  .coach-voice.basketball {
-    @apply border-gold bg-gradient-to-br from-gold/10 to-action-orange/5;
+  .coach-voice cite {
+    @apply text-body-sm not-italic block mt-1;
+    color: var(--text-secondary);
   }
 
-  /* Section Header */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SECTION HEADER
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .section-header {
-    @apply pt-8 pb-4 border-b-2 border-gold mb-6;
+    @apply pt-4 pb-2 mb-3;
+    border-bottom: 2px solid var(--accent-gold);
   }
 
   .chapter-label {
-    @apply font-mono text-[0.7rem] uppercase tracking-widest text-gold mb-2;
+    @apply font-mono text-label uppercase tracking-widest mb-1;
+    color: var(--accent-primary);
   }
 
-  /* Drill Card */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     DRILL CARD
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .drill-card {
-    @apply bg-white rounded-lg shadow-card overflow-hidden mb-6 border border-black/5;
+    @apply rounded-xl overflow-hidden mb-3;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-default);
   }
 
   .drill-header {
-    @apply flex items-center gap-4 px-5 py-4 bg-paper-dark border-b border-black/5;
+    @apply flex items-center gap-2 px-2.5 py-2;
+    background-color: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-default);
   }
 
   .drill-number {
-    @apply w-11 h-11 rounded-md flex items-center justify-center font-display font-bold text-lg text-white flex-shrink-0;
+    @apply w-5 h-5 rounded-md flex items-center justify-center font-bebas text-body-lg flex-shrink-0;
+    background: var(--gradient-cyan);
+    color: #000000;
   }
 
   .drill-body {
-    @apply p-5;
+    @apply p-2.5;
+  }
+
+  .drill-step {
+    @apply flex items-start gap-1.5 mb-1.5;
+  }
+
+  .drill-step-num {
+    @apply w-3 h-3 rounded-full flex items-center justify-center text-body-xs font-bold flex-shrink-0;
+    background-color: var(--accent-gold);
+    color: #000000;
   }
 
   .drill-footer {
-    @apply flex justify-between items-center px-5 py-3 bg-paper-dark border-t border-black/5 text-sm;
+    @apply flex justify-between items-center px-2.5 py-1.5 text-body-sm;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--glass-border);
   }
 
-  /* Age Badges */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     AGE BADGES
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .age-badge {
-    @apply inline-block px-2 py-1 rounded-sm font-mono text-[0.7rem] font-medium uppercase text-white;
+    @apply inline-block px-1 py-0.5 rounded font-mono text-label font-medium uppercase text-white;
   }
 
-  .age-badge.age-7-9 { @apply bg-age-7-9; }
-  .age-badge.age-10-13 { @apply bg-age-10-13; }
-  .age-badge.age-14-18 { @apply bg-age-14-18; }
+  .age-badge.age-7-9 {
+    background-color: #7c3aed;
+  }
+  .age-badge.age-10-13 {
+    background-color: #2563eb;
+  }
+  .age-badge.age-14-18 {
+    background-color: #059669;
+  }
 
-  /* Safety Box */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SAFETY BOX
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .safety-box {
-    @apply border-l-4 border-warning px-6 py-5 my-6 rounded-r-md bg-gradient-to-br from-warning/10 to-danger/5;
+    @apply px-3 py-2.5 my-3 rounded-r-lg;
+    border-left: 4px solid var(--state-warning);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
   }
 
-  /* CTA Block */
+  .safety-title {
+    @apply flex items-center gap-1 font-bebas text-display-xs mb-1;
+    color: var(--state-warning);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CTA BLOCK
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .cta-block {
-    @apply text-white py-12 px-6 text-center;
-  }
-
-  .cta-block.basketball {
-    @apply bg-gradient-to-br from-trust-blue to-ink;
-  }
-
-  .cta-block.barefoot {
-    @apply bg-gradient-to-br from-moss to-bark;
+    @apply py-6 px-3 text-center rounded-xl;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--accent-primary-rgb), 0.2) 0%,
+      rgba(var(--accent-gold-rgb), 0.1) 100%
+    );
+    border: 1px solid rgba(var(--accent-primary-rgb), 0.3);
   }
 
   .cta-button {
-    @apply inline-flex items-center gap-2 px-8 py-4 rounded-md font-mono text-sm uppercase tracking-wide text-white transition-all duration-200;
+    @apply inline-flex items-center gap-1 px-4 py-2 rounded-lg font-inter font-semibold text-body-md uppercase tracking-wide text-black;
+    @apply transition-all duration-normal;
+    background: var(--gradient-cyan);
   }
 
-  .cta-button.green {
-    @apply bg-action-green hover:bg-action-green-hover hover:-translate-y-0.5 hover:shadow-lg;
+  .cta-button:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.4);
   }
 
-  .cta-button.orange {
-    @apply bg-action-orange hover:bg-action-orange-hover hover:-translate-y-0.5 hover:shadow-lg;
+  .cta-button.gold {
+    background: var(--gradient-gold);
   }
 
-  /* FAQ */
+  .cta-button.gold:hover {
+    box-shadow: 0 0 20px rgba(var(--accent-gold-rgb), 0.4);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     FAQ
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .faq-item {
-    @apply bg-white rounded-md mb-3 shadow-card overflow-hidden;
+    @apply rounded-lg mb-1.5 overflow-hidden;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-default);
   }
 
   .faq-question {
-    @apply px-5 py-4 font-medium flex items-center justify-between gap-4 cursor-pointer;
+    @apply px-2.5 py-2 font-semibold flex items-center justify-between gap-2 cursor-pointer;
+    color: var(--text-primary);
+  }
+
+  .faq-question:hover {
+    background-color: var(--bg-tertiary);
   }
 
   .faq-answer {
-    @apply px-5 pb-5 text-ink-soft text-[0.95rem] leading-relaxed;
+    @apply px-2.5 pb-2.5 text-body-sm leading-relaxed;
+    color: var(--text-secondary);
   }
 
-  /* Tables */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TABLES
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .content-table {
-    @apply w-full border-collapse my-6 text-[0.9rem];
+    @apply w-full border-collapse my-3 text-body-sm;
   }
 
   .content-table th {
-    @apply bg-trust-blue text-white py-3 px-4 text-left font-mono text-xs uppercase tracking-wide;
+    @apply py-1.5 px-2 text-left font-mono text-label uppercase tracking-wide;
+    background: var(--gradient-cyan);
+    color: #000000;
   }
 
   .content-table td {
-    @apply py-3 px-4 border-b border-black/5 align-top;
+    @apply py-1.5 px-2 align-top;
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-primary);
   }
 
   .content-table tr:nth-child(even) {
-    @apply bg-paper-dark;
+    background-color: var(--bg-tertiary);
   }
 
-  /* Related Cards */
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     RELATED CARDS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .related-card {
-    @apply flex items-center gap-4 p-4 bg-paper-dark rounded-md no-underline text-inherit transition-all duration-200;
+    @apply flex items-center gap-2 p-2 rounded-lg no-underline;
+    @apply transition-all duration-normal;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
   }
 
   .related-card:hover {
-    @apply bg-paper shadow-card -translate-y-0.5;
+    @apply -translate-y-0.5;
+    background-color: var(--bg-elevated);
+    box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.2);
+    border-color: var(--accent-primary);
   }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   UTILITY CLASSES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer utilities {
+  /* Glass Morphism */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-strong {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Glow Effects */
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.3);
+  }
+
+  .glow-cyan-strong {
+    box-shadow: 0 0 30px rgba(var(--accent-primary-rgb), 0.5);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px rgba(var(--accent-gold-rgb), 0.3);
+  }
+
+  .glow-gold-strong {
+    box-shadow: 0 0 30px rgba(var(--accent-gold-rgb), 0.5);
+  }
+
+  /* Text Gradients */
+  .text-gradient-cyan {
+    background: var(--gradient-cyan);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Border Accent */
+  .border-accent {
+    border-color: var(--accent-primary);
+  }
+
+  .border-gold {
+    border-color: var(--accent-gold);
+  }
+
+  /* Hover Lift */
+  .hover-lift {
+    @apply transition-transform duration-normal;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-0.5;
+  }
+
+  /* Wolf Eyes Pulse (Easter Egg) */
+  .wolf-pulse {
+    animation: wolf-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes wolf-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(var(--accent-primary-rgb), 0.6);
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PROSE / MARKDOWN CONTENT
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.prose {
+  color: var(--text-primary);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--text-primary);
+  @apply font-bebas;
+}
+
+.prose p {
+  color: var(--text-secondary);
+}
+
+.prose strong {
+  color: var(--text-primary);
+}
+
+.prose a {
+  color: var(--accent-primary);
+}
+
+.prose a:hover {
+  color: var(--accent-primary-hover);
+}
+
+.prose ul,
+.prose ol {
+  color: var(--text-secondary);
+}
+
+.prose li::marker {
+  color: var(--accent-gold);
+}
+
+.prose blockquote {
+  border-left-color: var(--accent-primary);
+  color: var(--text-secondary);
+}
+
+.prose code {
+  @apply font-mono text-body-sm px-1 py-0.5 rounded;
+  background-color: var(--bg-tertiary);
+  color: var(--accent-primary);
+}
+
+.prose pre {
+  @apply rounded-lg;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.prose hr {
+  border-color: var(--border-default);
 }

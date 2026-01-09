@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { METRICS, LIVE_TICKER_ITEMS } from "@/lib/constants";
+import { Globe, Repeat, TrendingUp, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { LIVE_TICKER_ITEMS, METRICS } from "@/lib/constants";
 import { formatCurrency, formatNumber } from "@/lib/utils";
-import { TrendingUp, Users, Repeat, Globe } from "lucide-react";
 
 function AnimatedCounter({
   value,
@@ -46,8 +46,8 @@ function AnimatedCounter({
     format === "currency"
       ? formatCurrency(count)
       : format === "percent"
-      ? `${count}%`
-      : formatNumber(count);
+        ? `${count}%`
+        : formatNumber(count);
 
   return (
     <span ref={ref}>

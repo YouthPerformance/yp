@@ -1,0 +1,482 @@
+---
+// SEO / Frontmatter
+const title = "Bulletproof Ankles: The NBA Pro Stability Protocol";
+const description =
+  "The exact stability routine used to keep elite athletes on the floor. Build unshakeable ankle strength with James Scott's Pro Protocol.";
+const canonical =
+  "https://playbook.youthperformance.com/barefoot-training/injury-rehab/bulletproof-ankles/";
+
+// FAQs
+const faqs = [
+  {
+    question: "How long until I see results?",
+    answer:
+      "Most athletes notice improved stability within 2-3 weeks of consistent practice. Measurable strength gains typically appear around 4-6 weeks. Full ankle resilience takes 8-12 weeks of progressive work.",
+  },
+  {
+    question: "Is this safe for youth athletes?",
+    answer:
+      "Yes, when done progressively. The protocol scales by age and ability. Start with Level 1 exercises and progress only when you can complete them with perfect form. Stop immediately if there's any pain.",
+  },
+  {
+    question: "Can I do this if I've sprained my ankle before?",
+    answer:
+      "Yes - this protocol is specifically designed to rebuild ankle stability after injury. However, wait until acute symptoms (swelling, sharp pain) have resolved. Consult a healthcare provider if you're unsure.",
+  },
+  {
+    question: "How often should I do this protocol?",
+    answer:
+      "3-4 times per week for optimal results. The full protocol takes 8-12 minutes. You can integrate it into your warm-up or do it as a standalone session.",
+  },
+  {
+    question: "Do I need any equipment?",
+    answer:
+      "No equipment required for Level 1. A resistance band and balance pad are helpful for Levels 2-3 but not essential - you can progress with bodyweight only.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  theme="athlete-dark"
+>
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       HERO SECTION - "The Lab" (bpa1.jpeg)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="relative w-full h-[60vh] min-h-[500px] overflow-hidden bg-black">
+    <!-- Background Image -->
+    <img
+      src="/images/academy/bpa1.jpeg"
+      alt="James Scott treating Jimmy Butler's ankle in private training session"
+      class="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-80"
+      loading="eager"
+    />
+
+    <!-- Radial Vignette -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_120%)]"></div>
+
+    <!-- Bottom Gradient Scrim -->
+    <div class="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black via-black/90 to-transparent"></div>
+
+    <!-- Content Overlay -->
+    <div class="absolute bottom-0 left-0 w-full p-6 pb-8 z-10 flex flex-col items-start gap-4">
+      <!-- Protocol Badge -->
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full">
+        <div class="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse"></div>
+        <span class="text-[0.65rem] text-white tracking-[0.15em] uppercase font-mono">NBA PRO PROTOCOL</span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="font-bebas text-[3.5rem] md:text-[5rem] text-white leading-[0.9] drop-shadow-2xl tracking-wide">
+        BULLETPROOF<br/>
+        <span class="text-accent-primary">ANKLES</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <div class="max-w-[85%] md:max-w-[60%]">
+        <p class="text-body-md md:text-body-lg text-gray-300">
+          The exact stability routine used to keep Jimmy Butler on the floor.
+          <span class="text-white font-semibold">Build the base.</span>
+        </p>
+      </div>
+
+      <!-- Metadata Tag -->
+      <div class="flex items-center gap-2 text-[0.6rem] font-mono text-gray-500 tracking-wider">
+        <span>JB x JS</span>
+        <span class="text-accent-primary">|</span>
+        <span>PRIVATE SESSION</span>
+      </div>
+    </div>
+
+    <!-- Cinematic Zoom Animation -->
+    <style>
+      @keyframes hero-zoom {
+        from { transform: scale(1.1); }
+        to { transform: scale(1); }
+      }
+      section:first-of-type img {
+        animation: hero-zoom 10s ease-out forwards;
+      }
+    </style>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       QUICK STATS BAR
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="bg-bg-secondary border-y border-border-default">
+    <div class="max-w-content mx-auto px-4 py-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div>
+          <div class="font-bebas text-display-sm text-accent-primary">8-12</div>
+          <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Minutes</div>
+        </div>
+        <div>
+          <div class="font-bebas text-display-sm text-accent-primary">6</div>
+          <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Exercises</div>
+        </div>
+        <div>
+          <div class="font-bebas text-display-sm text-accent-primary">0</div>
+          <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Equipment</div>
+        </div>
+        <div>
+          <div class="font-bebas text-display-sm text-accent-primary">ALL</div>
+          <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Ages</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       DIRECT ANSWER (AEO)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="max-w-article mx-auto px-4 py-8">
+    <div class="direct-answer">
+      <strong>Bulletproof Ankles is a targeted stability protocol</strong> that builds the
+      proprioception, strength, and reactive control your ankles need to handle cutting,
+      landing, and change-of-direction demands. Start with balance and activation work,
+      progress to loaded movements, and integrate sport-specific patterns. 8-12 minutes,
+      3-4x per week, builds measurable ankle resilience in 4-6 weeks.
+    </div>
+
+    <!-- Key Takeaways -->
+    <div class="key-takeaways">
+      <h2 class="font-bebas text-display-xs mb-2">What You'll Build</h2>
+      <ul>
+        <li>Stronger foot-ankle connection for better force transfer</li>
+        <li>Enhanced proprioception - your ankle's "awareness" of position</li>
+        <li>Reactive stability for cuts, jumps, and unexpected movements</li>
+        <li>Resilience against sprains and chronic instability</li>
+        <li>Foundation for speed, power, and injury prevention</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       THE SCIENCE SECTION (bpa2.jpeg - Skeletal Lines)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="bg-bg-secondary py-8">
+    <div class="max-w-content mx-auto px-4">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="h-px flex-1 bg-accent-primary/30"></div>
+        <span class="font-mono text-label text-accent-primary tracking-widest">WHY IT WORKS</span>
+        <div class="h-px flex-1 bg-accent-primary/30"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 items-center">
+        <!-- Image Card -->
+        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 group">
+          <img
+            src="/images/academy/bpa2.jpeg"
+            alt="Biomechanical analysis showing lateral ankle stability tracking"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+          />
+
+          <!-- Overlay -->
+          <div class="absolute inset-0 bg-black/30 mix-blend-multiply"></div>
+
+          <!-- Data Badge -->
+          <div class="absolute top-4 left-4">
+            <span class="bg-black/80 text-accent-primary text-[0.65rem] font-mono px-2 py-1 rounded border border-accent-primary/30">
+              LATERAL STABILITY: TRACKING
+            </span>
+          </div>
+
+          <!-- Scanline Effect -->
+          <div class="absolute inset-0 opacity-5 pointer-events-none"
+               style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,246,224,0.1) 2px, rgba(0,246,224,0.1) 4px);">
+          </div>
+        </div>
+
+        <!-- Text Content -->
+        <div class="space-y-4">
+          <h3 class="font-bebas text-display-md">The Biomechanics of Bulletproof</h3>
+
+          <p class="text-text-secondary leading-relaxed">
+            Your ankle is a <strong class="text-text-primary">kinetic chain bottleneck</strong>.
+            Every force from the ground passes through it. Weak ankles leak power, create
+            compensations, and invite injury.
+          </p>
+
+          <p class="text-text-secondary leading-relaxed">
+            This protocol targets three systems:
+          </p>
+
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
+                <span class="font-mono text-accent-primary text-body-xs">01</span>
+              </div>
+              <div>
+                <div class="font-semibold text-text-primary">Proprioception</div>
+                <div class="text-body-sm text-text-tertiary">Your ankle's position sense - the "software"</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
+                <span class="font-mono text-accent-primary text-body-xs">02</span>
+              </div>
+              <div>
+                <div class="font-semibold text-text-primary">Intrinsic Strength</div>
+                <div class="text-body-sm text-text-tertiary">The small stabilizers - the "hardware"</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
+                <span class="font-mono text-accent-primary text-body-xs">03</span>
+              </div>
+              <div>
+                <div class="font-semibold text-text-primary">Reactive Control</div>
+                <div class="text-body-sm text-text-tertiary">Response to unexpected forces - the "reflexes"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       SAFETY
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="max-w-article mx-auto px-4 py-8">
+    <SafetyBox>
+      <ul class="ml-5 mt-2 space-y-1 text-[0.95rem]">
+        <li>Sharp or sudden pain (not just muscle work)</li>
+        <li>Pain that increases during or after exercise</li>
+        <li>Numbness, tingling, or weakness</li>
+        <li>Visible swelling or bruising</li>
+        <li>Instability that feels "dangerous" not just challenging</li>
+      </ul>
+    </SafetyBox>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       THE PROTOCOL - DRILLS
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="max-w-article mx-auto px-4 py-8">
+    <div class="section-header">
+      <div class="chapter-label">The Protocol</div>
+      <h2 class="font-bebas text-display-lg">6 Exercises. 8 Minutes. Bulletproof.</h2>
+    </div>
+
+    <DrillCard
+      number={1}
+      title="Tripod Foot Activation"
+      tags={["Wake Up", "Foundation"]}
+      ageBadge={{ label: "All Ages", class: "age-7-9" }}
+      description="Establish the three-point connection that creates a stable base. This is the foundation of everything else."
+      steps={[
+        { instruction: "Stand barefoot, feet hip-width apart" },
+        { instruction: "Press down through: big toe base, pinky toe base, and heel center" },
+        { instruction: "Feel these three points 'grip' the floor without curling toes" },
+        { instruction: "Hold for 60 seconds. Breathe. Reset if you lose connection." }
+      ]}
+      coachingCues={[
+        "Think 'tripod' - three points of contact",
+        "Toes stay relaxed, not gripping",
+        "You should feel the arch lift slightly"
+      ]}
+      duration="60 sec"
+      reps="1 set"
+      difficulty="Beginner"
+    />
+
+    <DrillCard
+      number={2}
+      title="Short Foot Holds"
+      tags={["Strength", "Arch"]}
+      ageBadge={{ label: "All Ages", class: "age-7-9" }}
+      description="Build arch strength by shortening the foot without curling the toes. The most important barefoot drill."
+      steps={[
+        { instruction: "Stand in tripod position" },
+        { instruction: "Without curling toes, pull the ball of foot toward the heel" },
+        { instruction: "Imagine doming your arch up from the floor" },
+        { instruction: "Hold 5 seconds, release. Repeat 10 times each foot." }
+      ]}
+      coachingCues={[
+        "Toes stay flat - no scrunching",
+        "Feel the arch rise, not the toes grip",
+        "Start seated if standing is too hard"
+      ]}
+      duration="45 sec x 2"
+      reps="10 reps each foot"
+      difficulty="Beginner"
+    />
+
+    <DrillCard
+      number={3}
+      title="Single Leg Balance"
+      tags={["Proprioception", "Sport Transfer"]}
+      ageBadge={{ label: "10+", class: "age-10-13" }}
+      description="Challenge your ankle's position sense. Every cut, jump, and landing happens on one foot."
+      steps={[
+        { instruction: "Stand on one leg, tripod engaged" },
+        { instruction: "Level 1: Eyes open, 30 seconds each side" },
+        { instruction: "Level 2: Eyes closed (much harder)" },
+        { instruction: "Level 3: Add head turns or arm movements" }
+      ]}
+      coachingCues={[
+        "Feel your foot making micro-corrections",
+        "Slight knee bend is fine - don't lock out",
+        "Quality over time - stop if form breaks"
+      ]}
+      duration="30 sec each"
+      reps="3 sets each leg"
+      difficulty="Scalable"
+    />
+
+    <DrillCard
+      number={4}
+      title="Ankle Circles"
+      tags={["Mobility", "Range"]}
+      ageBadge={{ label: "All Ages", class: "age-7-9" }}
+      description="Restore full ankle range of motion. Most athletes are locked up from shoes and surface repetition."
+      steps={[
+        { instruction: "Lift one foot slightly off ground" },
+        { instruction: "Draw slow, controlled circles with your toes" },
+        { instruction: "20 circles clockwise, 20 counterclockwise" },
+        { instruction: "Make circles as LARGE as possible" }
+      ]}
+      coachingCues={[
+        "Slow = better. Speed kills quality",
+        "Go to end range in every direction",
+        "Feel any stiff spots and work them"
+      ]}
+      duration="2 min"
+      reps="20 each direction"
+      difficulty="Beginner"
+    />
+
+    <DrillCard
+      number={5}
+      title="Calf Raises (Slow)"
+      tags={["Strength", "Loading"]}
+      ageBadge={{ label: "10+", class: "age-10-13" }}
+      description="Controlled loading through full range. Builds the strength that powers push-off and absorbs landing."
+      steps={[
+        { instruction: "Stand barefoot, feet hip-width" },
+        { instruction: "Rise onto balls of feet - 3 seconds up" },
+        { instruction: "Hold at top for 2 seconds" },
+        { instruction: "Lower SLOWLY - 3 seconds down. 10 reps." }
+      ]}
+      coachingCues={[
+        "Control the descent - that's where strength is built",
+        "Keep weight over big toe, not rolling out",
+        "Progress to single-leg when ready"
+      ]}
+      duration="90 sec"
+      reps="10 slow reps"
+      difficulty="Beginner"
+    />
+
+    <DrillCard
+      number={6}
+      title="Landing Prep"
+      tags={["Reactive", "Sport Transfer"]}
+      ageBadge={{ label: "10+", class: "age-10-13" }}
+      description="Train quiet, controlled landings. If your feet slap the ground, you're leaking force and inviting injury."
+      steps={[
+        { instruction: "Small jump in place - just 2-3 inches" },
+        { instruction: "Land SILENT. Absorb through the whole foot." },
+        { instruction: "Stick each landing for 1 second" },
+        { instruction: "5 reps. Every landing should be quiet." }
+      ]}
+      coachingCues={[
+        "Silent = controlled. Loud = force leak",
+        "Land on full foot, not toes only",
+        "Knees track over toes - no collapse"
+      ]}
+      duration="45 sec"
+      reps="5 soft jumps"
+      difficulty="Intermediate"
+    />
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       PROGRESSION IMAGES (bpa3, bpa4)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="bg-bg-secondary py-8">
+    <div class="max-w-content mx-auto px-4">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="h-px flex-1 bg-accent-gold/30"></div>
+        <span class="font-mono text-label text-accent-gold tracking-widest">PRO APPLICATION</span>
+        <div class="h-px flex-1 bg-accent-gold/30"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="relative rounded-xl overflow-hidden border border-white/10 aspect-[3/4]">
+          <img
+            src="/images/academy/bpa3.jpeg"
+            alt="Ankle assessment and treatment"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="font-mono text-[0.6rem] text-accent-primary tracking-widest mb-1">ASSESSMENT</div>
+            <div class="font-bebas text-display-xs text-white">Find the Weak Links</div>
+          </div>
+        </div>
+
+        <div class="relative rounded-xl overflow-hidden border border-white/10 aspect-[3/4]">
+          <img
+            src="/images/academy/bpa4.jpeg"
+            alt="Toe spacer training with weights"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="font-mono text-[0.6rem] text-accent-primary tracking-widest mb-1">INTEGRATION</div>
+            <div class="font-bebas text-display-xs text-white">Load the Pattern</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       FAQ
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="max-w-article mx-auto px-4 py-8">
+    <FAQSection
+      faqs={faqs}
+      title="Frequently Asked Questions"
+      subtitle="Common questions about the Bulletproof Ankles protocol"
+    />
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       CTA
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="max-w-article mx-auto px-4 py-8">
+    <CTABlock
+      title="Start the Bulletproof Protocol Today"
+      description="Get the full protocol with video demos, progression tracking, and personalized coaching in the Academy app."
+      buttonText="Start Free"
+      buttonUrl="https://academy.youthperformance.com/programs/bulletproof-ankles"
+    />
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       EXPERT FOOTER
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <section class="bg-bg-tertiary py-8 mt-8">
+    <div class="max-w-article mx-auto px-4">
+      <div class="expert-box">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-accent-primary to-accent-gold flex items-center justify-center text-black font-bebas text-display-xs">
+          JS
+        </div>
+        <div class="flex-1">
+          <div class="font-bebas text-display-xs text-text-primary">James Scott</div>
+          <div class="text-body-sm text-text-secondary">Movement Specialist & Foot Performance Coach</div>
+          <div class="text-body-xs text-text-tertiary mt-1">Creator of Weak Feet Don't Eat</div>
+        </div>
+        <div class="expert-badge">PRO COACH</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

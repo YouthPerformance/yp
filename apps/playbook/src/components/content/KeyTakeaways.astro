@@ -2,18 +2,19 @@
 /**
  * KeyTakeaways - 5 bullet max summary
  * Appears right after the direct answer, high visibility for AI extraction.
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Props {
   takeaways: string[];
-  theme?: 'basketball' | 'barefoot';
+  class?: string;
 }
 
-const { takeaways, theme = 'basketball' } = Astro.props;
-const bgColor = theme === 'barefoot' ? 'bg-moss' : 'bg-trust-blue';
+const { takeaways, class: className = "" } = Astro.props;
 ---
 
-<div class={`key-takeaways ${bgColor}`}>
-  <h2 class="font-mono text-xs uppercase tracking-widest opacity-80 mb-3">
+<div class={`key-takeaways ${className}`}>
+  <h2 class="font-mono text-label uppercase tracking-widest opacity-80 mb-2" style="color: var(--accent-primary);">
     Key Takeaways
   </h2>
   <ul>

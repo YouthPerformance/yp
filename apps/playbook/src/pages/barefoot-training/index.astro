@@ -1,31 +1,30 @@
 ---
-import PillarLayout from '@/layouts/PillarLayout.astro';
-import SectionHeader from '@/components/content/SectionHeader.astro';
-import CoachVoice from '@/components/content/CoachVoice.astro';
-import SafetyBox from '@/components/content/SafetyBox.astro';
-import DrillCard from '@/components/content/DrillCard.astro';
-import FAQSection from '@/components/content/FAQSection.astro';
-import CTABlock from '@/components/content/CTABlock.astro';
-import RelatedGrid from '@/components/content/RelatedGrid.astro';
-
 // Frontmatter
 const frontmatter = {
   title: "Barefoot Training: The Complete Guide to Stronger, Faster Feet (Barefoot Reset™)",
-  description: "Science-backed barefoot training guide for athletes. Build foot strength, balance, and performance. Safe progressions for youth athletes by movement specialist James Scott.",
+  description:
+    "Science-backed barefoot training guide for athletes. Build foot strength, balance, and performance. Safe progressions for youth athletes by movement specialist James Scott.",
   author: "james-scott",
   publishedDate: new Date("2025-12-19"),
   updatedDate: new Date("2026-01-07"),
   readTime: "18 min read",
-  directAnswer: "<strong>Barefoot training builds foot strength, balance, and proprioception that translate directly to athletic performance.</strong> Start gradually on soft surfaces for 5–10 minutes, 2–3 times per week. Focus on intrinsic foot muscle activation before adding load or intensity. For youth athletes, it's safe when progressive—and it builds the foundation for quicker feet, better landings, and fewer ankle injuries.",
+  directAnswer:
+    "<strong>Barefoot training builds foot strength, balance, and proprioception that translate directly to athletic performance.</strong> Start gradually on soft surfaces for 5–10 minutes, 2–3 times per week. Focus on intrinsic foot muscle activation before adding load or intensity. For youth athletes, it's safe when progressive—and it builds the foundation for quicker feet, better landings, and fewer ankle injuries.",
   keyTakeaways: [
     "Your feet have 26 bones, 33 joints, and 100+ muscles—they need training too",
     "Start on grass, carpet, or rubber flooring before harder surfaces",
     "5–10 minutes of barefoot work, 2–3x per week, creates measurable change",
     "Improved balance and foot awareness in 2–3 weeks; strength gains in 4–6 weeks",
-    "Safe for kids when done progressively—stop if there's pain"
+    "Safe for kids when done progressively—stop if there's pain",
   ],
   category: "barefoot-training",
-  keywords: ["barefoot training", "foot strengthening exercises", "barefoot workout", "foot exercises for athletes", "barefoot reset"],
+  keywords: [
+    "barefoot training",
+    "foot strengthening exercises",
+    "barefoot workout",
+    "foot exercises for athletes",
+    "barefoot reset",
+  ],
   canonical: "https://playbook.youthperformance.com/barefoot-training/",
   theme: "barefoot" as const,
   programBadge: "Barefoot Reset™ Program",
@@ -36,7 +35,11 @@ const authorData = {
   name: "James Scott",
   initials: "JS",
   tagline: "Weak Feet Don't Eat",
-  credentials: ["Movement Specialist & Foot Performance Coach", "Creator of Weak Feet Don't Eat", "Barefoot Reset Developer"],
+  credentials: [
+    "Movement Specialist & Foot Performance Coach",
+    "Creator of Weak Feet Don't Eat",
+    "Barefoot Reset Developer",
+  ],
   socialLinks: {
     instagram: "https://www.instagram.com/weakfeetdonteat/",
     twitter: "https://twitter.com/weakfeetdonteat",
@@ -44,10 +47,7 @@ const authorData = {
 };
 
 // Breadcrumbs
-const breadcrumbs = [
-  { label: "Home", url: "/" },
-  { label: "Barefoot Training" },
-];
+const breadcrumbs = [{ label: "Home", url: "/" }, { label: "Barefoot Training" }];
 
 // Table of Contents
 const toc = [
@@ -65,32 +65,57 @@ const toc = [
 const faqs = [
   {
     question: "Is barefoot training safe for kids?",
-    answer: "Yes, when done progressively and on appropriate surfaces. Start with short sessions (5–10 minutes), avoid hard concrete initially, and stop immediately if there's any pain. Children's feet are naturally adaptable—barefoot training helps build the strength and sensory awareness they need for athletic performance."
+    answer:
+      "Yes, when done progressively and on appropriate surfaces. Start with short sessions (5–10 minutes), avoid hard concrete initially, and stop immediately if there's any pain. Children's feet are naturally adaptable—barefoot training helps build the strength and sensory awareness they need for athletic performance.",
   },
   {
     question: "How long does it take to see results from barefoot training?",
-    answer: "Most people notice improved balance and foot awareness within 2–3 weeks of consistent practice. Measurable strength gains typically appear around 4–6 weeks. Full adaptation to barefoot or minimalist training takes 3–6 months of progressive work."
+    answer:
+      "Most people notice improved balance and foot awareness within 2–3 weeks of consistent practice. Measurable strength gains typically appear around 4–6 weeks. Full adaptation to barefoot or minimalist training takes 3–6 months of progressive work.",
   },
   {
     question: "What surfaces are best for barefoot training?",
-    answer: "Start on forgiving surfaces: grass, rubber gym flooring, carpet, or foam mats. These allow your feet to adapt without excessive stress. Gradually progress to harder surfaces as foot strength improves. Avoid starting on concrete or asphalt."
+    answer:
+      "Start on forgiving surfaces: grass, rubber gym flooring, carpet, or foam mats. These allow your feet to adapt without excessive stress. Gradually progress to harder surfaces as foot strength improves. Avoid starting on concrete or asphalt.",
   },
   {
     question: "Can barefoot training help with basketball performance?",
-    answer: "Absolutely. Stronger feet improve first-step quickness, change of direction, balance on drives, and landing stability. Many NBA players incorporate barefoot work into their training. It's foundational for any sport requiring quick footwork."
+    answer:
+      "Absolutely. Stronger feet improve first-step quickness, change of direction, balance on drives, and landing stability. Many NBA players incorporate barefoot work into their training. It's foundational for any sport requiring quick footwork.",
   },
   {
     question: "How often should I do barefoot training exercises?",
-    answer: "Start with 2–3 sessions per week, 10–15 minutes each. As your feet adapt, you can increase to 4–5 sessions or integrate barefoot drills into your regular warm-up. Consistency matters more than duration."
+    answer:
+      "Start with 2–3 sessions per week, 10–15 minutes each. As your feet adapt, you can increase to 4–5 sessions or integrate barefoot drills into your regular warm-up. Consistency matters more than duration.",
   },
 ];
 
 // Related content
 const relatedItems = [
-  { title: "Barefoot Training for Youth", description: "Safe progressions by age", url: "/barefoot-training/youth-athletes/", icon: "👶" },
-  { title: "Barefoot Drills for Hoopers", description: "12 drills to fix weak feet", url: "/barefoot-training/basketball-drills/", icon: "🏀" },
-  { title: "Is It Safe for Kids?", description: "What science says", url: "/barefoot-training/kids-safety/", icon: "🛡️" },
-  { title: "Youth Basketball Drills", description: "50+ drills by age", url: "/basketball/youth-basketball-drills/", icon: "🏀" },
+  {
+    title: "Barefoot Training for Youth",
+    description: "Safe progressions by age",
+    url: "/barefoot-training/youth-athletes/",
+    icon: "👶",
+  },
+  {
+    title: "Barefoot Drills for Hoopers",
+    description: "12 drills to fix weak feet",
+    url: "/barefoot-training/basketball-drills/",
+    icon: "🏀",
+  },
+  {
+    title: "Is It Safe for Kids?",
+    description: "What science says",
+    url: "/barefoot-training/kids-safety/",
+    icon: "🛡️",
+  },
+  {
+    title: "Youth Basketball Drills",
+    description: "50+ drills by age",
+    url: "/basketball/youth-basketball-drills/",
+    icon: "🏀",
+  },
 ];
 ---
 
@@ -106,7 +131,6 @@ const relatedItems = [
     id="what-is"
     chapter="Chapter I"
     title="What Is Barefoot Training?"
-    theme="barefoot"
   />
 
   <p>Barefoot training is the practice of performing exercises without shoes to strengthen the intrinsic muscles of the feet, improve balance, and develop proprioception—your body's awareness of where it is in space.</p>
@@ -136,7 +160,6 @@ const relatedItems = [
     id="benefits"
     chapter="Chapter II"
     title="Benefits of Barefoot Training"
-    theme="barefoot"
   />
 
   <p>Research shows barefoot training improves several key athletic qualities:</p>
@@ -171,7 +194,6 @@ const relatedItems = [
     id="safety"
     chapter="Chapter III"
     title="Safety & When NOT to Train Barefoot"
-    theme="barefoot"
   />
 
   <SafetyBox>
@@ -198,7 +220,6 @@ const relatedItems = [
     id="framework"
     chapter="Chapter IV"
     title="The Barefoot Reset Framework"
-    theme="barefoot"
   />
 
   <p>The Barefoot Reset is a 3-stage system for building foot strength safely:</p>
@@ -267,7 +288,6 @@ const relatedItems = [
     id="drills"
     chapter="Chapter V"
     title="Core Barefoot Drills"
-    theme="barefoot"
   />
 
   <p>These are the foundational drills I use with every athlete I work with:</p>
@@ -292,7 +312,6 @@ const relatedItems = [
     duration="2–3 min"
     reps="10 reps x 5 sec holds"
     difficulty="Beginner"
-    theme="barefoot"
   />
 
   <DrillCard
@@ -315,7 +334,6 @@ const relatedItems = [
     duration="3 min"
     reps="10 reps each pattern"
     difficulty="Beginner"
-    theme="barefoot"
   />
 
   <DrillCard
@@ -338,7 +356,6 @@ const relatedItems = [
     duration="4–6 min"
     reps="30 sec x 3 each side"
     difficulty="Scalable"
-    theme="barefoot"
   />
 
   <!-- Chapter 6: 30-Day Plan -->
@@ -346,7 +363,6 @@ const relatedItems = [
     id="30-day"
     chapter="Chapter VI"
     title="30-Day Barefoot Reset Plan"
-    theme="barefoot"
   />
 
   <p>Here's a simple 4-week progression to get started:</p>
@@ -397,7 +413,6 @@ const relatedItems = [
     id="youth"
     chapter="Chapter VII"
     title="Barefoot Training for Youth Athletes"
-    theme="barefoot"
   />
 
   <p>Kids are natural barefoot movers—they just need permission and a little structure. Here's how I approach it by age:</p>
@@ -435,7 +450,6 @@ const relatedItems = [
     faqs={faqs}
     title="Frequently Asked Questions"
     subtitle="Common questions about barefoot training for athletes"
-    theme="barefoot"
   />
 
   <CTABlock
@@ -443,7 +457,6 @@ const relatedItems = [
     description="Get the complete 30-Day Barefoot Reset program in the Playbook app. Video demos, daily schedules, and progress tracking."
     buttonText="Get the Program"
     buttonUrl="https://academy.youthperformance.com/programs/barefoot-reset"
-    theme="barefoot"
   />
 
   <RelatedGrid items={relatedItems} />

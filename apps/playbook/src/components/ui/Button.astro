@@ -1,0 +1,108 @@
+---
+/**
+ * Button Component
+ * YP Design System - Playbook
+ *
+ * @prop variant - 'primary' | 'secondary' | 'outline' | 'ghost' | 'gold'
+ * @prop size - 'sm' | 'md' | 'lg'
+ * @prop href - Optional link (renders as <a>)
+ * @prop disabled - Disabled state
+ * @prop fullWidth - Full width button
+ * @prop class - Additional classes
+ */
+
+interface Props {
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "gold";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  disabled?: boolean;
+  fullWidth?: boolean;
+  class?: string;
+  type?: "button" | "submit" | "reset";
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  disabled = false,
+  fullWidth = false,
+  class: className = "",
+  type = "button",
+  ...rest
+} = Astro.props;
+
+// Size classes
+const sizeClasses = {
+  sm: "px-4 py-2 text-xs tracking-wider",
+  md: "px-6 py-3 text-sm tracking-wider",
+  lg: "px-8 py-4 text-base tracking-wider",
+};
+
+// Variant classes
+const variantClasses = {
+  primary: `
+    bg-[var(--accent-primary)] text-[var(--bg-primary)] font-bold
+    hover:shadow-[0_0_20px_rgba(0,246,224,0.4)] hover:-translate-y-0.5
+    active:scale-95
+  `,
+  secondary: `
+    bg-[var(--bg-elevated)] text-[var(--text-primary)] font-medium
+    border border-[var(--border-default)]
+    hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]
+    active:scale-95
+  `,
+  outline: `
+    bg-transparent text-[var(--accent-primary)] font-medium
+    border-2 border-[var(--accent-primary)]
+    hover:bg-[var(--accent-primary)] hover:text-[var(--bg-primary)]
+    active:scale-95
+  `,
+  ghost: `
+    bg-transparent text-[var(--text-secondary)] font-medium
+    hover:text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10
+    active:scale-95
+  `,
+  gold: `
+    bg-[var(--accent-gold)] text-[var(--bg-primary)] font-bold
+    hover:shadow-[0_0_20px_rgba(251,191,36,0.4)] hover:-translate-y-0.5
+    active:scale-95
+  `,
+};
+
+const baseClasses = `
+  inline-flex items-center justify-center gap-2
+  uppercase transition-all duration-200
+  focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
+  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-none
+`;
+
+const classes = [
+  baseClasses,
+  sizeClasses[size],
+  variantClasses[variant],
+  fullWidth && "w-full",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+
+const Tag = href ? "a" : "button";
+---
+
+{href ? (
+  <a href={href} class={classes} {...rest}>
+    <slot />
+  </a>
+) : (
+  <button type={type} disabled={disabled} class={classes} {...rest}>
+    <slot />
+  </button>
+)}
+
+<style>
+  /* Ensure smooth transitions */
+  a, button {
+    will-change: transform, box-shadow;
+  }
+</style>

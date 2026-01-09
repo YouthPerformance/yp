@@ -1,69 +1,162 @@
 ---
 /**
- * Footer - Site footer with trust signals and navigation
+ * Footer - Glass morphism footer with YP branding
+ * YP Design System v2.0
  */
-interface Props {
-  theme?: 'basketball' | 'barefoot';
-}
-
-const { theme = 'basketball' } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer class="bg-ink text-white py-12 px-6">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+<footer class="footer-glass">
+  <div class="footer-container">
+    <div class="footer-grid">
       <!-- Train -->
-      <div>
-        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Train</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="https://academy.youthperformance.com" class="text-white/80 hover:text-white transition-colors">YP Academy</a></li>
-          <li><a href="https://shop.youthperformance.com/products/neoball" class="text-white/80 hover:text-white transition-colors">The NeoBall</a></li>
-          <li><a href="/programs/" class="text-white/80 hover:text-white transition-colors">Programs</a></li>
-          <li><a href="https://academy.youthperformance.com/pricing" class="text-white/80 hover:text-white transition-colors">Pricing</a></li>
+      <div class="footer-section">
+        <h3 class="footer-heading">Train</h3>
+        <ul class="footer-links">
+          <li><a href="https://academy.youthperformance.com">YP Academy</a></li>
+          <li><a href="https://shop.youthperformance.com/products/neoball">The NeoBall</a></li>
+          <li><a href="/programs/">Programs</a></li>
+          <li><a href="https://academy.youthperformance.com/pricing">Pricing</a></li>
         </ul>
       </div>
 
       <!-- Learn -->
-      <div>
-        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Learn</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/barefoot-training/" class="text-white/80 hover:text-white transition-colors">Barefoot Training</a></li>
-          <li><a href="/basketball/youth-basketball-drills/" class="text-white/80 hover:text-white transition-colors">Youth Basketball Drills</a></li>
-          <li><a href="/basketball/silent-training/" class="text-white/80 hover:text-white transition-colors">Silent Training</a></li>
-          <li><a href="/parent-sidelines/" class="text-white/80 hover:text-white transition-colors">Parent Sidelines (Q&A)</a></li>
-          <li><a href="/drills/" class="text-white/80 hover:text-white transition-colors">Drill Library</a></li>
+      <div class="footer-section">
+        <h3 class="footer-heading">Learn</h3>
+        <ul class="footer-links">
+          <li><a href="/barefoot-training/">Barefoot Training</a></li>
+          <li><a href="/basketball/youth-basketball-drills/">Youth Basketball Drills</a></li>
+          <li><a href="/basketball/silent-training/">Silent Training</a></li>
+          <li><a href="/parent-sidelines/">Parent Sidelines (Q&A)</a></li>
+          <li><a href="/drills/">Drill Library</a></li>
         </ul>
       </div>
 
       <!-- Trust -->
-      <div>
-        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Trust & AI</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/about/" class="text-white/80 hover:text-white transition-colors">About YP</a></li>
-          <li><a href="/authors/" class="text-white/80 hover:text-white transition-colors">Our Coaches</a></li>
-          <li><a href="/editorial-policy/" class="text-white/80 hover:text-white transition-colors">Editorial Policy</a></li>
-          <li><a href="/safety/" class="text-white/80 hover:text-white transition-colors">Safety & Medical</a></li>
-          <li><a href="/contact/" class="text-white/80 hover:text-white transition-colors">Contact</a></li>
+      <div class="footer-section">
+        <h3 class="footer-heading">Trust & AI</h3>
+        <ul class="footer-links">
+          <li><a href="/about/">About YP</a></li>
+          <li><a href="/authors/">Our Coaches</a></li>
+          <li><a href="/editorial-policy/">Editorial Policy</a></li>
+          <li><a href="/safety/">Safety & Medical</a></li>
+          <li><a href="/contact/">Contact</a></li>
         </ul>
       </div>
 
       <!-- Technical -->
-      <div>
-        <h3 class="font-mono text-xs uppercase tracking-widest text-white/60 mb-4">Technical</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/sitemap-index.xml" class="text-white/80 hover:text-white transition-colors font-mono text-xs">sitemap.xml</a></li>
-          <li><a href="/robots.txt" class="text-white/80 hover:text-white transition-colors font-mono text-xs">robots.txt</a></li>
-          <li><a href="/llms.txt" class="text-white/80 hover:text-white transition-colors font-mono text-xs">llms.txt (AI Index)</a></li>
+      <div class="footer-section">
+        <h3 class="footer-heading">Technical</h3>
+        <ul class="footer-links footer-links-mono">
+          <li><a href="/sitemap-index.xml">sitemap.xml</a></li>
+          <li><a href="/robots.txt">robots.txt</a></li>
+          <li><a href="/llms.txt">llms.txt (AI Index)</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="border-t border-white/10 pt-8 text-center text-sm text-white/60">
-      <p>© {year} Youth Performance. All rights reserved.</p>
-      <p class="mt-2 text-xs">
-        Expert content by <a href="/authors/adam-harrington/" class="text-gold-light hover:underline">Adam Harrington</a> and <a href="/authors/james-scott/" class="text-gold-light hover:underline">James Scott</a>.
+    <div class="footer-bottom">
+      <p class="footer-copyright">© {year} Youth Performance. All rights reserved.</p>
+      <p class="footer-authors">
+        Expert content by <a href="/authors/adam-harrington/">Adam Harrington</a> and <a href="/authors/james-scott/">James Scott</a>.
       </p>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--glass-border);
+    padding: 48px 24px;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .footer-heading {
+    font-family: "Inter", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    margin: 0;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--accent-primary);
+  }
+
+  .footer-links-mono a {
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 0.75rem;
+  }
+
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid var(--border-default);
+    text-align: center;
+  }
+
+  .footer-copyright {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+  }
+
+  .footer-authors {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+
+  .footer-authors a {
+    color: var(--accent-gold);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .footer-authors a:hover {
+    color: var(--accent-gold-hover);
+    text-decoration: underline;
+  }
+</style>

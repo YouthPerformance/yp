@@ -1,0 +1,139 @@
+---
+/**
+ * Tooltip Component (CSS-only)
+ * YP Design System - Playbook
+ *
+ * @prop text - Tooltip text
+ * @prop position - 'top' | 'bottom' | 'left' | 'right'
+ */
+
+interface Props {
+  text: string;
+  position?: "top" | "bottom" | "left" | "right";
+  class?: string;
+}
+
+const { text, position = "top", class: className = "" } = Astro.props;
+---
+
+<span class={`tooltip-wrapper tooltip-${position} ${className}`} data-tooltip={text}>
+  <slot />
+</span>
+
+<style>
+  .tooltip-wrapper {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .tooltip-wrapper::before,
+  .tooltip-wrapper::after {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 200ms ease;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* Tooltip text */
+  .tooltip-wrapper::before {
+    content: attr(data-tooltip);
+    padding: 0.5rem 0.75rem;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Arrow */
+  .tooltip-wrapper::after {
+    content: '';
+    border: 6px solid transparent;
+  }
+
+  /* Show on hover */
+  .tooltip-wrapper:hover::before,
+  .tooltip-wrapper:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Position: Top */
+  .tooltip-top::before {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    margin-bottom: 4px;
+  }
+
+  .tooltip-top::after {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: var(--border-default);
+  }
+
+  .tooltip-top:hover::before {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Position: Bottom */
+  .tooltip-bottom::before {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    margin-top: 4px;
+  }
+
+  .tooltip-bottom::after {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: var(--border-default);
+  }
+
+  .tooltip-bottom:hover::before {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Position: Left */
+  .tooltip-left::before {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-8px);
+    margin-right: 4px;
+  }
+
+  .tooltip-left::after {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: var(--border-default);
+  }
+
+  .tooltip-left:hover::before {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /* Position: Right */
+  .tooltip-right::before {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(8px);
+    margin-left: 4px;
+  }
+
+  .tooltip-right::after {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: var(--border-default);
+  }
+
+  .tooltip-right:hover::before {
+    transform: translateY(-50%) translateX(0);
+  }
+</style>

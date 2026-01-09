@@ -19,31 +19,31 @@ const { title, description, author, publishedDate, updatedDate, keywords, canoni
 const schema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": title,
-  "description": description,
-  "author": {
+  headline: title,
+  description: description,
+  author: {
     "@type": "Person",
-    "name": author.name,
-    "jobTitle": author.jobTitle,
-    "description": author.description,
-    "sameAs": author.sameAs || [],
+    name: author.name,
+    jobTitle: author.jobTitle,
+    description: author.description,
+    sameAs: author.sameAs || [],
   },
-  "publisher": {
+  publisher: {
     "@type": "Organization",
-    "name": "Youth Performance",
-    "url": "https://youthperformance.com",
-    "logo": {
+    name: "Youth Performance",
+    url: "https://youthperformance.com",
+    logo: {
       "@type": "ImageObject",
-      "url": "https://youthperformance.com/logo.png"
-    }
+      url: "https://youthperformance.com/logo.png",
+    },
   },
-  "datePublished": publishedDate.toISOString(),
-  "dateModified": updatedDate.toISOString(),
-  "mainEntityOfPage": {
+  datePublished: publishedDate.toISOString(),
+  dateModified: updatedDate.toISOString(),
+  mainEntityOfPage: {
     "@type": "WebPage",
-    "@id": canonical
+    "@id": canonical,
   },
-  "keywords": keywords.join(", ")
+  keywords: keywords.join(", "),
 };
 ---
 

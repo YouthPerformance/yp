@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Mail, FileText, ExternalLink } from "lucide-react";
+import { Check, Copy, ExternalLink, FileText, Mail } from "lucide-react";
+import { useState } from "react";
 import { CONTACT } from "@/lib/constants";
 
 export function CTA() {

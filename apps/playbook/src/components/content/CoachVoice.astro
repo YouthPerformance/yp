@@ -2,36 +2,41 @@
 /**
  * CoachVoice - Expert callout/quote block
  * Adds unique first-person coaching insight that AI can't replicate.
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Props {
-  author: 'adam' | 'james';
+  author?: "adam" | "james" | "wolf";
   label?: string;
+  class?: string;
 }
 
-const { author, label } = Astro.props;
+const { author = "wolf", label, class: className = "" } = Astro.props;
 
 const config = {
   adam: {
-    icon: '💬',
+    icon: "🏀",
     label: label || "Coach Adam's Take",
-    theme: 'basketball',
   },
   james: {
-    icon: '🦶',
+    icon: "🦶",
     label: label || "James's Take",
-    theme: 'barefoot',
+  },
+  wolf: {
+    icon: "🐺",
+    label: label || "Wolf Says",
   },
 };
 
-const { icon, label: displayLabel, theme } = config[author];
+const { icon, label: displayLabel } = config[author];
 ---
 
-<div class={`coach-voice ${theme}`}>
-  <div class="flex items-center gap-2 mb-2 font-mono text-[0.7rem] uppercase tracking-widest text-inherit opacity-80">
+<div class={`coach-voice ${className}`}>
+  <div class="flex items-center gap-1.5 mb-1.5 font-mono text-label uppercase tracking-widest" style="color: var(--accent-primary);">
     <span>{icon}</span>
     <span>{displayLabel}</span>
   </div>
-  <p class="italic text-ink-soft text-base leading-relaxed m-0">
+  <blockquote>
     <slot />
-  </p>
+  </blockquote>
 </div>

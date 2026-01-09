@@ -3,16 +3,16 @@
  * DirectAnswer - THE AEO MONEY SHOT
  * This is the 2-3 sentence definitive answer that AI engines quote.
  * Must be in the first 200 words of the page.
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Props {
-  theme?: 'basketball' | 'barefoot';
+  class?: string;
 }
 
-const { theme = 'basketball' } = Astro.props;
-
-const borderColor = theme === 'barefoot' ? 'border-moss' : 'border-gold';
+const { class: className = "" } = Astro.props;
 ---
 
-<div class={`direct-answer ${borderColor}`}>
+<div class={`direct-answer ${className}`}>
   <slot />
 </div>

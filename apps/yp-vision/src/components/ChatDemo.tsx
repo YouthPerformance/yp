@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, Sparkles, Send } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { MessageSquare, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { INVESTOR_QA } from "@/lib/constants";
 
 const PROMPT_CHIPS = [
@@ -79,9 +79,7 @@ export function ChatDemo() {
           <h2 className="font-display text-4xl md:text-6xl font-bold mb-4">
             ASK<span className="text-purple-400">YP</span>
           </h2>
-          <p className="text-gray-400 text-lg">
-            AI coaching that knows every athlete. Try it.
-          </p>
+          <p className="text-gray-400 text-lg">AI coaching that knows every athlete. Try it.</p>
         </motion.div>
 
         {/* Chat Interface */}

@@ -1,25 +1,34 @@
 ---
 /**
  * CTABlock - Conversion section at end of articles
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Props {
   title: string;
   description: string;
   buttonText: string;
   buttonUrl: string;
-  theme?: 'basketball' | 'barefoot';
+  variant?: "cyan" | "gold";
+  class?: string;
 }
 
-const { title, description, buttonText, buttonUrl, theme = 'basketball' } = Astro.props;
+const {
+  title,
+  description,
+  buttonText,
+  buttonUrl,
+  variant = "cyan",
+  class: className = "",
+} = Astro.props;
 
-const bgClass = theme === 'barefoot' ? 'cta-block barefoot' : 'cta-block basketball';
-const btnClass = theme === 'barefoot' ? 'cta-button green' : 'cta-button orange';
+const buttonClass = variant === "gold" ? "cta-button gold" : "cta-button";
 ---
 
-<section class={bgClass}>
-  <h2 class="font-display text-2xl mb-4">{title}</h2>
-  <p class="opacity-90 mb-6 max-w-[500px] mx-auto text-base">{description}</p>
-  <a href={buttonUrl} class={btnClass}>
+<section class={`cta-block ${className}`}>
+  <h2 class="font-bebas text-display-md mb-2" style="color: var(--text-primary);">{title}</h2>
+  <p class="text-body-md mb-3 max-w-[500px] mx-auto" style="color: var(--text-secondary);">{description}</p>
+  <a href={buttonUrl} class={buttonClass}>
     <span>{buttonText}</span>
     <span>→</span>
   </a>

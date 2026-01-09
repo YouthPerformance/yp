@@ -19,7 +19,20 @@
             "defense",
             "barefoot",
             "balance",
-            "strength"
+            "strength",
+            "pain-relief",
+            "silent-training"
+          ]
+        },
+        "cluster": {
+          "type": "string",
+          "enum": [
+            "silent-training",
+            "home-training",
+            "shooting-mechanics",
+            "pain-relief",
+            "foot-structure",
+            "injury-rehab"
           ]
         },
         "sport": {
@@ -67,12 +80,24 @@
         "description": {
           "type": "string"
         },
+        "coachNote": {
+          "type": "string"
+        },
         "steps": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
+              "title": {
+                "type": "string"
+              },
               "instruction": {
+                "type": "string"
+              },
+              "durationSeconds": {
+                "type": "number"
+              },
+              "videoUrl": {
                 "type": "string"
               }
             },
@@ -99,6 +124,12 @@
         },
         "thumbnailUrl": {
           "type": "string"
+        },
+        "relatedDrills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "$schema": {
           "type": "string"

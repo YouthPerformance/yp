@@ -1,0 +1,54 @@
+{
+  "title": "The 'Knee Pain' Protocol (Osgood-Schlatter)",
+  "slug": "osgood-schlatter-protocol",
+  "category": "pain-relief",
+  "cluster": "pain-relief",
+  "sport": "all-sports",
+  "author": "james-scott",
+  "ageMin": 11,
+  "ageMax": 16,
+  "duration": "8 min",
+  "reps": "45 sec holds x 3 sets",
+  "difficulty": "intermediate",
+  "tags": [
+    "knee-pain",
+    "osgood-schlatter",
+    "jumpers-knee",
+    "durability",
+    "growth-plate",
+    "basketball"
+  ],
+  "description": "Reduce knee pain from growth spurts using Spanish Squats and static loading. Target the patellar tendon without aggravating the tibial tuberosity.",
+  "coachNote": "James's Take: That painful bump below your knee hurts because your quad tendon is too tight and pulling on the bone. The solution isn't rest—it's loading the tendon WITHOUT moving the joint. Isometrics are your best friend here.",
+  "steps": [
+    {
+      "title": "Spanish Squat Iso",
+      "instruction": "Loop a resistance band behind your knees, attached to a heavy post or squat rack. Sit back into a squat position with shins staying VERTICAL. Hold this position—the band provides counter-pressure that offloads the knee.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "Wall Sit (Knee Bias)",
+      "instruction": "Standard wall sit but with knees at exactly 90 degrees. Hold. This loads the quad isometrically without the pounding of movement.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "Terminal Knee Extension",
+      "instruction": "Band around back of knee, attached to anchor behind you. Start with slight knee bend, straighten the leg against band resistance. Hold the straight position.",
+      "durationSeconds": 30
+    },
+    {
+      "title": "Couch Stretch",
+      "instruction": "Foot up on wall or couch behind you. Knee on floor or pad. Squeeze your glute to open the hip flexor. Do NOT push into sharp pain. This addresses the hip tightness that contributes to knee stress.",
+      "durationSeconds": 60
+    }
+  ],
+  "coachingCues": [
+    "Keep shins VERTICAL in the Spanish Squat—this is non-negotiable",
+    "Pain should stay below 4/10 during all holds",
+    "The couch stretch addresses the ROOT CAUSE—tight hip flexors pull on the knee",
+    "Do this protocol before AND after activity"
+  ],
+  "commonMistake": "Letting the knees drift forward over the toes during wall sits",
+  "mistakeFix": "Use a mirror or have someone check your shin angle. Shins should be vertical or angled slightly back.",
+  "relatedDrills": ["severs-disease-protocol", "tibialis-raises"]
+}

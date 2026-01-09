@@ -1,0 +1,57 @@
+{
+  "title": "The 'Phone Booth' Workout",
+  "slug": "phone-booth-workout",
+  "category": "silent-training",
+  "cluster": "silent-training",
+  "sport": "basketball",
+  "author": "adam-harrington",
+  "ageMin": 8,
+  "ageMax": 18,
+  "duration": "8 min",
+  "reps": "45 sec x 6 rounds",
+  "difficulty": "intermediate",
+  "tags": ["small-space", "apartment-friendly", "handles", "at-home", "silent", "4-square-feet"],
+  "description": "Elite ball handling in 4 square feet. This workout proves you don't need a gym—you need discipline. Every move happens in place.",
+  "coachNote": "Adam's Take: I've trained guys in hotel rooms smaller than your closet. Space is an excuse. This workout strips away movement and forces pure handle. If you can control the ball in a phone booth, you can control it anywhere.",
+  "steps": [
+    {
+      "title": "Stationary Pounds",
+      "instruction": "Stand in one spot. Pound the ball as hard as possible while keeping it below knee height. Control the chaos.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "In-and-Out (No Movement)",
+      "instruction": "In-and-out crossover without moving your feet. Ball goes outside your knee, then back between your legs. Rhythm is key.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "Between-the-Legs Combos",
+      "instruction": "Alternate between-the-legs dribbles. Right hand front, left hand back. Then reverse. Stay planted.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "Behind-the-Back Wraps",
+      "instruction": "Continuous behind-the-back dribbles. The ball should 'kiss' the ground behind you and return to your front hand.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "Spider Dribble",
+      "instruction": "Ball bounces once in front, once in back, switching hands each time. Like a spider crawling. This is the ultimate stationary handle drill.",
+      "durationSeconds": 45
+    },
+    {
+      "title": "Freestyle Combo (Silent)",
+      "instruction": "Combine all moves above in any order. Keep the ball below your waist. Minimal noise. Maximum control.",
+      "durationSeconds": 45
+    }
+  ],
+  "coachingCues": [
+    "Your feet should not move from their starting position",
+    "Keep eyes up—don't watch the ball",
+    "Control > Speed until you master the pattern",
+    "If you're making noise, you're losing control"
+  ],
+  "commonMistake": "Drifting out of the 'phone booth' zone",
+  "mistakeFix": "Put tape on the floor marking your 2x2 foot zone. Stay inside it.",
+  "relatedDrills": ["silent-assassin-handle", "carpet-court-mechanics"]
+}

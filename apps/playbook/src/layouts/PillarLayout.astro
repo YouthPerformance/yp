@@ -1,13 +1,4 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import Breadcrumb from '@/components/layout/Breadcrumb.astro';
-import Footer from '@/components/layout/Footer.astro';
-import DirectAnswer from '@/components/content/DirectAnswer.astro';
-import KeyTakeaways from '@/components/content/KeyTakeaways.astro';
-import ExpertBox from '@/components/content/ExpertBox.astro';
-import ArticleSchema from '@/components/seo/ArticleSchema.astro';
-import FAQSchema from '@/components/seo/FAQSchema.astro';
-
 interface Props {
   frontmatter: {
     title: string;
@@ -21,7 +12,6 @@ interface Props {
     category: string;
     keywords: string[];
     canonical: string;
-    theme: 'basketball' | 'barefoot';
     programBadge?: string;
   };
   authorData: {
@@ -52,21 +42,11 @@ const {
   keyTakeaways,
   keywords,
   canonical,
-  theme,
   programBadge,
 } = frontmatter;
 
-// Theme-specific styles
-const heroGradient = theme === 'barefoot'
-  ? 'from-earth-dark to-earth'
-  : 'from-paper-dark to-paper';
-const heroBorder = theme === 'barefoot' ? 'border-copper' : 'border-gold';
-const heroTopBorder = theme === 'barefoot'
-  ? 'from-moss via-copper to-moss'
-  : 'from-gold via-action-orange to-gold';
-
 // Build credentials string
-const credentialsStr = authorData.credentials.join(' • ');
+const credentialsStr = authorData.credentials.join(" • ");
 
 // Build social links for schema
 const sameAs = [
@@ -80,7 +60,6 @@ const sameAs = [
   title={title}
   description={description}
   canonical={canonical}
-  theme={theme}
   author={authorData.name}
   publishedDate={publishedDate}
   updatedDate={updatedDate}
@@ -104,25 +83,26 @@ const sameAs = [
     {faqs.length > 0 && <FAQSchema faqs={faqs} />}
   </Fragment>
 
+  <Header />
   <Breadcrumb items={breadcrumbs} />
 
   <!-- Hero Section -->
-  <header class={`bg-gradient-to-b ${heroGradient} px-6 py-12 pb-8 border-b-[3px] ${heroBorder} relative`}>
+  <header class="hero-section px-3 py-6 pb-4 relative" style="background: var(--gradient-dark);">
     <!-- Top gradient line -->
-    <div class={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${heroTopBorder}`}></div>
+    <div class="absolute top-0 left-0 right-0 h-0.5" style="background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-gold) 50%, var(--accent-primary) 100%);"></div>
 
     <div class="container-article">
       {programBadge && (
-        <span class={`inline-block ${theme === 'barefoot' ? 'bg-moss' : 'bg-trust-blue'} text-white px-3 py-1.5 rounded-full font-mono text-[0.65rem] uppercase tracking-widest mb-4`}>
+        <span class="inline-block px-2 py-1 rounded-full font-mono text-label uppercase tracking-widest mb-2" style="background-color: var(--accent-primary); color: var(--bg-primary);">
           {programBadge}
         </span>
       )}
 
-      <h1 class="font-display text-3xl md:text-4xl font-bold leading-tight mb-4">
+      <h1 class="font-bebas text-display-lg leading-tight mb-2" style="color: var(--text-primary);">
         {title}
       </h1>
 
-      <div class="flex flex-wrap gap-4 items-center text-sm text-ink-muted mb-6">
+      <div class="flex flex-wrap gap-2 items-center text-body-sm mb-3" style="color: var(--text-muted);">
         <time datetime={updatedDate.toISOString()}>
           Updated {updatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </time>
@@ -133,12 +113,12 @@ const sameAs = [
       </div>
 
       <!-- Direct Answer -->
-      <DirectAnswer theme={theme}>
+      <DirectAnswer>
         <p set:html={directAnswer} />
       </DirectAnswer>
 
       <!-- Key Takeaways -->
-      <KeyTakeaways takeaways={keyTakeaways} theme={theme} />
+      <KeyTakeaways takeaways={keyTakeaways} />
 
       <!-- Expert Box -->
       <ExpertBox
@@ -146,7 +126,6 @@ const sameAs = [
         initials={authorData.initials}
         tagline={authorData.tagline}
         credentials={credentialsStr}
-        theme={theme}
       />
     </div>
   </header>
@@ -154,12 +133,12 @@ const sameAs = [
   <!-- Table of Contents -->
   {toc.length > 0 && (
     <div class="container-article">
-      <nav class="bg-paper-dark p-6 rounded-md my-8" aria-label="Table of Contents">
-        <h2 class="font-display text-base mb-4">In This Guide</h2>
-        <ol class="pl-5 space-y-2">
+      <nav class="p-3 rounded-lg my-4" aria-label="Table of Contents" style="background-color: var(--bg-tertiary);">
+        <h2 class="font-bebas text-display-xs mb-2" style="color: var(--text-primary);">In This Guide</h2>
+        <ol class="pl-3 space-y-1">
           {toc.map((item) => (
-            <li class="text-[0.95rem]">
-              <a href={`#${item.id}`} class="text-trust-blue-light hover:underline">{item.label}</a>
+            <li class="text-body-sm">
+              <a href={`#${item.id}`} class="hover:underline" style="color: var(--accent-primary);">{item.label}</a>
             </li>
           ))}
         </ol>
@@ -168,11 +147,11 @@ const sameAs = [
   )}
 
   <!-- Main Content -->
-  <main class="py-8">
+  <main class="py-4">
     <div class="container-article prose prose-lg max-w-none">
       <slot />
     </div>
   </main>
 
-  <Footer theme={theme} />
+  <Footer />
 </BaseLayout>

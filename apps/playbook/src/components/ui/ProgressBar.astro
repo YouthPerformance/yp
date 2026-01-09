@@ -1,0 +1,114 @@
+---
+/**
+ * ProgressBar Component
+ * YP Design System - Playbook
+ *
+ * @prop value - Current value (0-100)
+ * @prop max - Maximum value (default 100)
+ * @prop variant - 'cyan' | 'gold' | 'gradient'
+ * @prop size - 'sm' | 'md' | 'lg'
+ * @prop animated - Enable pulse animation
+ * @prop showLabel - Show percentage label
+ */
+
+interface Props {
+  value: number;
+  max?: number;
+  variant?: "cyan" | "gold" | "gradient";
+  size?: "sm" | "md" | "lg";
+  animated?: boolean;
+  showLabel?: boolean;
+  class?: string;
+}
+
+const {
+  value,
+  max = 100,
+  variant = "cyan",
+  size = "md",
+  animated = false,
+  showLabel = false,
+  class: className = "",
+} = Astro.props;
+
+const percentage = Math.min(100, Math.max(0, (value / max) * 100));
+
+// Size classes
+const sizeClasses = {
+  sm: "h-1",
+  md: "h-2",
+  lg: "h-3",
+};
+
+// Variant classes for the fill
+const variantClasses = {
+  cyan: "bg-[var(--accent-primary)]",
+  gold: "bg-[var(--accent-gold)]",
+  gradient: "bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-gold)]",
+};
+---
+
+<div class={`progress-wrapper ${className}`}>
+  {showLabel && (
+    <div class="progress-header">
+      <span class="progress-label">{Math.round(percentage)}%</span>
+    </div>
+  )}
+  <div
+    class={`progress-track ${sizeClasses[size]}`}
+    role="progressbar"
+    aria-valuenow={value}
+    aria-valuemin={0}
+    aria-valuemax={max}
+  >
+    <div
+      class={`progress-fill ${variantClasses[variant]} ${animated ? 'animated' : ''}`}
+      style={`width: ${percentage}%`}
+    />
+  </div>
+</div>
+
+<style>
+  .progress-wrapper {
+    width: 100%;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-track {
+    width: 100%;
+    background-color: var(--bg-elevated);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .progress-fill.animated {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+</style>

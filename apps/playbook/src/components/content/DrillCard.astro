@@ -1,6 +1,8 @@
 ---
 /**
  * DrillCard - Full drill display with video, steps, and coaching cues
+ *
+ * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Step {
   instruction: string;
@@ -10,15 +12,15 @@ interface Props {
   number: number;
   title: string;
   tags: string[];
-  ageBadge?: { label: string; class: 'age-7-9' | 'age-10-13' | 'age-14-18' };
+  ageBadge?: { label: string; class: "age-7-9" | "age-10-13" | "age-14-18" };
   description: string;
   steps: Step[];
   coachingCues: string[];
   duration: string;
   reps: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Scalable';
+  difficulty: "Beginner" | "Intermediate" | "Advanced" | "Scalable";
   videoUrl?: string;
-  theme?: 'basketball' | 'barefoot';
+  class?: string;
 }
 
 const {
@@ -33,25 +35,20 @@ const {
   reps,
   difficulty,
   videoUrl,
-  theme = 'basketball',
+  class: className = "",
 } = Astro.props;
-
-const numberBg = theme === 'barefoot' ? 'bg-copper' : 'bg-trust-blue';
-const stepBg = theme === 'barefoot' ? 'bg-copper' : 'bg-gold';
-const cueIcon = theme === 'barefoot' ? '🦶' : '👁';
-const cueLabel = theme === 'barefoot' ? 'Coaching Cues' : 'Coaching Cues';
 ---
 
-<article class="drill-card">
+<article class={`drill-card ${className}`}>
   <div class="drill-header">
-    <div class={`drill-number ${numberBg}`}>
+    <div class="drill-number">
       {String(number).padStart(2, '0')}
     </div>
     <div class="flex-1">
-      <h3 class="font-display font-semibold text-lg mb-1">{title}</h3>
-      <div class="flex flex-wrap gap-2">
+      <h3 class="font-bebas text-display-sm mb-1" style="color: var(--text-primary);">{title}</h3>
+      <div class="flex flex-wrap gap-1">
         {tags.map((tag) => (
-          <span class="font-mono text-[0.6rem] px-1.5 py-0.5 bg-black/5 rounded-sm uppercase">
+          <span class="font-mono text-label px-1 py-0.5 rounded-sm uppercase" style="background-color: var(--bg-tertiary); color: var(--text-secondary);">
             {tag}
           </span>
         ))}
@@ -64,54 +61,54 @@ const cueLabel = theme === 'barefoot' ? 'Coaching Cues' : 'Coaching Cues';
 
   <div class="drill-body">
     <!-- Video Placeholder -->
-    <div class={`aspect-video rounded-md flex items-center justify-center mb-4 relative bg-gradient-to-br ${theme === 'barefoot' ? 'from-moss to-bark' : 'from-trust-blue to-ink'}`}>
-      <div class="absolute w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-        <div class="w-0 h-0 border-l-[20px] border-l-white border-y-[12px] border-y-transparent ml-1"></div>
+    <div class="aspect-video rounded-md flex items-center justify-center mb-2.5 relative" style="background: var(--gradient-cyan);">
+      <div class="absolute w-10 h-10 rounded-full flex items-center justify-center" style="background-color: rgba(0,0,0,0.3);">
+        <div class="w-0 h-0 border-l-[14px] border-l-white border-y-[8px] border-y-transparent ml-0.5"></div>
       </div>
       {videoUrl ? (
-        <span class="absolute bottom-2 right-2 font-mono text-xs text-white/70">Video</span>
+        <span class="absolute bottom-1.5 right-1.5 font-mono text-label text-white/70">Video</span>
       ) : (
-        <span class="font-mono text-sm text-white/70">Video Coming Soon</span>
+        <span class="font-mono text-body-sm text-white/70">Video Coming Soon</span>
       )}
     </div>
 
     <!-- Description -->
-    <p class="text-ink-soft text-[0.95rem] mb-4">{description}</p>
+    <p class="text-body-md mb-2.5" style="color: var(--text-secondary);">{description}</p>
 
     <!-- Steps -->
-    <ol class="list-none mb-4">
+    <ol class="list-none mb-2.5">
       {steps.map((step, i) => (
-        <li class="relative pl-9 mb-2.5 text-[0.95rem]">
-          <span class={`absolute left-0 top-0 w-6 h-6 ${stepBg} text-white rounded-full font-mono text-xs font-semibold flex items-center justify-center`}>
+        <li class="drill-step">
+          <span class="drill-step-num">
             {i + 1}
           </span>
-          {step.instruction}
+          <span style="color: var(--text-primary);">{step.instruction}</span>
         </li>
       ))}
     </ol>
 
     <!-- Coaching Cues -->
-    <div class="bg-paper-dark p-4 rounded-md">
-      <div class="font-mono text-[0.65rem] uppercase tracking-widest text-gold mb-2">
-        {cueLabel}
+    <div class="p-2 rounded-md" style="background-color: var(--bg-tertiary);">
+      <div class="font-mono text-label uppercase tracking-widest mb-1" style="color: var(--accent-gold);">
+        Coaching Cues
       </div>
       {coachingCues.map((cue) => (
-        <div class="flex items-start gap-2 mb-1.5 text-sm">
-          <span class="text-xs">{cueIcon}</span>
-          <span>{cue}</span>
+        <div class="flex items-start gap-1.5 mb-1 text-body-sm">
+          <span class="text-body-xs" style="color: var(--accent-primary);">👁</span>
+          <span style="color: var(--text-secondary);">{cue}</span>
         </div>
       ))}
     </div>
   </div>
 
   <div class="drill-footer">
-    <span class="flex items-center gap-1 text-ink-muted">
+    <span class="flex items-center gap-0.5" style="color: var(--text-muted);">
       <span>⏱</span> {duration}
     </span>
-    <span class="flex items-center gap-1 text-ink-muted">
+    <span class="flex items-center gap-0.5" style="color: var(--text-muted);">
       <span>🔁</span> {reps}
     </span>
-    <span class="flex items-center gap-1 text-ink-muted">
+    <span class="flex items-center gap-0.5" style="color: var(--text-muted);">
       <span>⚡</span> {difficulty}
     </span>
   </div>

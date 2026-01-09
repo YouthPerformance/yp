@@ -1,18 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Clock, DollarSign, Percent, TrendingUp } from "lucide-react";
 import {
-  LineChart,
-  Line,
-  AreaChart,
   Area,
-  XAxis,
-  YAxis,
+  AreaChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { GROWTH_DATA, COHORT_DATA, UNIT_ECONOMICS } from "@/lib/constants";
-import { TrendingUp, DollarSign, Clock, Percent } from "lucide-react";
+import { COHORT_DATA, GROWTH_DATA, UNIT_ECONOMICS } from "@/lib/constants";
 
 export function Financials() {
   const unitEconMetrics = [
@@ -80,15 +80,13 @@ export function Financials() {
           viewport={{ once: true }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
         >
-          {unitEconMetrics.map((metric, i) => (
+          {unitEconMetrics.map((metric, _i) => (
             <div
               key={metric.label}
               className="bg-wolf-gray/30 border border-gray-800 rounded-xl p-4 text-center"
             >
               <metric.icon className={`w-5 h-5 ${metric.color} mx-auto mb-2`} />
-              <p className={`text-2xl md:text-3xl font-bold ${metric.color}`}>
-                {metric.value}
-              </p>
+              <p className={`text-2xl md:text-3xl font-bold ${metric.color}`}>{metric.value}</p>
               <p className="text-gray-500 text-sm">{metric.label}</p>
             </div>
           ))}

@@ -1,23 +1,35 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Breadcrumb from '@/components/layout/Breadcrumb.astro';
-
-const breadcrumbs = [
-  { label: "Home", url: "/" },
-  { label: "Basketball" },
-];
+const breadcrumbs = [{ label: "Home", url: "/" }, { label: "Basketball" }];
 
 const categories = [
   {
     title: "Youth Basketball Drills",
-    description: "50+ age-appropriate drills for players ages 7–18. Ball-handling, shooting, footwork—organized by skill level.",
+    description:
+      "50+ age-appropriate drills for players ages 7–18. Ball-handling, shooting, footwork—organized by skill level.",
     url: "/basketball/youth-basketball-drills/",
     icon: "🏀",
     badge: "Pillar Guide",
   },
   {
+    title: "Silent Training",
+    description:
+      "Apartment-friendly drills that won't wake the neighbors. Build elite handles in any space.",
+    url: "/basketball/silent-training/",
+    icon: "🤫",
+    badge: "New",
+  },
+  {
+    title: "Shooting Mechanics Lab",
+    description:
+      "Fix the chicken wing, perfect your follow-through. Pro-level shooting corrections from Adam Harrington.",
+    url: "/basketball/shooting/",
+    icon: "🎯",
+    badge: "New",
+  },
+  {
     title: "Drills for 8–10 Year Olds",
-    description: "Fun fundamentals with no fancy gear needed. Perfect for beginners building coordination.",
+    description:
+      "Fun fundamentals with no fancy gear needed. Perfect for beginners building coordination.",
     url: "/basketball/basketball-drills-8-10-year-olds/",
     icon: "👶",
     badge: "Coming Soon",
@@ -27,20 +39,6 @@ const categories = [
     description: "Games that teach without feeling like practice. Keep young athletes engaged.",
     url: "/basketball/fun-basketball-drills-for-kids/",
     icon: "🎮",
-    badge: "Coming Soon",
-  },
-  {
-    title: "Youth Shooting Drills",
-    description: "Form, footwork, and confidence building. Get the fundamentals right first.",
-    url: "/basketball/youth-basketball-shooting-drills/",
-    icon: "🎯",
-    badge: "Coming Soon",
-  },
-  {
-    title: "Silent Training",
-    description: "No-bounce drills for apartments and late-night work. Build handles anywhere.",
-    url: "/basketball/silent-training/",
-    icon: "🔇",
     badge: "Coming Soon",
   },
 ];
@@ -74,6 +72,7 @@ const categories = [
           <a
             href={cat.url}
             class={`block bg-white rounded-lg shadow-card border border-black/5 p-6 hover:shadow-elevated hover:-translate-y-0.5 transition-all ${cat.badge === 'Coming Soon' ? 'opacity-60 pointer-events-none' : ''}`}
+            aria-disabled={cat.badge === 'Coming Soon'}
           >
             <div class="flex items-start gap-4">
               <div class="w-14 h-14 bg-gold rounded-lg flex items-center justify-center text-2xl flex-shrink-0">
@@ -83,7 +82,11 @@ const categories = [
                 <div class="flex items-center gap-2 mb-1">
                   <h3 class="font-display font-semibold text-lg text-ink">{cat.title}</h3>
                   {cat.badge && (
-                    <span class={`px-2 py-0.5 rounded text-xs font-mono uppercase ${cat.badge === 'Pillar Guide' ? 'bg-gold text-white' : 'bg-paper-dark text-bark-muted'}`}>
+                    <span class={`px-2 py-0.5 rounded text-xs font-mono uppercase ${
+                      cat.badge === 'Pillar Guide' ? 'bg-gold text-white' :
+                      cat.badge === 'New' ? 'bg-trust-blue text-white' :
+                      'bg-paper-dark text-bark-muted'
+                    }`}>
                       {cat.badge}
                     </span>
                   )}

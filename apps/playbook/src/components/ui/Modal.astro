@@ -1,0 +1,186 @@
+---
+/**
+ * Modal Component
+ * YP Design System - Playbook
+ *
+ * Uses native <dialog> element for accessibility
+ * Requires client-side JS to open/close
+ *
+ * @prop id - Modal ID for JS targeting
+ * @prop size - 'sm' | 'md' | 'lg' | 'full'
+ * @prop title - Optional modal title
+ * @prop closeButton - Show close button
+ */
+
+interface Props {
+  id: string;
+  size?: "sm" | "md" | "lg" | "full";
+  title?: string;
+  closeButton?: boolean;
+  class?: string;
+}
+
+const { id, size = "md", title, closeButton = true, class: className = "" } = Astro.props;
+
+// Size classes
+const sizeClasses = {
+  sm: "max-w-sm",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  full: "max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
+};
+---
+
+<dialog
+  id={id}
+  class={`modal ${sizeClasses[size]} ${className}`}
+>
+  <div class="modal-content">
+    {(title || closeButton) && (
+      <div class="modal-header">
+        {title && <h2 class="modal-title">{title}</h2>}
+        {closeButton && (
+          <button
+            type="button"
+            class="modal-close"
+            aria-label="Close modal"
+            onclick={`document.getElementById('${id}').close()`}
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        )}
+      </div>
+    )}
+
+    <div class="modal-body">
+      <slot />
+    </div>
+
+    <slot name="footer" />
+  </div>
+</dialog>
+
+<style>
+  .modal {
+    position: fixed;
+    padding: 0;
+    border: none;
+    background: transparent;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* Backdrop */
+  .modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Open state animation */
+  .modal[open] {
+    animation: modal-in 300ms ease forwards;
+  }
+
+  .modal[open]::backdrop {
+    animation: backdrop-in 300ms ease forwards;
+  }
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .modal-content {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .modal-title {
+    font-family: var(--font-bebas);
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+
+  .modal-close:hover {
+    color: var(--accent-primary);
+  }
+
+  .modal-close:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  /* Footer slot styling */
+  .modal-content :global([slot="footer"]) {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-default);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+</style>
+
+<script define:vars={{ id }}>
+  // Close modal on backdrop click
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.close();
+      }
+    });
+
+    // Close on Escape key
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        modal.close();
+      }
+    });
+  }
+</script>

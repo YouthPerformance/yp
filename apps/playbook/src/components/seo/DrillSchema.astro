@@ -17,51 +17,61 @@ interface Props {
   publishedDate?: string;
 }
 
-const { title, description, duration, author, steps, ageMin, ageMax, slug, publishedDate = new Date().toISOString() } = Astro.props;
+const {
+  title,
+  description,
+  duration,
+  author,
+  steps,
+  ageMin,
+  ageMax,
+  slug,
+  publishedDate = new Date().toISOString(),
+} = Astro.props;
 
 // Parse duration like "3 min" to PT3M format
 const durationMatch = duration.match(/(\d+)\s*min/);
-const isoDuration = durationMatch ? `PT${durationMatch[1]}M` : 'PT5M';
+const isoDuration = durationMatch ? `PT${durationMatch[1]}M` : "PT5M";
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": title,
-  "description": description,
-  "totalTime": isoDuration,
-  "estimatedCost": {
+  name: title,
+  description: description,
+  totalTime: isoDuration,
+  estimatedCost: {
     "@type": "MonetaryAmount",
-    "currency": "USD",
-    "value": "0"
+    currency: "USD",
+    value: "0",
   },
-  "step": steps.map((step, index) => ({
+  step: steps.map((step, index) => ({
     "@type": "HowToStep",
-    "url": `${slug}#step-${index + 1}`,
-    "name": `Step ${index + 1}`,
-    "text": step.instruction,
+    url: `${slug}#step-${index + 1}`,
+    name: `Step ${index + 1}`,
+    text: step.instruction,
     ...(step.videoUrl && {
-      "video": {
+      video: {
         "@type": "VideoObject",
-        "name": `${title} - Step ${index + 1}`,
-        "description": step.instruction,
-        "thumbnailUrl": step.thumbnailUrl,
-        "contentUrl": step.videoUrl,
-        "uploadDate": publishedDate
-      }
-    })
+        name: `${title} - Step ${index + 1}`,
+        description: step.instruction,
+        thumbnailUrl: step.thumbnailUrl,
+        contentUrl: step.videoUrl,
+        uploadDate: publishedDate,
+      },
+    }),
   })),
-  "author": {
+  author: {
     "@type": "Person",
-    "name": author
+    name: author,
   },
-  "audience": {
+  audience: {
     "@type": "PeopleAudience",
-    "suggestedAge": {
+    suggestedAge: {
       "@type": "QuantitativeValue",
-      "minValue": ageMin,
-      "maxValue": ageMax
-    }
-  }
+      minValue: ageMin,
+      maxValue: ageMax,
+    },
+  },
 };
 ---
 

@@ -7,19 +7,23 @@
         "question": {
           "type": "string"
         },
-        "slug": {
-          "type": "string"
-        },
         "category": {
           "type": "string",
           "enum": [
             "basketball",
             "barefoot",
             "general",
-            "safety"
+            "safety",
+            "training-hacks",
+            "injury-prevention",
+            "skills-mechanics",
+            "health-safety"
           ]
         },
         "author": {
+          "type": "string"
+        },
+        "expertTitle": {
           "type": "string"
         },
         "publishedDate": {
@@ -57,7 +61,19 @@
         "directAnswer": {
           "type": "string"
         },
+        "keyTakeaways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "safetyNote": {
+          "type": "string"
+        },
         "relatedPillar": {
+          "type": "string"
+        },
+        "relatedDrillSlug": {
           "type": "string"
         },
         "relatedDrills": {
@@ -72,13 +88,18 @@
             "type": "string"
           }
         },
+        "ctaText": {
+          "type": "string"
+        },
+        "ctaUrl": {
+          "type": "string"
+        },
         "$schema": {
           "type": "string"
         }
       },
       "required": [
         "question",
-        "slug",
         "category",
         "author",
         "publishedDate",
