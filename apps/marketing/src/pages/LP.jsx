@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./LP.css";
 
 // =============================================================================
@@ -29,7 +29,7 @@ function useTextScramble(text, trigger) {
             if (char === " ") return " ";
             return CHARS[Math.floor(Math.random() * CHARS.length)];
           })
-          .join("")
+          .join(""),
       );
 
       iteration++;
@@ -57,7 +57,7 @@ function useCountUp(end, duration = 2000, trigger) {
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 4); // easeOutQuart
+      const eased = 1 - (1 - progress) ** 4; // easeOutQuart
       setCount(Math.floor(eased * end));
       if (progress < 1) requestAnimationFrame(animate);
     };
@@ -106,12 +106,9 @@ export default function LP() {
   // Text scramble for taglines
   const { displayText: line1, isComplete: line1Complete } = useTextScramble(
     "ELITE TRAINING",
-    isReady
+    isReady,
   );
-  const { displayText: line2 } = useTextScramble(
-    "FOR EVERY KID",
-    line1Complete
-  );
+  const { displayText: line2 } = useTextScramble("FOR EVERY KID", line1Complete);
 
   // Counter animations
   const athleteCount = useCountUp(10000, 2500, isReady);
@@ -224,8 +221,7 @@ export default function LP() {
     (type) => {
       if (!soundEnabled) return;
 
-      const audioContext = new (window.AudioContext ||
-        window.webkitAudioContext)();
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
@@ -243,10 +239,7 @@ export default function LP() {
           oscillator.frequency.value = 600;
           gainNode.gain.value = 0.1;
           oscillator.start();
-          gainNode.gain.exponentialRampToValueAtTime(
-            0.01,
-            audioContext.currentTime + 0.1
-          );
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
           oscillator.stop(audioContext.currentTime + 0.1);
           break;
         case "success":
@@ -261,7 +254,7 @@ export default function LP() {
           break;
       }
     },
-    [soundEnabled]
+    [soundEnabled],
   );
 
   // Confetti explosion
@@ -368,10 +361,7 @@ export default function LP() {
 
           {/* Progress Bar */}
           <div className="lp-preloader-progress">
-            <div
-              className="lp-preloader-bar"
-              style={{ width: `${loadProgress}%` }}
-            />
+            <div className="lp-preloader-bar" style={{ width: `${loadProgress}%` }} />
           </div>
 
           {/* Loading Text */}
@@ -485,13 +475,7 @@ export default function LP() {
             </div>
 
             {/* Main video */}
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="lp-logo-video lp-logo-main"
-            >
+            <video autoPlay loop muted playsInline className="lp-logo-video lp-logo-main">
               <source src="/webm/3dyp.webm" type="video/webm" />
             </video>
 
