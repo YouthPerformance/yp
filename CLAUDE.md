@@ -34,19 +34,56 @@ This monorepo uses **layered CLAUDE.md files**. Read only what you need:
 2. Run security scan (CI does this automatically)
 3. Test on branch first, never push directly to main
 
+### Never Do (Learned the Hard Way)
+
+> **Pattern:** Every mistake becomes a rule. Update this table via `/retro`.
+
+| Don't | Instead | Why | Added |
+|-------|---------|-----|-------|
+| Commit `.env` files or tokens to git | Use `.gitignore` + env vars + secrets manager | Security breach - exposed Shopify tokens | 2026-01 |
+| Push directly to main/master | Use PR workflow with branch protection | Bypasses review, breaks CI gates | 2026-01 |
+| Skip `pnpm typecheck` before deploy | Always run typecheck first | Silent type errors cause build failures | 2026-01 |
+| Write shared logic in app folders | Put reusable code in `@yp/alpha` | "One Brain" principle - apps are consumers | 2026-01 |
+| Change `schema.ts` without `npx convex dev` | Always sync Convex after schema changes | Type mismatches, runtime errors | 2026-01 |
+| Guess database field names | Reference `packages/yp-alpha/convex/schema.ts` | Hallucinated fields cause silent failures | 2026-01 |
+| Use `workspace:*` with Vercel CLI deploys | Use GitHub integration for monorepo apps | CLI can't resolve workspace dependencies | 2026-01 |
+| Hardcode secrets or use placeholder values | Require env vars, fail fast if missing | JWT_SECRET placeholder caused auth bypass | 2026-01 |
+
 ---
 
 ## Stack Overview
 
-| Layer | Technology | Deploy |
-|-------|------------|--------|
-| Monorepo | Turborepo + pnpm | - |
-| Academy | Next.js 15 | Vercel |
-| Marketing | Vite + React | Cloudflare Pages |
-| Shop | Hydrogen + Remix | Shopify Oxygen |
-| Database | Convex | Convex Cloud |
-| Auth | Clerk | - |
-| AI | Claude (Anthropic) | - |
+| Layer | Technology | Deploy | Dev Port |
+|-------|------------|--------|----------|
+| Monorepo | Turborepo + pnpm | - | - |
+| Shop | Hydrogen + Remix | Shopify Oxygen | 3001 |
+| Neoball LP | Astro | - | 3002 |
+| Academy | Next.js 16 | Vercel | 3003 |
+| Marketing | Vite + React | Cloudflare Pages | 3004 |
+| YP Vision | Next.js 14 | - | 3005 |
+| Playbook | Astro | Vercel | 3006 |
+| Database | Convex | Convex Cloud | 8188 |
+| Auth | Clerk | - | - |
+| AI | Claude (Anthropic) | - | - |
+
+> **Port conflicts?** See `.claude/docs/ports.md` for full registry and troubleshooting.
+
+---
+
+## Agent Context Hub
+
+> **Start here.** `.claude/docs/index.md` is the single-hop reference for everything.
+
+| Doc | Purpose |
+|-----|---------|
+| `.claude/docs/index.md` | **Quick reference index (start here)** |
+| `.claude/docs/project_status.md` | Current sprint context |
+| `.claude/docs/ports.md` | Port registry |
+| `.claude/docs/env-registry.md` | Environment variables |
+| `.claude/docs/dependencies.md` | Package dependency graph |
+| `.claude/docs/cheatsheet.md` | Common commands |
+| `.claude/docs/troubleshooting.md` | Error fixes |
+| `.claude/docs/architecture.md` | System design |
 
 ---
 
@@ -57,7 +94,6 @@ This monorepo uses **layered CLAUDE.md files**. Read only what you need:
 | `turbo.json` | Build orchestration |
 | `packages/yp-alpha/convex/schema.ts` | Database schema (source of truth) |
 | `packages/yp-alpha/src/router/` | AI routing brain |
-| `.claude/docs/project_status.md` | Current sprint context |
 | `.github/ENVIRONMENTS.md` | CI/CD secrets setup |
 
 ---

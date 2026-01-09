@@ -9,7 +9,7 @@
  * - Shine sweep effect option
  */
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface ProductCardProps {
   title: string;
@@ -56,7 +56,7 @@ export function ProductCardAnimated({
             className={`
               w-full h-full object-cover
               transition-all duration-500 ease-out
-              ${isHovered && secondaryImage ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}
+              ${isHovered && secondaryImage ? "opacity-0 scale-95" : "opacity-100 scale-100"}
             `}
           />
 
@@ -68,7 +68,7 @@ export function ProductCardAnimated({
               className={`
                 absolute inset-0 w-full h-full object-cover
                 transition-all duration-500 ease-out
-                ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}
+                ${isHovered ? "opacity-100 scale-100" : "opacity-0 scale-105"}
               `}
             />
           )}
@@ -88,9 +88,10 @@ export function ProductCardAnimated({
                 transition-all duration-300 ease-out
                 hover:bg-white hover:text-black
                 md:block hidden
-                ${isHovered
-                  ? 'opacity-100 translate-y-0 scale-100'
-                  : 'opacity-0 translate-y-2 scale-90'
+                ${
+                  isHovered
+                    ? "opacity-100 translate-y-0 scale-100"
+                    : "opacity-0 translate-y-2 scale-90"
                 }
               `}
             >
@@ -113,13 +114,7 @@ export function ProductCardAnimated({
  * Rotating Shop All Button Component
  * The circular spinning text badge
  */
-export function ShopAllButton({
-  href = '/shop',
-  size = 100,
-}: {
-  href?: string;
-  size?: number;
-}) {
+export function ShopAllButton({ href = "/shop", size = 100 }: { href?: string; size?: number }) {
   return (
     <a
       href={href}
@@ -130,25 +125,15 @@ export function ShopAllButton({
       <svg
         viewBox="0 0 100 100"
         className="w-full h-full animate-[rotate_10s_linear_infinite] group-hover:animate-[rotate_3s_linear_infinite]"
-        style={{ animationPlayState: 'paused' }}
-        onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = 'running')}
-        onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = 'paused')}
+        style={{ animationPlayState: "paused" }}
+        onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "running")}
+        onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "paused")}
       >
         <defs>
-          <path
-            id="circlePath"
-            d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"
-          />
+          <path id="circlePath" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
         </defs>
-        <text
-          fill="currentColor"
-          fontSize="10"
-          fontFamily="monospace"
-          letterSpacing="4"
-        >
-          <textPath href="#circlePath">
-            SHOP ALL • SHOP ALL • SHOP ALL •
-          </textPath>
+        <text fill="currentColor" fontSize="10" fontFamily="monospace" letterSpacing="4">
+          <textPath href="#circlePath">SHOP ALL • SHOP ALL • SHOP ALL •</textPath>
         </text>
       </svg>
 
@@ -183,28 +168,28 @@ export const tailwindAnimationConfig = {
   theme: {
     extend: {
       animation: {
-        'spin-slow': 'rotate 10s linear infinite',
-        'spin-medium': 'rotate 5s linear infinite',
-        'spin-fast': 'rotate 2s linear infinite',
-        'bloop': 'bloop 0.3s linear',
-        'float': 'float 5s ease-in-out infinite',
-        'shine': 'shine 1s ease-out',
+        "spin-slow": "rotate 10s linear infinite",
+        "spin-medium": "rotate 5s linear infinite",
+        "spin-fast": "rotate 2s linear infinite",
+        bloop: "bloop 0.3s linear",
+        float: "float 5s ease-in-out infinite",
+        shine: "shine 1s ease-out",
       },
       keyframes: {
         rotate: {
-          to: { transform: 'rotate(360deg)' },
+          to: { transform: "rotate(360deg)" },
         },
         bloop: {
-          '0%': { transform: 'scale(0.9)' },
-          '40%': { transform: 'scale(1.1)' },
-          '100%': { transform: 'scale(1)' },
+          "0%": { transform: "scale(0.9)" },
+          "40%": { transform: "scale(1.1)" },
+          "100%": { transform: "scale(1)" },
         },
         float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-5%)' },
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5%)" },
         },
         shine: {
-          to: { left: '125%' },
+          to: { left: "125%" },
         },
       },
     },

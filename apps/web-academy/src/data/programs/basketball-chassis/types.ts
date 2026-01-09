@@ -14,6 +14,11 @@ export type WorkoutTheme = "RELEASE" | "RESTORE" | "RE-ENGINEER" | "INTEGRATE";
 export type ExerciseSide = "left" | "right" | "both" | "alternate";
 
 /**
+ * Video layout mode for exercises
+ */
+export type VideoLayout = "single" | "split";
+
+/**
  * Individual exercise within a workout day
  */
 export interface Exercise {
@@ -38,8 +43,14 @@ export interface Exercise {
   /** Required equipment (empty array = bodyweight) */
   equipment: string[];
 
-  /** URL to exercise demonstration video */
+  /** URL to exercise demonstration video (primary/coach video) */
   videoUrl: string;
+
+  /** URL to athlete demonstration video for split-screen mode */
+  demoVideoUrl?: string;
+
+  /** Video layout: 'single' (default) or 'split' (dual video) */
+  videoLayout?: VideoLayout;
 
   /** URL to thumbnail image for preview */
   thumbnailUrl: string;

@@ -15,6 +15,7 @@ import {
   CountdownView,
   FinishedView,
   MusicPrompt,
+  SplitScreenPlayer,
 } from "@/components/programs/player";
 import { useUserContext } from "@/contexts/UserContext";
 import { getDay, getThemeColor, PROGRAM } from "@/data/programs/basketball-chassis";
@@ -139,9 +140,12 @@ export default function WorkoutPlayerPage() {
     );
   }
 
+  // Check if any exercise uses split-screen mode
+  const usesSplitScreen = exercises.some((e) => e.demoVideoUrl);
+
   return (
     <main
-      className="min-h-screen max-w-md mx-auto relative overflow-hidden"
+      className={`min-h-screen relative overflow-hidden ${usesSplitScreen ? "" : "max-w-md mx-auto"}`}
       style={{ backgroundColor: "var(--bg-primary)" }}
     >
       <AnimatePresence mode="wait">
@@ -156,16 +160,29 @@ export default function WorkoutPlayerPage() {
         )}
 
         {playerState === "active" && currentExercise && (
-          <ActiveWorkout
-            key={`exercise-${currentExerciseIndex}`}
-            exercise={currentExercise}
-            exerciseIndex={currentExerciseIndex}
-            totalExercises={exercises.length}
-            onComplete={handleExerciseComplete}
-            onSkip={handleSkipExercise}
-            onExit={handleExit}
-            themeColor={themeColor}
-          />
+          currentExercise.demoVideoUrl ? (
+            <SplitScreenPlayer
+              key={`exercise-${currentExerciseIndex}`}
+              exercise={currentExercise}
+              exerciseIndex={currentExerciseIndex}
+              totalExercises={exercises.length}
+              onComplete={handleExerciseComplete}
+              onSkip={handleSkipExercise}
+              onExit={handleExit}
+              themeColor={themeColor}
+            />
+          ) : (
+            <ActiveWorkout
+              key={`exercise-${currentExerciseIndex}`}
+              exercise={currentExercise}
+              exerciseIndex={currentExerciseIndex}
+              totalExercises={exercises.length}
+              onComplete={handleExerciseComplete}
+              onSkip={handleSkipExercise}
+              onExit={handleExit}
+              themeColor={themeColor}
+            />
+          )
         )}
 
         {playerState === "finished" && (

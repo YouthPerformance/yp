@@ -60,25 +60,29 @@ export const CLIENTS = {
 // =============================================================================
 export const TESTIMONIALS = [
   {
-    quote: "Adam's extensive knowledge of the game and his ability to break down shooting mechanics has been essential to my development. He sees things that others miss.",
+    quote:
+      "Adam's extensive knowledge of the game and his ability to break down shooting mechanics has been essential to my development. He sees things that others miss.",
     author: "Kevin Durant",
     title: "NBA MVP, 2x NBA Champion",
     image: "/images/adam/kd-adam.jpg",
   },
   {
-    quote: "What sets Adam apart is his influence over different generations of players. He connects with everyone—from rookies to Hall of Famers—because he speaks the universal language of the game.",
+    quote:
+      "What sets Adam apart is his influence over different generations of players. He connects with everyone—from rookies to Hall of Famers—because he speaks the universal language of the game.",
     author: "Steve Nash",
     title: "2x NBA MVP, Hall of Famer",
     image: "/images/adam/nash-adam.jpg",
   },
   {
-    quote: "One of the most amazing people I've ever worked with. Adam doesn't just teach basketball—he teaches you how to think about basketball.",
+    quote:
+      "One of the most amazing people I've ever worked with. Adam doesn't just teach basketball—he teaches you how to think about basketball.",
     author: "Tiago Splitter",
     title: "NBA Champion, Spurs",
     image: "/images/adam/splitter-adam.jpg",
   },
   {
-    quote: "Adam is a student of the game who became its professor. His attention to detail and care for his players is unmatched in this industry.",
+    quote:
+      "Adam is a student of the game who became its professor. His attention to detail and care for his players is unmatched in this industry.",
     author: "Jamal Crawford",
     title: "3x NBA Sixth Man of the Year",
     image: "/images/adam/crawford-adam.jpg",
@@ -93,21 +97,24 @@ export const TIMELINE = [
     year: "1998",
     title: "USA Junior National Team",
     subtitle: "Gold Medal",
-    description: "Represented the United States on the international stage, laying the foundation for an understanding of elite-level basketball.",
+    description:
+      "Represented the United States on the international stage, laying the foundation for an understanding of elite-level basketball.",
     type: "player",
   },
   {
     year: "2002",
     title: "The NBA Grind",
     subtitle: "Dallas Mavericks, Denver Nuggets, China",
-    description: "Learned the game from the inside—the film sessions, the practice routines, the mental battles. This wasn't stardom; it was an education.",
+    description:
+      "Learned the game from the inside—the film sessions, the practice routines, the mental battles. This wasn't stardom; it was an education.",
     type: "player",
   },
   {
     year: "2014",
     title: "The MVP Season",
     subtitle: "OKC Thunder, Shooting Coach",
-    description: "Joined the Thunder coaching staff. Kevin Durant wins MVP. The partnership that would define a philosophy begins.",
+    description:
+      "Joined the Thunder coaching staff. Kevin Durant wins MVP. The partnership that would define a philosophy begins.",
     type: "coach",
     highlight: true,
   },
@@ -115,14 +122,16 @@ export const TIMELINE = [
     year: "2016",
     title: "The Brooklyn Era Begins",
     subtitle: "Brooklyn Nets, Player Development",
-    description: "Moved to Brooklyn to lead player development. Built systems for skill acquisition that would become the foundation of YP.",
+    description:
+      "Moved to Brooklyn to lead player development. Built systems for skill acquisition that would become the foundation of YP.",
     type: "coach",
   },
   {
     year: "2022",
     title: "Director of Player Development",
     subtitle: "Brooklyn Nets",
-    description: "Promoted to Director. Worked with Durant, Irving, Harden—the most skilled trio in NBA history. Learned to engineer excellence at scale.",
+    description:
+      "Promoted to Director. Worked with Durant, Irving, Harden—the most skilled trio in NBA history. Learned to engineer excellence at scale.",
     type: "coach",
     highlight: true,
   },
@@ -130,7 +139,8 @@ export const TIMELINE = [
     year: "2024",
     title: "The New Era",
     subtitle: "Unrivaled / Phantom BC Head Coach",
-    description: "Named Head Coach of Phantom BC in the groundbreaking Unrivaled league. Bringing NBA-level development to women's professional basketball.",
+    description:
+      "Named Head Coach of Phantom BC in the groundbreaking Unrivaled league. Bringing NBA-level development to women's professional basketball.",
     type: "coach",
     highlight: true,
   },
@@ -138,7 +148,8 @@ export const TIMELINE = [
     year: "2025",
     title: "The Founder",
     subtitle: "Youth Performance / Intentional360",
-    description: "Launched Youth Performance to democratize elite training. If the game taught me anything, it's that talent is everywhere—opportunity is not.",
+    description:
+      "Launched Youth Performance to democratize elite training. If the game taught me anything, it's that talent is everywhere—opportunity is not.",
     type: "founder",
     highlight: true,
   },
@@ -188,7 +199,8 @@ export const CTA = {
 // =============================================================================
 export const SEO = {
   title: "Adam Harrington | NBA Skills Coach & Architect of Youth Performance",
-  description: "The official profile of Adam Harrington. Former NBA Shooting Coach (OKC, Nets), Head Coach of Phantom BC (Unrivaled), and Founder of Youth Performance.",
+  description:
+    "The official profile of Adam Harrington. Former NBA Shooting Coach (OKC, Nets), Head Coach of Phantom BC (Unrivaled), and Founder of Youth Performance.",
   keywords: [
     "Adam Harrington",
     "NBA skills coach",
@@ -213,11 +225,7 @@ export const SCHEMA = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Adam Harrington",
-  jobTitle: [
-    "Head Coach, Phantom BC",
-    "NBA Skills Strategist",
-    "Founder, Youth Performance",
-  ],
+  jobTitle: ["Head Coach, Phantom BC", "NBA Skills Strategist", "Founder, Youth Performance"],
   knowsAbout: [
     "Shooting Mechanics",
     "Player Development",
@@ -233,8 +241,5 @@ export const SCHEMA = {
     { "@type": "Organization", name: "Phantom BC" },
     { "@type": "Organization", name: "Intentional360" },
   ],
-  award: [
-    "USA Junior National Team Gold Medal",
-    "NBA Championship Coach (Staff)",
-  ],
+  award: ["USA Junior National Team Gold Medal", "NBA Championship Coach (Staff)"],
 };

@@ -1,126 +1,599 @@
-import { useEffect } from "react";
-import Header from "../components/Header";
+import { useEffect, useRef, useState, useCallback } from "react";
+import "./LP.css";
+
+// =============================================================================
+// AWARD-WINNING LP - 2026 EDITION
+// Effects: Magnetic cursor, spotlight, text scramble, confetti, sound design
+// =============================================================================
+
+// Text scramble characters
+const CHARS = "!<>-_\\/[]{}—=+*^?#________";
+
+// Scramble text effect
+function useTextScramble(text, trigger) {
+  const [displayText, setDisplayText] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    if (!trigger) return;
+
+    let iteration = 0;
+    const maxIterations = text.length * 3;
+
+    const interval = setInterval(() => {
+      setDisplayText(
+        text
+          .split("")
+          .map((char, index) => {
+            if (index < iteration / 3) return text[index];
+            if (char === " ") return " ";
+            return CHARS[Math.floor(Math.random() * CHARS.length)];
+          })
+          .join("")
+      );
+
+      iteration++;
+      if (iteration >= maxIterations) {
+        clearInterval(interval);
+        setDisplayText(text);
+        setIsComplete(true);
+      }
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [text, trigger]);
+
+  return { displayText, isComplete };
+}
+
+// Counter animation hook
+function useCountUp(end, duration = 2000, trigger) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!trigger) return;
+
+    let startTime;
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4); // easeOutQuart
+      setCount(Math.floor(eased * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [end, duration, trigger]);
+
+  return count;
+}
+
+// Confetti particle
+function Confetti({ x, y, color, delay }) {
+  return (
+    <div
+      className="confetti-particle"
+      style={{
+        left: x,
+        top: y,
+        background: color,
+        animationDelay: `${delay}ms`,
+      }}
+    />
+  );
+}
 
 export default function LP() {
-  // Load Unicorn Studio script
+  // Refs
+  const containerRef = useRef(null);
+  const logoRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  // State
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [glitchActive, setGlitchActive] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [confetti, setConfetti] = useState([]);
+  const [magneticOffset, setMagneticOffset] = useState({ x: 0, y: 0 });
+  const [konamiProgress, setKonamiProgress] = useState(0);
+  const [easterEggActive, setEasterEggActive] = useState(false);
+  const [cursorScale, setCursorScale] = useState(1);
+  const [cursorText, setCursorText] = useState("");
+
+  // Text scramble for taglines
+  const { displayText: line1, isComplete: line1Complete } = useTextScramble(
+    "ELITE TRAINING",
+    isReady
+  );
+  const { displayText: line2 } = useTextScramble(
+    "FOR EVERY KID",
+    line1Complete
+  );
+
+  // Counter animations
+  const athleteCount = useCountUp(10000, 2500, isReady);
+  const countryCount = useCountUp(47, 2000, isReady);
+
+  // Konami code: ↑↑↓↓←→←→BA
+  const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+
+  // Loading simulation
   useEffect(() => {
-    if (!window.UnicornStudio) {
-      window.UnicornStudio = { isInitialized: false };
-      const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js";
-      script.onload = () => {
-        if (!window.UnicornStudio.isInitialized) {
-          window.UnicornStudio.init();
-          window.UnicornStudio.isInitialized = true;
-        }
-      };
-      document.head.appendChild(script);
-    } else if (!window.UnicornStudio.isInitialized) {
-      window.UnicornStudio.init();
-      window.UnicornStudio.isInitialized = true;
-    }
+    const stages = [
+      { progress: 15, delay: 200 },
+      { progress: 35, delay: 400 },
+      { progress: 50, delay: 300 },
+      { progress: 75, delay: 500 },
+      { progress: 90, delay: 300 },
+      { progress: 100, delay: 400 },
+    ];
+
+    let timeout;
+    let currentStage = 0;
+
+    const runStage = () => {
+      if (currentStage < stages.length) {
+        setLoadProgress(stages[currentStage].progress);
+        timeout = setTimeout(() => {
+          currentStage++;
+          runStage();
+        }, stages[currentStage].delay);
+      } else {
+        setTimeout(() => {
+          setIsLoading(false);
+          setTimeout(() => setIsReady(true), 500);
+        }, 300);
+      }
+    };
+
+    runStage();
+    return () => clearTimeout(timeout);
   }, []);
+
+  // Mouse tracking for parallax and spotlight
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      setMousePos({ x, y });
+      setCursorPos({ x: e.clientX, y: e.clientY });
+
+      // Magnetic effect for CTA button
+      if (ctaRef.current) {
+        const rect = ctaRef.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distX = e.clientX - centerX;
+        const distY = e.clientY - centerY;
+        const distance = Math.sqrt(distX * distX + distY * distY);
+
+        if (distance < 150) {
+          const force = (150 - distance) / 150;
+          setMagneticOffset({
+            x: distX * force * 0.3,
+            y: distY * force * 0.3,
+          });
+        } else {
+          setMagneticOffset({ x: 0, y: 0 });
+        }
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Konami code detection
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.keyCode === konamiCode[konamiProgress]) {
+        const newProgress = konamiProgress + 1;
+        setKonamiProgress(newProgress);
+        if (newProgress === konamiCode.length) {
+          setEasterEggActive(true);
+          playSound("success");
+          triggerConfetti(window.innerWidth / 2, window.innerHeight / 2, 50);
+          setTimeout(() => setKonamiProgress(0), 1000);
+        }
+      } else {
+        setKonamiProgress(0);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [konamiProgress]);
+
+  // Random glitch effect
+  useEffect(() => {
+    if (!isReady) return;
+    const glitchInterval = setInterval(() => {
+      if (Math.random() > 0.9) {
+        setGlitchActive(true);
+        setTimeout(() => setGlitchActive(false), 150);
+      }
+    }, 3000);
+    return () => clearInterval(glitchInterval);
+  }, [isReady]);
+
+  // Sound effects (requires user interaction to enable)
+  const playSound = useCallback(
+    (type) => {
+      if (!soundEnabled) return;
+
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      switch (type) {
+        case "hover":
+          oscillator.frequency.value = 800;
+          gainNode.gain.value = 0.05;
+          oscillator.start();
+          oscillator.stop(audioContext.currentTime + 0.05);
+          break;
+        case "click":
+          oscillator.frequency.value = 600;
+          gainNode.gain.value = 0.1;
+          oscillator.start();
+          gainNode.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioContext.currentTime + 0.1
+          );
+          oscillator.stop(audioContext.currentTime + 0.1);
+          break;
+        case "success":
+          oscillator.frequency.value = 523.25; // C5
+          gainNode.gain.value = 0.1;
+          oscillator.start();
+          oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+          oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+          oscillator.stop(audioContext.currentTime + 0.3);
+          break;
+        default:
+          break;
+      }
+    },
+    [soundEnabled]
+  );
+
+  // Confetti explosion
+  const triggerConfetti = (x, y, count = 30) => {
+    const colors = ["#00f6e0", "#8a2be2", "#00bfff", "#ff6b6b", "#ffd93d"];
+    const particles = [];
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        id: Date.now() + i,
+        x: x + (Math.random() - 0.5) * 20,
+        y: y + (Math.random() - 0.5) * 20,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 100,
+      });
+    }
+
+    setConfetti(particles);
+    setTimeout(() => setConfetti([]), 2000);
+  };
+
+  // CTA click handler
+  const handleCTAClick = (e) => {
+    e.preventDefault();
+    playSound("click");
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    triggerConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 40);
+
+    // Navigate after animation
+    setTimeout(() => {
+      window.location.href = "/waitlist";
+    }, 800);
+  };
+
+  // Cursor handlers
+  const handleCursorEnter = (text, scale = 1.5) => {
+    setCursorText(text);
+    setCursorScale(scale);
+    playSound("hover");
+  };
+
+  const handleCursorLeave = () => {
+    setCursorText("");
+    setCursorScale(1);
+  };
+
+  // Parallax values
+  const parallaxX = (mousePos.x - 0.5) * 30;
+  const parallaxY = (mousePos.y - 0.5) * 30;
+  const rotateX = (mousePos.y - 0.5) * -15;
+  const rotateY = (mousePos.x - 0.5) * 15;
+
+  // =============================================================================
+  // RENDER
+  // =============================================================================
 
   return (
     <div
-      style={{
-        minHeight: "100vh",
-        width: "100%",
-        position: "relative",
-        overflow: "hidden",
-        background: "#000",
-      }}
+      ref={containerRef}
+      className={`lp-container ${isReady ? "ready" : ""} ${easterEggActive ? "rainbow-mode" : ""}`}
     >
-      {/* Top Navigation */}
-      <Header />
-
-      {/* Unicorn Studio Aura Background */}
+      {/* Custom Cursor */}
       <div
-        className="aura-background-component"
+        className="lp-cursor"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 0,
+          left: cursorPos.x,
+          top: cursorPos.y,
+          transform: `translate(-50%, -50%) scale(${cursorScale})`,
         }}
       >
+        <div className="lp-cursor-dot" />
+        <div className="lp-cursor-ring" />
+        {cursorText && <span className="lp-cursor-text">{cursorText}</span>}
+      </div>
+
+      {/* Cursor Trail */}
+      <div
+        className="lp-cursor-glow"
+        style={{
+          left: cursorPos.x,
+          top: cursorPos.y,
+        }}
+      />
+
+      {/* Spotlight Effect */}
+      <div
+        className="lp-spotlight"
+        style={{
+          background: `radial-gradient(600px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(0, 246, 224, 0.06), transparent 40%)`,
+        }}
+      />
+
+      {/* =========== PRELOADER =========== */}
+      <div className={`lp-preloader ${!isLoading ? "fade-out" : ""}`}>
+        <div className="lp-preloader-content">
+          {/* Morphing Logo */}
+          <div className="lp-preloader-logo">
+            <div className="lp-preloader-ring" />
+            <div className="lp-preloader-ring lp-preloader-ring-2" />
+            <div className="lp-preloader-ring lp-preloader-ring-3" />
+            <span className="lp-preloader-text">YP</span>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="lp-preloader-progress">
+            <div
+              className="lp-preloader-bar"
+              style={{ width: `${loadProgress}%` }}
+            />
+          </div>
+
+          {/* Loading Text */}
+          <div className="lp-preloader-status">
+            {loadProgress < 30 && "INITIALIZING WOLF PROTOCOL..."}
+            {loadProgress >= 30 && loadProgress < 60 && "LOADING TRAINING DATA..."}
+            {loadProgress >= 60 && loadProgress < 90 && "CALIBRATING EXPERIENCE..."}
+            {loadProgress >= 90 && "READY"}
+          </div>
+        </div>
+      </div>
+
+      {/* =========== MAIN CONTENT =========== */}
+      <div className={`lp-main-wrapper ${isReady ? "visible" : ""}`}>
+        {/* Noise & Effects */}
+        <div className="lp-noise" />
+        <div className="lp-scanlines" />
+        <div className="lp-vignette" />
+
+        {/* Animated Gradient Mesh */}
+        <div className="lp-gradient-mesh" />
+
+        {/* Floating Particles */}
+        <div className="lp-particles">
+          {[...Array(40)].map((_, i) => (
+            <div
+              key={i}
+              className="lp-particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 20}s`,
+                animationDuration: `${15 + Math.random() * 20}s`,
+                opacity: 0.3 + Math.random() * 0.5,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Ambient Glow Orbs */}
         <div
-          data-us-project="ILgOO23w4wEyPQOKyLO4"
+          className="lp-orb lp-orb-1"
           style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            left: 0,
-            top: 0,
+            transform: `translate(${parallaxX * 2}px, ${parallaxY * 2}px)`,
           }}
         />
-      </div>
-
-      {/* Content */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          padding: "2rem",
-          textAlign: "center",
-        }}
-      >
-        <img
-          src="/logo/yp-logo.png"
-          alt="YouthPerformance"
+        <div
+          className="lp-orb lp-orb-2"
           style={{
-            width: "180px",
-            marginBottom: "3rem",
-            filter: "drop-shadow(0 0 20px #00f6e0)",
+            transform: `translate(${-parallaxX * 1.5}px, ${-parallaxY * 1.5}px)`,
+          }}
+        />
+        <div
+          className="lp-orb lp-orb-3"
+          style={{
+            transform: `translate(${parallaxX}px, ${-parallaxY}px)`,
           }}
         />
 
+        {/* Sound Toggle */}
         <button
-          className="lp-cta-button"
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "2.5rem",
-            letterSpacing: "0.1em",
-            padding: "1.25rem 3rem",
-            background: "transparent",
-            color: "#00f6e0",
-            border: "3px solid #00f6e0",
-            cursor: "pointer",
-            textTransform: "uppercase",
-            boxShadow: "0 0 20px #00f6e0, 0 0 40px rgba(0, 246, 224, 0.5)",
+          className={`lp-sound-toggle ${soundEnabled ? "active" : ""}`}
+          onClick={() => {
+            setSoundEnabled(!soundEnabled);
+            if (!soundEnabled) playSound("click");
           }}
+          onMouseEnter={() => handleCursorEnter("SOUND", 1.2)}
+          onMouseLeave={handleCursorLeave}
+          aria-label="Toggle sound"
         >
-          GET BULLETPROOF ANKLES
+          {soundEnabled ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          )}
         </button>
-      </div>
 
-      {/* Pulse animation */}
-      <style>{`
-        @keyframes pulse-glow {
-          0%, 100% {
-            box-shadow: 0 0 20px #00f6e0, 0 0 40px rgba(0, 246, 224, 0.5);
-          }
-          50% {
-            box-shadow: 0 0 40px #00f6e0, 0 0 80px rgba(0, 246, 224, 0.8), 0 0 120px rgba(0, 246, 224, 0.4);
-          }
-        }
-        .lp-cta-button {
-          animation: pulse-glow 2s ease-in-out infinite;
-        }
-        .lp-cta-button:hover {
-          background: #00f6e0 !important;
-          color: #000 !important;
-          box-shadow: 0 0 40px #00f6e0, 0 0 80px #00f6e0 !important;
-        }
-      `}</style>
+        {/* Main Content */}
+        <main className="lp-main">
+          {/* 3D Logo Container */}
+          <div
+            ref={logoRef}
+            className={`lp-logo-container ${glitchActive ? "glitch" : ""}`}
+            style={{
+              transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(50px)`,
+            }}
+            onMouseEnter={() => handleCursorEnter("", 2)}
+            onMouseLeave={handleCursorLeave}
+          >
+            {/* Chromatic aberration layers */}
+            <div className="lp-logo-chromatic lp-chromatic-r">
+              <video autoPlay loop muted playsInline className="lp-logo-video">
+                <source src="/webm/3dyp.webm" type="video/webm" />
+              </video>
+            </div>
+            <div className="lp-logo-chromatic lp-chromatic-g">
+              <video autoPlay loop muted playsInline className="lp-logo-video">
+                <source src="/webm/3dyp.webm" type="video/webm" />
+              </video>
+            </div>
+            <div className="lp-logo-chromatic lp-chromatic-b">
+              <video autoPlay loop muted playsInline className="lp-logo-video">
+                <source src="/webm/3dyp.webm" type="video/webm" />
+              </video>
+            </div>
+
+            {/* Main video */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="lp-logo-video lp-logo-main"
+            >
+              <source src="/webm/3dyp.webm" type="video/webm" />
+            </video>
+
+            {/* Holographic shimmer */}
+            <div className="lp-holographic" />
+
+            {/* Glow ring */}
+            <div className="lp-logo-glow" />
+
+            {/* Reflection */}
+            <div className="lp-reflection">
+              <video autoPlay loop muted playsInline className="lp-logo-video">
+                <source src="/webm/3dyp.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+
+          {/* Tagline with Scramble Effect */}
+          <h1 className="lp-tagline">
+            <span className="lp-tagline-line">{displayText || "\u00A0"}</span>
+            <span className="lp-tagline-accent">{line2 || "\u00A0"}</span>
+          </h1>
+
+          {/* Stats Counter */}
+          <div className="lp-stats">
+            <div className="lp-stat">
+              <span className="lp-stat-number">{athleteCount.toLocaleString()}+</span>
+              <span className="lp-stat-label">ATHLETES</span>
+            </div>
+            <div className="lp-stat-divider" />
+            <div className="lp-stat">
+              <span className="lp-stat-number">{countryCount}</span>
+              <span className="lp-stat-label">COUNTRIES</span>
+            </div>
+          </div>
+
+          {/* Magnetic CTA Button */}
+          <a
+            ref={ctaRef}
+            href="/waitlist"
+            className="lp-cta"
+            onClick={handleCTAClick}
+            onMouseEnter={() => handleCursorEnter("", 0)}
+            onMouseLeave={handleCursorLeave}
+            style={{
+              transform: `translate(${magneticOffset.x}px, ${magneticOffset.y}px)`,
+            }}
+          >
+            <span className="lp-cta-bg" />
+            <span className="lp-cta-text">JOIN THE PACK</span>
+            <span className="lp-cta-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </span>
+            <span className="lp-cta-shine" />
+          </a>
+
+          {/* Social Proof Ticker */}
+          <div className="lp-ticker-container">
+            <div className="lp-ticker">
+              <div className="lp-ticker-content">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="lp-ticker-items">
+                    <span className="lp-ticker-item">
+                      <span className="lp-ticker-dot" /> NBA SKILLS COACH APPROVED
+                    </span>
+                    <span className="lp-ticker-item">
+                      <span className="lp-ticker-dot" /> USED BY D1 PROGRAMS
+                    </span>
+                    <span className="lp-ticker-item">
+                      <span className="lp-ticker-dot" /> AI-POWERED TRAINING
+                    </span>
+                    <span className="lp-ticker-item">
+                      <span className="lp-ticker-dot" /> BUILD SPRINGS NOT PISTONS
+                    </span>
+                    <span className="lp-ticker-item">
+                      <span className="lp-ticker-dot" /> YOUTH PERFORMANCE
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="lp-scroll-indicator">
+            <div className="lp-scroll-line" />
+            <span>SCROLL TO EXPLORE</span>
+          </div>
+        </main>
+
+        {/* Confetti Container */}
+        <div className="lp-confetti-container">
+          {confetti.map((particle) => (
+            <Confetti key={particle.id} {...particle} />
+          ))}
+        </div>
+
+        {/* Bottom Fade */}
+        <div className="lp-bottom-fade" />
+      </div>
     </div>
   );
 }

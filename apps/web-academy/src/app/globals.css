@@ -313,3 +313,154 @@
     display: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   SPLIT-SCREEN PLAYER UTILITIES
+   ───────────────────────────────────────────────────────────── */
+
+@layer utilities {
+  /* Force landscape orientation hint */
+  .force-landscape {
+    @media screen and (orientation: portrait) and (min-width: 640px) {
+      transform: rotate(90deg);
+      transform-origin: left top;
+      width: 100vh;
+      height: 100vw;
+      overflow-x: hidden;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+  }
+
+  /* TV safe zone (5% margins) */
+  .tv-safe-zone {
+    padding: 5%;
+  }
+
+  /* 10-foot UI text scaling for TV */
+  @media screen and (min-width: 1920px) {
+    .tv-text-scale {
+      font-size: 1.5em;
+    }
+
+    .tv-text-scale h1 {
+      font-size: 2em;
+    }
+  }
+
+  /* Video aspect ratio containers */
+  .video-16-9 {
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-9-16 {
+    aspect-ratio: 9 / 16;
+  }
+
+  .video-1-1 {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Split screen layouts */
+  .split-stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .split-panel {
+    display: grid;
+    grid-template-columns: 60% 40%;
+  }
+
+  .split-cinema {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Video overlay gradients */
+  .video-overlay-top {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+  }
+
+  .video-overlay-bottom {
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  }
+
+  .video-overlay-full {
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.4) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(0,0,0,0.6) 100%
+    );
+  }
+
+  /* Player controls backdrop */
+  .controls-backdrop {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Prevent layout shift during video load */
+  .video-placeholder {
+    background: linear-gradient(
+      135deg,
+      var(--bg-secondary) 0%,
+      var(--bg-tertiary) 100%
+    );
+  }
+
+  /* Responsive player breakpoints */
+  @media screen and (max-width: 639px) {
+    .player-mobile-only {
+      display: block;
+    }
+    .player-tablet-up {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 640px) and (max-width: 1023px) {
+    .player-mobile-only {
+      display: none;
+    }
+    .player-tablet-only {
+      display: block;
+    }
+    .player-desktop-up {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 1024px) and (max-width: 1919px) {
+    .player-mobile-only {
+      display: none;
+    }
+    .player-tablet-only {
+      display: none;
+    }
+    .player-desktop-only {
+      display: block;
+    }
+    .player-tv-only {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 1920px) {
+    .player-mobile-only {
+      display: none;
+    }
+    .player-desktop-only {
+      display: none;
+    }
+    .player-tv-only {
+      display: block;
+    }
+  }
+}

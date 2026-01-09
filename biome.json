@@ -110,6 +110,16 @@
         "rules": {
           "suspicious": {
             "noUnknownAtRules": "off"
+          },
+          "correctness": {
+            "noUnusedImports": "off"
+          }
+        }
+      },
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": "off"
           }
         }
       }

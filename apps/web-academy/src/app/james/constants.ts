@@ -264,25 +264,28 @@ export const OFFER = {
 };
 
 // ─────────────────────────────────────────────────────────────
-// CARD 8: FINAL CTA
+// CARD 8: FINAL CTA (The Close)
 // ─────────────────────────────────────────────────────────────
 
 export const FINAL_CTA = {
-  headline: "The Foundation Is Waiting.",
-  subheadline: "Weak feet don't eat. Strong feet perform.",
-  quote: {
-    text: "Elite training for every kid, everywhere.",
-    author: "James Scott",
-    title: "Founder, YouthPerformance",
-  },
+  headline: "Do Not Wait.",
+  subheadline: "The cohort starts soon. Your spot is waiting.",
+
+  // The PS (Hormozi closing)
+  ps: "Remember, you are trying to build a skyscraper on a swamp. It won't work. Fix the foundation first. Join the 42-Day Reset. See you inside.",
+
   primaryCTA: {
-    label: "START MODULE 1 — $88",
+    label: "JOIN THE CHALLENGE — $88",
     href: "https://academy.youthperformance.com/programs/barefoot-reset",
+    subtext: "Secure my spot & start building my foundation",
   },
-  secondaryCTA: {
-    label: "SHOP NEOBALL — $168",
-    href: "https://shop.youthperformance.com/products/neoball",
+
+  // Guarantee reminder
+  guarantee: {
+    headline: "Stronger Feet or Your Money Back",
+    text: "If you don't feel the difference in 14 days, email me. Full refund. No questions.",
   },
+
   social: {
     instagram: "https://instagram.com/weakfeetdonteat",
     twitter: "https://twitter.com/weakfeetdonteat",
