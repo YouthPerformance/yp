@@ -1,12 +1,13 @@
 ---
-import { Header } from '@yp/ui';
-
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "The world's best silent basketball - according to the kids. Play anytime, anywhere without the noise." } = Astro.props;
+const {
+  title,
+  description = "The world's best silent basketball - according to the kids. Play anytime, anywhere without the noise.",
+} = Astro.props;
 
 const navLinks = [
   { label: "ACADEMY", href: "https://app.youthperformance.com" },

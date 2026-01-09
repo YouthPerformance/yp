@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+const convexUrl = import.meta.env.PUBLIC_CONVEX_URL || "";
 ---
 
 <Layout title="NeoBall - World's Best Silent Basketball">
@@ -34,12 +34,12 @@ import Layout from '../layouts/Layout.astro';
       </p>
 
       <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="https://shop.youthperformance.com/products/neoball"
+        <button
+          id="hero-notify-btn"
           class="inline-block px-10 py-4 bg-pink text-white font-bold text-lg rounded-lg glow-pink hover:bg-cyan hover:text-wolf-black transition-all duration-300 transform hover:scale-105"
         >
-          BUY NOW — $29.99
-        </a>
+          NOTIFY ME WHEN AVAILABLE
+        </button>
         <a
           href="#features"
           class="inline-block px-10 py-4 border-2 border-cyan text-cyan font-bold text-lg rounded-lg hover:bg-cyan hover:text-wolf-black transition-all duration-300"
@@ -132,24 +132,98 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- Waitlist Leaderboard Section -->
+  <section id="leaderboard" class="py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="font-display text-4xl md:text-5xl tracking-wider mb-4">
+          JOIN THE <span class="text-pink">WAITLIST</span>
+        </h2>
+        <p class="text-gray-400 max-w-xl mx-auto">
+          NeoBall is currently sold out. Join the waitlist to be notified when it's back in stock.
+          Invite friends to move up the list!
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <!-- Leaderboard -->
+        <div id="leaderboard-container">
+          <WaitlistApp client:load convexUrl={convexUrl} showLeaderboard={true} />
+        </div>
+
+        <!-- How it works -->
+        <div class="bg-surface rounded-2xl border border-white/5 p-8">
+          <h3 class="font-display text-2xl tracking-wider text-cyan mb-6">
+            HOW IT WORKS
+          </h3>
+          <div class="space-y-6">
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-lg bg-pink/20 flex items-center justify-center shrink-0">
+                <span class="font-display text-pink">1</span>
+              </div>
+              <div>
+                <p class="text-white font-medium">Join the waitlist</p>
+                <p class="text-gray-500 text-sm">Enter your email and select your size</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-lg bg-pink/20 flex items-center justify-center shrink-0">
+                <span class="font-display text-pink">2</span>
+              </div>
+              <div>
+                <p class="text-white font-medium">Share your link</p>
+                <p class="text-gray-500 text-sm">Pass the rock to your squad</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-lg bg-pink/20 flex items-center justify-center shrink-0">
+                <span class="font-display text-pink">3</span>
+              </div>
+              <div>
+                <p class="text-white font-medium">Move up the list</p>
+                <p class="text-gray-500 text-sm">Each friend = +10 spots up</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-lg bg-neon-green/20 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-neon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-white font-medium">Get early access</p>
+                <p class="text-gray-500 text-sm">Top of the list = first to know</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA Section -->
   <section class="py-24 px-6 bg-surface">
     <div class="max-w-3xl mx-auto text-center">
       <h2 class="font-display text-4xl md:text-6xl tracking-wider mb-6">
-        GET YOUR <span class="text-neon-green">NEOBALL</span>
+        DON'T MISS OUT
       </h2>
       <p class="text-xl text-gray-400 mb-10">
-        Join thousands of young athletes training smarter.
+        Join thousands of young athletes waiting for the next drop.
       </p>
-      <a
-        href="https://shop.youthperformance.com/products/neoball"
-        class="inline-block px-12 py-5 bg-neon-green text-wolf-black font-bold text-xl rounded-lg shadow-lg hover:scale-105 transition-transform"
+      <button
+        id="cta-notify-btn"
+        class="inline-block px-12 py-5 bg-neon-green text-wolf-black font-bold text-xl rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer"
         style="box-shadow: 0 0 30px rgba(57, 255, 20, 0.4);"
       >
-        BUY NOW — $29.99
-      </a>
+        JOIN THE WAITLIST
+      </button>
     </div>
   </section>
+
+  <!-- Waitlist Modal App (outside layout for portal) -->
+  <div id="waitlist-modal-app">
+    <WaitlistApp client:load convexUrl={convexUrl} showLeaderboard={false} />
+  </div>
 
   <!-- Footer -->
   <footer class="py-12 px-6 border-t border-white/5">
@@ -176,3 +250,14 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </footer>
 </Layout>
+
+<script>
+  // Button click handlers to open waitlist modal
+  document.getElementById('hero-notify-btn')?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('open-waitlist-modal'));
+  });
+
+  document.getElementById('cta-notify-btn')?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('open-waitlist-modal'));
+  });
+</script>
