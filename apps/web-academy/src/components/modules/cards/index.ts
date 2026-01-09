@@ -1,5 +1,7 @@
 // Card components barrel export
-export { LessonCard } from './LessonCard';
-export { CheckCard } from './CheckCard';
-export { UnlockGate } from './UnlockGate';
-export { CompletionCard } from './CompletionCard';
+
+export { CheckCard } from "./CheckCard";
+export { CompletionCard } from "./CompletionCard";
+export { LessonCard } from "./LessonCard";
+export { TeaserCompletionCard } from "./TeaserCompletionCard";
+export { UnlockGate } from "./UnlockGate";

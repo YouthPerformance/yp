@@ -7,7 +7,7 @@
 // CONTENT MODE
 // ─────────────────────────────────────────────────────────────
 
-export type ContentMode = 'athlete' | 'parent';
+export type ContentMode = "athlete" | "parent";
 
 // ─────────────────────────────────────────────────────────────
 // CARD CONTENT
@@ -16,7 +16,7 @@ export type ContentMode = 'athlete' | 'parent';
 export interface CardContent {
   headline: string;
   body: string | null;
-  mediaType?: 'image' | 'video' | null;
+  mediaType?: "image" | "video" | null;
   mediaUrl?: string | null;
   caption?: string | null;
 }
@@ -38,7 +38,7 @@ export interface BaseLearningCard {
 }
 
 export interface LessonCard extends BaseLearningCard {
-  type: 'Lesson';
+  type: "Lesson";
 }
 
 export interface CheckOption {
@@ -49,7 +49,7 @@ export interface CheckOption {
 }
 
 export interface CheckCard extends BaseLearningCard {
-  type: 'Check';
+  type: "Check";
   question: { athlete: string; parent: string };
   options: CheckOption[];
   hintAvailable: boolean;
@@ -58,7 +58,7 @@ export interface CheckCard extends BaseLearningCard {
 }
 
 export interface UnlockedItem {
-  type: 'DrillStack' | 'Program' | 'Product';
+  type: "DrillStack" | "Program" | "Product";
   id: string;
   title: string;
   description: string;
@@ -75,7 +75,7 @@ export interface Badge {
 }
 
 export interface CompletionCard extends BaseLearningCard {
-  type: 'Completion';
+  type: "Completion";
   unlockedContent: UnlockedItem[];
   completionBadge: Badge;
 }
@@ -118,7 +118,7 @@ export interface LearningModule {
   subtitle: string;
   shortDescription: string;
   longDescription: string;
-  sport: 'Basketball' | 'Barefoot' | 'General';
+  sport: "Basketball" | "Barefoot" | "General";
   author: string;
   reviewedBy?: string;
   estimatedMinutes: number;
@@ -170,18 +170,18 @@ export interface ModuleProgress {
 // UTILITY TYPES
 // ─────────────────────────────────────────────────────────────
 
-export type CardType = 'Lesson' | 'Check' | 'Completion';
+export type CardType = "Lesson" | "Check" | "Completion";
 
 export function isCheckCard(card: LearningCard): card is CheckCard {
-  return card.type === 'Check';
+  return card.type === "Check";
 }
 
 export function isLessonCard(card: LearningCard): card is LessonCard {
-  return card.type === 'Lesson';
+  return card.type === "Lesson";
 }
 
 export function isCompletionCard(card: LearningCard): card is CompletionCard {
-  return card.type === 'Completion';
+  return card.type === "Completion";
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -195,10 +195,7 @@ export function isCompletionCard(card: LearningCard): card is CompletionCard {
  * - Retry correct: +2 XP
  * - Lesson card view: +2 XP
  */
-export function calculateCardXp(
-  isCorrect: boolean,
-  attemptNumber: number
-): number {
+export function calculateCardXp(isCorrect: boolean, attemptNumber: number): number {
   if (!isCorrect) return 0;
   if (attemptNumber === 1) return 5;
   return 2; // Retry XP
@@ -238,7 +235,7 @@ export const SHARDS_PER_CRYSTAL = 10;
  */
 export function calculateModuleRewards(
   accuracy: number,
-  levelsCompleted: number
+  levelsCompleted: number,
 ): { xp: number; shards: number } {
   let xp = 0;
   let shards = 0;
@@ -266,9 +263,9 @@ export function calculateModuleRewards(
 export function calculateCrystalReward(
   isCorrect: boolean,
   attemptNumber: number,
-  baseReward: number = 10
+  _baseReward: number = 10,
 ): number {
-  console.warn('calculateCrystalReward is deprecated. Use calculateCardXp instead.');
+  console.warn("calculateCrystalReward is deprecated. Use calculateCardXp instead.");
   return calculateCardXp(isCorrect, attemptNumber);
 }
 
@@ -276,10 +273,7 @@ export function calculateCrystalReward(
 // SECTION UNLOCK LOGIC
 // ─────────────────────────────────────────────────────────────
 
-export function canUnlockSection(
-  section: LearningSection,
-  cumulativeCorrect: number
-): boolean {
+export function canUnlockSection(section: LearningSection, cumulativeCorrect: number): boolean {
   return cumulativeCorrect >= section.unlockThreshold;
 }
 
@@ -293,8 +287,8 @@ export function getModuleStats(module: LearningModule): {
 
   for (const section of module.sections) {
     for (const card of section.cards) {
-      if (card.type === 'Lesson') totalLessons++;
-      if (card.type === 'Check') totalChecks++;
+      if (card.type === "Lesson") totalLessons++;
+      if (card.type === "Check") totalChecks++;
     }
   }
 
@@ -303,4 +297,48 @@ export function getModuleStats(module: LearningModule): {
     totalChecks,
     totalCards: totalLessons + totalChecks,
   };
+}
+
+// ─────────────────────────────────────────────────────────────
+// TEASER MODULE TYPES (Free → Paid Conversion)
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Configuration for the paid product a teaser converts to
+ */
+export interface ConversionConfig {
+  productSlug: string; // e.g., "barefoot-reset-42"
+  productName: string; // e.g., "Barefoot Reset Challenge"
+  price: number; // in cents, e.g., 8800 = $88
+  originalPrice?: number; // for strikethrough, e.g., 12900 = $129
+  features: string[]; // bullet points for upsell
+  headline: string; // e.g., "Ready to bulletproof your ankles?"
+  subheadline: string; // e.g., "You learned WHY. Now learn HOW."
+}
+
+/**
+ * Email gate configuration for lead capture
+ */
+export interface EmailGateConfig {
+  enabled: boolean;
+  rewardSlug?: string; // e.g., "bpa-drill-stack-preview"
+  rewardName?: string; // e.g., "BPA Drill Stack Preview"
+  ctaText?: string; // e.g., "Get Free Drill Stack"
+}
+
+/**
+ * Teaser module extends LearningModule with conversion capabilities
+ */
+export interface TeaserModule extends LearningModule {
+  isTeaser: true;
+  conversion: ConversionConfig;
+  emailGate: EmailGateConfig;
+  teaserBadge: Badge; // Lighter badge than full module (e.g., "Ankle Intel" vs "Armor Builder")
+}
+
+/**
+ * Type guard for teaser modules
+ */
+export function isTeaserModule(module: LearningModule): module is TeaserModule {
+  return "isTeaser" in module && module.isTeaser === true;
 }

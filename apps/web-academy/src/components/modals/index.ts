@@ -1,2 +1,3 @@
-export { AccessDeniedModal } from './AccessDeniedModal';
-export { UpsellModal } from './UpsellModal';
+export { AccessDeniedModal } from "./AccessDeniedModal";
+export { EmailCaptureModal } from "./EmailCaptureModal";
+export { UpsellModal } from "./UpsellModal";
