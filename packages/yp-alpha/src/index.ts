@@ -5,14 +5,17 @@
  * Provides AI routing, model execution, and voice interfaces.
  */
 
-// Router exports
-export * from "./router";
+// Re-export types
+export type { ModelTier, RouteDecision } from "./config/models";
 
 // Config exports
 export * from "./config/models";
-
+// Router exports
+export * from "./router";
 // Shopify exports
 export * from "./shopify";
-
-// Re-export types
-export type { ModelTier, RouteDecision } from "./config/models";
+// Auth exports
+export * from "./auth";
+export * from "./auth/client";
+// Voice exports
+export * from "./voices";

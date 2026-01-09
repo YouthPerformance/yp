@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════
 // MODULE PLAYER
 // Interactive card-based learning experience
+// Supports anonymous users for teaser modules
 // ═══════════════════════════════════════════════════════════
 
 "use client";
@@ -11,6 +12,9 @@ import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { CardSwiper, ModeToggle, ModuleProgress, XpCounter } from "@/components/modules";
 import { moduleRegistry } from "@/data/modules/bulletproof-ankles";
+import { isTeaserModule } from "@/data/modules/types";
+import { useAnonymousProgress } from "@/hooks";
+import { useSession } from "@/lib/auth";
 import { useModuleStore } from "@/stores/moduleStore";
 
 interface PageProps {
@@ -23,6 +27,14 @@ export default function ModulePlayerPage({ params }: PageProps) {
 
   // Get module data
   const module = Object.values(moduleRegistry).find((m) => m.slug === slug);
+  const isTeaser = module ? isTeaserModule(module) : false;
+
+  // Auth state - check if user is logged in
+  const { data: session } = useSession();
+  const isAnonymous = !session?.user;
+
+  // Anonymous progress for teaser modules
+  const { saveTeaserCompletion, isLoaded: progressLoaded } = useAnonymousProgress();
 
   // Store state
   const {
@@ -53,12 +65,24 @@ export default function ModulePlayerPage({ params }: PageProps) {
     totalChecks: number;
     xp: number;
     time: number;
+    shards?: number;
   }) => {
     setIsCompleted(true);
 
-    // TODO: Integrate with Convex when auth is available
-    // For now, just show success state
-    console.log("Module completed:", stats);
+    // For teaser modules with anonymous users, save to localStorage
+    if (isTeaser && isAnonymous && module) {
+      saveTeaserCompletion(module.slug, {
+        score: stats.score,
+        totalChecks: stats.totalChecks,
+        xpEarned: stats.xp,
+        shardsEarned: stats.shards ?? 0,
+        timeElapsed: stats.time,
+      });
+      console.log("[TeaserModule] Saved anonymous progress to localStorage");
+    } else {
+      // TODO: Save to Convex for authenticated users
+      console.log("Module completed:", stats);
+    }
 
     // Redirect after a short delay
     setTimeout(() => {
@@ -127,7 +151,7 @@ export default function ModulePlayerPage({ params }: PageProps) {
 
       {/* Card area */}
       <main className="flex-1 overflow-hidden">
-        <CardSwiper sections={module.sections} mode={mode} onComplete={handleComplete} />
+        <CardSwiper module={module} sections={module.sections} mode={mode} onComplete={handleComplete} />
       </main>
 
       {/* Exit confirmation modal */}

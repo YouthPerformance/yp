@@ -16,7 +16,7 @@ const rankValidator = v.union(
   v.literal("pup"),
   v.literal("hunter"),
   v.literal("alpha"),
-  v.literal("apex")
+  v.literal("apex"),
 );
 const subscriptionValidator = v.union(v.literal("free"), v.literal("pro"));
 const wolfColorValidator = v.union(
@@ -24,27 +24,23 @@ const wolfColorValidator = v.union(
   v.literal("gold"),
   v.literal("purple"),
   v.literal("green"),
-  v.literal("red")
+  v.literal("red"),
 );
 
 // R3 Wolf Pack Sorting validators
-const wolfIdentityValidator = v.union(
-  v.literal("speed"),
-  v.literal("tank"),
-  v.literal("air")
-);
+const wolfIdentityValidator = v.union(v.literal("speed"), v.literal("tank"), v.literal("air"));
 
 const trainingPathValidator = v.union(
-  v.literal("glass"),    // Pain-dominant → Release phase
-  v.literal("grinder"),  // Volume-dominant → Restore phase
-  v.literal("prospect")  // Output-ready → Re-Engineer phase
+  v.literal("glass"), // Pain-dominant → Release phase
+  v.literal("grinder"), // Volume-dominant → Restore phase
+  v.literal("prospect"), // Output-ready → Re-Engineer phase
 );
 
 const sortingMethodValidator = v.union(
   v.literal("voice"),
   v.literal("buttons"),
   v.literal("parent_assisted"),
-  v.literal("manual")
+  v.literal("manual"),
 );
 
 // ─────────────────────────────────────────────────────────────
@@ -57,8 +53,14 @@ export default defineSchema({
   // Core user profiles for athletes and parents
   // ═══════════════════════════════════════════════════════════
   users: defineTable({
-    // Identity (from Clerk)
-    clerkId: v.string(),
+    // Identity - BetterAuth (replaces Clerk)
+    // authUserId links to betterauth_users table managed by BetterAuth component
+    authUserId: v.optional(v.string()),
+
+    // DEPRECATED: clerkId - kept for migration, remove after 30 days
+    clerkId: v.optional(v.string()),
+
+    // Primary identifier
     email: v.string(),
 
     // Profile
@@ -74,7 +76,7 @@ export default defineSchema({
     rank: rankValidator,
     streakCurrent: v.number(),
     streakBest: v.number(),
-    streakFreezes: v.optional(v.number()),  // Available streak freezes (max 2)
+    streakFreezes: v.optional(v.number()), // Available streak freezes (max 2)
     lastWorkoutAt: v.optional(v.number()),
 
     // Daily caps tracking (reset at midnight)
@@ -92,9 +94,9 @@ export default defineSchema({
     subscriptionExpiresAt: v.optional(v.number()),
 
     // Parent-Child Linking
-    parentCode: v.optional(v.string()),     // Code this user has (if athlete)
+    parentCode: v.optional(v.string()), // Code this user has (if athlete)
     athleteCodes: v.optional(v.array(v.string())), // Codes of athletes (if parent)
-    linkedParentId: v.optional(v.id("users")),     // Parent's user ID (if athlete)
+    linkedParentId: v.optional(v.id("users")), // Parent's user ID (if athlete)
     linkedAthleteIds: v.optional(v.array(v.id("users"))), // Athlete IDs (if parent)
 
     // Onboarding
@@ -127,11 +129,15 @@ export default defineSchema({
     firstMissionId: v.optional(v.string()),
 
     // Path evolution history (for future re-sorting)
-    pathHistory: v.optional(v.array(v.object({
-      path: trainingPathValidator,
-      assignedAt: v.number(),
-      reason: v.string(),
-    }))),
+    pathHistory: v.optional(
+      v.array(
+        v.object({
+          path: trainingPathValidator,
+          assignedAt: v.number(),
+          reason: v.string(),
+        }),
+      ),
+    ),
 
     // COPPA: Age verification for under-13
     dateOfBirth: v.optional(v.string()), // ISO date string
@@ -142,7 +148,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
-    .index("by_clerk_id", ["clerkId"])
+    .index("by_auth_user_id", ["authUserId"])
+    .index("by_clerk_id", ["clerkId"]) // DEPRECATED: Remove after migration
     .index("by_email", ["email"])
     .index("by_parent_code", ["parentCode"])
     .index("by_role", ["role"])
@@ -166,14 +173,14 @@ export default defineSchema({
     consentType: v.union(
       v.literal("voice_sorting"),
       v.literal("ai_chat"),
-      v.literal("data_collection")
+      v.literal("data_collection"),
     ),
 
     // How did they verify? (FTC-approved methods)
     consentMethod: v.union(
       v.literal("sms_verification"),
       v.literal("email_verification"),
-      v.literal("credit_card_verification")
+      v.literal("credit_card_verification"),
     ),
 
     // Verification
@@ -260,7 +267,7 @@ export default defineSchema({
       v.literal("uncommon"),
       v.literal("rare"),
       v.literal("epic"),
-      v.literal("legendary")
+      v.literal("legendary"),
     ),
     unlockedByDay: v.optional(v.number()), // Day that unlocks this card
     unlockedByAchievement: v.optional(v.string()),
@@ -289,14 +296,13 @@ export default defineSchema({
       v.literal("streak_saver"),
       v.literal("xp_boost"),
       v.literal("card_pack"),
-      v.literal("theme_pack")
+      v.literal("theme_pack"),
     ),
     crystalsCost: v.number(),
     purchasedAt: v.number(),
     usedAt: v.optional(v.number()),
     metadata: v.optional(v.any()),
-  })
-    .index("by_user", ["userId"]),
+  }).index("by_user", ["userId"]),
 
   // ═══════════════════════════════════════════════════════════
   // PARENT CODES TABLE
@@ -361,10 +367,10 @@ export default defineSchema({
     userId: v.string(),
     key: v.string(), // "left_knee", "shooting_confidence", "sleep_quality"
     category: v.union(
-      v.literal("body_part"),      // Physical: ankle, knee, hip
-      v.literal("metric"),         // Measurable: vertical, sprint_time
-      v.literal("mental"),         // Psychological: confidence, focus
-      v.literal("recovery")        // Sleep, nutrition, fatigue
+      v.literal("body_part"), // Physical: ankle, knee, hip
+      v.literal("metric"), // Measurable: vertical, sprint_time
+      v.literal("mental"), // Psychological: confidence, focus
+      v.literal("recovery"), // Sleep, nutrition, fatigue
     ),
     status: v.string(), // "Healthy", "Sore", "Injured", "Improving", "Plateaued"
     score: v.number(), // 1-10 (1=Critical, 10=Elite)
@@ -384,10 +390,10 @@ export default defineSchema({
     fromNode: v.string(), // "high_volume_plyos"
     toNode: v.string(), // "knee_pain"
     relationship: v.union(
-      v.literal("CAUSES"),     // A leads to B
-      v.literal("IMPROVES"),   // A makes B better
-      v.literal("BLOCKS"),     // A prevents B
-      v.literal("CORRELATES")  // A and B move together
+      v.literal("CAUSES"), // A leads to B
+      v.literal("IMPROVES"), // A makes B better
+      v.literal("BLOCKS"), // A prevents B
+      v.literal("CORRELATES"), // A and B move together
     ),
     strength: v.number(), // 0-1 confidence score
     observedAt: v.number(),
@@ -406,12 +412,12 @@ export default defineSchema({
     conversationId: v.optional(v.id("conversations")),
     content: v.string(), // "Athlete mentioned left knee pain after dunking"
     memoryType: v.union(
-      v.literal("injury"),     // Pain/injury reports
-      v.literal("goal"),       // Goals mentioned
-      v.literal("progress"),   // Progress updates
-      v.literal("emotion"),    // Emotional state
+      v.literal("injury"), // Pain/injury reports
+      v.literal("goal"), // Goals mentioned
+      v.literal("progress"), // Progress updates
+      v.literal("emotion"), // Emotional state
       v.literal("preference"), // Training preferences
-      v.literal("context")     // General context
+      v.literal("context"), // General context
     ),
     extractedAt: v.number(),
     processed: v.boolean(), // Has it been distilled into athlete_nodes?
@@ -432,7 +438,7 @@ export default defineSchema({
       v.literal("drill"),
       v.literal("article"),
       v.literal("protocol"),
-      v.literal("faq")
+      v.literal("faq"),
     ),
     text: v.string(),
     tags: v.optional(v.array(v.string())),
@@ -445,8 +451,8 @@ export default defineSchema({
   })
     .index("by_category", ["category"])
     .index("by_slug", ["slug"]),
-    // Note: Vector index added separately when embeddings are ready
-    // .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 })
+  // Note: Vector index added separately when embeddings are ready
+  // .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 })
 
   // ═══════════════════════════════════════════════════════════
   // GPT UPLINK - CONTENT MULTIPLEXER
@@ -467,10 +473,10 @@ export default defineSchema({
 
     // Workflow status
     status: v.union(
-      v.literal("DRAFT"),      // Just created, awaiting review
-      v.literal("READY"),      // Reviewed, ready to publish
-      v.literal("PUBLISHED"),  // Sent to Make.com
-      v.literal("FAILED")      // Generation or distribution failed
+      v.literal("DRAFT"), // Just created, awaiting review
+      v.literal("READY"), // Reviewed, ready to publish
+      v.literal("PUBLISHED"), // Sent to Make.com
+      v.literal("FAILED"), // Generation or distribution failed
     ),
 
     // Error tracking
@@ -501,7 +507,7 @@ export default defineSchema({
       v.literal("BLOG"),
       v.literal("LINKEDIN"),
       v.literal("TWITTER"),
-      v.literal("INSTAGRAM")
+      v.literal("INSTAGRAM"),
     ),
 
     // Content
@@ -538,7 +544,7 @@ export default defineSchema({
         answeredAt: v.optional(v.number()),
         wasCorrect: v.optional(v.boolean()),
         attemptsOnCard: v.number(),
-      })
+      }),
     ),
     updatedAt: v.number(),
   })
@@ -579,6 +585,24 @@ export default defineSchema({
     .index("by_user_product", ["userId", "productSlug"]),
 
   // ─────────────────────────────────────────────────────────────
+  // EMAIL CAPTURES TABLE
+  // Lead capture for teaser modules → paid conversion
+  // ─────────────────────────────────────────────────────────────
+  emailCaptures: defineTable({
+    email: v.string(),
+    source: v.string(), // e.g., "bpa-teaser-completion", "homepage-cta"
+    capturedAt: v.number(),
+    userId: v.optional(v.id("users")), // If they later sign up
+    rewardUnlocked: v.optional(v.string()), // e.g., "bpa-drill-stack-preview"
+    convertedAt: v.optional(v.number()), // When they purchased
+    convertedTo: v.optional(v.string()), // e.g., "barefoot-reset-42"
+    metadata: v.optional(v.any()), // Session ID, UTM params, etc.
+  })
+    .index("by_email", ["email"])
+    .index("by_source", ["source"])
+    .index("by_converted", ["convertedTo"]),
+
+  // ─────────────────────────────────────────────────────────────
   // SHOPIFY ORDERS TABLE
   // Track Shopify orders for golden ticket generation
   // ─────────────────────────────────────────────────────────────
@@ -593,7 +617,7 @@ export default defineSchema({
         name: v.string(),
         quantity: v.number(),
         price: v.number(),
-      })
+      }),
     ),
     totalAmount: v.number(),
     currency: v.string(),
@@ -622,4 +646,154 @@ export default defineSchema({
     .index("by_token", ["token"])
     .index("by_order", ["orderId"])
     .index("by_status", ["status"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // VIRAL WAITLIST SYSTEM
+  // NeoBall pre-launch waitlist with referral mechanics
+  // ═══════════════════════════════════════════════════════════
+  waitlistEntries: defineTable({
+    // Contact
+    email: v.string(),
+
+    // Product preference
+    size: v.union(v.literal("6"), v.literal("7")),
+
+    // Referral system
+    referralCode: v.string(), // Unique code for sharing (nanoid)
+    referredBy: v.optional(v.string()), // referralCode of who referred them
+    referralCount: v.number(), // Number of people they've referred
+
+    // Position tracking
+    // Effective position = basePosition - (referralCount * 10)
+    basePosition: v.number(), // Original signup order (immutable)
+
+    // Source tracking
+    source: v.string(), // "neoball-waitlist"
+
+    // Timestamps
+    joinedAt: v.number(),
+
+    // Email sent tracking
+    confirmationSentAt: v.optional(v.number()),
+
+    // Metadata
+    metadata: v.optional(v.any()), // UTM params, user agent, etc.
+  })
+    .index("by_email", ["email"])
+    .index("by_referral_code", ["referralCode"])
+    .index("by_base_position", ["basePosition"])
+    .index("by_referral_count", ["referralCount"])
+    .index("by_joined", ["joinedAt"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // PLAYBOOK CONTENT FACTORY
+  // AI-generated content with expert voice iteration
+  // ═══════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────
+  // PLAYBOOK CONTENT TABLE
+  // Stores AI-generated pages for James/Adam review
+  // ─────────────────────────────────────────────────────────────
+  playbook_content: defineTable({
+    // Identity
+    slug: v.string(), // URL-safe slug: "barefoot-for-golf"
+
+    contentType: v.union(
+      v.literal("pillar"), // 2,500-4,000 word comprehensive guides
+      v.literal("topic"), // 1,200-2,000 word sub-topic pages
+      v.literal("qa"), // 800-1,200 word parent Q&A
+      v.literal("drill"), // 400-600 word drill cards
+    ),
+
+    // Ownership
+    author: v.union(v.literal("JAMES"), v.literal("ADAM"), v.literal("YP"), v.literal("TEAM_YP")),
+
+    // Categorization
+    category: v.string(), // "basketball", "barefoot-training", etc.
+    subcategory: v.optional(v.string()), // "shooting", "injury-rehab", etc.
+
+    // Target (for age/sport specific content)
+    targetAge: v.optional(v.number()), // 8, 9, 10, etc.
+    targetSport: v.optional(v.string()), // "golf", "soccer", etc.
+
+    // Content
+    title: v.string(),
+    frontmatter: v.any(), // All metadata (directAnswer, keywords, keyTakeaways, etc.)
+    body: v.string(), // MDX/Markdown content
+
+    // Workflow status
+    status: v.union(
+      v.literal("DRAFT"), // Just generated, awaiting review
+      v.literal("IN_REVIEW"), // Expert is looking at it
+      v.literal("CHANGES_REQUESTED"), // Expert wants edits
+      v.literal("APPROVED"), // Ready to export
+      v.literal("PUBLISHED"), // Exported to Git/Playbook
+    ),
+
+    // Version tracking
+    version: v.number(), // Current version number
+    parentVersion: v.optional(v.id("playbook_content")), // Previous version ID
+
+    // Iteration feedback
+    iterationNotes: v.optional(v.string()), // Voice feedback transcript
+    changesRequested: v.optional(v.string()), // What the expert wanted changed
+
+    // Approval tracking
+    approvedAt: v.optional(v.number()),
+    approvedBy: v.optional(v.string()), // "JAMES" or "ADAM"
+    approverNotes: v.optional(v.string()),
+
+    // Publishing
+    publishedAt: v.optional(v.number()),
+    gitPrUrl: v.optional(v.string()), // PR URL for tracking
+
+    // Generation metadata
+    generationModel: v.optional(v.string()), // "claude-sonnet-4-5-..."
+    promptTokens: v.optional(v.number()),
+    completionTokens: v.optional(v.number()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_author", ["author"])
+    .index("by_status", ["status"])
+    .index("by_author_status", ["author", "status"])
+    .index("by_category", ["category"])
+    .index("by_content_type", ["contentType"])
+    .index("by_created", ["createdAt"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // EXPERT VOICE EXAMPLES TABLE
+  // Stores approved/rejected examples for voice learning
+  // ─────────────────────────────────────────────────────────────
+  expert_voice_examples: defineTable({
+    // Which expert's voice
+    expert: v.union(v.literal("JAMES"), v.literal("ADAM"), v.literal("TEAM_YP")),
+
+    // Example type
+    exampleType: v.union(
+      v.literal("approved"), // Content they liked
+      v.literal("rejected"), // Content they didn't like
+    ),
+
+    // The content
+    contentSnippet: v.string(), // Up to ~500 chars of example text
+    fullContentId: v.optional(v.id("playbook_content")), // Reference to full content
+
+    // Context
+    category: v.string(), // For category-specific learning
+    contentType: v.string(), // "pillar", "topic", "qa", "drill"
+
+    // Feedback (for rejected)
+    feedback: v.optional(v.string()), // Why they rejected it
+    correctedVersion: v.optional(v.string()), // What they changed it to
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_expert", ["expert"])
+    .index("by_expert_type", ["expert", "exampleType"])
+    .index("by_expert_category", ["expert", "category"]),
 });

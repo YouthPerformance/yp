@@ -6,11 +6,14 @@
  */
 
 // Components
-export { Button } from "./components/Button";
 export type { ButtonProps } from "./components/Button";
+export { Button } from "./components/Button";
 
-export { Header } from "./components/Header";
+export type { BetaBadgeProps, BetaBadgeVariant } from "./components/BetaBadge";
+export { BetaBadge } from "./components/BetaBadge";
+
 export type { HeaderProps, NavLink } from "./components/Header";
+export { Header } from "./components/Header";
 
 // Tokens
 export * from "./tokens";

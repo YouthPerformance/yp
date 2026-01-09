@@ -3,24 +3,32 @@
 // Vertical swipe container for navigating module cards
 // ═══════════════════════════════════════════════════════════
 
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-import { useModuleStore } from '@/stores/moduleStore';
-import { LessonCard, CheckCard, UnlockGate, CompletionCard } from './cards';
-import type { LearningCard, LearningSection, ContentMode } from '@/data/modules/types';
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import type {
+  ContentMode,
+  LearningCard,
+  LearningModule,
+  LearningSection,
+  TeaserModule,
+} from "@/data/modules/types";
+import { isTeaserModule } from "@/data/modules/types";
+import { useModuleStore } from "@/stores/moduleStore";
+import { CheckCard, CompletionCard, LessonCard, TeaserCompletionCard, UnlockGate } from "./cards";
 
 interface CardSwiperProps {
+  module: LearningModule | TeaserModule;
   sections: LearningSection[];
   mode: ContentMode;
-  onComplete: (stats: { score: number; totalChecks: number; xp: number; time: number }) => void;
+  onComplete: (stats: { score: number; totalChecks: number; xp: number; time: number; shards?: number }) => void;
 }
 
 const SWIPE_THRESHOLD = 50;
 const SWIPE_VELOCITY = 500;
 
-export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
+export function CardSwiper({ module, sections, mode, onComplete }: CardSwiperProps) {
   const {
     currentSectionIndex,
     currentCardIndex,
@@ -34,19 +42,19 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
   } = useModuleStore();
 
   const [startTime] = useState(() => Date.now());
-  const [direction, setDirection] = useState<'up' | 'down'>('up');
+  const [direction, setDirection] = useState<"up" | "down">("up");
 
   const currentSection = sections[currentSectionIndex];
   const currentCard = currentSection?.cards[currentCardIndex];
   const sectionProgress = getSectionProgress();
 
   // Build flat card list with unlock gates
-  const allCards = buildCardSequence(sections, sectionProgress);
-  const flatIndex = getFlatIndex(sections, currentSectionIndex, currentCardIndex);
+  const _allCards = buildCardSequence(sections, sectionProgress);
+  const _flatIndex = getFlatIndex(sections, currentSectionIndex, currentCardIndex);
 
   const handleNext = useCallback(() => {
     // Don't advance if current card is a check that hasn't been answered correctly
-    if (currentCard?.type === 'Check') {
+    if (currentCard?.type === "Check") {
       const answer = answers[currentCard.id];
       if (!answer?.isCorrect) return;
     }
@@ -61,12 +69,20 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
       }
     }
 
-    setDirection('up');
+    setDirection("up");
     nextCard(sections);
-  }, [currentCard, currentSection, currentSectionIndex, currentCardIndex, answers, sections, nextCard]);
+  }, [
+    currentCard,
+    currentSection,
+    currentSectionIndex,
+    currentCardIndex,
+    answers,
+    sections,
+    nextCard,
+  ]);
 
   const handlePrev = useCallback(() => {
-    setDirection('down');
+    setDirection("down");
     prevCard(sections);
   }, [sections, prevCard]);
 
@@ -84,18 +100,18 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
         handlePrev();
       }
     },
-    [handleNext, handlePrev]
+    [handleNext, handlePrev],
   );
 
   // Handle answer submission
   const handleAnswer = useCallback(
     (optionId: string, isCorrect: boolean) => {
-      if (!currentCard || currentCard.type !== 'Check') return;
+      if (!currentCard || currentCard.type !== "Check") return;
       const existingAnswer = answers[currentCard.id];
       const attemptNumber = existingAnswer ? existingAnswer.attempts : 0;
       recordAnswer(currentCard.id, optionId, isCorrect, attemptNumber + 1);
     },
-    [currentCard, answers, recordAnswer]
+    [currentCard, answers, recordAnswer],
   );
 
   // Handle section unlock
@@ -103,14 +119,14 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
     const nextSection = sections[currentSectionIndex + 1];
     if (nextSection) {
       unlockSection(nextSection.id);
-      setDirection('up');
+      setDirection("up");
       nextCard(sections);
     }
   }, [currentSectionIndex, sections, unlockSection, nextCard]);
 
   // Handle module completion
   const handleComplete = useCallback(() => {
-    const totalChecks = sections.flatMap((s) => s.cards.filter((c) => c.type === 'Check')).length;
+    const totalChecks = sections.flatMap((s) => s.cards.filter((c) => c.type === "Check")).length;
     const score = Object.values(answers).filter((a) => a.isCorrect).length;
     const timeElapsed = Math.floor((Date.now() - startTime) / 1000);
 
@@ -125,17 +141,17 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowUp' || e.key === ' ') {
+      if (e.key === "ArrowUp" || e.key === " ") {
         e.preventDefault();
         handleNext();
-      } else if (e.key === 'ArrowDown') {
+      } else if (e.key === "ArrowDown") {
         e.preventDefault();
         handlePrev();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
   if (!currentCard) {
@@ -148,21 +164,21 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
     currentSectionIndex,
     currentCardIndex,
     sectionProgress,
-    answers
+    answers,
   );
 
   // Animation variants - simplified for reliability
   const variants = {
-    enter: (dir: 'up' | 'down') => ({
-      y: dir === 'up' ? 100 : -100,
+    enter: (dir: "up" | "down") => ({
+      y: dir === "up" ? 100 : -100,
       opacity: 0,
     }),
     center: {
       y: 0,
       opacity: 1,
     },
-    exit: (dir: 'up' | 'down') => ({
-      y: dir === 'up' ? -100 : 100,
+    exit: (dir: "up" | "down") => ({
+      y: dir === "up" ? -100 : 100,
       opacity: 0,
     }),
   };
@@ -171,16 +187,16 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
     <div className="relative h-full w-full overflow-hidden bg-bg-primary">
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
-          key={`${currentSectionIndex}-${currentCardIndex}-${shouldShowUnlockGate ? 'gate' : 'card'}`}
+          key={`${currentSectionIndex}-${currentCardIndex}-${shouldShowUnlockGate ? "gate" : "card"}`}
           custom={direction}
           variants={variants}
           initial="enter"
           animate="center"
           exit="exit"
           transition={{
-            type: 'tween',
+            type: "tween",
             duration: 0.3,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
           drag="y"
           dragConstraints={{ top: 0, bottom: 0 }}
@@ -198,9 +214,12 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
           ) : (
             renderCard(currentCard, mode, answers, handleAnswer, handleComplete, {
               score: Object.values(answers).filter((a) => a.isCorrect).length,
-              totalChecks: sections.flatMap((s) => s.cards.filter((c) => c.type === 'Check')).length,
+              totalChecks: sections.flatMap((s) => s.cards.filter((c) => c.type === "Check"))
+                .length,
               xpEarned,
+              shardsEarned: isTeaserModule(module) ? module.maxShards : 0,
               timeElapsed: Math.floor((Date.now() - startTime) / 1000),
+              module,
             })
           )}
         </motion.div>
@@ -213,10 +232,10 @@ export function CardSwiper({ sections, mode, onComplete }: CardSwiperProps) {
             key={idx}
             className={`w-2 h-2 rounded-full transition-all ${
               idx === currentCardIndex
-                ? 'bg-accent-primary w-4'
+                ? "bg-accent-primary w-4"
                 : idx < currentCardIndex
-                  ? 'bg-accent-primary/50'
-                  : 'bg-border-default'
+                  ? "bg-accent-primary/50"
+                  : "bg-border-default"
             }`}
           />
         ))}
@@ -235,13 +254,20 @@ function renderCard(
   answers: Record<string, { optionId: string; isCorrect: boolean; attempts: number }>,
   onAnswer: (optionId: string, isCorrect: boolean) => void,
   onComplete: () => void,
-  stats: { score: number; totalChecks: number; xpEarned: number; timeElapsed: number }
+  stats: {
+    score: number;
+    totalChecks: number;
+    xpEarned: number;
+    shardsEarned: number;
+    timeElapsed: number;
+    module: LearningModule | TeaserModule;
+  },
 ) {
   switch (card.type) {
-    case 'Lesson':
+    case "Lesson":
       return <LessonCard card={card} mode={mode} />;
 
-    case 'Check':
+    case "Check": {
       const answer = answers[card.id];
       return (
         <CheckCard
@@ -252,8 +278,25 @@ function renderCard(
           attempts={answer?.attempts ?? 0}
         />
       );
+    }
 
-    case 'Completion':
+    case "Completion":
+      // Use TeaserCompletionCard for teaser modules
+      if (isTeaserModule(stats.module)) {
+        return (
+          <TeaserCompletionCard
+            module={stats.module}
+            mode={mode}
+            score={stats.score}
+            totalChecks={stats.totalChecks}
+            xpEarned={stats.xpEarned}
+            shardsEarned={stats.shardsEarned}
+            timeElapsed={stats.timeElapsed}
+            onComplete={onComplete}
+          />
+        );
+      }
+      // Standard completion card for regular modules
       return (
         <CompletionCard
           card={card}
@@ -273,20 +316,20 @@ function renderCard(
 
 function buildCardSequence(
   sections: LearningSection[],
-  sectionProgress: Record<string, boolean>
-): Array<{ type: 'card' | 'gate'; sectionIndex: number; cardIndex: number }> {
-  const sequence: Array<{ type: 'card' | 'gate'; sectionIndex: number; cardIndex: number }> = [];
+  sectionProgress: Record<string, boolean>,
+): Array<{ type: "card" | "gate"; sectionIndex: number; cardIndex: number }> {
+  const sequence: Array<{ type: "card" | "gate"; sectionIndex: number; cardIndex: number }> = [];
 
   sections.forEach((section, sectionIndex) => {
     section.cards.forEach((_, cardIndex) => {
-      sequence.push({ type: 'card', sectionIndex, cardIndex });
+      sequence.push({ type: "card", sectionIndex, cardIndex });
     });
 
     // Add unlock gate after each section (except the last)
     if (sectionIndex < sections.length - 1) {
       const nextSection = sections[sectionIndex + 1];
       if (!sectionProgress[nextSection.id]) {
-        sequence.push({ type: 'gate', sectionIndex, cardIndex: section.cards.length - 1 });
+        sequence.push({ type: "gate", sectionIndex, cardIndex: section.cards.length - 1 });
       }
     }
   });
@@ -294,7 +337,11 @@ function buildCardSequence(
   return sequence;
 }
 
-function getFlatIndex(sections: LearningSection[], sectionIndex: number, cardIndex: number): number {
+function getFlatIndex(
+  sections: LearningSection[],
+  sectionIndex: number,
+  cardIndex: number,
+): number {
   let index = 0;
   for (let s = 0; s < sectionIndex; s++) {
     index += sections[s].cards.length;
@@ -307,7 +354,7 @@ function checkShouldShowUnlockGate(
   sectionIndex: number,
   cardIndex: number,
   sectionProgress: Record<string, boolean>,
-  answers: Record<string, { optionId: string; isCorrect: boolean; attempts: number }>
+  answers: Record<string, { optionId: string; isCorrect: boolean; attempts: number }>,
 ): boolean {
   const currentSection = sections[sectionIndex];
   const nextSection = sections[sectionIndex + 1];
@@ -324,7 +371,7 @@ function checkShouldShowUnlockGate(
 
   // If the last card is a Check card, only show gate after it's been answered correctly
   const lastCard = currentSection.cards[cardIndex];
-  if (lastCard.type === 'Check') {
+  if (lastCard.type === "Check") {
     const answer = answers[lastCard.id];
     // Show the Check card if not answered correctly yet
     if (!answer?.isCorrect) {

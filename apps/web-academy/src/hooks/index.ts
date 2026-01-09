@@ -2,5 +2,6 @@
 // HOOKS INDEX
 // ═══════════════════════════════════════════════════════════
 
-export { useSound } from './useSound';
-export { useHaptics } from './useHaptics';
+export { useAnonymousProgress, migrateAnonymousProgress } from "./useAnonymousProgress";
+export { useHaptics } from "./useHaptics";
+export { useSound } from "./useSound";
