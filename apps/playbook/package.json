@@ -3,10 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --port 3006",
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "lint": "biome check .",
     "astro": "astro",
     "typecheck": "astro check"
   },

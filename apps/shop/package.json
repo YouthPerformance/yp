@@ -8,6 +8,7 @@
     "dev": "shopify hydrogen dev --codegen --port 3001",
     "build": "shopify hydrogen build --codegen --no-lockfile-check",
     "preview": "shopify hydrogen preview",
+    "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen",
     "deploy": "shopify hydrogen deploy"

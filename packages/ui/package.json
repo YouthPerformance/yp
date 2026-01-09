@@ -21,6 +21,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
