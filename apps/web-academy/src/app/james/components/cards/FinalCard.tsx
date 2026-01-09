@@ -75,9 +75,7 @@ export function FinalCard() {
           className="mb-6 border-l-2 border-amber-500/50 pl-4 text-left"
         >
           <p className="text-xs font-medium text-amber-400">P.S.</p>
-          <p className="mt-1 text-sm italic leading-relaxed text-white/70">
-            {FINAL_CTA.ps}
-          </p>
+          <p className="mt-1 text-sm italic leading-relaxed text-white/70">{FINAL_CTA.ps}</p>
         </motion.div>
 
         {/* Divider */}

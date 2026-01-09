@@ -86,9 +86,7 @@ export function PanelLayout({
       {/* Left Side - Videos (60%) */}
       <div className="w-[60%] flex flex-col h-full">
         {/* Header */}
-        {header && (
-          <div className="shrink-0 p-4">{header}</div>
-        )}
+        {header && <div className="shrink-0 p-4">{header}</div>}
 
         {/* Video Stack */}
         <div className="flex-1 flex flex-col gap-2 p-4 pt-0 min-h-0">
@@ -164,32 +162,20 @@ export function PanelLayout({
         </div>
 
         {/* Timer */}
-        {timer && (
-          <div className="flex justify-center mb-8">
-            {timer}
-          </div>
-        )}
+        {timer && <div className="flex justify-center mb-8">{timer}</div>}
 
         {/* Divider */}
-        <div
-          className="w-full h-px mb-6"
-          style={{ backgroundColor: "var(--border-default)" }}
-        />
+        <div className="w-full h-px mb-6" style={{ backgroundColor: "var(--border-default)" }} />
 
         {/* Coaching Cue */}
         <div className="flex-1">
-          <p
-            className="text-lg leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          >
+          <p className="text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             "{cue}"
           </p>
         </div>
 
         {/* Controls */}
-        <div className="mt-auto pt-6">
-          {controls}
-        </div>
+        <div className="mt-auto pt-6">{controls}</div>
       </motion.div>
 
       {/* Pause Overlay */}
@@ -201,11 +187,7 @@ export function PanelLayout({
           className="absolute inset-0 z-40 flex items-center justify-center"
           style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
         >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="text-center"
-          >
+          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center">
             <p
               className="font-bebas text-5xl tracking-wider mb-2"
               style={{ color: "var(--text-primary)" }}

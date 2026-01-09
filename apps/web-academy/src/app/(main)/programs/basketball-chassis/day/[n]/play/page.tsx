@@ -159,8 +159,9 @@ export default function WorkoutPlayerPage() {
           />
         )}
 
-        {playerState === "active" && currentExercise && (
-          currentExercise.demoVideoUrl ? (
+        {playerState === "active" &&
+          currentExercise &&
+          (currentExercise.demoVideoUrl ? (
             <SplitScreenPlayer
               key={`exercise-${currentExerciseIndex}`}
               exercise={currentExercise}
@@ -182,8 +183,7 @@ export default function WorkoutPlayerPage() {
               onExit={handleExit}
               themeColor={themeColor}
             />
-          )
-        )}
+          ))}
 
         {playerState === "finished" && (
           <FinishedView

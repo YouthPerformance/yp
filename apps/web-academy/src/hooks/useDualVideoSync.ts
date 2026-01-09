@@ -74,11 +74,7 @@ export interface DualVideoSyncReturn {
  * ```
  */
 export function useDualVideoSync(options: DualVideoSyncOptions = {}): DualVideoSyncReturn {
-  const {
-    maxDrift = 0.1,
-    syncInterval = 500,
-    masterVideo = "primary",
-  } = options;
+  const { maxDrift = 0.1, syncInterval = 500, masterVideo = "primary" } = options;
 
   const primaryRef = useRef<VideoPaneRef>(null);
   const secondaryRef = useRef<VideoPaneRef>(null);
@@ -142,10 +138,7 @@ export function useDualVideoSync(options: DualVideoSyncOptions = {}): DualVideoS
     slaveRef.current?.seekTo(masterTime);
 
     // Play both
-    await Promise.all([
-      primaryRef.current?.play(),
-      secondaryRef.current?.play(),
-    ]);
+    await Promise.all([primaryRef.current?.play(), secondaryRef.current?.play()]);
 
     setState((prev) => ({ ...prev, isPlaying: true }));
   }, [state.isReady, masterVideo]);

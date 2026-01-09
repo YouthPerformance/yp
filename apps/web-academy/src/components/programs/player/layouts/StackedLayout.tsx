@@ -68,9 +68,7 @@ export function StackedLayout({
       style={{ backgroundColor: "var(--bg-primary)" }}
     >
       {/* Header - Fixed top */}
-      {header && (
-        <div className="relative z-20 shrink-0 safe-top">{header}</div>
-      )}
+      {header && <div className="relative z-20 shrink-0 safe-top">{header}</div>}
 
       {/* Video Stack */}
       <div className="flex-1 flex flex-col gap-1 min-h-0 p-2">
@@ -104,15 +102,11 @@ export function StackedLayout({
 
       {/* Info Overlay - Absolute positioned over videos */}
       {infoOverlay && (
-        <div className="absolute inset-x-0 bottom-24 z-20 pointer-events-none">
-          {infoOverlay}
-        </div>
+        <div className="absolute inset-x-0 bottom-24 z-20 pointer-events-none">{infoOverlay}</div>
       )}
 
       {/* Controls - Fixed bottom */}
-      <div className="relative z-20 shrink-0 safe-bottom px-4 pb-4">
-        {controls}
-      </div>
+      <div className="relative z-20 shrink-0 safe-bottom px-4 pb-4">{controls}</div>
 
       {/* Pause Overlay */}
       {isPaused && (
@@ -123,11 +117,7 @@ export function StackedLayout({
           className="absolute inset-0 z-40 flex items-center justify-center"
           style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
         >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="text-center"
-          >
+          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center">
             <p
               className="font-bebas text-4xl tracking-wider mb-2"
               style={{ color: "var(--text-primary)" }}

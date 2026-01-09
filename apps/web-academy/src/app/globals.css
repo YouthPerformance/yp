@@ -382,20 +382,20 @@
 
   /* Video overlay gradients */
   .video-overlay-top {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
   }
 
   .video-overlay-bottom {
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
   }
 
   .video-overlay-full {
     background: linear-gradient(
       to bottom,
-      rgba(0,0,0,0.4) 0%,
+      rgba(0, 0, 0, 0.4) 0%,
       transparent 30%,
       transparent 70%,
-      rgba(0,0,0,0.6) 100%
+      rgba(0, 0, 0, 0.6) 100%
     );
   }
 
@@ -408,11 +408,7 @@
 
   /* Prevent layout shift during video load */
   .video-placeholder {
-    background: linear-gradient(
-      135deg,
-      var(--bg-secondary) 0%,
-      var(--bg-tertiary) 100%
-    );
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   }
 
   /* Responsive player breakpoints */

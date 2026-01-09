@@ -69,17 +69,13 @@ export function OfferCard() {
                   <Check className="h-3 w-3 text-[#00f6e0]" />
                   <span className="text-xs text-white/70">{item.item}</span>
                 </div>
-                <span className="text-xs font-medium text-white/40 line-through">
-                  {item.value}
-                </span>
+                <span className="text-xs font-medium text-white/40 line-through">{item.value}</span>
               </motion.div>
             ))}
           </div>
           <div className="mt-3 border-t border-white/10 pt-3 text-right">
             <span className="text-xs text-white/40">Total Value: </span>
-            <span className="text-sm font-bold text-white/60 line-through">
-              {OFFER.totalValue}
-            </span>
+            <span className="text-sm font-bold text-white/60 line-through">{OFFER.totalValue}</span>
           </div>
         </motion.div>
 
@@ -90,20 +86,12 @@ export function OfferCard() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-4 w-full rounded-xl border border-[#00f6e0]/30 bg-[#00f6e0]/5 p-4"
         >
-          <div className="mb-1 text-xs uppercase tracking-wider text-white/50">
-            Your Price
-          </div>
+          <div className="mb-1 text-xs uppercase tracking-wider text-white/50">Your Price</div>
           <div className="flex items-baseline justify-center gap-2">
-            <span className="text-4xl font-bold text-[#00f6e0]">
-              {OFFER.pricing.price}
-            </span>
-            <span className="text-sm text-white/40">
-              ({OFFER.pricing.perDay})
-            </span>
+            <span className="text-4xl font-bold text-[#00f6e0]">{OFFER.pricing.price}</span>
+            <span className="text-sm text-white/40">({OFFER.pricing.perDay})</span>
           </div>
-          <div className="mt-1 text-xs text-white/50">
-            {OFFER.pricing.comparison}
-          </div>
+          <div className="mt-1 text-xs text-white/50">{OFFER.pricing.comparison}</div>
         </motion.div>
 
         {/* The Filter - Why So Cheap */}
@@ -113,18 +101,14 @@ export function OfferCard() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mb-4 w-full rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-left"
         >
-          <div className="mb-2 text-sm font-bold text-amber-400">
-            {OFFER.filter.headline}
-          </div>
+          <div className="mb-2 text-sm font-bold text-amber-400">{OFFER.filter.headline}</div>
           <p className="mb-2 text-xs text-white/60">{OFFER.filter.text}</p>
           <ul className="mb-2 space-y-1 text-xs text-white/60">
             {OFFER.filter.points.map((point, i) => (
               <li key={i}>• {point}</li>
             ))}
           </ul>
-          <p className="text-xs font-semibold text-amber-400">
-            {OFFER.filter.punchline}
-          </p>
+          <p className="text-xs font-semibold text-amber-400">{OFFER.filter.punchline}</p>
         </motion.div>
 
         {/* CTA Button */}

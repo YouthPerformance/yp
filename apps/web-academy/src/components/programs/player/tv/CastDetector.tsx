@@ -5,8 +5,8 @@
 
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Cast, Tv, Smartphone } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Cast, Smartphone, Tv } from "lucide-react";
 import { useCastSession } from "@/hooks/useCastSession";
 
 export interface CastDetectorProps {
@@ -122,9 +122,7 @@ export function CastDetector({
       className={`${config.button} rounded-full flex items-center gap-2`}
       style={{
         backgroundColor:
-          session.state === "connected"
-            ? `${themeColor}20`
-            : "rgba(255,255,255,0.1)",
+          session.state === "connected" ? `${themeColor}20` : "rgba(255,255,255,0.1)",
         borderWidth: session.state === "connected" ? 2 : 0,
         borderColor: session.state === "connected" ? themeColor : "transparent",
       }}
@@ -138,10 +136,7 @@ export function CastDetector({
         <span
           className={`${config.text} font-medium`}
           style={{
-            color:
-              session.state === "connected"
-                ? themeColor
-                : "var(--text-tertiary)",
+            color: session.state === "connected" ? themeColor : "var(--text-tertiary)",
           }}
         >
           {getLabel()}

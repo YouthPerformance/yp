@@ -5,8 +5,8 @@
 
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Pause, Play, SkipForward, RotateCcw } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Pause, Play, RotateCcw, SkipForward } from "lucide-react";
 import { useCallback, useState } from "react";
 
 export interface PlaybackControlsProps {
@@ -95,9 +95,10 @@ export function PlaybackControls({
     }
   }, [showSkipConfirm, onSkip]);
 
-  const containerClass = variant === "row"
-    ? `flex items-center justify-center ${config.gap}`
-    : `flex flex-col items-center ${config.gap}`;
+  const containerClass =
+    variant === "row"
+      ? `flex items-center justify-center ${config.gap}`
+      : `flex flex-col items-center ${config.gap}`;
 
   return (
     <div className={containerClass}>
@@ -113,10 +114,7 @@ export function PlaybackControls({
           whileTap={{ scale: 0.95 }}
           aria-label="Replay exercise"
         >
-          <RotateCcw
-            className={config.secondaryIcon}
-            style={{ color: "var(--text-tertiary)" }}
-          />
+          <RotateCcw className={config.secondaryIcon} style={{ color: "var(--text-tertiary)" }} />
         </motion.button>
       )}
 
@@ -133,17 +131,9 @@ export function PlaybackControls({
         aria-label={isPaused ? "Play" : "Pause"}
       >
         {isPaused ? (
-          <Play
-            className={`${config.mainIcon} ml-1`}
-            fill="white"
-            style={{ color: "white" }}
-          />
+          <Play className={`${config.mainIcon} ml-1`} fill="white" style={{ color: "white" }} />
         ) : (
-          <Pause
-            className={config.mainIcon}
-            fill="white"
-            style={{ color: "white" }}
-          />
+          <Pause className={config.mainIcon} fill="white" style={{ color: "white" }} />
         )}
       </motion.button>
 
@@ -153,9 +143,7 @@ export function PlaybackControls({
           onClick={handleSkipPress}
           className={`${config.secondaryButton} rounded-full`}
           style={{
-            backgroundColor: showSkipConfirm
-              ? "rgba(239,68,68,0.3)"
-              : "rgba(255,255,255,0.1)",
+            backgroundColor: showSkipConfirm ? "rgba(239,68,68,0.3)" : "rgba(255,255,255,0.1)",
           }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}

@@ -153,10 +153,7 @@ export function CinemaLayout({
 
           {/* Right: Progress & Timer */}
           <div className="text-right">
-            <p
-              className="text-2xl font-medium mb-1"
-              style={{ color: "rgba(255,255,255,0.5)" }}
-            >
+            <p className="text-2xl font-medium mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>
               {exerciseIndex + 1} / {totalExercises}
             </p>
             <p
@@ -197,15 +194,8 @@ export function CinemaLayout({
           className="absolute inset-0 z-40 flex items-center justify-center"
           style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
         >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="text-center"
-          >
-            <p
-              className="font-bebas text-7xl tracking-wider mb-4"
-              style={{ color: "#fff" }}
-            >
+          <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center">
+            <p className="font-bebas text-7xl tracking-wider mb-4" style={{ color: "#fff" }}>
               PAUSED
             </p>
             <p className="text-2xl" style={{ color: "rgba(255,255,255,0.6)" }}>

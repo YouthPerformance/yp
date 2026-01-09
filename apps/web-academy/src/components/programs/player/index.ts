@@ -4,22 +4,17 @@
 
 // Original single-video player
 export { ActiveWorkout } from "./ActiveWorkout";
-
-// Split-screen dual-video player
-export { SplitScreenPlayer } from "./SplitScreenPlayer";
-export { VideoPane, type VideoPaneRef, type VideoPaneProps } from "./VideoPane";
-
 // Shared components
 export { CountdownView } from "./CountdownView";
-export { FinishedView } from "./FinishedView";
-export { MusicPrompt } from "./MusicPrompt";
-export { TimerCircle } from "./TimerCircle";
-
-// Layouts
-export * from "./layouts";
-
 // Controls
 export * from "./controls";
-
+export { FinishedView } from "./FinishedView";
+// Layouts
+export * from "./layouts";
+export { MusicPrompt } from "./MusicPrompt";
+// Split-screen dual-video player
+export { SplitScreenPlayer } from "./SplitScreenPlayer";
+export { TimerCircle } from "./TimerCircle";
 // TV/Casting
 export * from "./tv";
+export { VideoPane, type VideoPaneProps, type VideoPaneRef } from "./VideoPane";

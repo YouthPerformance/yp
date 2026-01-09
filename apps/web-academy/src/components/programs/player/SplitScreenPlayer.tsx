@@ -9,12 +9,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, Pause, Play, SkipForward, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Exercise } from "@/data/programs/basketball-chassis";
-import { useViewportMode, getLayoutType } from "@/hooks/useViewportMode";
-import { VideoPane, type VideoPaneRef } from "./VideoPane";
-import { StackedLayout } from "./layouts/StackedLayout";
-import { PanelLayout } from "./layouts/PanelLayout";
+import { getLayoutType, useViewportMode } from "@/hooks/useViewportMode";
 import { CinemaLayout } from "./layouts/CinemaLayout";
+import { PanelLayout } from "./layouts/PanelLayout";
+import { StackedLayout } from "./layouts/StackedLayout";
 import { TimerCircle } from "./TimerCircle";
+import { VideoPane, type VideoPaneRef } from "./VideoPane";
 
 export interface SplitScreenPlayerProps {
   /** Exercise to display (must have videoUrl and demoVideoUrl) */

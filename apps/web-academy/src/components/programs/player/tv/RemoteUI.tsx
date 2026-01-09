@@ -6,16 +6,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
+import { ChevronLeft, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import type { CastCommand } from "@/hooks/useCastSession";
 
 export interface RemoteUIProps {
@@ -125,18 +116,12 @@ export function RemoteUI({
         </h1>
 
         {/* Progress indicator */}
-        <p
-          className="text-sm mb-6"
-          style={{ color: "var(--text-secondary)" }}
-        >
+        <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
           {exerciseIndex + 1} of {totalExercises}
         </p>
 
         {/* Timer */}
-        <div
-          className="font-bebas text-6xl tabular-nums mb-8"
-          style={{ color: themeColor }}
-        >
+        <div className="font-bebas text-6xl tabular-nums mb-8" style={{ color: themeColor }}>
           {timeDisplay}
         </div>
 
@@ -149,10 +134,7 @@ export function RemoteUI({
             >
               Up Next
             </p>
-            <p
-              className="text-sm font-medium"
-              style={{ color: "var(--text-secondary)" }}
-            >
+            <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
               {nextExerciseName}
             </p>
           </div>
@@ -208,10 +190,7 @@ export function RemoteUI({
           onClick={() => onCommand({ type: "audio", payload: "coach" })}
           className="flex items-center gap-2 px-4 py-3 rounded-full"
           style={{
-            backgroundColor:
-              audioSource === "coach"
-                ? `${themeColor}20`
-                : "rgba(255,255,255,0.1)",
+            backgroundColor: audioSource === "coach" ? `${themeColor}20` : "rgba(255,255,255,0.1)",
             borderWidth: audioSource === "coach" ? 2 : 0,
             borderColor: themeColor,
           }}
@@ -237,10 +216,7 @@ export function RemoteUI({
           onClick={() => onCommand({ type: "audio", payload: "demo" })}
           className="flex items-center gap-2 px-4 py-3 rounded-full"
           style={{
-            backgroundColor:
-              audioSource === "demo"
-                ? `${themeColor}20`
-                : "rgba(255,255,255,0.1)",
+            backgroundColor: audioSource === "demo" ? `${themeColor}20` : "rgba(255,255,255,0.1)",
             borderWidth: audioSource === "demo" ? 2 : 0,
             borderColor: themeColor,
           }}

@@ -81,7 +81,7 @@ export function useCastSession(): CastSessionReturn {
     const hasAirPlay =
       "WebKitPlaybackTargetAvailabilityEvent" in window ||
       // @ts-expect-error - Safari-specific
-      (window.WebKitPlaybackTargetAvailabilityEvent !== undefined);
+      window.WebKitPlaybackTargetAvailabilityEvent !== undefined;
 
     // Check Chromecast (Chrome)
     // @ts-expect-error - Chrome-specific
@@ -125,17 +125,14 @@ export function useCastSession(): CastSessionReturn {
     // Find video elements and listen for AirPlay
     const videos = document.querySelectorAll("video");
     videos.forEach((video) => {
-      video.addEventListener(
-        "webkitplaybacktargetavailabilitychanged",
-        handleAirPlayAvailability
-      );
+      video.addEventListener("webkitplaybacktargetavailabilitychanged", handleAirPlayAvailability);
     });
 
     return () => {
       videos.forEach((video) => {
         video.removeEventListener(
           "webkitplaybacktargetavailabilitychanged",
-          handleAirPlayAvailability
+          handleAirPlayAvailability,
         );
       });
     };
@@ -216,9 +213,7 @@ export function useCastSession(): CastSessionReturn {
     console.log("Cast command:", command);
 
     // For now, dispatch a custom event that the receiver can listen to
-    window.dispatchEvent(
-      new CustomEvent("cast-command", { detail: command })
-    );
+    window.dispatchEvent(new CustomEvent("cast-command", { detail: command }));
   }, []);
 
   return {
@@ -232,9 +227,7 @@ export function useCastSession(): CastSessionReturn {
 /**
  * Hook to receive cast commands (for TV/receiver side)
  */
-export function useCastReceiver(
-  onCommand: (command: CastCommand) => void
-) {
+export function useCastReceiver(onCommand: (command: CastCommand) => void) {
   useEffect(() => {
     const handleCommand = (event: CustomEvent<CastCommand>) => {
       onCommand(event.detail);

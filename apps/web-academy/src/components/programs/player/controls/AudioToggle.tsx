@@ -6,7 +6,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Volume2, VolumeX, Headphones } from "lucide-react";
+import { Headphones, Volume2, VolumeX } from "lucide-react";
 
 export type AudioSource = "coach" | "demo" | "none";
 
@@ -90,10 +90,7 @@ export function AudioToggle({
         onClick={handleToggle}
         className={`${config.button} rounded-full flex items-center gap-2`}
         style={{
-          backgroundColor:
-            audioSource !== "none"
-              ? `${themeColor}20`
-              : "rgba(255,255,255,0.1)",
+          backgroundColor: audioSource !== "none" ? `${themeColor}20` : "rgba(255,255,255,0.1)",
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -104,25 +101,17 @@ export function AudioToggle({
         ) : audioSource === "demo" ? (
           <Headphones className={config.icon} style={{ color: themeColor }} />
         ) : (
-          <VolumeX
-            className={config.icon}
-            style={{ color: "var(--text-tertiary)" }}
-          />
+          <VolumeX className={config.icon} style={{ color: "var(--text-tertiary)" }} />
         )}
 
         {showLabels && (
           <span
             className={`${config.text} font-medium`}
             style={{
-              color:
-                audioSource !== "none" ? themeColor : "var(--text-tertiary)",
+              color: audioSource !== "none" ? themeColor : "var(--text-tertiary)",
             }}
           >
-            {audioSource === "coach"
-              ? "Coach"
-              : audioSource === "demo"
-                ? "Demo"
-                : "Muted"}
+            {audioSource === "coach" ? "Coach" : audioSource === "demo" ? "Demo" : "Muted"}
           </span>
         )}
       </motion.button>
@@ -137,10 +126,7 @@ export function AudioToggle({
         onClick={() => onToggle("coach")}
         className={`${config.button} rounded-full flex items-center gap-2`}
         style={{
-          backgroundColor:
-            audioSource === "coach"
-              ? `${themeColor}20`
-              : "rgba(255,255,255,0.1)",
+          backgroundColor: audioSource === "coach" ? `${themeColor}20` : "rgba(255,255,255,0.1)",
           borderWidth: audioSource === "coach" ? 2 : 0,
           borderColor: themeColor,
         }}
@@ -159,8 +145,7 @@ export function AudioToggle({
           <span
             className={`${config.text} font-medium`}
             style={{
-              color:
-                audioSource === "coach" ? themeColor : "var(--text-tertiary)",
+              color: audioSource === "coach" ? themeColor : "var(--text-tertiary)",
             }}
           >
             Coach
@@ -173,10 +158,7 @@ export function AudioToggle({
         onClick={() => onToggle("demo")}
         className={`${config.button} rounded-full flex items-center gap-2`}
         style={{
-          backgroundColor:
-            audioSource === "demo"
-              ? `${themeColor}20`
-              : "rgba(255,255,255,0.1)",
+          backgroundColor: audioSource === "demo" ? `${themeColor}20` : "rgba(255,255,255,0.1)",
           borderWidth: audioSource === "demo" ? 2 : 0,
           borderColor: themeColor,
         }}
@@ -195,8 +177,7 @@ export function AudioToggle({
           <span
             className={`${config.text} font-medium`}
             style={{
-              color:
-                audioSource === "demo" ? themeColor : "var(--text-tertiary)",
+              color: audioSource === "demo" ? themeColor : "var(--text-tertiary)",
             }}
           >
             Demo
