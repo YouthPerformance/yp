@@ -1,0 +1,118 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "off",
+        "noUnusedFunctionParameters": "off",
+        "useExhaustiveDependencies": "off",
+        "useHookAtTopLevel": "off",
+        "noInvalidUseBeforeDeclaration": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useConst": "error",
+        "useImportType": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noConsole": "off",
+        "noArrayIndexKey": "off",
+        "noAssignInExpressions": "off",
+        "noUnknownAtRules": "off",
+        "noImplicitAnyLet": "off",
+        "noCommentText": "off",
+        "useIterableCallbackReturn": "off",
+        "noAsyncPromiseExecutor": "warn"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "off"
+      },
+      "a11y": {
+        "recommended": false
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "arrowParentheses": "always"
+    }
+  },
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "css": {
+    "parser": {
+      "allowWrongLineComments": true,
+      "cssModules": true,
+      "tailwindDirectives": true
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.next",
+      "!**/.vercel",
+      "!**/.turbo",
+      "!**/coverage",
+      "!**/build",
+      "!**/.astro",
+      "!**/convex/_generated",
+      "!**/*.min.js",
+      "!**/*.min.css",
+      "!**/pnpm-lock.yaml",
+      "!**/.env*",
+      "!newsupply",
+      "!ypsupplyrip",
+      "!**/.open-next"
+    ]
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noUnknownAtRules": "off"
+          }
+        }
+      }
+    }
+  ]
+}
