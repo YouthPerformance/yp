@@ -52,17 +52,17 @@ export const getAthleteContext = query({
     // Simple client-side filter for relevant keys (fast for <100 nodes)
     const keywords = args.userQuery.toLowerCase().split(/\s+/);
     const relevantNodes = allNodes.filter((node) =>
-      keywords.some((k) => k.length > 3 && node.key.includes(k))
+      keywords.some((k) => k.length > 3 && node.key.includes(k)),
     );
 
     // Also check for common body part mappings
     const bodyPartMappings: Record<string, string[]> = {
-      "dunk": ["ankle", "knee", "vertical", "calf", "hip"],
-      "jump": ["ankle", "knee", "vertical", "calf"],
-      "run": ["ankle", "knee", "hip", "hamstring", "calf"],
-      "shoot": ["shoulder", "wrist", "elbow", "confidence"],
-      "sprint": ["hamstring", "hip", "ankle", "quad"],
-      "lift": ["back", "shoulder", "knee", "core"],
+      dunk: ["ankle", "knee", "vertical", "calf", "hip"],
+      jump: ["ankle", "knee", "vertical", "calf"],
+      run: ["ankle", "knee", "hip", "hamstring", "calf"],
+      shoot: ["shoulder", "wrist", "elbow", "confidence"],
+      sprint: ["hamstring", "hip", "ankle", "quad"],
+      lift: ["back", "shoulder", "knee", "core"],
     };
 
     // Find additional relevant nodes based on activity keywords
@@ -70,13 +70,13 @@ export const getAthleteContext = query({
     const relatedParts = activityKeywords.flatMap((k) => bodyPartMappings[k] || []);
 
     const activityRelatedNodes = allNodes.filter((node) =>
-      relatedParts.some((part) => node.key.includes(part))
+      relatedParts.some((part) => node.key.includes(part)),
     );
 
     // Merge unique nodes
-    const allRelevantNodes = [...new Map(
-      [...relevantNodes, ...activityRelatedNodes].map((n) => [n._id, n])
-    ).values()];
+    const allRelevantNodes = [
+      ...new Map([...relevantNodes, ...activityRelatedNodes].map((n) => [n._id, n])).values(),
+    ];
 
     // ─────────────────────────────────────────────────────────────
     // 3. FETCH RECENT CONVERSATION (Short-term memory)
@@ -196,12 +196,15 @@ export const getFullGraph = query({
       .collect();
 
     // Group nodes by category
-    const byCategory = nodes.reduce((acc, node) => {
-      const cat = node.category;
-      if (!acc[cat]) acc[cat] = [];
-      acc[cat].push(node);
-      return acc;
-    }, {} as Record<string, typeof nodes>);
+    const byCategory = nodes.reduce(
+      (acc, node) => {
+        const cat = node.category;
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(node);
+        return acc;
+      },
+      {} as Record<string, typeof nodes>,
+    );
 
     return {
       nodes,

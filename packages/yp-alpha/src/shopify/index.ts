@@ -1,1 +1,1 @@
-export { ShopifyClient, createYPShopClient } from './client';
+export { createYPShopClient, ShopifyClient } from "./client";

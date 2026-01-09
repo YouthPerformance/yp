@@ -5,7 +5,6 @@
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
 
 // ─────────────────────────────────────────────────────────────
 // TYPE VALIDATORS
@@ -16,13 +15,13 @@ const statusValidator = v.union(
   v.literal("DRAFT"),
   v.literal("READY"),
   v.literal("PUBLISHED"),
-  v.literal("FAILED")
+  v.literal("FAILED"),
 );
-const platformValidator = v.union(
+const _platformValidator = v.union(
   v.literal("BLOG"),
   v.literal("LINKEDIN"),
   v.literal("TWITTER"),
-  v.literal("INSTAGRAM")
+  v.literal("INSTAGRAM"),
 );
 
 // ─────────────────────────────────────────────────────────────
@@ -224,7 +223,7 @@ export const getCampaign = query({
       .collect();
 
     // Organize assets by platform
-    const assetsByPlatform: Record<string, typeof assets[0]> = {};
+    const assetsByPlatform: Record<string, (typeof assets)[0]> = {};
     for (const asset of assets) {
       assetsByPlatform[asset.platform] = asset;
     }
@@ -254,7 +253,7 @@ export const listCampaigns = query({
       campaignsQuery = ctx.db
         .query("campaigns")
         .withIndex("by_author_status", (q) =>
-          q.eq("author", args.author!).eq("status", args.status!)
+          q.eq("author", args.author!).eq("status", args.status!),
         );
     } else if (args.author) {
       campaignsQuery = ctx.db
@@ -265,14 +264,10 @@ export const listCampaigns = query({
         .query("campaigns")
         .withIndex("by_status", (q) => q.eq("status", args.status!));
     } else {
-      campaignsQuery = ctx.db
-        .query("campaigns")
-        .withIndex("by_created");
+      campaignsQuery = ctx.db.query("campaigns").withIndex("by_created");
     }
 
-    const campaigns = await campaignsQuery
-      .order("desc")
-      .take(limit);
+    const campaigns = await campaignsQuery.order("desc").take(limit);
 
     return campaigns;
   },

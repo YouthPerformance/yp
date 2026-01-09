@@ -8,18 +8,17 @@
  * - ModelExecutor: Execution with the right model
  */
 
-export { WolfRouter, wolfRouter, RouteSchema } from "./wolf-router.js";
-export type { RouteClassification, UserContext } from "./wolf-router.js";
+export type { ExecutionContext, ExecutionResult } from "./model-executor.js";
+export { ModelExecutor, modelExecutor } from "./model-executor.js";
 
 export {
-  VoiceWrapper,
-  voiceWrapper,
   enforceWolfPackVoice,
   getWolfPackPrompt,
+  VoiceWrapper,
+  voiceWrapper,
 } from "./voice-wrapper.js";
-
-export { ModelExecutor, modelExecutor } from "./model-executor.js";
-export type { ExecutionResult, ExecutionContext } from "./model-executor.js";
+export type { RouteClassification, UserContext } from "./wolf-router.js";
+export { RouteSchema, WolfRouter, wolfRouter } from "./wolf-router.js";
 
 /**
  * Main entry point for routing a request
@@ -39,7 +38,7 @@ export type { ExecutionResult, ExecutionContext } from "./model-executor.js";
 export async function routeAndExecute(
   query: string,
   userContext: import("./wolf-router.js").UserContext,
-  executionContext?: Partial<import("./model-executor.js").ExecutionContext>
+  executionContext?: Partial<import("./model-executor.js").ExecutionContext>,
 ): Promise<import("./model-executor.js").ExecutionResult> {
   const { wolfRouter } = await import("./wolf-router.js");
   const { modelExecutor } = await import("./model-executor.js");
@@ -61,14 +60,10 @@ export async function routeAndExecute(
   }
 
   // 4. Execute with the selected model
-  const result = await modelExecutor.executeWithRetry(
-    query,
-    routeDecision,
-    {
-      userId: userContext.userId,
-      ...executionContext,
-    }
-  );
+  const result = await modelExecutor.executeWithRetry(query, routeDecision, {
+    userId: userContext.userId,
+    ...executionContext,
+  });
 
   // 5. Reset failure count on success
   wolfRouter.resetFailures(userContext.userId);

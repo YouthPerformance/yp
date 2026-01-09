@@ -21,6 +21,11 @@
       "import": "./dist/config/models.mjs",
       "require": "./dist/config/models.js"
     },
+    "./config/wolf-realtime-prompt": {
+      "types": "./dist/config/wolf-realtime-prompt.d.ts",
+      "import": "./dist/config/wolf-realtime-prompt.mjs",
+      "require": "./dist/config/wolf-realtime-prompt.js"
+    },
     "./convex/_generated/api": {
       "types": "./convex/_generated/api.d.ts",
       "import": "./convex/_generated/api.js",

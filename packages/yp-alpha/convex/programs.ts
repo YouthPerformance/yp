@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 // ─────────────────────────────────────────────────────────────
 // QUERIES
@@ -56,7 +56,7 @@ export const getProgramAccess = query({
     const entitlement = await ctx.db
       .query("entitlements")
       .withIndex("by_user_product", (q) =>
-        q.eq("userId", userId!).eq("productSlug", args.programSlug)
+        q.eq("userId", userId!).eq("productSlug", args.programSlug),
       )
       .filter((q) => q.eq(q.field("status"), "active"))
       .first();
@@ -83,11 +83,7 @@ export const getProgramAccess = query({
 /**
  * Helper to get completed days for a program
  */
-async function getCompletedDays(
-  ctx: any,
-  userId: any,
-  programSlug: string
-): Promise<number[]> {
+async function getCompletedDays(ctx: any, userId: any, programSlug: string): Promise<number[]> {
   // Query workoutCompletions for this user
   // We use a convention: programSlug stored in metadata or dayNumber range
   // For basketball-chassis, we use dayNumbers 1001-1008 (1000 + dayNumber)
@@ -99,8 +95,8 @@ async function getCompletedDays(
     .filter((q: any) =>
       q.and(
         q.gte(q.field("dayNumber"), programOffset + 1),
-        q.lte(q.field("dayNumber"), programOffset + 8)
-      )
+        q.lte(q.field("dayNumber"), programOffset + 8),
+      ),
     )
     .collect();
 
@@ -146,9 +142,7 @@ export const completeProgramDay = mutation({
     // Check if already completed
     const existing = await ctx.db
       .query("workoutCompletions")
-      .withIndex("by_user_day", (q) =>
-        q.eq("userId", args.userId).eq("dayNumber", storedDayNumber)
-      )
+      .withIndex("by_user_day", (q) => q.eq("userId", args.userId).eq("dayNumber", storedDayNumber))
       .first();
 
     if (existing) {

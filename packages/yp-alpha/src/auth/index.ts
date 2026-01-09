@@ -89,7 +89,8 @@ const authConfig = {
               : "Reset your Wolf Pack password";
 
         // Don't await - fire and forget for speed
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3003";
+        const siteUrl =
+          process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3003";
         fetch(`${siteUrl}/api/email/send-otp`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -142,6 +143,35 @@ const authConfig = {
     crossSubDomainCookies: {
       enabled: true,
       domain: process.env.COOKIE_DOMAIN || ".youthperformance.com",
+    },
+  },
+
+  // ---------------------------------------------------------------
+  // DATABASE HOOKS (Lifecycle Events)
+  // ---------------------------------------------------------------
+  databaseHooks: {
+    user: {
+      create: {
+        // Fire welcome email after user creation
+        after: async (user: { email: string; name?: string | null }) => {
+          const siteUrl =
+            process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3003";
+
+          // Fire-and-forget welcome email (don't block auth flow)
+          fetch(`${siteUrl}/api/email/welcome`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              to: user.email,
+              name: user.name || user.email.split("@")[0],
+            }),
+          }).catch((err) => {
+            console.error("[AUTH] Failed to send welcome email:", err);
+          });
+
+          console.log(`[AUTH] User created: ${user.email} - welcome email triggered`);
+        },
+      },
     },
   },
 };

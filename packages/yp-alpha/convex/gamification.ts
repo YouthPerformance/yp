@@ -3,8 +3,8 @@
 // XP, Crystals, Streaks, Levels, Ranks
 // ═══════════════════════════════════════════════════════════
 
-import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 // ─────────────────────────────────────────────────────────────
 // CONSTANTS
@@ -15,8 +15,8 @@ export const XP_REWARDS = {
   WORKOUT_COMPLETE: 100,
   PERFECT_FORM_BONUS: 25,
   FIRST_WORKOUT_BONUS: 10,
-  QUIZ_PASS: 20,          // 70%+
-  QUIZ_PERFECT: 35,       // 100%
+  QUIZ_PASS: 20, // 70%+
+  QUIZ_PERFECT: 35, // 100%
   STRIKEWOD_COMPLETE: 50,
   STRIKEWOD_PR: 30,
   EDUCATION_VIDEO: 15,
@@ -85,7 +85,11 @@ export function calculateLevel(totalXp: number): number {
   return 1;
 }
 
-export function getXpProgress(totalXp: number): { current: number; required: number; percentage: number } {
+export function getXpProgress(totalXp: number): {
+  current: number;
+  required: number;
+  percentage: number;
+} {
   const level = calculateLevel(totalXp);
   const currentThreshold = LEVEL_THRESHOLDS[level - 1] || 0;
   const nextThreshold = LEVEL_THRESHOLDS[level] || currentThreshold + 2000;
@@ -99,17 +103,20 @@ export function getXpProgress(totalXp: number): { current: number; required: num
   };
 }
 
-export function calculateRank(level: number, bestStreak: number): 'pup' | 'hunter' | 'alpha' | 'apex' {
+export function calculateRank(
+  level: number,
+  bestStreak: number,
+): "pup" | "hunter" | "alpha" | "apex" {
   if (level >= RANK_REQUIREMENTS.apex.level && bestStreak >= RANK_REQUIREMENTS.apex.streak) {
-    return 'apex';
+    return "apex";
   }
   if (level >= RANK_REQUIREMENTS.alpha.level && bestStreak >= RANK_REQUIREMENTS.alpha.streak) {
-    return 'alpha';
+    return "alpha";
   }
   if (level >= RANK_REQUIREMENTS.hunter.level && bestStreak >= RANK_REQUIREMENTS.hunter.streak) {
-    return 'hunter';
+    return "hunter";
   }
-  return 'pup';
+  return "pup";
 }
 
 function isSameDay(date1: number, date2: number): boolean {
@@ -135,7 +142,7 @@ function getDaysDifference(date1: number, date2: number): number {
 // ─────────────────────────────────────────────────────────────
 
 export const getGamificationStats = query({
-  args: { userId: v.id('users') },
+  args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
     const user = await ctx.db.get(userId);
     if (!user) return null;
@@ -157,7 +164,7 @@ export const getGamificationStats = query({
 });
 
 export const getDailyProgress = query({
-  args: { userId: v.id('users') },
+  args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
     const user = await ctx.db.get(userId);
     if (!user) return null;
@@ -166,8 +173,8 @@ export const getDailyProgress = query({
     const isToday = user.lastXpResetAt && isSameDay(user.lastXpResetAt, today);
 
     return {
-      dailyXpEarned: isToday ? (user.dailyXpEarned || 0) : 0,
-      dailyCrystalsEarned: isToday ? (user.dailyCrystalsEarned || 0) : 0,
+      dailyXpEarned: isToday ? user.dailyXpEarned || 0 : 0,
+      dailyCrystalsEarned: isToday ? user.dailyCrystalsEarned || 0 : 0,
       xpCap: DAILY_CAPS.XP,
       crystalsCap: DAILY_CAPS.CRYSTALS,
       canEarnMoreXp: isToday ? (user.dailyXpEarned || 0) < DAILY_CAPS.XP : true,
@@ -183,19 +190,19 @@ export const getDailyProgress = query({
 // Award XP with daily cap enforcement
 export const awardXp = mutation({
   args: {
-    userId: v.id('users'),
+    userId: v.id("users"),
     amount: v.number(),
     reason: v.string(),
   },
   handler: async (ctx, { userId, amount, reason }) => {
     const user = await ctx.db.get(userId);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new Error("User not found");
 
     const now = Date.now();
     const isNewDay = !user.lastXpResetAt || !isSameDay(user.lastXpResetAt, now);
 
     // Reset daily counters if new day
-    const dailyXpEarned = isNewDay ? 0 : (user.dailyXpEarned || 0);
+    const dailyXpEarned = isNewDay ? 0 : user.dailyXpEarned || 0;
 
     // Calculate capped XP
     const remainingCap = DAILY_CAPS.XP - dailyXpEarned;
@@ -203,7 +210,7 @@ export const awardXp = mutation({
 
     if (cappedAmount <= 0) {
       console.log(`[Gamification] XP cap reached for user ${userId}`);
-      return { awarded: 0, reason: 'Daily XP cap reached', newTotal: user.xpTotal };
+      return { awarded: 0, reason: "Daily XP cap reached", newTotal: user.xpTotal };
     }
 
     // Check for level up
@@ -241,19 +248,19 @@ export const awardXp = mutation({
 // Award crystals with daily cap enforcement
 export const awardCrystals = mutation({
   args: {
-    userId: v.id('users'),
+    userId: v.id("users"),
     amount: v.number(),
     reason: v.string(),
   },
   handler: async (ctx, { userId, amount, reason }) => {
     const user = await ctx.db.get(userId);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new Error("User not found");
 
     const now = Date.now();
     const isNewDay = !user.lastXpResetAt || !isSameDay(user.lastXpResetAt, now);
 
     // Reset daily counters if new day
-    const dailyCrystalsEarned = isNewDay ? 0 : (user.dailyCrystalsEarned || 0);
+    const dailyCrystalsEarned = isNewDay ? 0 : user.dailyCrystalsEarned || 0;
 
     // Calculate capped crystals
     const remainingCap = DAILY_CAPS.CRYSTALS - dailyCrystalsEarned;
@@ -261,7 +268,7 @@ export const awardCrystals = mutation({
 
     if (cappedAmount <= 0) {
       console.log(`[Gamification] Crystal cap reached for user ${userId}`);
-      return { awarded: 0, reason: 'Daily crystal cap reached', newTotal: user.crystals };
+      return { awarded: 0, reason: "Daily crystal cap reached", newTotal: user.crystals };
     }
 
     // Update user
@@ -283,22 +290,22 @@ export const awardCrystals = mutation({
 // Complete workout with all rewards
 export const completeWorkout = mutation({
   args: {
-    userId: v.id('users'),
-    enrollmentId: v.id('enrollments'),
+    userId: v.id("users"),
+    enrollmentId: v.id("enrollments"),
     dayNumber: v.number(),
     durationSeconds: v.number(),
     perfectForm: v.optional(v.boolean()),
   },
   handler: async (ctx, { userId, enrollmentId, dayNumber, durationSeconds, perfectForm }) => {
     const user = await ctx.db.get(userId);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new Error("User not found");
 
     const enrollment = await ctx.db.get(enrollmentId);
-    if (!enrollment) throw new Error('Enrollment not found');
+    if (!enrollment) throw new Error("Enrollment not found");
 
     // Validate workout duration (min 5 minutes)
     if (durationSeconds < 300) {
-      throw new Error('Workout too short to count');
+      throw new Error("Workout too short to count");
     }
 
     const now = Date.now();
@@ -314,12 +321,12 @@ export const completeWorkout = mutation({
     if (perfectForm) {
       xpToAward += XP_REWARDS.PERFECT_FORM_BONUS;
       crystalsToAward += CRYSTAL_REWARDS.PERFECT_FORM_BONUS;
-      bonuses.push('Perfect Form');
+      bonuses.push("Perfect Form");
     }
 
     if (isFirstWorkoutToday) {
       xpToAward += XP_REWARDS.FIRST_WORKOUT_BONUS;
-      bonuses.push('First Workout');
+      bonuses.push("First Workout");
     }
 
     // Update streak
@@ -340,7 +347,7 @@ export const completeWorkout = mutation({
     }
 
     // Record workout completion
-    await ctx.db.insert('workoutCompletions', {
+    await ctx.db.insert("workoutCompletions", {
       userId,
       enrollmentId,
       dayNumber,
@@ -410,7 +417,10 @@ async function updateStreak(ctx: any, user: any, now: number) {
 }
 
 // Check for streak milestone rewards
-function checkStreakMilestones(newStreak: number, oldStreak: number): Array<{ days: number; crystals: number; xp: number }> {
+function checkStreakMilestones(
+  newStreak: number,
+  oldStreak: number,
+): Array<{ days: number; crystals: number; xp: number }> {
   const milestones = [
     { days: 3, crystals: CRYSTAL_REWARDS.STREAK_3_DAY, xp: 0 },
     { days: 7, crystals: CRYSTAL_REWARDS.STREAK_7_DAY, xp: XP_REWARDS.STREAK_7_DAY },
@@ -420,13 +430,13 @@ function checkStreakMilestones(newStreak: number, oldStreak: number): Array<{ da
     { days: 42, crystals: CRYSTAL_REWARDS.STREAK_42_DAY, xp: 0 },
   ];
 
-  return milestones.filter(m => newStreak >= m.days && oldStreak < m.days);
+  return milestones.filter((m) => newStreak >= m.days && oldStreak < m.days);
 }
 
 // Internal XP award (reusable)
 async function awardXpInternal(ctx: any, userId: any, user: any, amount: number, now: number) {
   const isNewDay = !user.lastXpResetAt || !isSameDay(user.lastXpResetAt, now);
-  const dailyXpEarned = isNewDay ? 0 : (user.dailyXpEarned || 0);
+  const dailyXpEarned = isNewDay ? 0 : user.dailyXpEarned || 0;
   const remainingCap = DAILY_CAPS.XP - dailyXpEarned;
   const cappedAmount = Math.min(amount, Math.max(0, remainingCap));
 
@@ -445,9 +455,15 @@ async function awardXpInternal(ctx: any, userId: any, user: any, amount: number,
 }
 
 // Internal crystals award (reusable)
-async function awardCrystalsInternal(ctx: any, userId: any, user: any, amount: number, now: number) {
+async function awardCrystalsInternal(
+  ctx: any,
+  userId: any,
+  user: any,
+  amount: number,
+  now: number,
+) {
   const isNewDay = !user.lastXpResetAt || !isSameDay(user.lastXpResetAt, now);
-  const dailyCrystalsEarned = isNewDay ? 0 : (user.dailyCrystalsEarned || 0);
+  const dailyCrystalsEarned = isNewDay ? 0 : user.dailyCrystalsEarned || 0;
   const remainingCap = DAILY_CAPS.CRYSTALS - dailyCrystalsEarned;
   const cappedAmount = Math.min(amount, Math.max(0, remainingCap));
 
@@ -464,20 +480,20 @@ async function awardCrystalsInternal(ctx: any, userId: any, user: any, amount: n
 
 // Purchase streak freeze
 export const purchaseStreakFreeze = mutation({
-  args: { userId: v.id('users') },
+  args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
     const user = await ctx.db.get(userId);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new Error("User not found");
 
     const cost = CRYSTAL_COSTS.STREAK_FREEZE;
     const maxFreezes = 2;
 
     if (user.crystals < cost) {
-      throw new Error('Not enough crystals');
+      throw new Error("Not enough crystals");
     }
 
     if ((user.streakFreezes || 0) >= maxFreezes) {
-      throw new Error('Already at max streak freezes');
+      throw new Error("Already at max streak freezes");
     }
 
     await ctx.db.patch(userId, {
@@ -485,16 +501,20 @@ export const purchaseStreakFreeze = mutation({
       streakFreezes: (user.streakFreezes || 0) + 1,
     });
 
-    return { success: true, newCrystals: user.crystals - cost, freezes: (user.streakFreezes || 0) + 1 };
+    return {
+      success: true,
+      newCrystals: user.crystals - cost,
+      freezes: (user.streakFreezes || 0) + 1,
+    };
   },
 });
 
 // Repair broken streak
 export const repairStreak = mutation({
-  args: { userId: v.id('users') },
+  args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
     const user = await ctx.db.get(userId);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new Error("User not found");
 
     const now = Date.now();
     const lastWorkoutAt = user.lastWorkoutAt || 0;
@@ -502,17 +522,17 @@ export const repairStreak = mutation({
 
     let cost = 0;
     if (hoursSinceLastWorkout <= 24) {
-      throw new Error('Streak is not broken yet');
+      throw new Error("Streak is not broken yet");
     } else if (hoursSinceLastWorkout <= 48) {
       cost = CRYSTAL_COSTS.STREAK_REPAIR_24H;
     } else if (hoursSinceLastWorkout <= 72) {
       cost = CRYSTAL_COSTS.STREAK_REPAIR_48H;
     } else {
-      throw new Error('Too late to repair streak');
+      throw new Error("Too late to repair streak");
     }
 
     if (user.crystals < cost) {
-      throw new Error('Not enough crystals');
+      throw new Error("Not enough crystals");
     }
 
     await ctx.db.patch(userId, {

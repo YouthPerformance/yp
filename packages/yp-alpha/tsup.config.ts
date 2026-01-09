@@ -5,6 +5,7 @@ export default defineConfig({
     "src/index.ts",
     "src/router/index.ts",
     "src/config/models.ts",
+    "src/config/wolf-realtime-prompt.ts",
     "src/auth/index.ts",
     "src/auth/client.ts",
     "src/shopify/index.ts",

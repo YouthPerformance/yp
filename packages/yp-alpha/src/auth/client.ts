@@ -23,7 +23,7 @@ export function createWolfAuthClient(baseURL?: string) {
 
 // Default client for SSR-safe usage
 export const authClient = createWolfAuthClient(
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3003"
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3003",
 );
 
 // ---------------------------------------------------------------
@@ -54,7 +54,9 @@ export type User = NonNullable<Session>["user"];
 export async function sendSignInOTP(email: string) {
   // Access the emailOtp plugin method
   const client = authClient as unknown as {
-    emailOtp?: { sendVerificationOtp?: (opts: { email: string; type: string }) => Promise<unknown> };
+    emailOtp?: {
+      sendVerificationOtp?: (opts: { email: string; type: string }) => Promise<unknown>;
+    };
   };
   return client.emailOtp?.sendVerificationOtp?.({ email, type: "sign-in" });
 }

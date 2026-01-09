@@ -18,8 +18,13 @@
 
 // McpServer type - using minimal interface to avoid SDK dependency
 interface McpServer {
-  tool(name: string, schema: Record<string, unknown>, handler: (input: DailyStackInput) => Promise<unknown>): void;
+  tool(
+    name: string,
+    schema: Record<string, unknown>,
+    handler: (input: DailyStackInput) => Promise<unknown>,
+  ): void;
 }
+
 import type { ConvexHttpClient } from "convex/browser";
 import { z } from "zod";
 import { api } from "../../convex/_generated/api.js";

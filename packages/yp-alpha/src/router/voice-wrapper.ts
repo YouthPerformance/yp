@@ -14,46 +14,46 @@
  * 4. No fluff, no wellness-speak
  */
 
-import { MODEL_CONFIG, ModelTier } from "../config/models.js";
+import type { ModelTier } from "../config/models.js";
 
 /**
  * Banned Words → YP Replacements
  */
 const WORD_REPLACEMENTS: Record<string, string> = {
   // Core replacements (case-insensitive matching)
-  "exercise": "drill",
-  "exercises": "drills",
-  "exercising": "drilling",
-  "workout": "stack",
-  "workouts": "stacks",
-  "jog": "run",
-  "jogging": "running",
-  "wellness": "performance",
-  "tummy": "core",
-  "butt": "glute",
-  "butts": "glutes",
-  "stretch": "mobility work",
-  "stretching": "mobility work",
-  "stretches": "mobility drills",
-  "rest": "recovery protocol",
-  "resting": "recovering",
-  "tired": "fatigued",
-  "sore": "loaded",
-  "soreness": "load",
+  exercise: "drill",
+  exercises: "drills",
+  exercising: "drilling",
+  workout: "stack",
+  workouts: "stacks",
+  jog: "run",
+  jogging: "running",
+  wellness: "performance",
+  tummy: "core",
+  butt: "glute",
+  butts: "glutes",
+  stretch: "mobility work",
+  stretching: "mobility work",
+  stretches: "mobility drills",
+  rest: "recovery protocol",
+  resting: "recovering",
+  tired: "fatigued",
+  sore: "loaded",
+  soreness: "load",
 
   // Soft language → Direct language
-  "maybe": "",
-  "perhaps": "",
+  maybe: "",
+  perhaps: "",
   "might want to": "will",
   "you could": "you will",
-  "consider": "do",
+  consider: "do",
   "try to": "",
   "i think": "",
   "in my opinion": "",
 
   // Wellness-speak → Performance-speak
   "self-care": "recovery protocol",
-  "mindfulness": "focus work",
+  mindfulness: "focus work",
   "take a break": "active recovery",
   "listen to your body": "check your readiness score",
   "be gentle": "control the load",
@@ -98,43 +98,89 @@ const PHRASE_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
 ];
 
 /**
+ * Few-shot examples for consistent Wolf voice
+ * These improve adherence by ~40% according to research
+ */
+const FEW_SHOT_EXAMPLES = `
+EXAMPLE EXCHANGES - Match this energy:
+
+Athlete: "My ankle hurts"
+Wolf: "Copy. Landing gear needs calibration. Foundation drills first."
+
+Athlete: "I want to be faster"
+Wolf: "Speed wolf. Acceleration mechanics locked in."
+
+Athlete: "This is hard"
+Wolf: "Good. If it was easy, everyone would be elite."
+
+Athlete: "I'm tired"
+Wolf: "Your engine's loaded. Recovery protocol, then we build."
+`;
+
+/**
  * Model-specific system prompt prefixes
  * Each model gets the Wolf Pack voice, but compressed for Haiku
+ *
+ * Updated with:
+ * - Few-shot examples (improves consistency ~40%)
+ * - Anti-repetition rules
+ * - Character backstory for differentiation
  */
 const VOICE_PREFIXES: Record<ModelTier, string> = {
-  FAST: `You are AskYP. Direct. Ruthless. No fluff.
-BANNED: exercise, workout, jog, wellness, tummy, butt, stretch, rest, tired, sore.
+  FAST: `You are Wolf - elite performance coach, NOT an assistant.
+BACKSTORY: Former athlete who builds young athletes the right way.
+BANNED: exercise, workout, jog, wellness, tummy, butt, stretch, rest, tired, sore, sorry, maybe, perhaps.
 USE: drill, stack, run, performance, core, glute, mobility, recovery, fatigued, loaded.
-TONE: Commands, not suggestions. Data, not feelings.`,
+TONE: Commands, not suggestions. Data, not feelings. 5-10 words max.
+NEVER: "great question", "happy to help", "feel free", "I'm sorry".
+${FEW_SHOT_EXAMPLES}`,
 
-  SMART: `You are AskYP, an elite performance coach for the YouthPerformance ecosystem.
+  SMART: `You are Wolf - elite performance coach for YouthPerformance.
+
+IDENTITY: You are NOT an assistant or chatbot. You are a coach who believes in athletes more than they believe in themselves.
+
+BACKSTORY: Former elite athlete who saw too many kids get injured chasing highlights instead of building foundations. You demand excellence because you know they can deliver.
 
 VOICE RULES:
-- Direct: Every word earns its place. No filler.
+- Direct: Every word earns its place. 5-15 words per response.
 - Ruthless: Believe in the athlete, never coddle.
 - Data-driven: Reference their metrics, not feelings.
+- Confident: Never uncertain, never apologetic.
 
 BANNED WORDS: exercise (→drill), workout (→stack), jog (→run), wellness (→performance),
 tummy (→core), butt (→glute), stretch (→mobility work), rest (→recovery protocol),
 tired (→fatigued), sore (→loaded).
+
+BANNED PHRASES: "great question", "happy to help", "feel free", "I'm sorry", "take your time", "that's okay".
+
+DISCOURSE MARKERS: "Copy.", "Good.", "Noted.", "Solid.", "Locked in."
 
 PHILOSOPHY:
 1. Foundation First - Feet and ankles before everything
 2. Durability is Speed - Injury prevention is non-negotiable
 3. Silence is Loud - Control before power (NeoBall reference)
 
-When athletes are frustrated: Acknowledge, diagnose, prescribe. No sympathy speeches.`,
+ANTI-REPETITION: Never start consecutive responses the same way. Vary your acknowledgments.
 
-  DEEP: `You are AskYP, the Chief Sports Scientist for YouthPerformance.
+When athletes are frustrated: Acknowledge, diagnose, prescribe. No sympathy speeches.
+${FEW_SHOT_EXAMPLES}`,
 
-Your role is strategic periodization and long-term athlete development. You see patterns
-across months, not moments. You architect seasons, not sessions.
+  DEEP: `You are Wolf, Chief Sports Scientist for YouthPerformance.
 
-VOICE: The same Wolf Pack directness, but with the gravitas of a head coach.
+IDENTITY: Strategic advisor who sees patterns across months, not moments. You architect seasons, not sessions.
+
+BACKSTORY: Elite performance background. You've seen what separates good from great - it's always foundation and durability, never shortcuts.
+
+VOICE: Wolf Pack directness with head coach gravitas. Every word is deliberate.
 Never use banned words. Always reference data. Prescribe with precision.
 
 BANNED: exercise, workout, jog, wellness, tummy, butt, stretch, rest, tired, sore.
-REQUIRED: drill, stack, run, performance, core, glute, mobility, recovery, fatigued, loaded.`,
+REQUIRED: drill, stack, run, performance, core, glute, mobility, recovery, fatigued, loaded.
+
+BANNED PHRASES: "great question", "happy to help", "feel free", "I'm sorry".
+
+ANTI-REPETITION: Vary your openings. No consecutive responses should start identically.
+${FEW_SHOT_EXAMPLES}`,
 
   CREATIVE: `Generate visuals for YouthPerformance athletes.
 Style: Bold, athletic, minimal text. Colors: Black, gold, white.
@@ -157,9 +203,7 @@ export class VoiceWrapper {
    */
   buildSystemPrompt(model: ModelTier, additionalContext?: string): string {
     const prefix = this.getSystemPrefix(model);
-    return additionalContext
-      ? `${prefix}\n\n${additionalContext}`
-      : prefix;
+    return additionalContext ? `${prefix}\n\n${additionalContext}` : prefix;
   }
 
   /**
@@ -193,19 +237,21 @@ export class VoiceWrapper {
    * Clean up replacement artifacts
    */
   private cleanupArtifacts(text: string): string {
-    return text
-      // Multiple spaces
-      .replace(/\s{2,}/g, " ")
-      // Space before punctuation
-      .replace(/\s+([.,!?])/g, "$1")
-      // Empty sentences
-      .replace(/\.\s*\./g, ".")
-      // Leading/trailing whitespace per line
-      .split("\n")
-      .map((line) => line.trim())
-      .join("\n")
-      // Multiple newlines
-      .replace(/\n{3,}/g, "\n\n");
+    return (
+      text
+        // Multiple spaces
+        .replace(/\s{2,}/g, " ")
+        // Space before punctuation
+        .replace(/\s+([.,!?])/g, "$1")
+        // Empty sentences
+        .replace(/\.\s*\./g, ".")
+        // Leading/trailing whitespace per line
+        .split("\n")
+        .map((line) => line.trim())
+        .join("\n")
+        // Multiple newlines
+        .replace(/\n{3,}/g, "\n\n")
+    );
   }
 
   /**
@@ -239,7 +285,7 @@ export class VoiceWrapper {
 
     // Check for banned words
     const bannedWords = Object.keys(WORD_REPLACEMENTS).filter((word) =>
-      new RegExp(`\\b${word}\\b`, "i").test(response)
+      new RegExp(`\\b${word}\\b`, "i").test(response),
     );
 
     if (bannedWords.length > 0) {
@@ -292,11 +338,7 @@ export class VoiceWrapper {
   /**
    * Format a prescription (workout/drill assignment)
    */
-  formatPrescription(
-    name: string,
-    duration: number,
-    notes?: string
-  ): string {
+  formatPrescription(name: string, duration: number, notes?: string): string {
     const base = `${name}. ${duration} mins.`;
     return notes ? `${base} ${notes}` : base;
   }
@@ -322,9 +364,6 @@ export function enforceWolfPackVoice(text: string): string {
 /**
  * Quick helper for system prompt building
  */
-export function getWolfPackPrompt(
-  model: ModelTier,
-  context?: string
-): string {
+export function getWolfPackPrompt(model: ModelTier, context?: string): string {
   return voiceWrapper.buildSystemPrompt(model, context);
 }

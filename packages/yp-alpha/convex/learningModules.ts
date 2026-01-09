@@ -29,9 +29,7 @@ export const getProgress = query({
   handler: async (ctx, args) => {
     const progress = await ctx.db
       .query("learningProgress")
-      .withIndex("by_user_module", (q) =>
-        q.eq("userId", args.userId).eq("moduleId", args.moduleId)
-      )
+      .withIndex("by_user_module", (q) => q.eq("userId", args.userId).eq("moduleId", args.moduleId))
       .first();
     return progress;
   },
@@ -80,9 +78,7 @@ export const hasBadge = query({
   handler: async (ctx, args) => {
     const badge = await ctx.db
       .query("userBadges")
-      .withIndex("by_user_badge", (q) =>
-        q.eq("userId", args.userId).eq("badgeId", args.badgeId)
-      )
+      .withIndex("by_user_badge", (q) => q.eq("userId", args.userId).eq("badgeId", args.badgeId))
       .first();
     return badge !== null;
   },
@@ -107,9 +103,7 @@ export const startModule = mutation({
     // Check if progress already exists
     const existing = await ctx.db
       .query("learningProgress")
-      .withIndex("by_user_module", (q) =>
-        q.eq("userId", args.userId).eq("moduleId", args.moduleId)
-      )
+      .withIndex("by_user_module", (q) => q.eq("userId", args.userId).eq("moduleId", args.moduleId))
       .first();
 
     if (existing) {
@@ -154,11 +148,9 @@ export const updatePosition = mutation({
     const now = Date.now();
 
     // Check if card is already in history
-    const existingCardIndex = progress.cardHistory.findIndex(
-      (h) => h.cardId === args.cardId
-    );
+    const existingCardIndex = progress.cardHistory.findIndex((h) => h.cardId === args.cardId);
 
-    let updatedHistory = [...progress.cardHistory];
+    const updatedHistory = [...progress.cardHistory];
 
     if (existingCardIndex === -1) {
       // Add new card to history
@@ -216,11 +208,9 @@ export const answerCheck = mutation({
     const now = Date.now();
 
     // Find card in history
-    const cardIndex = progress.cardHistory.findIndex(
-      (h) => h.cardId === args.cardId
-    );
+    const cardIndex = progress.cardHistory.findIndex((h) => h.cardId === args.cardId);
 
-    let updatedHistory = [...progress.cardHistory];
+    const updatedHistory = [...progress.cardHistory];
     let crystalsToAward = 0;
     let isFirstCorrect = false;
 
@@ -253,8 +243,7 @@ export const answerCheck = mutation({
 
     // Calculate crystals
     if (isFirstCorrect) {
-      const attempts =
-        cardIndex === -1 ? 1 : updatedHistory[cardIndex].attemptsOnCard;
+      const attempts = cardIndex === -1 ? 1 : updatedHistory[cardIndex].attemptsOnCard;
       crystalsToAward = attempts === 1 ? CRYSTALS_FIRST_TRY : CRYSTALS_RETRY;
 
       // Check daily cap
@@ -276,9 +265,7 @@ export const answerCheck = mutation({
     // Update progress
     await ctx.db.patch(args.progressId, {
       totalAttempts: progress.totalAttempts + 1,
-      totalCorrect: isFirstCorrect
-        ? progress.totalCorrect + 1
-        : progress.totalCorrect,
+      totalCorrect: isFirstCorrect ? progress.totalCorrect + 1 : progress.totalCorrect,
       crystalsEarned: progress.crystalsEarned + crystalsToAward,
       cardHistory: updatedHistory,
       updatedAt: now,
@@ -305,9 +292,7 @@ export const answerCheck = mutation({
       isCorrect: args.isCorrect,
       isFirstCorrect,
       crystalsAwarded: crystalsToAward,
-      totalCorrect: isFirstCorrect
-        ? progress.totalCorrect + 1
-        : progress.totalCorrect,
+      totalCorrect: isFirstCorrect ? progress.totalCorrect + 1 : progress.totalCorrect,
     };
   },
 });
@@ -386,9 +371,7 @@ export const completeModule = mutation({
     // Check if badge already exists
     const existingBadge = await ctx.db
       .query("userBadges")
-      .withIndex("by_user_badge", (q) =>
-        q.eq("userId", args.userId).eq("badgeId", args.badge.id)
-      )
+      .withIndex("by_user_badge", (q) => q.eq("userId", args.userId).eq("badgeId", args.badge.id))
       .first();
 
     if (!existingBadge) {
@@ -455,7 +438,7 @@ export const createUnlockEntitlement = mutation({
     const existing = await ctx.db
       .query("entitlements")
       .withIndex("by_user_product", (q) =>
-        q.eq("userId", args.userId).eq("productSlug", args.productSlug)
+        q.eq("userId", args.userId).eq("productSlug", args.productSlug),
       )
       .first();
 

@@ -5,17 +5,17 @@
  * domain, topic, and explicit assignment.
  */
 
-export * from "./types";
-export { jamesScottVoice } from "./james-scott";
 export { adamHarringtonVoice } from "./adam-harrington";
+export { jamesScottVoice } from "./james-scott";
+export { preLaunchContentPlan, teamYPCategories, teamYPVoice } from "./team-yp";
+export * from "./types";
 export { ypBrandVoice } from "./yp-brand";
-export { teamYPVoice, teamYPCategories, preLaunchContentPlan } from "./team-yp";
 
-import { jamesScottVoice } from "./james-scott";
 import { adamHarringtonVoice } from "./adam-harrington";
-import { ypBrandVoice } from "./yp-brand";
+import { jamesScottVoice } from "./james-scott";
 import { teamYPVoice } from "./team-yp";
-import type { ExpertVoice, ExpertId, ContentDomain } from "./types";
+import type { ContentDomain, ExpertId, ExpertVoice } from "./types";
+import { ypBrandVoice } from "./yp-brand";
 
 // ─────────────────────────────────────────────────────────────
 // VOICE REGISTRY
@@ -125,9 +125,7 @@ export function inferExpertFromTopic(topic: string): ExpertId {
   ];
 
   // Score each expert
-  const jamesScore = jamesKeywords.filter((kw) =>
-    topicLower.includes(kw)
-  ).length;
+  const jamesScore = jamesKeywords.filter((kw) => topicLower.includes(kw)).length;
   const adamScore = adamKeywords.filter((kw) => topicLower.includes(kw)).length;
 
   if (jamesScore > adamScore) return "JAMES";
@@ -144,7 +142,7 @@ export function inferExpertFromTopic(topic: string): ExpertId {
  */
 export function buildContentSystemPrompt(
   expert: ExpertVoice,
-  contentType: "pillar" | "topic" | "qa" | "drill"
+  contentType: "pillar" | "topic" | "qa" | "drill",
 ): string {
   const contentTypeInstructions = {
     pillar: `You are writing a comprehensive PILLAR PAGE (2,500-4,000 words).
@@ -207,7 +205,7 @@ Sign off as: ${expert.signatureBlock}`;
  */
 export function validateVoice(
   content: string,
-  expert: ExpertVoice
+  expert: ExpertVoice,
 ): { isValid: boolean; violations: string[] } {
   const violations: string[] = [];
   const contentLower = content.toLowerCase();
@@ -248,9 +246,7 @@ export function validateVoice(
   // Check exclamation mark count
   const exclamationCount = (content.match(/!/g) || []).length;
   if (exclamationCount > 3) {
-    violations.push(
-      `Too many exclamation marks (${exclamationCount}). Keep it under 3.`
-    );
+    violations.push(`Too many exclamation marks (${exclamationCount}). Keep it under 3.`);
   }
 
   return {

@@ -11,7 +11,22 @@ import { mutation, query } from "./_generated/server";
 // ─────────────────────────────────────────────────────────────
 
 /**
+ * Get user by BetterAuth user ID
+ * PRIMARY LOOKUP - Use this for authenticated requests
+ */
+export const getByAuthUserId = query({
+  args: { authUserId: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_auth_user_id", (q) => q.eq("authUserId", args.authUserId))
+      .first();
+  },
+});
+
+/**
  * Get user by Clerk ID
+ * @deprecated Use getByAuthUserId for new code. Kept for migration.
  */
 export const getByClerkId = query({
   args: { clerkId: v.string() },
@@ -54,9 +69,7 @@ export const getCurrentEnrollment = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("enrollments")
-      .withIndex("by_user_active", (q) =>
-        q.eq("userId", args.userId).eq("isActive", true)
-      )
+      .withIndex("by_user_active", (q) => q.eq("userId", args.userId).eq("isActive", true))
       .first();
   },
 });
@@ -80,7 +93,141 @@ export const getLeaderboard = query({
 // ─────────────────────────────────────────────────────────────
 
 /**
+ * Get or create user from BetterAuth session
+ * PERFORMANCE OPTIMIZED: Single query to check auth + migrate + create
+ *
+ * Returns:
+ * - User object if found/linked
+ * - null if needs onboarding (new user)
+ */
+export const getOrCreateFromAuth = mutation({
+  args: {
+    authUserId: v.string(),
+    email: v.string(),
+    name: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+
+    // 1. Try by authUserId first (fastest - already migrated users)
+    let user = await ctx.db
+      .query("users")
+      .withIndex("by_auth_user_id", (q) => q.eq("authUserId", args.authUserId))
+      .first();
+
+    if (user) {
+      return user;
+    }
+
+    // 2. Try by email (migration case - existing Clerk user)
+    user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+
+    if (user) {
+      // Link existing user to new auth system
+      await ctx.db.patch(user._id, {
+        authUserId: args.authUserId,
+        updatedAt: now,
+      });
+      return { ...user, authUserId: args.authUserId };
+    }
+
+    // 3. No user found - return null to signal onboarding needed
+    return null;
+  },
+});
+
+/**
+ * Create new user from onboarding (BetterAuth version)
+ */
+export const createFromAuth = mutation({
+  args: {
+    authUserId: v.string(),
+    email: v.string(),
+    name: v.string(),
+    role: v.union(v.literal("athlete"), v.literal("parent")),
+    avatarColor: v.union(
+      v.literal("cyan"),
+      v.literal("gold"),
+      v.literal("purple"),
+      v.literal("green"),
+      v.literal("red"),
+    ),
+    sport: v.optional(v.string()),
+    age: v.optional(v.number()),
+    parentCode: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+
+    // Check if user already exists by authUserId
+    const existingByAuth = await ctx.db
+      .query("users")
+      .withIndex("by_auth_user_id", (q) => q.eq("authUserId", args.authUserId))
+      .first();
+
+    if (existingByAuth) {
+      return existingByAuth._id;
+    }
+
+    // Check by email (migration case)
+    const existingByEmail = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+
+    if (existingByEmail) {
+      // Link and return
+      await ctx.db.patch(existingByEmail._id, {
+        authUserId: args.authUserId,
+        updatedAt: now,
+      });
+      return existingByEmail._id;
+    }
+
+    // Create new user
+    const userId = await ctx.db.insert("users", {
+      authUserId: args.authUserId,
+      email: args.email,
+      name: args.name,
+      role: args.role,
+      avatarColor: args.avatarColor,
+      sport: args.sport,
+      age: args.age,
+      xpTotal: 0,
+      crystals: 0,
+      rank: "pup",
+      streakCurrent: 0,
+      streakBest: 0,
+      subscriptionStatus: "free",
+      parentCode: args.parentCode,
+      onboardingCompletedAt: now,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    // If athlete, create initial enrollment
+    if (args.role === "athlete") {
+      await ctx.db.insert("enrollments", {
+        userId,
+        programSlug: "foundation-42",
+        currentDay: 1,
+        isActive: true,
+        startedAt: now,
+        totalWorkoutsCompleted: 0,
+        totalXpEarned: 0,
+      });
+    }
+
+    return userId;
+  },
+});
+
+/**
  * Create new user from onboarding
+ * @deprecated Use createFromAuth for new code. Kept for Clerk migration.
  */
 export const create = mutation({
   args: {
@@ -93,7 +240,7 @@ export const create = mutation({
       v.literal("gold"),
       v.literal("purple"),
       v.literal("green"),
-      v.literal("red")
+      v.literal("red"),
     ),
     sport: v.optional(v.string()),
     age: v.optional(v.number()),
@@ -163,8 +310,8 @@ export const updateProfile = mutation({
         v.literal("gold"),
         v.literal("purple"),
         v.literal("green"),
-        v.literal("red")
-      )
+        v.literal("red"),
+      ),
     ),
     sport: v.optional(v.string()),
     age: v.optional(v.number()),
@@ -174,7 +321,7 @@ export const updateProfile = mutation({
 
     // Filter out undefined values
     const filteredUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([_, v]) => v !== undefined)
+      Object.entries(updates).filter(([_, v]) => v !== undefined),
     );
 
     if (Object.keys(filteredUpdates).length === 0) {

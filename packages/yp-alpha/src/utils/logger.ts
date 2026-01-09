@@ -2,7 +2,7 @@
  * Simple logger for YP-Alpha
  */
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+type LogLevel = "debug" | "info" | "warn" | "error";
 
 const LOG_LEVELS: Record<LogLevel, number> = {
   debug: 0,
@@ -11,7 +11,7 @@ const LOG_LEVELS: Record<LogLevel, number> = {
   error: 3,
 };
 
-const currentLevel = (process.env.LOG_LEVEL as LogLevel) || 'info';
+const currentLevel = (process.env.LOG_LEVEL as LogLevel) || "info";
 
 function shouldLog(level: LogLevel): boolean {
   return LOG_LEVELS[level] >= LOG_LEVELS[currentLevel];
@@ -29,26 +29,26 @@ function formatMessage(level: LogLevel, message: string, data?: unknown): string
 
 export const logger = {
   debug(message: string, data?: unknown) {
-    if (shouldLog('debug')) {
-      console.debug(formatMessage('debug', message, data));
+    if (shouldLog("debug")) {
+      console.debug(formatMessage("debug", message, data));
     }
   },
 
   info(message: string, data?: unknown) {
-    if (shouldLog('info')) {
-      console.info(formatMessage('info', message, data));
+    if (shouldLog("info")) {
+      console.info(formatMessage("info", message, data));
     }
   },
 
   warn(message: string, data?: unknown) {
-    if (shouldLog('warn')) {
-      console.warn(formatMessage('warn', message, data));
+    if (shouldLog("warn")) {
+      console.warn(formatMessage("warn", message, data));
     }
   },
 
   error(message: string, data?: unknown) {
-    if (shouldLog('error')) {
-      console.error(formatMessage('error', message, data));
+    if (shouldLog("error")) {
+      console.error(formatMessage("error", message, data));
     }
   },
 };

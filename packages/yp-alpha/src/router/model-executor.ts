@@ -7,9 +7,9 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { MODEL_CONFIG, ModelTier, RouteDecision } from "../config/models";
-import { voiceWrapper } from "./voice-wrapper";
+import { MODEL_CONFIG, type ModelTier, type RouteDecision } from "../config/models";
 import { logger } from "../utils/logger";
+import { voiceWrapper } from "./voice-wrapper";
 
 export interface ExecutionResult {
   response: string;
@@ -48,7 +48,7 @@ export class ModelExecutor {
   async execute(
     query: string,
     routeDecision: RouteDecision,
-    context: ExecutionContext
+    context: ExecutionContext,
   ): Promise<ExecutionResult> {
     const startTime = Date.now();
 
@@ -60,7 +60,7 @@ export class ModelExecutor {
     // Build system prompt with Wolf Pack voice
     const systemPrompt = voiceWrapper.buildSystemPrompt(
       routeDecision.selectedModel,
-      context.athleteContext
+      context.athleteContext,
     );
 
     // Build messages
@@ -122,10 +122,7 @@ export class ModelExecutor {
   /**
    * Execute Haiku for fast execution tasks
    */
-  async executeHaiku(
-    query: string,
-    context: ExecutionContext
-  ): Promise<ExecutionResult> {
+  async executeHaiku(query: string, context: ExecutionContext): Promise<ExecutionResult> {
     return this.execute(
       query,
       {
@@ -136,17 +133,14 @@ export class ModelExecutor {
         selectedModel: "FAST",
         estimatedLatency: 500,
       },
-      context
+      context,
     );
   }
 
   /**
    * Execute Sonnet for coaching tasks
    */
-  async executeSonnet(
-    query: string,
-    context: ExecutionContext
-  ): Promise<ExecutionResult> {
+  async executeSonnet(query: string, context: ExecutionContext): Promise<ExecutionResult> {
     return this.execute(
       query,
       {
@@ -157,17 +151,14 @@ export class ModelExecutor {
         selectedModel: "SMART",
         estimatedLatency: 2000,
       },
-      context
+      context,
     );
   }
 
   /**
    * Execute Opus for deep planning tasks
    */
-  async executeOpus(
-    query: string,
-    context: ExecutionContext
-  ): Promise<ExecutionResult> {
+  async executeOpus(query: string, context: ExecutionContext): Promise<ExecutionResult> {
     return this.execute(
       query,
       {
@@ -178,7 +169,7 @@ export class ModelExecutor {
         selectedModel: "DEEP",
         estimatedLatency: 8000,
       },
-      context
+      context,
     );
   }
 
@@ -188,7 +179,7 @@ export class ModelExecutor {
   private async executeCreative(
     query: string,
     context: ExecutionContext,
-    startTime: number
+    startTime: number,
   ): Promise<ExecutionResult> {
     // Placeholder for Gemini integration
     // In production, this would call the Gemini API
@@ -212,10 +203,10 @@ export class ModelExecutor {
    */
   private getMaxTokens(model: ModelTier): number {
     const tokenLimits: Record<ModelTier, number> = {
-      FAST: 1024,     // Haiku: Keep responses tight
-      SMART: 2048,    // Sonnet: Allow more depth
-      DEEP: 4096,     // Opus: Full analysis
-      CREATIVE: 256,  // Creative: Just commands
+      FAST: 1024, // Haiku: Keep responses tight
+      SMART: 2048, // Sonnet: Allow more depth
+      DEEP: 4096, // Opus: Full analysis
+      CREATIVE: 256, // Creative: Just commands
     };
     return tokenLimits[model];
   }
@@ -227,10 +218,10 @@ export class ModelExecutor {
     query: string,
     routeDecision: RouteDecision,
     context: ExecutionContext,
-    maxRetries: number = 2
+    maxRetries: number = 2,
   ): Promise<ExecutionResult> {
     let lastError: Error | null = null;
-    let currentDecision = { ...routeDecision };
+    const currentDecision = { ...routeDecision };
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {

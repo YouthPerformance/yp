@@ -122,25 +122,37 @@ export const ingestConversation = mutation({
     // Auto-create/update nodes for mentioned body parts
     // ─────────────────────────────────────────────────────────────
     const bodyParts = [
-      "ankle", "knee", "hip", "back", "shoulder", "wrist", "elbow",
-      "calf", "hamstring", "quad", "glute", "core", "foot", "achilles",
+      "ankle",
+      "knee",
+      "hip",
+      "back",
+      "shoulder",
+      "wrist",
+      "elbow",
+      "calf",
+      "hamstring",
+      "quad",
+      "glute",
+      "core",
+      "foot",
+      "achilles",
     ];
 
     const mentionedParts = bodyParts.filter((part) => message.includes(part));
 
     for (const part of mentionedParts) {
       // Check for negative indicators
-      const isNegative = painPatterns.some((p) =>
-        new RegExp(`${part}[^.]*?(hurt|pain|sore|injury|strain|swollen|stiff|tight)`, "i").test(message)
+      const isNegative = painPatterns.some((_p) =>
+        new RegExp(`${part}[^.]*?(hurt|pain|sore|injury|strain|swollen|stiff|tight)`, "i").test(
+          message,
+        ),
       );
 
       if (isNegative) {
         // Update or create node with lower score
         const existing = await ctx.db
           .query("athlete_nodes")
-          .withIndex("by_user_key", (q) =>
-            q.eq("userId", args.userId).eq("key", part)
-          )
+          .withIndex("by_user_key", (q) => q.eq("userId", args.userId).eq("key", part))
           .first();
 
         if (existing) {
@@ -255,7 +267,7 @@ export const updateAthleteNode = mutation({
       v.literal("body_part"),
       v.literal("metric"),
       v.literal("mental"),
-      v.literal("recovery")
+      v.literal("recovery"),
     ),
     status: v.string(),
     score: v.number(),
@@ -266,9 +278,7 @@ export const updateAthleteNode = mutation({
 
     const existing = await ctx.db
       .query("athlete_nodes")
-      .withIndex("by_user_key", (q) =>
-        q.eq("userId", args.userId).eq("key", args.key)
-      )
+      .withIndex("by_user_key", (q) => q.eq("userId", args.userId).eq("key", args.key))
       .first();
 
     if (existing) {
@@ -307,7 +317,7 @@ export const addCorrelation = mutation({
       v.literal("CAUSES"),
       v.literal("IMPROVES"),
       v.literal("BLOCKS"),
-      v.literal("CORRELATES")
+      v.literal("CORRELATES"),
     ),
     strength: v.number(),
   },
@@ -317,9 +327,7 @@ export const addCorrelation = mutation({
     // Check if correlation already exists
     const existing = await ctx.db
       .query("correlations")
-      .withIndex("by_user_from", (q) =>
-        q.eq("userId", args.userId).eq("fromNode", args.fromNode)
-      )
+      .withIndex("by_user_from", (q) => q.eq("userId", args.userId).eq("fromNode", args.fromNode))
       .filter((q) => q.eq(q.field("toNode"), args.toNode))
       .first();
 

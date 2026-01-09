@@ -46,16 +46,16 @@ export class ShopifyClient {
   constructor(config: ShopifyConfig) {
     this.storeDomain = config.storeDomain;
     this.storefrontToken = config.storefrontToken;
-    this.apiVersion = config.apiVersion || '2024-10';
+    this.apiVersion = config.apiVersion || "2024-10";
     this.endpoint = `https://${this.storeDomain}/api/${this.apiVersion}/graphql.json`;
   }
 
   private async query<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
     const response = await fetch(this.endpoint, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': this.storefrontToken,
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": this.storefrontToken,
       },
       body: JSON.stringify({ query, variables }),
     });
@@ -64,7 +64,7 @@ export class ShopifyClient {
       throw new Error(`Shopify API error: ${response.status}`);
     }
 
-    const result = await response.json() as { data: T; errors?: Array<{ message: string }> };
+    const result = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
 
     if (result.errors) {
       throw new Error(`Shopify GraphQL error: ${JSON.stringify(result.errors)}`);
@@ -77,7 +77,8 @@ export class ShopifyClient {
    * Get a single product by handle
    */
   async getProduct(handle: string): Promise<Product | null> {
-    const data = await this.query<{ product: Product | null }>(`
+    const data = await this.query<{ product: Product | null }>(
+      `
       query GetProduct($handle: String!) {
         product(handle: $handle) {
           id
@@ -107,7 +108,9 @@ export class ShopifyClient {
           }
         }
       }
-    `, { handle });
+    `,
+      { handle },
+    );
 
     return data.product;
   }
@@ -116,7 +119,8 @@ export class ShopifyClient {
    * Get featured/best-selling products
    */
   async getFeaturedProducts(first: number = 6): Promise<Product[]> {
-    const data = await this.query<{ products: { nodes: Product[] } }>(`
+    const data = await this.query<{ products: { nodes: Product[] } }>(
+      `
       query FeaturedProducts($first: Int!) {
         products(first: $first, sortKey: BEST_SELLING) {
           nodes {
@@ -148,7 +152,9 @@ export class ShopifyClient {
           }
         }
       }
-    `, { first });
+    `,
+      { first },
+    );
 
     return data.products.nodes;
   }
@@ -156,13 +162,17 @@ export class ShopifyClient {
   /**
    * Get all products from a collection
    */
-  async getCollection(handle: string, first: number = 20): Promise<{ title: string; products: Product[] } | null> {
+  async getCollection(
+    handle: string,
+    first: number = 20,
+  ): Promise<{ title: string; products: Product[] } | null> {
     const data = await this.query<{
       collection: {
         title: string;
         products: { nodes: Product[] };
       } | null;
-    }>(`
+    }>(
+      `
       query GetCollection($handle: String!, $first: Int!) {
         collection(handle: $handle) {
           title
@@ -197,7 +207,9 @@ export class ShopifyClient {
           }
         }
       }
-    `, { handle, first });
+    `,
+      { handle, first },
+    );
 
     if (!data.collection) return null;
 
@@ -214,7 +226,7 @@ export class ShopifyClient {
  */
 export function createYPShopClient(storefrontToken: string) {
   return new ShopifyClient({
-    storeDomain: 'youthperformance.myshopify.com',
+    storeDomain: "youthperformance.myshopify.com",
     storefrontToken,
   });
 }

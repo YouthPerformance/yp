@@ -37,9 +37,7 @@ export const getDayProgress = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("workoutCompletions")
-      .withIndex("by_user_day", (q) =>
-        q.eq("userId", args.userId).eq("dayNumber", args.dayNumber)
-      )
+      .withIndex("by_user_day", (q) => q.eq("userId", args.userId).eq("dayNumber", args.dayNumber))
       .first();
   },
 });
@@ -100,9 +98,7 @@ export const completeWorkout = mutation({
     // Check existing completion
     const existing = await ctx.db
       .query("workoutCompletions")
-      .withIndex("by_user_day", (q) =>
-        q.eq("userId", args.userId).eq("dayNumber", args.dayNumber)
-      )
+      .withIndex("by_user_day", (q) => q.eq("userId", args.userId).eq("dayNumber", args.dayNumber))
       .first();
 
     if (existing) {
@@ -135,7 +131,7 @@ export const completeWorkout = mutation({
     const user = await ctx.db.get(args.userId);
     if (user) {
       const lastWorkout = user.lastWorkoutAt;
-      const oneDayAgo = now - 24 * 60 * 60 * 1000;
+      const _oneDayAgo = now - 24 * 60 * 60 * 1000;
       const twoDaysAgo = now - 48 * 60 * 60 * 1000;
 
       let newStreak = 1;
@@ -186,9 +182,7 @@ export const submitQuiz = mutation({
     // Find and update the completion record
     const completion = await ctx.db
       .query("workoutCompletions")
-      .withIndex("by_user_day", (q) =>
-        q.eq("userId", args.userId).eq("dayNumber", args.dayNumber)
-      )
+      .withIndex("by_user_day", (q) => q.eq("userId", args.userId).eq("dayNumber", args.dayNumber))
       .first();
 
     if (completion) {
@@ -233,9 +227,7 @@ export const submitStrikeWodScore = mutation({
     // Find completion record
     const completion = await ctx.db
       .query("workoutCompletions")
-      .withIndex("by_user_day", (q) =>
-        q.eq("userId", args.userId).eq("dayNumber", args.dayNumber)
-      )
+      .withIndex("by_user_day", (q) => q.eq("userId", args.userId).eq("dayNumber", args.dayNumber))
       .first();
 
     if (!completion) {
@@ -304,17 +296,17 @@ export const awardCrystals = mutation({
  */
 export const completeProgramDay = mutation({
   args: {
-    clerkUserId: v.string(),
+    authUserId: v.string(),
     programSlug: v.string(),
     dayNumber: v.number(),
     xpEarned: v.number(),
     crystalsEarned: v.number(),
   },
   handler: async (ctx, args) => {
-    // Find user by Clerk ID
+    // Find user by BetterAuth ID
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkUserId))
+      .withIndex("by_auth_user_id", (q) => q.eq("authUserId", args.authUserId))
       .unique();
 
     if (!user) throw new Error("User not found");

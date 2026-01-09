@@ -4,8 +4,8 @@
 // LEADS - Email Capture for Teaser Module Conversion
 // ═══════════════════════════════════════════════════════════
 
-import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 // ─────────────────────────────────────────────────────────────
 // CAPTURE EMAIL

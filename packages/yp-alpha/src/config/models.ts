@@ -21,7 +21,7 @@ export const MODEL_CONFIG = {
   DEEP: "claude-opus-4-5-20251124",
 
   // The Artist - Visual generation (Gemini/external)
-  CREATIVE: "gemini-2.0-flash-exp"
+  CREATIVE: "gemini-2.0-flash-exp",
 } as const;
 
 export type ModelTier = keyof typeof MODEL_CONFIG;
@@ -31,18 +31,18 @@ export type ModelTier = keyof typeof MODEL_CONFIG;
  */
 export const MODEL_PRICING = {
   [MODEL_CONFIG.FAST]: { input: 0.25, output: 1.25 },
-  [MODEL_CONFIG.SMART]: { input: 3.00, output: 15.00 },
-  [MODEL_CONFIG.DEEP]: { input: 15.00, output: 75.00 },
+  [MODEL_CONFIG.SMART]: { input: 3.0, output: 15.0 },
+  [MODEL_CONFIG.DEEP]: { input: 15.0, output: 75.0 },
 } as const;
 
 /**
  * Latency Targets (p95)
  */
 export const LATENCY_TARGETS = {
-  ROUTER: 100,      // Router classification: <100ms
-  FAST: 500,        // Haiku response: <500ms
-  SMART: 2000,      // Sonnet response: <2s
-  DEEP: 10000,      // Opus response: <10s (batch jobs)
+  ROUTER: 100, // Router classification: <100ms
+  FAST: 500, // Haiku response: <500ms
+  SMART: 2000, // Sonnet response: <2s
+  DEEP: 10000, // Opus response: <10s (batch jobs)
 } as const;
 
 /**
@@ -62,37 +62,37 @@ export interface RouteDecision {
  */
 export const INTENT_MODEL_MAP: Record<string, ModelTier> = {
   // EXECUTION intents → Haiku
-  "lookup_data": "FAST",
-  "get_workout": "FAST",
-  "check_progress": "FAST",
-  "product_info": "FAST",
-  "schedule_session": "FAST",
+  lookup_data: "FAST",
+  get_workout: "FAST",
+  check_progress: "FAST",
+  product_info: "FAST",
+  schedule_session: "FAST",
 
   // COACHING intents → Sonnet
-  "emotional_support": "SMART",
-  "troubleshoot_plateau": "SMART",
-  "analyze_patterns": "SMART",
-  "injury_assessment": "SMART",
-  "motivation_crisis": "SMART",
+  emotional_support: "SMART",
+  troubleshoot_plateau: "SMART",
+  analyze_patterns: "SMART",
+  injury_assessment: "SMART",
+  motivation_crisis: "SMART",
 
   // PLANNING intents → Opus
-  "season_planning": "DEEP",
-  "periodization": "DEEP",
-  "multi_month_analysis": "DEEP",
+  season_planning: "DEEP",
+  periodization: "DEEP",
+  multi_month_analysis: "DEEP",
 
   // CREATION intents → External
-  "generate_visual": "CREATIVE",
-  "create_poster": "CREATIVE",
-  "chart_progress": "CREATIVE",
+  generate_visual: "CREATIVE",
+  create_poster: "CREATIVE",
+  chart_progress: "CREATIVE",
 };
 
 /**
  * Complexity Thresholds
  */
 export const COMPLEXITY_THRESHOLDS = {
-  HAIKU_MAX: 6,      // Haiku handles complexity 1-6
-  SONNET_MAX: 9,     // Sonnet handles complexity 7-9
-  OPUS_MIN: 10,      // Opus for complexity 10 (rare)
+  HAIKU_MAX: 6, // Haiku handles complexity 1-6
+  SONNET_MAX: 9, // Sonnet handles complexity 7-9
+  OPUS_MIN: 10, // Opus for complexity 10 (rare)
 } as const;
 
 /**
@@ -100,9 +100,9 @@ export const COMPLEXITY_THRESHOLDS = {
  * If user is emotional, escalate even simple requests
  */
 export const SENTIMENT_ESCALATION: Record<string, boolean> = {
-  NEUTRAL: false,    // No escalation
-  HYPE: false,       // Positive emotion, Haiku can celebrate
-  FRUSTRATED: true,  // Escalate to Sonnet
-  SAD: true,         // Escalate to Sonnet
-  ANXIOUS: true,     // Escalate to Sonnet
+  NEUTRAL: false, // No escalation
+  HYPE: false, // Positive emotion, Haiku can celebrate
+  FRUSTRATED: true, // Escalate to Sonnet
+  SAD: true, // Escalate to Sonnet
+  ANXIOUS: true, // Escalate to Sonnet
 };

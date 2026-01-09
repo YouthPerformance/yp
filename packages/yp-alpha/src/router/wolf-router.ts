@@ -14,10 +14,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import {
-  MODEL_CONFIG,
-  ModelTier,
-  RouteDecision,
   COMPLEXITY_THRESHOLDS,
+  MODEL_CONFIG,
+  type ModelTier,
+  type RouteDecision,
   SENTIMENT_ESCALATION,
 } from "../config/models";
 import { logger } from "../utils/logger";
@@ -39,12 +39,12 @@ export type RouteClassification = z.infer<typeof RouteSchema>;
  */
 export interface UserContext {
   userId: string;
-  recentSentiment?: string[];      // Last 3 messages sentiment
-  currentStreak?: number;          // Training streak
-  durabilityScore?: number;        // Health metric 0-100
-  lastInteractionType?: string;    // What they did last
-  equipmentOwned?: string[];       // Gear they have
-  injuryStatus?: string;           // Active injuries
+  recentSentiment?: string[]; // Last 3 messages sentiment
+  currentStreak?: number; // Training streak
+  durabilityScore?: number; // Health metric 0-100
+  lastInteractionType?: string; // What they did last
+  equipmentOwned?: string[]; // Gear they have
+  injuryStatus?: string; // Active injuries
 }
 
 /**
@@ -106,10 +106,7 @@ export class WolfRouter {
    * Route a request to the appropriate model
    * Target: <100ms classification
    */
-  async route(
-    userQuery: string,
-    context: UserContext
-  ): Promise<RouteDecision> {
+  async route(userQuery: string, context: UserContext): Promise<RouteDecision> {
     const startTime = Date.now();
 
     try {
@@ -185,10 +182,7 @@ export class WolfRouter {
   /**
    * Build the classification prompt with context
    */
-  private buildClassificationPrompt(
-    query: string,
-    context: UserContext
-  ): string {
+  private buildClassificationPrompt(query: string, context: UserContext): string {
     const contextParts: string[] = [];
 
     if (context.durabilityScore !== undefined) {
@@ -204,8 +198,7 @@ export class WolfRouter {
       contextParts.push(`Recent mood: ${context.recentSentiment.join(", ")}`);
     }
 
-    const contextStr =
-      contextParts.length > 0 ? `\nContext: ${contextParts.join(" | ")}` : "";
+    const contextStr = contextParts.length > 0 ? `\nContext: ${contextParts.join(" | ")}` : "";
 
     return `Athlete Query: "${query}"${contextStr}
 
@@ -215,10 +208,7 @@ Classify this request. Consider both the explicit ask AND the emotional state.`;
   /**
    * Build final route decision from classification
    */
-  private buildDecision(
-    classification: RouteClassification,
-    startTime: number
-  ): RouteDecision {
+  private buildDecision(classification: RouteClassification, _startTime: number): RouteDecision {
     let selectedModel: ModelTier;
 
     // Sentiment escalation check
@@ -254,9 +244,9 @@ Classify this request. Consider both the explicit ask AND the emotional state.`;
    * Conservative: Default to Sonnet for safety
    */
   private fallbackDecision(
-    query: string,
+    _query: string,
     context: UserContext,
-    startTime: number
+    _startTime: number,
   ): RouteDecision {
     // Track failures for this user
     const failures = (this.failureCount.get(context.userId) || 0) + 1;
@@ -314,10 +304,7 @@ Classify this request. Consider both the explicit ask AND the emotional state.`;
     const history = this.routeHistory.get(userId) || [];
     const recent = history.slice(-3);
 
-    return (
-      recent.length >= 3 &&
-      recent.every((d) => d.sentiment === "FRUSTRATED")
-    );
+    return recent.length >= 3 && recent.every((d) => d.sentiment === "FRUSTRATED");
   }
 
   /**
@@ -366,8 +353,7 @@ Classify this request. Consider both the explicit ask AND the emotional state.`;
     let totalComplexity = 0;
 
     for (const decision of history) {
-      modelCounts[decision.selectedModel] =
-        (modelCounts[decision.selectedModel] || 0) + 1;
+      modelCounts[decision.selectedModel] = (modelCounts[decision.selectedModel] || 0) + 1;
       totalComplexity += decision.complexityScore;
     }
 
