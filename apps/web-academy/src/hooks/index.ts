@@ -25,3 +25,5 @@ export {
   type ViewportMode,
   type ViewportState,
 } from "./useViewportMode";
+
+export { useAnonymousProgress } from "./useAnonymousProgress";
