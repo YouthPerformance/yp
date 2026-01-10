@@ -60,9 +60,9 @@ const {
   </div>
 
   <div class="drill-body">
-    <!-- Video Placeholder -->
-    <div class="aspect-video rounded-md flex items-center justify-center mb-2.5 relative" style="background: var(--gradient-cyan);">
-      <div class="absolute w-10 h-10 rounded-full flex items-center justify-center" style="background-color: rgba(0,0,0,0.3);">
+    <!-- Video Placeholder with Shimmer -->
+    <div class="aspect-video rounded-md flex items-center justify-center mb-2.5 relative shimmer-loading" style="background: var(--gradient-cyan);" data-video-placeholder>
+      <div class="absolute w-10 h-10 rounded-full flex items-center justify-center play-button" style="background-color: rgba(0,0,0,0.3);">
         <div class="w-0 h-0 border-l-[14px] border-l-white border-y-[8px] border-y-transparent ml-0.5"></div>
       </div>
       {videoUrl ? (

@@ -28,8 +28,19 @@ const buttonClass = variant === "gold" ? "cta-button gold" : "cta-button";
 <section class={`cta-block ${className}`}>
   <h2 class="font-bebas text-display-md mb-2" style="color: var(--text-primary);">{title}</h2>
   <p class="text-body-md mb-3 max-w-[500px] mx-auto" style="color: var(--text-secondary);">{description}</p>
-  <a href={buttonUrl} class={buttonClass}>
+  <a href={buttonUrl} class={buttonClass} data-magnetic="0.2" data-ripple>
     <span>{buttonText}</span>
-    <span>→</span>
+    <span class="cta-arrow">→</span>
   </a>
 </section>
+
+<style>
+  .cta-arrow {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .cta-button:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+</style>

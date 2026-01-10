@@ -1,4 +1,10 @@
 ---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import DrillCard from "@/components/content/DrillCard.astro";
+import SafetyBox from "@/components/content/SafetyBox.astro";
+import FAQSection from "@/components/content/FAQSection.astro";
+import CTABlock from "@/components/content/CTABlock.astro";
+
 // SEO / Frontmatter
 const title = "Bulletproof Ankles: The NBA Pro Stability Protocol";
 const description =
@@ -42,16 +48,30 @@ const faqs = [
   canonical={canonical}
   theme="athlete-dark"
 >
+  <!-- Scroll Progress Bar -->
+  <div data-scroll-progress></div>
+
+  <!-- Drill Progress Dots (Desktop) -->
+  <nav class="drill-progress" aria-label="Drill progress">
+    <div class="drill-progress-dot active" data-drill-dot data-drill-index="0" title="Drill 1"></div>
+    <div class="drill-progress-dot" data-drill-dot data-drill-index="1" title="Drill 2"></div>
+    <div class="drill-progress-dot" data-drill-dot data-drill-index="2" title="Drill 3"></div>
+    <div class="drill-progress-dot" data-drill-dot data-drill-index="3" title="Drill 4"></div>
+    <div class="drill-progress-dot" data-drill-dot data-drill-index="4" title="Drill 5"></div>
+    <div class="drill-progress-dot" data-drill-dot data-drill-index="5" title="Drill 6"></div>
+  </nav>
+
   <!-- ═══════════════════════════════════════════════════════════════════════════
        HERO SECTION - "The Lab" (bpa1.jpeg)
        ═══════════════════════════════════════════════════════════════════════════ -->
   <section class="relative w-full h-[60vh] min-h-[500px] overflow-hidden bg-black">
-    <!-- Background Image -->
+    <!-- Background Image with Parallax -->
     <img
       src="/images/academy/bpa1.jpeg"
       alt="James Scott treating Jimmy Butler's ankle in private training session"
       class="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-80"
       loading="eager"
+      data-parallax="0.3"
     />
 
     <!-- Radial Vignette -->
@@ -60,10 +80,10 @@ const faqs = [
     <!-- Bottom Gradient Scrim -->
     <div class="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black via-black/90 to-transparent"></div>
 
-    <!-- Content Overlay -->
-    <div class="absolute bottom-0 left-0 w-full p-6 pb-8 z-10 flex flex-col items-start gap-4">
-      <!-- Protocol Badge -->
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full">
+    <!-- Content Overlay with Entrance Animation -->
+    <div class="hero-content absolute bottom-0 left-0 w-full p-6 pb-8 z-10 flex flex-col items-start gap-4">
+      <!-- Protocol Badge with Glow Pulse -->
+      <div class="protocol-badge flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full">
         <div class="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse"></div>
         <span class="text-[0.65rem] text-white tracking-[0.15em] uppercase font-mono">NBA PRO PROTOCOL</span>
       </div>
@@ -103,25 +123,25 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       QUICK STATS BAR
+       QUICK STATS BAR - With Count-Up Animation
        ═══════════════════════════════════════════════════════════════════════════ -->
-  <section class="bg-bg-secondary border-y border-border-default">
+  <section class="bg-bg-secondary border-y border-border-default" data-reveal="fade">
     <div class="max-w-content mx-auto px-4 py-4">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-        <div>
-          <div class="font-bebas text-display-sm text-accent-primary">8-12</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center" data-reveal-stagger>
+        <div data-reveal>
+          <div class="font-bebas text-display-sm text-accent-primary" data-count-up data-count-to="8-12">8-12</div>
           <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Minutes</div>
         </div>
-        <div>
-          <div class="font-bebas text-display-sm text-accent-primary">6</div>
+        <div data-reveal>
+          <div class="font-bebas text-display-sm text-accent-primary" data-count-up data-count-to="6">0</div>
           <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Exercises</div>
         </div>
-        <div>
-          <div class="font-bebas text-display-sm text-accent-primary">0</div>
+        <div data-reveal>
+          <div class="font-bebas text-display-sm text-accent-primary" data-count-up data-count-to="0">0</div>
           <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Equipment</div>
         </div>
-        <div>
-          <div class="font-bebas text-display-sm text-accent-primary">ALL</div>
+        <div data-reveal>
+          <div class="font-bebas text-display-sm text-accent-primary" data-count-up data-count-to="ALL">ALL</div>
           <div class="text-body-xs text-text-tertiary uppercase tracking-wider">Ages</div>
         </div>
       </div>
@@ -129,10 +149,10 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       DIRECT ANSWER (AEO)
+       DIRECT ANSWER (AEO) - With Reveal Animation
        ═══════════════════════════════════════════════════════════════════════════ -->
   <section class="max-w-article mx-auto px-4 py-8">
-    <div class="direct-answer">
+    <div class="direct-answer" data-reveal="slide-left">
       <strong>Bulletproof Ankles is a targeted stability protocol</strong> that builds the
       proprioception, strength, and reactive control your ankles need to handle cutting,
       landing, and change-of-direction demands. Start with balance and activation work,
@@ -140,15 +160,15 @@ const faqs = [
       3-4x per week, builds measurable ankle resilience in 4-6 weeks.
     </div>
 
-    <!-- Key Takeaways -->
-    <div class="key-takeaways">
+    <!-- Key Takeaways with staggered list -->
+    <div class="key-takeaways" data-reveal>
       <h2 class="font-bebas text-display-xs mb-2">What You'll Build</h2>
-      <ul>
-        <li>Stronger foot-ankle connection for better force transfer</li>
-        <li>Enhanced proprioception - your ankle's "awareness" of position</li>
-        <li>Reactive stability for cuts, jumps, and unexpected movements</li>
-        <li>Resilience against sprains and chronic instability</li>
-        <li>Foundation for speed, power, and injury prevention</li>
+      <ul data-reveal-stagger>
+        <li data-reveal>Stronger foot-ankle connection for better force transfer</li>
+        <li data-reveal>Enhanced proprioception - your ankle's "awareness" of position</li>
+        <li data-reveal>Reactive stability for cuts, jumps, and unexpected movements</li>
+        <li data-reveal>Resilience against sprains and chronic instability</li>
+        <li data-reveal>Foundation for speed, power, and injury prevention</li>
       </ul>
     </div>
   </section>
@@ -158,19 +178,19 @@ const faqs = [
        ═══════════════════════════════════════════════════════════════════════════ -->
   <section class="bg-bg-secondary py-8">
     <div class="max-w-content mx-auto px-4">
-      <div class="flex items-center gap-2 mb-4">
+      <div class="flex items-center gap-2 mb-4" data-reveal="fade">
         <div class="h-px flex-1 bg-accent-primary/30"></div>
         <span class="font-mono text-label text-accent-primary tracking-widest">WHY IT WORKS</span>
         <div class="h-px flex-1 bg-accent-primary/30"></div>
       </div>
 
       <div class="grid md:grid-cols-2 gap-6 items-center">
-        <!-- Image Card -->
-        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 group">
+        <!-- Image Card with Reveal -->
+        <div class="image-reveal relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 group" data-reveal="slide-left">
           <img
             src="/images/academy/bpa2.jpeg"
             alt="Biomechanical analysis showing lateral ankle stability tracking"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            class="w-full h-full object-cover"
             loading="lazy"
           />
 
@@ -190,22 +210,22 @@ const faqs = [
           </div>
         </div>
 
-        <!-- Text Content -->
+        <!-- Text Content with staggered reveal -->
         <div class="space-y-4">
-          <h3 class="font-bebas text-display-md">The Biomechanics of Bulletproof</h3>
+          <h3 class="font-bebas text-display-md" data-reveal="slide-right">The Biomechanics of Bulletproof</h3>
 
-          <p class="text-text-secondary leading-relaxed">
+          <p class="text-text-secondary leading-relaxed" data-reveal>
             Your ankle is a <strong class="text-text-primary">kinetic chain bottleneck</strong>.
             Every force from the ground passes through it. Weak ankles leak power, create
             compensations, and invite injury.
           </p>
 
-          <p class="text-text-secondary leading-relaxed">
+          <p class="text-text-secondary leading-relaxed" data-reveal>
             This protocol targets three systems:
           </p>
 
-          <div class="space-y-3">
-            <div class="flex items-start gap-3">
+          <div class="space-y-3" data-reveal-stagger>
+            <div class="flex items-start gap-3" data-reveal data-ripple>
               <div class="w-8 h-8 rounded-lg bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
                 <span class="font-mono text-accent-primary text-body-xs">01</span>
               </div>
@@ -215,7 +235,7 @@ const faqs = [
               </div>
             </div>
 
-            <div class="flex items-start gap-3">
+            <div class="flex items-start gap-3" data-reveal data-ripple>
               <div class="w-8 h-8 rounded-lg bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
                 <span class="font-mono text-accent-primary text-body-xs">02</span>
               </div>
@@ -225,7 +245,7 @@ const faqs = [
               </div>
             </div>
 
-            <div class="flex items-start gap-3">
+            <div class="flex items-start gap-3" data-reveal data-ripple>
               <div class="w-8 h-8 rounded-lg bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
                 <span class="font-mono text-accent-primary text-body-xs">03</span>
               </div>
@@ -241,29 +261,32 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       SAFETY
+       SAFETY - With attention animation
        ═══════════════════════════════════════════════════════════════════════════ -->
   <section class="max-w-article mx-auto px-4 py-8">
-    <SafetyBox>
-      <ul class="ml-5 mt-2 space-y-1 text-[0.95rem]">
-        <li>Sharp or sudden pain (not just muscle work)</li>
-        <li>Pain that increases during or after exercise</li>
-        <li>Numbness, tingling, or weakness</li>
-        <li>Visible swelling or bruising</li>
-        <li>Instability that feels "dangerous" not just challenging</li>
-      </ul>
-    </SafetyBox>
+    <div data-reveal="scale">
+      <SafetyBox>
+        <ul class="ml-5 mt-2 space-y-1 text-[0.95rem]">
+          <li>Sharp or sudden pain (not just muscle work)</li>
+          <li>Pain that increases during or after exercise</li>
+          <li>Numbness, tingling, or weakness</li>
+          <li>Visible swelling or bruising</li>
+          <li>Instability that feels "dangerous" not just challenging</li>
+        </ul>
+      </SafetyBox>
+    </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       THE PROTOCOL - DRILLS
+       THE PROTOCOL - DRILLS (with staggered cascade)
        ═══════════════════════════════════════════════════════════════════════════ -->
-  <section class="max-w-article mx-auto px-4 py-8">
-    <div class="section-header">
+  <section class="max-w-article mx-auto px-4 py-8" data-drill-progress>
+    <div class="section-header" data-reveal>
       <div class="chapter-label">The Protocol</div>
       <h2 class="font-bebas text-display-lg">6 Exercises. 8 Minutes. Bulletproof.</h2>
     </div>
 
+    <div data-reveal data-ripple>
     <DrillCard
       number={1}
       title="Tripod Foot Activation"
@@ -285,7 +308,9 @@ const faqs = [
       reps="1 set"
       difficulty="Beginner"
     />
+    </div>
 
+    <div data-reveal data-ripple>
     <DrillCard
       number={2}
       title="Short Foot Holds"
@@ -307,7 +332,9 @@ const faqs = [
       reps="10 reps each foot"
       difficulty="Beginner"
     />
+    </div>
 
+    <div data-reveal data-ripple>
     <DrillCard
       number={3}
       title="Single Leg Balance"
@@ -329,7 +356,9 @@ const faqs = [
       reps="3 sets each leg"
       difficulty="Scalable"
     />
+    </div>
 
+    <div data-reveal data-ripple>
     <DrillCard
       number={4}
       title="Ankle Circles"
@@ -351,7 +380,9 @@ const faqs = [
       reps="20 each direction"
       difficulty="Beginner"
     />
+    </div>
 
+    <div data-reveal data-ripple>
     <DrillCard
       number={5}
       title="Calf Raises (Slow)"
@@ -373,7 +404,9 @@ const faqs = [
       reps="10 slow reps"
       difficulty="Beginner"
     />
+    </div>
 
+    <div data-reveal data-ripple>
     <DrillCard
       number={6}
       title="Landing Prep"
@@ -395,21 +428,22 @@ const faqs = [
       reps="5 soft jumps"
       difficulty="Intermediate"
     />
+    </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       PROGRESSION IMAGES (bpa3, bpa4)
+       PROGRESSION IMAGES (bpa3, bpa4) - With image reveal
        ═══════════════════════════════════════════════════════════════════════════ -->
   <section class="bg-bg-secondary py-8">
     <div class="max-w-content mx-auto px-4">
-      <div class="flex items-center gap-2 mb-6">
+      <div class="flex items-center gap-2 mb-6" data-reveal="fade">
         <div class="h-px flex-1 bg-accent-gold/30"></div>
         <span class="font-mono text-label text-accent-gold tracking-widest">PRO APPLICATION</span>
         <div class="h-px flex-1 bg-accent-gold/30"></div>
       </div>
 
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="relative rounded-xl overflow-hidden border border-white/10 aspect-[3/4]">
+        <div class="image-reveal relative rounded-xl overflow-hidden border border-white/10 aspect-[3/4]" data-reveal="slide-left">
           <img
             src="/images/academy/bpa3.jpeg"
             alt="Ankle assessment and treatment"
@@ -422,7 +456,7 @@ const faqs = [
           </div>
         </div>
 
-        <div class="relative rounded-xl overflow-hidden border border-white/10 aspect-[3/4]">
+        <div class="image-reveal relative rounded-xl overflow-hidden border border-white/10 aspect-[3/4]" data-reveal="slide-right">
           <img
             src="/images/academy/bpa4.jpeg"
             alt="Toe spacer training with weights"
@@ -439,9 +473,9 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       FAQ
+       FAQ - With smooth accordion
        ═══════════════════════════════════════════════════════════════════════════ -->
-  <section class="max-w-article mx-auto px-4 py-8">
+  <section class="max-w-article mx-auto px-4 py-8" data-reveal>
     <FAQSection
       faqs={faqs}
       title="Frequently Asked Questions"
@@ -450,9 +484,9 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       CTA
+       CTA - With magnetic button
        ═══════════════════════════════════════════════════════════════════════════ -->
-  <section class="max-w-article mx-auto px-4 py-8">
+  <section class="max-w-article mx-auto px-4 py-8" data-reveal="scale">
     <CTABlock
       title="Start the Bulletproof Protocol Today"
       description="Get the full protocol with video demos, progression tracking, and personalized coaching in the Academy app."
@@ -462,11 +496,11 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       EXPERT FOOTER
+       EXPERT FOOTER - With reveal
        ═══════════════════════════════════════════════════════════════════════════ -->
   <section class="bg-bg-tertiary py-8 mt-8">
-    <div class="max-w-article mx-auto px-4">
-      <div class="expert-box">
+    <div class="max-w-article mx-auto px-4" data-reveal="fade">
+      <div class="expert-box" data-ripple>
         <div class="w-16 h-16 rounded-full bg-gradient-to-br from-accent-primary to-accent-gold flex items-center justify-center text-black font-bebas text-display-xs">
           JS
         </div>
@@ -479,4 +513,9 @@ const faqs = [
       </div>
     </div>
   </section>
+
+  <!-- Premium Animation Script -->
+  <script>
+    import '../../../scripts/animations';
+  </script>
 </BaseLayout>

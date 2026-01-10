@@ -25,15 +25,50 @@ const { faqs, title = "Frequently Asked Questions", subtitle, class: className =
     {subtitle && <p class="text-body-sm" style="color: var(--text-muted);">{subtitle}</p>}
   </div>
 
-  <div class="max-w-[700px] mx-auto">
-    {faqs.map((faq) => (
-      <details class="faq-item group">
-        <summary class="faq-question list-none">
+  <div class="max-w-[700px] mx-auto" data-accordion data-accordion-single>
+    {faqs.map((faq, index) => (
+      <div class="faq-item" data-accordion-item data-reveal style={`transition-delay: ${index * 80}ms`}>
+        <button class="faq-question w-full text-left" data-accordion-trigger type="button">
           <span class="flex-1">{faq.question}</span>
-          <span class="font-mono text-display-xs group-open:rotate-45 transition-transform" style="color: var(--accent-gold);">+</span>
-        </summary>
-        <div class="faq-answer">{faq.answer}</div>
-      </details>
+          <span class="faq-icon font-mono text-display-xs" data-accordion-icon style="color: var(--accent-gold);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer" data-accordion-content>
+          <div class="pb-2.5">{faq.answer}</div>
+        </div>
+      </div>
     ))}
   </div>
 </section>
+
+<style>
+  .faq-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  [data-accordion-item].open .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-question {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font: inherit;
+  }
+
+  .faq-question:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+</style>
