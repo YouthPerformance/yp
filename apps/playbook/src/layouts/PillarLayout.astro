@@ -1,4 +1,14 @@
 ---
+import BaseLayout from "./BaseLayout.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import Breadcrumb from "../components/layout/Breadcrumb.astro";
+import ArticleSchema from "../components/seo/ArticleSchema.astro";
+import FAQSchema from "../components/seo/FAQSchema.astro";
+import DirectAnswer from "../components/content/DirectAnswer.astro";
+import KeyTakeaways from "../components/content/KeyTakeaways.astro";
+import ExpertBox from "../components/content/ExpertBox.astro";
+
 interface Props {
   frontmatter: {
     title: string;
