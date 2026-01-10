@@ -210,9 +210,7 @@ export function VoiceSortingRealtime({
       <WolfAvatar
         isSpeaking={isSpeaking}
         isListening={isListening}
-        identity={
-          (classification?.wolf_identity.toLowerCase() as "speed" | "tank" | "air") ?? null
-        }
+        identity={(classification?.wolf_identity.toLowerCase() as "speed" | "tank" | "air") ?? null}
         revealed={!!classification}
       />
 
