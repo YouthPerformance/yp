@@ -2,6 +2,7 @@
 // Hooks Barrel Export
 // ═══════════════════════════════════════════════════════════
 
+export { useAnonymousProgress } from "./useAnonymousProgress";
 export {
   type CastCommand,
   type CastSessionReturn,
@@ -11,7 +12,6 @@ export {
   useCastReceiver,
   useCastSession,
 } from "./useCastSession";
-
 export {
   type DualVideoSyncOptions,
   type DualVideoSyncReturn,
@@ -25,5 +25,3 @@ export {
   type ViewportMode,
   type ViewportState,
 } from "./useViewportMode";
-
-export { useAnonymousProgress } from "./useAnonymousProgress";
