@@ -11,6 +11,7 @@ import type { Id } from "@yp/alpha/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 import { useSession } from "@/lib/auth";
+import { DEV_USER, DEV_CONVEX_USER, DEV_ENROLLMENT, isDevUser } from "@/lib/dev-bypass";
 
 // ---------------------------------------------------------------
 // TYPES
@@ -157,6 +158,9 @@ function UserProviderClient({ children }: UserProviderProps) {
   const authUserId = session?.user?.id ?? null;
   const authEmail = session?.user?.email ?? null;
 
+  // DEV MODE: Check if this is the dev user
+  const isDevMode = isDevUser(authUserId);
+
   // PERFORMANCE: Use getOrCreateFromAuth - single mutation handles lookup + migration + linking
   const getOrCreateUser = useMutation(api.users.getOrCreateFromAuth);
   const createUserMutation = useMutation(api.users.createFromAuth);
@@ -174,6 +178,13 @@ function UserProviderClient({ children }: UserProviderProps) {
   // Fetch user when session changes
   useEffect(() => {
     async function resolveUser() {
+      // DEV MODE: Return mock user immediately
+      if (isDevMode) {
+        setConvexUser(DEV_CONVEX_USER as ConvexUser);
+        setUserLoading(false);
+        return;
+      }
+
       if (!authUserId || !authEmail) {
         setConvexUser(null);
         setUserLoading(false);
@@ -205,13 +216,16 @@ function UserProviderClient({ children }: UserProviderProps) {
     } else {
       resolveUser();
     }
-  }, [authUserId, authEmail, sessionLoading, getOrCreateUser, session?.user?.name]);
+  }, [authUserId, authEmail, sessionLoading, getOrCreateUser, session?.user?.name, isDevMode]);
 
-  // Fetch current enrollment
-  const enrollment = useQuery(
+  // Fetch current enrollment (skip for dev user - use mock data)
+  const enrollmentQuery = useQuery(
     api.users.getCurrentEnrollment,
-    convexUser?._id ? { userId: convexUser._id } : "skip",
+    !isDevMode && convexUser?._id ? { userId: convexUser._id } : "skip",
   );
+
+  // DEV MODE: Use mock enrollment
+  const enrollment = isDevMode ? DEV_ENROLLMENT as Enrollment : enrollmentQuery;
 
   // ---------------------------------------------------------------
   // AUTH STATE MANAGEMENT

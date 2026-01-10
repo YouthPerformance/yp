@@ -23,6 +23,7 @@ const PUBLIC_ROUTES = new Set([
   "/voice-sorting",
   "/bulletproof-ankles",
   "/adam",
+  "/james", // James Scott founder page
 ]);
 
 // Public route prefixes
@@ -36,6 +37,9 @@ const PUBLIC_PREFIXES = [
   "/api/content", // Content iteration API
   "/legal",
   "/admin", // Admin dashboard (temporary - add proper admin auth later)
+  "/dev", // Dev test routes (remove before production)
+  "/demo", // Demo routes - no auth required
+  "/playbook", // Playbook modules - public content
 ];
 
 function isPublicRoute(pathname: string): boolean {
@@ -60,6 +64,11 @@ function isPublicRoute(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // DEV MODE - bypass all auth (set DEV_MODE=true in .env.local)
+  if (process.env.DEV_MODE === "true") {
+    return NextResponse.next();
+  }
 
   // Allow public routes
   if (isPublicRoute(pathname)) {
