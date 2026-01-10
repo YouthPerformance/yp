@@ -221,7 +221,9 @@ export function useRealtimeVoice(options: UseRealtimeVoiceOptions = {}): UseReal
         throw new Error("Failed to get realtime token");
       }
 
-      const { client_secret } = await tokenResponse.json();
+      const tokenData = await tokenResponse.json();
+      // client_secret is an object with {value, expires_at}
+      const clientSecretToken = tokenData.client_secret?.value || tokenData.client_secret;
 
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -285,7 +287,7 @@ export function useRealtimeVoice(options: UseRealtimeVoiceOptions = {}): UseReal
       const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${client_secret}`,
+          Authorization: `Bearer ${clientSecretToken}`,
           "Content-Type": "application/sdp",
         },
         body: offer.sdp,

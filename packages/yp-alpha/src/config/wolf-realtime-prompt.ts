@@ -330,7 +330,7 @@ export const CLASSIFY_ATHLETE_FUNCTION = {
 export const REALTIME_SESSION_CONFIG = {
   model: "gpt-4o-realtime-preview",
   voice: VOICE_OPTIONS.primary,
-  temperature: 0.3, // Low for consistency
+  temperature: 0.6, // Minimum for Realtime API (0.6-1.2)
   max_response_output_tokens: 150, // Keep responses short
   turn_detection: {
     type: "server_vad",
