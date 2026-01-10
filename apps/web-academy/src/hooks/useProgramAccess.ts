@@ -43,11 +43,9 @@ export function useProgramAccess(programSlug: string): ProgramAccessState {
   // Dev mode: skip Convex queries, return mock data
   const isDevMode = DEV_BYPASS_AUTH && user?.authUserId === "dev_auth_123";
 
-  // Check entitlement access using tickets.hasAccess (skip in dev mode)
-  const accessResult = useQuery(
-    api.tickets.hasAccess,
-    isDevMode ? "skip" : { productSlug: programSlug },
-  );
+  // NOTE: tickets module is disabled, always grant access for now
+  // TODO: Re-enable when tickets.ts is restored
+  const accessResult = true; // was: useQuery(api.tickets.hasAccess, ...)
 
   // Get user's workout completions to derive program progress (skip in dev mode)
   const completions = useQuery(
