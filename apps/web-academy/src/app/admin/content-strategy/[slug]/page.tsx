@@ -8,14 +8,14 @@
  * - Voice button appears on edit
  * - Smooth transitions
  * - Auto-save
+ *
+ * NOTE: Using mock data for testing without Convex
  */
 
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@yp/alpha/convex/_generated/api";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
@@ -27,6 +27,124 @@ interface Section {
   title: string;
   content: string;
 }
+
+interface Article {
+  slug: string;
+  title: string;
+  targetKeyword: string;
+  pillar: string;
+  author: string;
+  sections: Section[];
+}
+
+// ─────────────────────────────────────────────────────────────
+// MOCK DATA
+// ─────────────────────────────────────────────────────────────
+
+const MOCK_ARTICLES: Record<string, Article> = {
+  "bulletproof-ankles-playbook": {
+    slug: "bulletproof-ankles-playbook",
+    title: "The Bulletproof Ankles Playbook",
+    targetKeyword: "ankle injury prevention youth sports",
+    pillar: "Injury Prevention",
+    author: "Adam Harris",
+    sections: [
+      {
+        id: "intro-1",
+        type: "intro",
+        title: "Why Ankles Matter",
+        content:
+          "Your ankle isn't just a hinge—it's a sensory organ. Thousands of mechanoreceptors in the ligaments and joint capsule constantly feed information to your brain about position and load. When you sprain an ankle, you don't just stretch ligaments. You disrupt that communication system. That's why 'it feels weak' even after the swelling goes down. The tissue healed, but the sensors need recalibration.",
+      },
+      {
+        id: "body-1",
+        type: "body",
+        title: "The Science of Ankle Stability",
+        content:
+          "Ankle stability comes from three systems working together: passive (ligaments), active (muscles), and neural (proprioception). Most rehab programs focus only on the first two. We focus on all three—especially the neural component that most programs miss.",
+      },
+      {
+        id: "drill-1",
+        type: "drill",
+        title: "Phase 1: Foundation Drills",
+        content:
+          "Single-leg balance with eyes closed. Sounds simple, but here's what's happening: you've removed visual input, forcing your proprioceptors to work harder. Your brain is literally rewiring the ankle-to-brain connection. Start with 30 seconds. When that's easy, add a perturbation—catch a ball, turn your head. Build complexity progressively.",
+      },
+      {
+        id: "drill-2",
+        type: "drill",
+        title: "Phase 2: Load Introduction",
+        content:
+          "Now we add force. Controlled hops, lateral bounds, and deceleration work. The key isn't going hard—it's going precise. Quality reps build quality patterns. 3 sets of 8 each direction, 2-3 times per week.",
+      },
+      {
+        id: "drill-3",
+        type: "drill",
+        title: "Phase 3: Sport-Specific",
+        content:
+          "This is where we introduce chaos. Reactive cuts, unexpected perturbations, game-like scenarios. The ankle has to handle what sport throws at it. Progress here means the ankle responds automatically—no conscious thought required.",
+      },
+      {
+        id: "faq-1",
+        type: "faq",
+        title: "Common Questions",
+        content:
+          "Q: How long until my ankle is 'fixed'?\nA: We don't fix ankles—we build capacity. Most athletes see significant improvement in 4-6 weeks with consistent work. But maintenance is forever.\n\nQ: Can I still play while doing this?\nA: Usually yes, but it depends on severity. The drills complement sport—they don't replace it.",
+      },
+      {
+        id: "cta-1",
+        type: "cta",
+        title: "Your Next Step",
+        content:
+          "Ready to bulletproof your ankles? Download the complete 8-week protocol with video demonstrations. Or join YouthPerformance Premium for coached progressions.",
+      },
+    ],
+  },
+  "speed-training-youth-athletes": {
+    slug: "speed-training-youth-athletes",
+    title: "Speed Training for Youth Athletes: The Complete Guide",
+    targetKeyword: "youth speed training",
+    pillar: "Speed & Agility",
+    author: "James Scott",
+    sections: [
+      {
+        id: "intro-1",
+        type: "intro",
+        title: "Speed Isn't Genetic",
+        content:
+          "Speed isn't genetic. It's built. Every elite athlete you watch on TV started exactly where your kid is now. The difference? They learned to move smarter, not just faster. Here's how to build that same foundation.",
+      },
+      {
+        id: "body-1",
+        type: "body",
+        title: "The Three Pillars of Speed",
+        content:
+          "True speed comes from three components: force production (how hard you push), force direction (where that force goes), and ground contact time (how quickly you can reapply force). Most young athletes only train the first one. We train all three.",
+      },
+      {
+        id: "drill-1",
+        type: "drill",
+        title: "A-Skip Progression",
+        content:
+          "No equipment. Start at one end of a 20-yard lane. Skip forward, driving the lead knee to hip height on each rep. Focus on: tall posture, quick ground contact, arm drive matching leg drive. 2 sets of 20 yards. Rest 30 seconds between.",
+      },
+      {
+        id: "drill-2",
+        type: "drill",
+        title: "Wall Drives",
+        content:
+          "Hands on wall, body at 45-degree angle. Drive one knee up while pushing through the planted foot. Hold the drive position for 2 seconds. This builds the motor pattern for acceleration. 3 sets of 8 each leg.",
+      },
+      {
+        id: "cta-1",
+        type: "cta",
+        title: "Stack These Drills",
+        content:
+          "Stack these drills 3x per week. In 4 weeks, you'll see the difference in their first step. Ready for the next level? Check out our Speed Chassis program for the complete system.",
+      },
+    ],
+  },
+};
 
 // ─────────────────────────────────────────────────────────────
 // READING SETTINGS
@@ -63,6 +181,11 @@ function EditableSection({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const settings = FONT_SIZES[fontSize];
 
+  // Sync content when section changes
+  useEffect(() => {
+    setContent(section.content);
+  }, [section.content]);
+
   // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current && isActive) {
@@ -79,6 +202,66 @@ function EditableSection({
   }, [isActive]);
 
   const handleVoiceInput = async () => {
+    // Try Groq first, fall back to browser
+    const groqKey = process.env.NEXT_PUBLIC_GROQ_API_KEY;
+
+    if (groqKey) {
+      // Use Groq Whisper API
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        const audioChunks: Blob[] = [];
+
+        setIsRecording(true);
+
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          const formData = new FormData();
+          formData.append("file", audioBlob, "audio.webm");
+          formData.append("model", "whisper-large-v3-turbo");
+          formData.append("response_format", "text");
+
+          try {
+            const response = await fetch(
+              "https://api.groq.com/openai/v1/audio/transcriptions",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${groqKey}`,
+                },
+                body: formData,
+              }
+            );
+            const transcript = await response.text();
+            setContent((prev) => (prev ? prev + " " + transcript : transcript));
+          } catch (error) {
+            console.error("Groq transcription failed:", error);
+          }
+
+          stream.getTracks().forEach((track) => track.stop());
+          setIsRecording(false);
+        };
+
+        mediaRecorder.start();
+
+        // Stop after 10 seconds
+        setTimeout(() => {
+          if (mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+          }
+        }, 10000);
+
+        return;
+      } catch (error) {
+        console.error("Microphone access failed:", error);
+      }
+    }
+
+    // Fallback to browser speech recognition
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Voice not supported");
       return;
@@ -109,34 +292,53 @@ function EditableSection({
     onSave(content);
   };
 
-  const sectionTypeStyles: Record<string, string> = {
-    intro: "border-l-blue-500",
-    body: "border-l-purple-500",
-    drill: "border-l-green-500",
-    faq: "border-l-yellow-500",
-    cta: "border-l-red-500",
+  // Hardcoded colors for section types (no CSS vars)
+  const sectionTypeColors: Record<string, string> = {
+    intro: "#3b82f6",
+    body: "#a855f7",
+    drill: "#22c55e",
+    faq: "#eab308",
+    cta: "#ef4444",
   };
+
+  const borderColor = sectionTypeColors[section.type] || "#00d4aa";
 
   // Reading mode
   if (!isActive) {
     return (
       <div
         onClick={onActivate}
-        className={`group cursor-pointer py-6 px-4 -mx-4 rounded-lg transition-all hover:bg-bg-secondary/50 border-l-4 border-transparent hover:${sectionTypeStyles[section.type] || "border-l-accent-primary"}`}
+        className="group cursor-pointer py-6 px-4 -mx-4 rounded-lg transition-all"
+        style={{
+          borderLeft: "4px solid transparent",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = "rgba(26, 26, 46, 0.5)";
+          e.currentTarget.style.borderLeftColor = borderColor;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "transparent";
+          e.currentTarget.style.borderLeftColor = "transparent";
+        }}
       >
         {/* Section label */}
         <div className="flex items-center gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <span className="text-xs uppercase tracking-wider text-text-tertiary font-medium">
+          <span
+            className="text-xs uppercase tracking-wider font-medium"
+            style={{ color: "#6b7280" }}
+          >
             {section.type}
           </span>
-          <span className="text-xs text-text-muted">• tap to edit</span>
+          <span className="text-xs" style={{ color: "#4b5563" }}>
+            • tap to edit
+          </span>
         </div>
 
         {/* Section title */}
         {section.title && section.type !== "body" && (
           <h2
-            className="font-bold text-text-primary mb-3"
-            style={{ fontSize: settings.heading }}
+            className="font-bold mb-3"
+            style={{ fontSize: settings.heading, color: "#f3f4f6" }}
           >
             {section.title}
           </h2>
@@ -144,14 +346,15 @@ function EditableSection({
 
         {/* Content */}
         <div
-          className="text-text-secondary whitespace-pre-wrap"
+          className="whitespace-pre-wrap"
           style={{
             fontSize: settings.body,
             lineHeight: settings.lineHeight,
+            color: "#d1d5db",
           }}
         >
           {section.content || (
-            <span className="text-text-muted italic">
+            <span style={{ color: "#6b7280", fontStyle: "italic" }}>
               No content yet. Tap to add...
             </span>
           )}
@@ -163,23 +366,30 @@ function EditableSection({
   // Edit mode
   return (
     <div
-      className={`py-6 px-4 -mx-4 rounded-lg bg-bg-secondary border-l-4 ${sectionTypeStyles[section.type] || "border-l-accent-primary"}`}
+      className="py-6 px-4 -mx-4 rounded-lg"
+      style={{
+        backgroundColor: "#1a1a2e",
+        borderLeft: `4px solid ${borderColor}`,
+      }}
     >
       {/* Section label */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs uppercase tracking-wider text-accent-primary font-medium">
+        <span
+          className="text-xs uppercase tracking-wider font-medium"
+          style={{ color: "#00d4aa" }}
+        >
           Editing: {section.type}
         </span>
         <div className="flex items-center gap-2">
           <button
             onClick={handleVoiceInput}
             disabled={isRecording}
-            className={`p-2 rounded-full transition-all ${
-              isRecording
-                ? "bg-red-500 text-white animate-pulse"
-                : "bg-bg-tertiary text-text-secondary hover:bg-accent-primary hover:text-black"
-            }`}
-            title="Voice input"
+            className="p-2 rounded-full transition-all"
+            style={{
+              backgroundColor: isRecording ? "#ef4444" : "#2a2a4a",
+              color: isRecording ? "white" : "#9ca3af",
+            }}
+            title="Voice input (Groq Whisper)"
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10 12a3 3 0 003-3V5a3 3 0 10-6 0v4a3 3 0 003 3z" />
@@ -192,8 +402,8 @@ function EditableSection({
       {/* Section title (if applicable) */}
       {section.title && section.type !== "body" && (
         <h2
-          className="font-bold text-text-primary mb-3"
-          style={{ fontSize: settings.heading }}
+          className="font-bold mb-3"
+          style={{ fontSize: settings.heading, color: "#f3f4f6" }}
         >
           {section.title}
         </h2>
@@ -204,20 +414,25 @@ function EditableSection({
         ref={textareaRef}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="w-full bg-transparent text-text-primary resize-none focus:outline-none"
+        className="w-full bg-transparent resize-none focus:outline-none"
         style={{
           fontSize: settings.body,
           lineHeight: settings.lineHeight,
           minHeight: "100px",
+          color: "#f3f4f6",
         }}
         placeholder="Start typing or use voice..."
       />
 
       {/* Action buttons */}
-      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border-subtle">
+      <div
+        className="flex items-center gap-3 mt-4 pt-4"
+        style={{ borderTop: "1px solid #2a2a4a" }}
+      >
         <button
           onClick={handleSave}
-          className="flex-1 py-3 bg-accent-primary text-black font-semibold rounded-xl"
+          className="flex-1 py-3 font-semibold rounded-xl"
+          style={{ backgroundColor: "#00d4aa", color: "black" }}
         >
           Save Section
         </button>
@@ -226,7 +441,8 @@ function EditableSection({
             setContent(section.content);
             onSave(section.content); // Close without changing
           }}
-          className="px-4 py-3 text-text-tertiary hover:text-text-primary"
+          className="px-4 py-3"
+          style={{ color: "#6b7280" }}
         >
           Cancel
         </button>
@@ -234,9 +450,15 @@ function EditableSection({
 
       {/* Recording indicator */}
       {isRecording && (
-        <div className="mt-3 flex items-center gap-2 text-red-500 text-sm">
-          <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
-          Listening... speak now
+        <div
+          className="mt-3 flex items-center gap-2 text-sm"
+          style={{ color: "#ef4444" }}
+        >
+          <span
+            className="w-2 h-2 rounded-full animate-ping"
+            style={{ backgroundColor: "#ef4444" }}
+          />
+          Listening... speak now (10s max)
         </div>
       )}
     </div>
@@ -257,29 +479,33 @@ function FontSizeToggle({
   const sizes: FontSize[] = ["small", "medium", "large", "xlarge"];
 
   return (
-    <div className="flex items-center gap-1 bg-bg-tertiary rounded-lg p-1">
+    <div
+      className="flex items-center gap-1 rounded-lg p-1"
+      style={{ backgroundColor: "#2a2a4a" }}
+    >
       {sizes.map((s) => (
         <button
           key={s}
           onClick={() => onChange(s)}
-          className={`px-2 py-1 rounded text-xs transition-colors ${
-            size === s
-              ? "bg-bg-primary text-text-primary"
-              : "text-text-tertiary hover:text-text-secondary"
-          }`}
+          className="px-2 py-1 rounded text-xs transition-colors"
+          style={{
+            backgroundColor: size === s ? "#0a0a14" : "transparent",
+            color: size === s ? "#f3f4f6" : "#6b7280",
+          }}
           title={`${s} font`}
         >
-          {s === "small" ? "A" : s === "medium" ? "A" : s === "large" ? "A" : "A"}
+          A
           <span
-            className={
-              s === "small"
-                ? "text-[10px]"
-                : s === "medium"
-                  ? "text-[12px]"
-                  : s === "large"
-                    ? "text-[14px]"
-                    : "text-[16px]"
-            }
+            style={{
+              fontSize:
+                s === "small"
+                  ? "10px"
+                  : s === "medium"
+                    ? "12px"
+                    : s === "large"
+                      ? "14px"
+                      : "16px",
+            }}
           >
             a
           </span>
@@ -312,13 +538,16 @@ function ProgressIndicator({
           <button
             key={section.id}
             onClick={() => onJump(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              isActive
-                ? "w-4 bg-accent-primary"
+            className="rounded-full transition-all"
+            style={{
+              width: isActive ? "16px" : "8px",
+              height: "8px",
+              backgroundColor: isActive
+                ? "#00d4aa"
                 : hasContent
-                  ? "bg-green-500"
-                  : "bg-bg-tertiary"
-            }`}
+                  ? "#22c55e"
+                  : "#2a2a4a",
+            }}
             title={section.title || section.type}
           />
         );
@@ -340,31 +569,27 @@ export default function ArticleReaderEditor() {
   const [fontSize, setFontSize] = useState<FontSize>("medium");
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<string>("");
+  const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Convex queries
-  const brief = useQuery(api.contentStrategy.getBrief, { slug });
-  const draft = useQuery(
-    api.contentStrategy.getDraftByBrief,
-    brief ? { briefId: brief._id } : "skip",
-  );
-
-  // Convex mutations
-  const getOrCreateDraft = useMutation(api.contentStrategy.getOrCreateDraft);
-  const updateSection = useMutation(api.contentStrategy.updateSection);
-
-  // Initialize draft
+  // Load article from mock data
   useEffect(() => {
-    if (brief && !draft) {
-      getOrCreateDraft({ briefId: brief._id });
-    }
-  }, [brief, draft, getOrCreateDraft]);
+    // Simulate loading
+    setTimeout(() => {
+      const foundArticle = MOCK_ARTICLES[slug];
+      setArticle(foundArticle || null);
+      setLoading(false);
+    }, 300);
+  }, [slug]);
 
   // Load font preference from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("article-font-size") as FontSize;
-    if (saved && FONT_SIZES[saved]) {
-      setFontSize(saved);
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("article-font-size") as FontSize;
+      if (saved && FONT_SIZES[saved]) {
+        setFontSize(saved);
+      }
     }
   }, []);
 
@@ -374,53 +599,81 @@ export default function ArticleReaderEditor() {
     localStorage.setItem("article-font-size", size);
   };
 
-  // Save section
+  // Save section (mock - just updates local state)
   const handleSaveSection = useCallback(
     async (sectionId: string, content: string) => {
-      if (!draft) return;
+      if (!article) return;
 
       setIsSaving(true);
-      try {
-        await updateSection({
-          draftId: draft._id,
-          sectionId,
-          content,
-        });
-        setLastSaved(new Date().toLocaleTimeString());
-      } catch (error) {
-        console.error("Failed to save:", error);
-      } finally {
-        setIsSaving(false);
-        setActiveSection(null);
-      }
+
+      // Simulate save delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Update local state
+      setArticle((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          sections: prev.sections.map((s) =>
+            s.id === sectionId ? { ...s, content } : s
+          ),
+        };
+      });
+
+      setLastSaved(new Date().toLocaleTimeString());
+      setIsSaving(false);
+      setActiveSection(null);
     },
-    [draft, updateSection],
+    [article]
   );
 
   // Jump to section
   const handleJumpToSection = (index: number) => {
-    sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    sectionRefs.current[index]?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   };
 
   // Loading
-  if (brief === undefined || (brief && draft === undefined)) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "#0a0a14" }}
+      >
+        <div
+          className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin"
+          style={{ borderColor: "#00d4aa", borderTopColor: "transparent" }}
+        />
       </div>
     );
   }
 
   // Not found
-  if (!brief) {
+  if (!article) {
     return (
-      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "#0a0a14" }}
+      >
         <div className="text-center">
           <div className="text-4xl mb-4">📄</div>
-          <h2 className="text-xl font-bold text-text-primary mb-2">Not Found</h2>
+          <h2
+            className="text-xl font-bold mb-2"
+            style={{ color: "#f3f4f6" }}
+          >
+            Article Not Found
+          </h2>
+          <p className="mb-4" style={{ color: "#6b7280" }}>
+            No article with slug "{slug}"
+          </p>
+          <p className="mb-4 text-sm" style={{ color: "#4b5563" }}>
+            Available: {Object.keys(MOCK_ARTICLES).join(", ")}
+          </p>
           <button
             onClick={() => router.push("/admin/content-strategy")}
-            className="text-accent-primary"
+            style={{ color: "#00d4aa" }}
           >
             Back to Dashboard
           </button>
@@ -429,22 +682,31 @@ export default function ArticleReaderEditor() {
     );
   }
 
-  const sections = draft?.sections || [];
+  const sections = article.sections;
   const wordCount = sections.reduce(
     (sum, s) => sum + (s.content?.split(/\s+/).filter(Boolean).length || 0),
-    0,
+    0
   );
   const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div className="min-h-screen bg-bg-primary">
+    <div className="min-h-screen" style={{ backgroundColor: "#0a0a14" }}>
       {/* Floating Header */}
-      <header className="sticky top-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-default">
+      <header
+        className="sticky top-0 z-50 backdrop-blur-sm"
+        style={{
+          backgroundColor: "rgba(10, 10, 20, 0.95)",
+          borderBottom: "1px solid #2a2a4a",
+        }}
+      >
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <button
               onClick={() => router.push("/admin/content-strategy")}
-              className="flex items-center gap-2 text-text-tertiary hover:text-text-primary"
+              className="flex items-center gap-2 transition-colors"
+              style={{ color: "#6b7280" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#f3f4f6")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path
@@ -471,17 +733,25 @@ export default function ArticleReaderEditor() {
       {/* Article Content */}
       <main className="max-w-3xl mx-auto px-4 py-8">
         {/* Title */}
-        <div className="mb-8 pb-8 border-b border-border-subtle">
+        <div
+          className="mb-8 pb-8"
+          style={{ borderBottom: "1px solid #2a2a4a" }}
+        >
           <h1
-            className="font-bold text-text-primary mb-3"
-            style={{ fontSize: FONT_SIZES[fontSize].heading }}
+            className="font-bold mb-3"
+            style={{
+              fontSize: FONT_SIZES[fontSize].heading,
+              color: "#f3f4f6",
+            }}
           >
-            {brief.title}
+            {article.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-text-tertiary">
-            <span className="text-accent-primary">{brief.targetKeyword}</span>
+          <div className="flex items-center gap-4 text-sm" style={{ color: "#6b7280" }}>
+            <span style={{ color: "#00d4aa" }}>{article.targetKeyword}</span>
             <span>•</span>
-            <span>{brief.pillar}</span>
+            <span>{article.pillar}</span>
+            <span>•</span>
+            <span>{article.author}</span>
             <span>•</span>
             <span>{wordCount} words</span>
             <span>•</span>
@@ -511,21 +781,36 @@ export default function ArticleReaderEditor() {
       </main>
 
       {/* Floating Save Indicator */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-bg-secondary border border-border-default rounded-full px-4 py-2 shadow-lg flex items-center gap-3 text-sm">
+      <div
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-2 shadow-lg flex items-center gap-3 text-sm"
+        style={{
+          backgroundColor: "#1a1a2e",
+          border: "1px solid #2a2a4a",
+        }}
+      >
         {isSaving ? (
           <>
-            <div className="w-3 h-3 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
-            <span className="text-text-tertiary">Saving...</span>
+            <div
+              className="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin"
+              style={{ borderColor: "#00d4aa", borderTopColor: "transparent" }}
+            />
+            <span style={{ color: "#6b7280" }}>Saving...</span>
           </>
         ) : lastSaved ? (
           <>
-            <span className="w-2 h-2 bg-green-500 rounded-full" />
-            <span className="text-text-tertiary">Saved {lastSaved}</span>
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: "#22c55e" }}
+            />
+            <span style={{ color: "#6b7280" }}>Saved {lastSaved}</span>
           </>
         ) : (
           <>
-            <span className="w-2 h-2 bg-bg-tertiary rounded-full" />
-            <span className="text-text-tertiary">Tap any section to edit</span>
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: "#2a2a4a" }}
+            />
+            <span style={{ color: "#6b7280" }}>Tap any section to edit</span>
           </>
         )}
       </div>
