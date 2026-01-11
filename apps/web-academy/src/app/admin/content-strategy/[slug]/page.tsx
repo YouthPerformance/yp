@@ -7,11 +7,12 @@
  * - Live preview
  * - Auto-save to Convex
  * - Mobile-optimized
+ * - CONTINUOUS LEARNING: Tracks corrections to improve over time
  */
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@yp/alpha/convex/_generated/api";

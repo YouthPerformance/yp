@@ -798,6 +798,136 @@ export default defineSchema({
     .index("by_expert_category", ["expert", "category"]),
 
   // ═══════════════════════════════════════════════════════════
+  // AUTHOR PERSONAS & CONTINUOUS LEARNING
+  // The more they use it, the smarter it gets
+  // ═══════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────
+  // AUTHOR PROFILES
+  // Mike (admin), James (drills), Adam (drills), Lawrence (team blog)
+  // ─────────────────────────────────────────────────────────────
+  author_profiles: defineTable({
+    // Identity
+    authorId: v.string(), // "mike", "james", "adam", "lawrence"
+    displayName: v.string(), // "Mike Admin", "James Scott", etc.
+    email: v.optional(v.string()),
+
+    // Role
+    role: v.union(
+      v.literal("admin"), // Mike - approves all content
+      v.literal("writer"), // James, Adam - writes drill content
+      v.literal("ghost"), // Lawrence - team blog persona (controlled by Mike)
+    ),
+
+    // Content types they write
+    contentTypes: v.array(v.string()), // ["drills", "guides"] or ["blog", "announcements"]
+
+    // Published attribution
+    publishedAs: v.string(), // "James Scott" or "TMYP" for Lawrence
+
+    // Learning stats
+    totalCorrections: v.number(),
+    totalArticles: v.number(),
+    lastActiveAt: v.number(),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_author_id", ["authorId"])
+    .index("by_role", ["role"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // WRITING CORRECTIONS (The Learning Loop)
+  // Every edit they make teaches the system
+  // ─────────────────────────────────────────────────────────────
+  writing_corrections: defineTable({
+    // Who made the correction
+    authorId: v.string(),
+
+    // The correction itself
+    originalText: v.string(), // What was transcribed/suggested
+    correctedText: v.string(), // What they changed it to
+    context: v.optional(v.string()), // Surrounding text for context
+
+    // Classification (auto-detected or manual)
+    correctionType: v.union(
+      v.literal("vocabulary"), // "workout" → "stack"
+      v.literal("phrasing"), // Sentence structure changes
+      v.literal("technical"), // Sport-specific terminology
+      v.literal("brand"), // YP brand language
+      v.literal("tone"), // Voice/style adjustments
+      v.literal("factual"), // Correcting information
+    ),
+
+    // Source
+    articleId: v.optional(v.id("article_briefs")),
+    sectionType: v.optional(v.string()), // "intro", "drill", etc.
+
+    // Learning metadata
+    weight: v.number(), // How important (1-10), increases with frequency
+    timesApplied: v.number(), // How often this correction pattern appears
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_author", ["authorId"])
+    .index("by_type", ["correctionType"])
+    .index("by_author_type", ["authorId", "correctionType"])
+    .index("by_weight", ["weight"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // VOCABULARY PREFERENCES (Quick Lookup)
+  // Word/phrase replacements learned from corrections
+  // ─────────────────────────────────────────────────────────────
+  vocabulary_preferences: defineTable({
+    authorId: v.string(),
+
+    // The preference
+    avoid: v.string(), // Word/phrase to avoid
+    prefer: v.string(), // Word/phrase to use instead
+
+    // Context (optional - when to apply)
+    context: v.optional(v.string()), // "when discussing training"
+
+    // Source
+    learnedFrom: v.optional(v.id("writing_corrections")),
+
+    // Usage tracking
+    timesApplied: v.number(),
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_author", ["authorId"])
+    .index("by_avoid", ["avoid"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // APPROVED EXAMPLES (Gold Standard)
+  // Content approved by Mike for future reference
+  // ─────────────────────────────────────────────────────────────
+  approved_examples: defineTable({
+    authorId: v.string(),
+
+    // The example
+    content: v.string(),
+    contentType: v.string(), // "intro", "drill", "cta", "blog_intro"
+
+    // Why it's good (for learning)
+    qualities: v.array(v.string()), // ["strong hook", "brand voice"]
+
+    // Source
+    articleId: v.optional(v.id("article_briefs")),
+    approvedBy: v.string(), // "mike"
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_author", ["authorId"])
+    .index("by_type", ["contentType"])
+    .index("by_author_type", ["authorId", "contentType"]),
+
+  // ═══════════════════════════════════════════════════════════
   // SEO CONTENT STRATEGY
   // Keyword tracking and article planning for James & Adam
   // ═══════════════════════════════════════════════════════════
