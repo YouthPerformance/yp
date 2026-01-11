@@ -1,15 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { track, EVENTS } from "../lib/analytics";
 import "./LP.css";
 
-// =============================================================================
-// AWARD-WINNING LP - 2026 EDITION
-// Effects: Magnetic cursor, spotlight, text scramble, confetti, sound design
-// =============================================================================
+// Convex HTTP API for lead capture (uses yp-alpha backend)
+const CONVEX_URL = import.meta.env.VITE_CONVEX_URL || "https://wry-cuttlefish-942.convex.cloud";
+
+console.log("[LP] Module loaded - testing full JSX");
+
+// CTA A/B Test Variants (PostHog flag: hero-cta-test)
+const CTA_CONFIG = {
+  athlete: { text: "FREE ATHLETE ASSESSMENT", subtext: "Personalized evaluation for young athletes" },
+  start: { text: "START FREE ASSESSMENT", subtext: "Takes 2 minutes • 100% free" },
+  outcome: { text: "GET BULLETPROOF ANKLES", subtext: "Free training plan for injury prevention" },
+};
+
+const PLAYBOOK_URL = "https://playbook.youthperformance.com/barefoot-training/injury-rehab/bulletproof-ankles";
 
 // Text scramble characters
 const CHARS = "!<>-_\\/[]{}—=+*^?#________";
 
-// Scramble text effect
+// Scramble text effect hook
 function useTextScramble(text, trigger) {
   const [displayText, setDisplayText] = useState("");
   const [isComplete, setIsComplete] = useState(false);
@@ -57,7 +67,7 @@ function useCountUp(end, duration = 2000, trigger) {
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - (1 - progress) ** 4; // easeOutQuart
+      const eased = 1 - (1 - progress) ** 4;
       setCount(Math.floor(eased * end));
       if (progress < 1) requestAnimationFrame(animate);
     };
@@ -83,17 +93,22 @@ function Confetti({ x, y, color, delay }) {
 }
 
 export default function LP() {
+  console.log("[LP] Component rendering - full JSX test");
+
   // Refs
   const containerRef = useRef(null);
   const logoRef = useRef(null);
   const ctaRef = useRef(null);
+  const cursorRef = useRef(null);
+  const cursorRingRef = useRef(null);
+  const mouseTarget = useRef({ x: 0, y: 0 });
+  const ringTarget = useRef({ x: 0, y: 0 });
 
   // State
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadProgress, setLoadProgress] = useState(0);
-  const [isReady, setIsReady] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isReady, setIsReady] = useState(true);
   const [glitchActive, setGlitchActive] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [confetti, setConfetti] = useState([]);
@@ -102,52 +117,62 @@ export default function LP() {
   const [easterEggActive, setEasterEggActive] = useState(false);
   const [cursorScale, setCursorScale] = useState(1);
   const [cursorText, setCursorText] = useState("");
+  const [ctaVariant, setCtaVariant] = useState("outcome");
 
-  // Text scramble for taglines
-  const { displayText: line1, isComplete: line1Complete } = useTextScramble(
-    "ELITE TRAINING",
-    isReady,
-  );
-  const { displayText: line2 } = useTextScramble("FOR EVERY KID", line1Complete);
+  // Email signup state
+  const [email, setEmail] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Counter animations
-  const athleteCount = useCountUp(10000, 2500, isReady);
-  const countryCount = useCountUp(47, 2000, isReady);
-
-  // Konami code: ↑↑↓↓←→←→BA
+  // Konami code
   const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 
-  // Loading simulation
+  // Load Unicorn Studio script
   useEffect(() => {
-    const stages = [
-      { progress: 15, delay: 200 },
-      { progress: 35, delay: 400 },
-      { progress: 50, delay: 300 },
-      { progress: 75, delay: 500 },
-      { progress: 90, delay: 300 },
-      { progress: 100, delay: 400 },
-    ];
-
-    let timeout;
-    let currentStage = 0;
-
-    const runStage = () => {
-      if (currentStage < stages.length) {
-        setLoadProgress(stages[currentStage].progress);
-        timeout = setTimeout(() => {
-          currentStage++;
-          runStage();
-        }, stages[currentStage].delay);
-      } else {
-        setTimeout(() => {
-          setIsLoading(false);
-          setTimeout(() => setIsReady(true), 500);
-        }, 300);
+    const script = document.createElement('script');
+    script.src = 'https://cdn.unicorn.studio/v1.3.2/unicornStudio.umd.js';
+    script.async = true;
+    script.onload = () => {
+      if (window.UnicornStudio) {
+        window.UnicornStudio.init();
       }
     };
+    document.body.appendChild(script);
 
-    runStage();
-    return () => clearTimeout(timeout);
+    return () => {
+      if (script.parentNode) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  // Smooth cursor animation with lerp (award-winning buttery feel)
+  useEffect(() => {
+    let animationId;
+    const lerp = (start, end, factor) => start + (end - start) * factor;
+
+    const animate = () => {
+      // Dot follows faster (0.2), ring follows slower (0.08) for trailing effect
+      if (cursorRef.current) {
+        const dotX = lerp(parseFloat(cursorRef.current.style.left) || 0, mouseTarget.current.x, 0.2);
+        const dotY = lerp(parseFloat(cursorRef.current.style.top) || 0, mouseTarget.current.y, 0.2);
+        cursorRef.current.style.left = `${dotX}px`;
+        cursorRef.current.style.top = `${dotY}px`;
+      }
+
+      if (cursorRingRef.current) {
+        const ringX = lerp(parseFloat(cursorRingRef.current.style.left) || 0, ringTarget.current.x, 0.08);
+        const ringY = lerp(parseFloat(cursorRingRef.current.style.top) || 0, ringTarget.current.y, 0.08);
+        cursorRingRef.current.style.left = `${ringX}px`;
+        cursorRingRef.current.style.top = `${ringY}px`;
+      }
+
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+    return () => cancelAnimationFrame(animationId);
   }, []);
 
   // Mouse tracking for parallax and spotlight
@@ -157,6 +182,10 @@ export default function LP() {
       const y = e.clientY / window.innerHeight;
       setMousePos({ x, y });
       setCursorPos({ x: e.clientX, y: e.clientY });
+
+      // Update cursor targets for lerp animation
+      mouseTarget.current = { x: e.clientX, y: e.clientY };
+      ringTarget.current = { x: e.clientX, y: e.clientY };
 
       // Magnetic effect for CTA button
       if (ctaRef.current) {
@@ -216,7 +245,17 @@ export default function LP() {
     return () => clearInterval(glitchInterval);
   }, [isReady]);
 
-  // Sound effects (requires user interaction to enable)
+  // PostHog A/B test for CTA
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof window.posthog !== "undefined") {
+      const variant = window.posthog.getFeatureFlag("hero-cta-test");
+      if (variant && CTA_CONFIG[variant]) {
+        setCtaVariant(variant);
+      }
+    }
+  }, []);
+
+  // Sound effects
   const playSound = useCallback(
     (type) => {
       if (!soundEnabled) return;
@@ -243,11 +282,11 @@ export default function LP() {
           oscillator.stop(audioContext.currentTime + 0.1);
           break;
         case "success":
-          oscillator.frequency.value = 523.25; // C5
+          oscillator.frequency.value = 523.25;
           gainNode.gain.value = 0.1;
           oscillator.start();
-          oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-          oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+          oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+          oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
           oscillator.stop(audioContext.currentTime + 0.3);
           break;
         default:
@@ -276,17 +315,87 @@ export default function LP() {
     setTimeout(() => setConfetti([]), 2000);
   };
 
+  // Email validation
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  // Email submit handler
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    setEmailError("");
+
+    if (!email.trim()) {
+      setEmailError("Email required");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setEmailError("Invalid email");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Store lead in Convex via HTTP API (yp-alpha backend)
+      const response = await fetch(`${CONVEX_URL}/api/mutation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          path: "playbook:captureLeadAndSendPDF",
+          args: {
+            email: email.trim().toLowerCase(),
+            source: "lp-bulletproof-ankles",
+            metadata: {
+              referrer: document.referrer || null,
+              utm: Object.fromEntries(new URLSearchParams(window.location.search)),
+            },
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to capture lead");
+      }
+
+      playSound("success");
+
+      track(EVENTS.EMAIL_SIGNUP || "email_signup", {
+        email: email,
+        source: "lp_hero",
+        isExisting: result.value?.isExisting || false,
+      });
+
+      console.log("[LP] Lead captured:", email, result);
+
+      setEmailSubmitted(true);
+      triggerConfetti(window.innerWidth / 2, window.innerHeight / 2, 30);
+    } catch (error) {
+      console.error("[LP] Lead capture error:", error);
+      setEmailError("Something went wrong. Try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // CTA click handler
   const handleCTAClick = (e) => {
     e.preventDefault();
     playSound("click");
 
+    track(EVENTS.CTA_CLICK, {
+      variant: ctaVariant,
+      destination: "playbook_bulletproof_ankles",
+    });
+
     const rect = e.currentTarget.getBoundingClientRect();
     triggerConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 40);
 
-    // Navigate after animation
     setTimeout(() => {
-      window.location.href = "/waitlist";
+      window.location.href = PLAYBOOK_URL;
     }, 800);
   };
 
@@ -294,51 +403,44 @@ export default function LP() {
   const handleCursorEnter = (text, scale = 1.5) => {
     setCursorText(text);
     setCursorScale(scale);
+    setIsHovering(true);
     playSound("hover");
   };
 
   const handleCursorLeave = () => {
     setCursorText("");
     setCursorScale(1);
+    setIsHovering(false);
   };
 
   // Parallax values
   const parallaxX = (mousePos.x - 0.5) * 30;
   const parallaxY = (mousePos.y - 0.5) * 30;
-  const rotateX = (mousePos.y - 0.5) * -15;
-  const rotateY = (mousePos.x - 0.5) * 15;
 
-  // =============================================================================
-  // RENDER
-  // =============================================================================
+  // Memoize particles to prevent re-creation on every render
+  const particles = useRef(
+    [...Array(40)].map((_, i) => ({
+      key: i,
+      left: `${Math.random() * 100}%`,
+      animationDelay: `${Math.random() * 20}s`,
+      animationDuration: `${15 + Math.random() * 20}s`,
+      opacity: 0.3 + Math.random() * 0.5,
+    }))
+  ).current;
 
   return (
     <div
       ref={containerRef}
       className={`lp-container ${isReady ? "ready" : ""} ${easterEggActive ? "rainbow-mode" : ""}`}
     >
-      {/* Custom Cursor */}
+      {/* Silent Luxury Cursor - tiny elegant dot */}
       <div
-        className="lp-cursor"
-        style={{
-          left: cursorPos.x,
-          top: cursorPos.y,
-          transform: `translate(-50%, -50%) scale(${cursorScale})`,
-        }}
+        ref={cursorRef}
+        className={`lp-cursor ${isHovering ? 'hovering' : ''}`}
+        style={{ left: 0, top: 0 }}
       >
         <div className="lp-cursor-dot" />
-        <div className="lp-cursor-ring" />
-        {cursorText && <span className="lp-cursor-text">{cursorText}</span>}
       </div>
-
-      {/* Cursor Trail */}
-      <div
-        className="lp-cursor-glow"
-        style={{
-          left: cursorPos.x,
-          top: cursorPos.y,
-        }}
-      />
 
       {/* Spotlight Effect */}
       <div
@@ -348,34 +450,11 @@ export default function LP() {
         }}
       />
 
-      {/* =========== PRELOADER =========== */}
-      <div className={`lp-preloader ${!isLoading ? "fade-out" : ""}`}>
-        <div className="lp-preloader-content">
-          {/* Morphing Logo */}
-          <div className="lp-preloader-logo">
-            <div className="lp-preloader-ring" />
-            <div className="lp-preloader-ring lp-preloader-ring-2" />
-            <div className="lp-preloader-ring lp-preloader-ring-3" />
-            <span className="lp-preloader-text">YP</span>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="lp-preloader-progress">
-            <div className="lp-preloader-bar" style={{ width: `${loadProgress}%` }} />
-          </div>
-
-          {/* Loading Text */}
-          <div className="lp-preloader-status">
-            {loadProgress < 30 && "INITIALIZING WOLF PROTOCOL..."}
-            {loadProgress >= 30 && loadProgress < 60 && "LOADING TRAINING DATA..."}
-            {loadProgress >= 60 && loadProgress < 90 && "CALIBRATING EXPERIENCE..."}
-            {loadProgress >= 90 && "READY"}
-          </div>
-        </div>
-      </div>
-
-      {/* =========== MAIN CONTENT =========== */}
+      {/* Main Content */}
       <div className={`lp-main-wrapper ${isReady ? "visible" : ""}`}>
+        {/* Film Grain Noise - Anti-AI Texture */}
+        <div className="lp-film-grain" />
+
         {/* Noise & Effects */}
         <div className="lp-noise" />
         <div className="lp-scanlines" />
@@ -384,17 +463,17 @@ export default function LP() {
         {/* Animated Gradient Mesh */}
         <div className="lp-gradient-mesh" />
 
-        {/* Floating Particles */}
+        {/* Floating Particles - using memoized values */}
         <div className="lp-particles">
-          {[...Array(40)].map((_, i) => (
+          {particles.map((particle) => (
             <div
-              key={i}
+              key={particle.key}
               className="lp-particle"
               style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 20}s`,
-                animationDuration: `${15 + Math.random() * 20}s`,
-                opacity: 0.3 + Math.random() * 0.5,
+                left: particle.left,
+                animationDelay: particle.animationDelay,
+                animationDuration: particle.animationDuration,
+                opacity: particle.opacity,
               }}
             />
           ))}
@@ -445,127 +524,110 @@ export default function LP() {
           )}
         </button>
 
+        {/* Wolf Aura Background */}
+        <div className="aura-background-component">
+          <div
+            data-us-project="FixNvEwvWwbu3QX9qC3F"
+            className="aura-unicorn-embed"
+          />
+        </div>
+
         {/* Main Content */}
         <main className="lp-main">
-          {/* 3D Logo Container */}
+          {/* 3D Logo - Unicorn Studio (LARGE) */}
           <div
             ref={logoRef}
-            className={`lp-logo-container ${glitchActive ? "glitch" : ""}`}
-            style={{
-              transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(50px)`,
-            }}
+            className={`lp-unicorn-container lp-unicorn-large ${glitchActive ? "glitch" : ""}`}
             onMouseEnter={() => handleCursorEnter("", 2)}
             onMouseLeave={handleCursorLeave}
           >
-            {/* Chromatic aberration layers */}
-            <div className="lp-logo-chromatic lp-chromatic-r">
-              <video autoPlay loop muted playsInline className="lp-logo-video">
-                <source src="/webm/3dyp.webm" type="video/webm" />
-              </video>
-            </div>
-            <div className="lp-logo-chromatic lp-chromatic-g">
-              <video autoPlay loop muted playsInline className="lp-logo-video">
-                <source src="/webm/3dyp.webm" type="video/webm" />
-              </video>
-            </div>
-            <div className="lp-logo-chromatic lp-chromatic-b">
-              <video autoPlay loop muted playsInline className="lp-logo-video">
-                <source src="/webm/3dyp.webm" type="video/webm" />
-              </video>
-            </div>
-
-            {/* Main video */}
-            <video autoPlay loop muted playsInline className="lp-logo-video lp-logo-main">
-              <source src="/webm/3dyp.webm" type="video/webm" />
-            </video>
-
-            {/* Holographic shimmer */}
-            <div className="lp-holographic" />
-
-            {/* Glow ring */}
-            <div className="lp-logo-glow" />
-
-            {/* Reflection */}
-            <div className="lp-reflection">
-              <video autoPlay loop muted playsInline className="lp-logo-video">
-                <source src="/webm/3dyp.webm" type="video/webm" />
-              </video>
-            </div>
+            <div
+              data-us-project="naRSjPpjqWS37meInh9T"
+              style={{ width: '100%', height: '100%' }}
+            />
           </div>
 
-          {/* Tagline with Scramble Effect */}
-          <h1 className="lp-tagline">
-            <span className="lp-tagline-line">{displayText || "\u00A0"}</span>
-            <span className="lp-tagline-accent">{line2 || "\u00A0"}</span>
-          </h1>
+          {/* FLUX Layout - Single Axis of Attention */}
+          <div className="lp-flux-container">
 
-          {/* Stats Counter */}
-          <div className="lp-stats">
-            <div className="lp-stat">
-              <span className="lp-stat-number">{athleteCount.toLocaleString()}+</span>
-              <span className="lp-stat-label">ATHLETES</span>
+            {/* Live Status Badge */}
+            <div className="lp-status-badge">
+              <span className="lp-status-dot">
+                <span className="lp-status-ping" />
+                <span className="lp-status-core" />
+              </span>
+              <span className="lp-status-text">
+                {useTextScramble("LOCK IN. LEVEL UP.", isReady).displayText || "\u00A0"}
+              </span>
             </div>
-            <div className="lp-stat-divider" />
-            <div className="lp-stat">
-              <span className="lp-stat-number">{countryCount}</span>
-              <span className="lp-stat-label">COUNTRIES</span>
-            </div>
+
+            {/* Hero Headline - The Desire */}
+            <h1 className="lp-flux-headline">
+              <span className="lp-flux-build">BUILD</span>
+              <span className="lp-flux-bulletproof">
+                <span className="lp-chrome-base">BULLETPROOF</span>
+                <span className="lp-chrome-shimmer">BULLETPROOF</span>
+              </span>
+              <span className="lp-flux-ankles">ANKLES</span>
+            </h1>
+
+            {/* Subhead */}
+            <p className="lp-flux-subhead">
+              Join the limited beta.
+            </p>
+
+            {/* Clean Input Stack - No Box-in-Box */}
+            <form className={`lp-flux-form ${emailSubmitted ? 'success' : ''}`} onSubmit={handleEmailSubmit}>
+              <input
+                type="email"
+                className={`lp-flux-input ${emailError ? 'error' : ''}`}
+                placeholder={emailSubmitted ? "YOU'RE IN" : "Enter your email for access..."}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError("");
+                }}
+                disabled={emailSubmitted}
+                onMouseEnter={() => handleCursorEnter("", 1.5)}
+                onMouseLeave={handleCursorLeave}
+              />
+
+              {!emailSubmitted ? (
+                <button
+                  type="submit"
+                  className={`lp-reactor-button ${isSubmitting ? 'submitting' : ''}`}
+                  disabled={isSubmitting}
+                  onMouseEnter={() => handleCursorEnter("", 0)}
+                  onMouseLeave={handleCursorLeave}
+                >
+                  <span className="lp-reactor-content">
+                    <span>{isSubmitting ? "SENDING..." : "GET ACCESS"}</span>
+                    {!isSubmitting && (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    )}
+                  </span>
+                </button>
+              ) : (
+                <div className="lp-flux-success">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>YOU'RE IN</span>
+                </div>
+              )}
+            </form>
+
+            {emailError && <span className="lp-flux-error">{emailError}</span>}
+
+            {/* Tagline */}
+            <p className="lp-flux-tagline">
+              EVERY KID DESERVES PRO-LEVEL COACHING.
+            </p>
+
           </div>
 
-          {/* Magnetic CTA Button */}
-          <a
-            ref={ctaRef}
-            href="/waitlist"
-            className="lp-cta"
-            onClick={handleCTAClick}
-            onMouseEnter={() => handleCursorEnter("", 0)}
-            onMouseLeave={handleCursorLeave}
-            style={{
-              transform: `translate(${magneticOffset.x}px, ${magneticOffset.y}px)`,
-            }}
-          >
-            <span className="lp-cta-bg" />
-            <span className="lp-cta-text">JOIN THE PACK</span>
-            <span className="lp-cta-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </span>
-            <span className="lp-cta-shine" />
-          </a>
-
-          {/* Social Proof Ticker */}
-          <div className="lp-ticker-container">
-            <div className="lp-ticker">
-              <div className="lp-ticker-content">
-                {[...Array(2)].map((_, i) => (
-                  <div key={i} className="lp-ticker-items">
-                    <span className="lp-ticker-item">
-                      <span className="lp-ticker-dot" /> NBA SKILLS COACH APPROVED
-                    </span>
-                    <span className="lp-ticker-item">
-                      <span className="lp-ticker-dot" /> USED BY D1 PROGRAMS
-                    </span>
-                    <span className="lp-ticker-item">
-                      <span className="lp-ticker-dot" /> AI-POWERED TRAINING
-                    </span>
-                    <span className="lp-ticker-item">
-                      <span className="lp-ticker-dot" /> BUILD SPRINGS NOT PISTONS
-                    </span>
-                    <span className="lp-ticker-item">
-                      <span className="lp-ticker-dot" /> YOUTH PERFORMANCE
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Scroll Indicator */}
-          <div className="lp-scroll-indicator">
-            <div className="lp-scroll-line" />
-            <span>SCROLL TO EXPLORE</span>
-          </div>
         </main>
 
         {/* Confetti Container */}
