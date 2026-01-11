@@ -189,7 +189,7 @@ export function CompletionCard({
                    hover:bg-accent-primary-hover transition-colors
                    shadow-[0_0_20px_rgba(0,246,224,0.3)]"
         >
-          Done
+          Start Barefoot Reset Challenge
         </button>
 
         <button

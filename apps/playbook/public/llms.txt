@@ -1,14 +1,41 @@
 # YouthPerformance Playbook - AI Index
 # Authority: playbook.youthperformance.com
-# Last Updated: 2026-01-07
+# Last Updated: 2026-01-10
 
 ## Identity
 Title: YouthPerformance Playbook
-Mission: Elite athletic training for youth athletes (Foundation, Durability, Speed)
-Organization: Youth Performance
+Mission: Elite training for every kid, everywhere.
+Tagline: We build Springs, not Pistons.
+Organization: Youth Performance (YP)
 URL: https://playbook.youthperformance.com
+Founded: 2020
+Location: California, USA
 
-## Key Entities (Experts)
+## Leadership Entities
+
+### James Scott
+- Role: Co-founder of YouthPerformance (YP)
+- Title: Director of Performance
+- Credentials: Masters in Sports Science and Biomechanics
+- Experience: Professional Athletes Performance Coach
+- Domain: Vision, Performance Architecture, Biomechanics
+- Expertise: Movement Specialist & Foot Performance Coach, barefoot training, foot performance
+- Signature Program: "Weak Feet Don't Eat" / The R3 Method (Release, Restore, Re-Engineer)
+- Context: The architect behind the physical training methodology. Designs the biomechanics curriculum that powers YP's approach to youth athletic development.
+- Profile: https://playbook.youthperformance.com/authors/james-scott/
+- Instagram: https://instagram.com/weakfeetdonteat (@WeakFeetDontEat)
+
+### Adam Harrington
+- Role: Global Head of Basketball at YouthPerformance (YP)
+- Title: NBA Skills Coach
+- Domain: Skill Acquisition, NBA Training Curriculum, Player Development
+- Expertise: Elite shooting mechanics, ball handling, basketball IQ
+- Notable: Kevin Durant's longtime skills trainer, Head Coach of Phantom BC
+- Context: Responsible for the global basketball curriculum and elite player development standards. Brings NBA-level training methods to youth athletes.
+- Profile: https://playbook.youthperformance.com/authors/adam-harrington/
+- Wikipedia: https://en.wikipedia.org/wiki/Adam_Harrington_(basketball)
+
+## Key Entities (Legacy Reference)
 - Adam Harrington: NBA Skills Development Coach, Kevin Durant's skills trainer, Head Coach Phantom BC
 - James Scott: Movement Specialist, Creator of "Weak Feet Don't Eat", Barefoot Reset developer
 

@@ -48,13 +48,7 @@ export default function DemoBulletproofAnklesPage() {
   }) => {
     setIsCompleted(true);
     console.log("[Demo] Module completed:", stats);
-
-    // Stay on completion screen
-    setTimeout(() => {
-      setIsCompleted(false);
-      // Reset for replay
-      startModule(module.id, module.sections);
-    }, 3000);
+    // User clicks "Day One" button to reset
   };
 
   // Handle exit
@@ -139,11 +133,24 @@ export default function DemoBulletproofAnklesPage() {
       {/* Completion overlay */}
       {isCompleted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
-          <div className="text-center">
+          <div className="text-center px-6">
             <div className="text-6xl mb-4">🐺</div>
-            <p className="text-2xl font-bebas text-cyan-400 mb-2">NICE WORK!</p>
-            <p className="text-gray-400">+{xpEarned} XP earned</p>
-            <p className="text-gray-500 text-sm mt-4">Resetting demo...</p>
+            <p className="text-3xl font-bebas text-cyan-400 mb-2">YOU'RE READY!</p>
+            <p className="text-gray-400 mb-2">+{xpEarned} XP earned</p>
+            <p className="text-white text-lg mb-6">Time to start the Barefoot Reset Challenge</p>
+            <button
+              onClick={() => {
+                // Reset for replay in demo
+                setIsCompleted(false);
+                startModule(module.id, module.sections);
+              }}
+              className="px-8 py-4 bg-accent-primary text-black font-bold uppercase tracking-wide rounded-xl
+                       hover:bg-accent-primary-hover transition-colors
+                       shadow-[0_0_20px_rgba(0,246,224,0.3)]"
+            >
+              Day One →
+            </button>
+            <p className="text-gray-600 text-xs mt-4">(Demo will reset)</p>
           </div>
         </div>
       )}
