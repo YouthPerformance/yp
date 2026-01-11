@@ -17,7 +17,7 @@ const JAMES = {
   name: "James Scott",
   tagline: "Weak Feet Don't Eat",
   title: "Movement Specialist & Foot Performance Coach",
-  heroImage: "/images/james/jamesmug.jpeg",
+  heroImage: "/images/james/jamesmug.webp",
   bio: `I've spent 15+ years training some of the world's best athletes. NBA All-Stars. NFL Pro Bowlers. Global icons. The pattern was always the same—weak feet creating problems upstream.
 
 So I built the R3 Method: Release, Restore, Re-Engineer. The same system I use with pros, now accessible to every athlete.`,
@@ -33,28 +33,28 @@ const ATHLETES = [
     name: "Jimmy Butler",
     title: "NBA All-Star",
     team: "Miami Heat",
-    image: "/images/james/jamesjimmy2.jpeg",
+    image: "/images/james/jamesjimmy2.webp",
     years: "6+ Years",
   },
   {
     name: "LeBron James",
     title: "NBA Legend",
     team: "Nike RISE",
-    image: "/images/james/jameslebron.jpeg",
+    image: "/images/james/jameslebron.webp",
     years: "Nike Tour",
   },
   {
     name: "Kobe Bryant",
     title: "NBA Legend",
     team: "Kobe Academy",
-    image: "/images/james/jameskobe.jpeg",
+    image: "/images/james/jameskobe.webp",
     years: "Mamba Mentality",
   },
   {
     name: "Kevin Durant",
     title: "NBA MVP",
     team: "Nike Basketball",
-    image: "/images/james/jameskd.jpeg",
+    image: "/images/james/jameskd.webp",
     years: "China Tour",
   },
 ];
@@ -83,12 +83,12 @@ const FEATURED_LOGOS = [
 
 // Photo gallery - training shots
 const GALLERY = [
-  { src: "/images/james/jamesjimmyside.jpeg", caption: "Barefoot training with Jimmy Butler" },
-  { src: "/images/james/bpa1.jpeg", caption: "Bulletproof Ankles protocol" },
-  { src: "/images/james/jameschina.jpeg", caption: "Nike RISE Tour - China" },
-  { src: "/images/james/james1.jpeg", caption: "In the lab" },
-  { src: "/images/james/bp3.jpeg", caption: "Movement assessment" },
-  { src: "/images/james/bpa2.jpeg", caption: "Foot activation work" },
+  { src: "/images/james/jamesjimmyside.webp", caption: "Barefoot training with Jimmy Butler" },
+  { src: "/images/james/bpa1.webp", caption: "Bulletproof Ankles protocol" },
+  { src: "/images/james/jameschina.webp", caption: "Nike RISE Tour - China" },
+  { src: "/images/james/james1.webp", caption: "In the lab" },
+  { src: "/images/james/bp3.webp", caption: "Movement assessment" },
+  { src: "/images/james/bpa2.webp", caption: "Foot activation work" },
 ];
 
 // R3 Method phases
@@ -266,7 +266,7 @@ export default function JamesScott() {
         <div className="absolute inset-0">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(/images/james/jameschina.jpeg)` }}
+            style={{ backgroundImage: `url(/images/james/jameschina.webp)` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/80 to-transparent" />
@@ -421,7 +421,7 @@ export default function JamesScott() {
               className="relative aspect-square rounded-2xl overflow-hidden"
             >
               <img
-                src="/images/james/jamesfamily.jpeg"
+                src="/images/james/jamesfamily.webp"
                 alt="James with his family"
                 className="w-full h-full object-cover"
               />
