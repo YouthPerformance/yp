@@ -96,6 +96,7 @@ export default function DemoBulletproofAnklesPage() {
         <CardSwiper
           module={module}
           sections={module.sections}
+          mode="athlete"
           onComplete={handleComplete}
         />
       </main>
