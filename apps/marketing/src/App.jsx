@@ -13,10 +13,11 @@ import Dashboard from "./pages/Dashboard";
 import FAQ from "./pages/FAQ";
 import Home from "./pages/Home";
 import Instructor from "./pages/Instructor";
+import JamesScott from "./pages/JamesScott";
 import Library from "./pages/Library";
 import LP from "./pages/LP";
 import MeetWolf from "./pages/MeetWolf";
-import Mission from "./pages/Mission";
+import Manifesto from "./pages/Manifesto";
 import NotFound from "./pages/NotFound";
 import Offer from "./pages/Offer";
 import PlanReady from "./pages/PlanReady";
@@ -46,7 +47,7 @@ function App() {
         <Route path="/login" element={<AuthPage />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
-        <Route path="/mission" element={<Mission />} />
+        <Route path="/manifesto" element={<Manifesto />} />
         <Route path="/lp" element={<LP />} />
 
         {/* Test pages for Iridescence backgrounds */}
@@ -60,6 +61,7 @@ function App() {
           <Route path="library" element={<Library />} />
           <Route path="courses/:id" element={<CourseDetail />} />
           <Route path="instructors/:id" element={<Instructor />} />
+          <Route path="james" element={<JamesScott />} />
           <Route path="coaches" element={<Library />} />
           <Route path="campus" element={<Library />} />
           <Route path="pricing" element={<Offer />} />

@@ -17,6 +17,7 @@ interface Props {
   credentials: string;
   badgeText?: string;
   image?: string;
+  profileUrl?: string;
   class?: string;
 }
 
@@ -27,6 +28,7 @@ const {
   credentials,
   badgeText = "Expert Author",
   image,
+  profileUrl,
   class: className = "",
 } = Astro.props;
 ---
@@ -58,7 +60,11 @@ const {
 
   <!-- Expert Info -->
   <div class="flex-1 min-w-0">
-    <div class="font-bebas text-display-xs mb-0.5" style="color: var(--text-primary);">{name}</div>
+    {profileUrl ? (
+      <a href={profileUrl} class="font-bebas text-display-xs mb-0.5 hover:underline transition-colors" style="color: var(--text-primary);">{name}</a>
+    ) : (
+      <div class="font-bebas text-display-xs mb-0.5" style="color: var(--text-primary);">{name}</div>
+    )}
     {tagline && (
       <div class="font-mono text-label uppercase tracking-wide mb-0.5" style="color: var(--accent-primary);">
         {tagline}
