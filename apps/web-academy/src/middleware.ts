@@ -40,6 +40,8 @@ const PUBLIC_PREFIXES = [
   "/dev", // Dev test routes (remove before production)
   "/demo", // Demo routes - no auth required
   "/playbook", // Playbook modules - public content
+  "/parent", // Parent onboarding flow - no auth required
+  "/handoff", // Baton pass handoff routes
 ];
 
 function isPublicRoute(pathname: string): boolean {
