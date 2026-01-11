@@ -1,13 +1,13 @@
 /**
- * Article Editor Page
+ * Article Reader/Editor
  *
- * Voice-enabled content editor for James & Adam.
- * Features:
- * - Voice dictation (Groq/Deepgram/Browser)
- * - Live preview
- * - Auto-save to Convex
- * - Mobile-optimized
- * - CONTINUOUS LEARNING: Tracks corrections to improve over time
+ * Optimized for editing LONG articles:
+ * - Full-screen readable view (like reading the published article)
+ * - Large, comfortable typography
+ * - Tap any section to edit inline
+ * - Voice button appears on edit
+ * - Smooth transitions
+ * - Auto-save
  */
 
 "use client";
@@ -16,135 +16,313 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@yp/alpha/convex/_generated/api";
-import type { Id } from "@yp/alpha/convex/_generated/dataModel";
-import { InlineVoiceEditor } from "@/components/voice/VoiceEditorButton";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
 
-type SectionType = "intro" | "body" | "drill" | "faq" | "cta";
-
 interface Section {
   id: string;
-  type: SectionType;
+  type: string;
   title: string;
   content: string;
-  lastEditedAt?: number;
 }
 
 // ─────────────────────────────────────────────────────────────
-// COMPONENTS
+// READING SETTINGS
 // ─────────────────────────────────────────────────────────────
 
-function SectionCard({
+const FONT_SIZES = {
+  small: { body: "16px", heading: "24px", lineHeight: "1.6" },
+  medium: { body: "18px", heading: "28px", lineHeight: "1.7" },
+  large: { body: "20px", heading: "32px", lineHeight: "1.8" },
+  xlarge: { body: "22px", heading: "36px", lineHeight: "1.9" },
+};
+
+type FontSize = keyof typeof FONT_SIZES;
+
+// ─────────────────────────────────────────────────────────────
+// EDITABLE SECTION (Tap to Edit)
+// ─────────────────────────────────────────────────────────────
+
+function EditableSection({
   section,
-  onUpdate,
-  groqApiKey,
+  isActive,
+  onActivate,
+  onSave,
+  fontSize,
 }: {
   section: Section;
-  onUpdate: (content: string) => void;
-  groqApiKey?: string;
+  isActive: boolean;
+  onActivate: () => void;
+  onSave: (content: string) => void;
+  fontSize: FontSize;
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [content, setContent] = useState(section.content);
+  const [isRecording, setIsRecording] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const settings = FONT_SIZES[fontSize];
 
-  const sectionIcons: Record<string, string> = {
-    intro: "📝",
-    body: "📄",
-    drill: "🏃",
-    faq: "❓",
-    cta: "🎯",
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current && isActive) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+    }
+  }, [content, isActive]);
+
+  // Focus textarea when activated
+  useEffect(() => {
+    if (isActive && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isActive]);
+
+  const handleVoiceInput = async () => {
+    if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      alert("Voice not supported");
+      return;
+    }
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    setIsRecording(true);
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setContent((prev) => (prev ? prev + " " + transcript : transcript));
+      setIsRecording(false);
+    };
+
+    recognition.onerror = () => setIsRecording(false);
+    recognition.onend = () => setIsRecording(false);
+
+    recognition.start();
   };
 
-  return (
-    <div className="bg-bg-secondary rounded-xl border border-border-default overflow-hidden">
-      {/* Header */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center gap-3 p-4 hover:bg-bg-tertiary/50 transition-colors"
+  const handleSave = () => {
+    onSave(content);
+  };
+
+  const sectionTypeStyles: Record<string, string> = {
+    intro: "border-l-blue-500",
+    body: "border-l-purple-500",
+    drill: "border-l-green-500",
+    faq: "border-l-yellow-500",
+    cta: "border-l-red-500",
+  };
+
+  // Reading mode
+  if (!isActive) {
+    return (
+      <div
+        onClick={onActivate}
+        className={`group cursor-pointer py-6 px-4 -mx-4 rounded-lg transition-all hover:bg-bg-secondary/50 border-l-4 border-transparent hover:${sectionTypeStyles[section.type] || "border-l-accent-primary"}`}
       >
-        <span className="text-xl">{sectionIcons[section.type]}</span>
-        <div className="flex-1 text-left">
-          <div className="font-semibold text-text-primary">{section.title}</div>
-          <div className="text-xs text-text-tertiary capitalize">{section.type}</div>
+        {/* Section label */}
+        <div className="flex items-center gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="text-xs uppercase tracking-wider text-text-tertiary font-medium">
+            {section.type}
+          </span>
+          <span className="text-xs text-text-muted">• tap to edit</span>
         </div>
-        <div
-          className={`w-6 h-6 flex items-center justify-center transition-transform ${
-            isExpanded ? "rotate-180" : ""
-          }`}
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" className="text-text-tertiary">
-            <path
-              d="M2 4L6 8L10 4"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-        {section.content && (
-          <span className="w-2 h-2 bg-green-500 rounded-full" title="Has content" />
+
+        {/* Section title */}
+        {section.title && section.type !== "body" && (
+          <h2
+            className="font-bold text-text-primary mb-3"
+            style={{ fontSize: settings.heading }}
+          >
+            {section.title}
+          </h2>
         )}
-      </button>
 
-      {/* Content */}
-      {isExpanded && (
-        <div className="p-4 pt-0">
-          <InlineVoiceEditor
-            value={section.content}
-            onChange={onUpdate}
-            placeholder={`Speak or type ${section.title.toLowerCase()}...`}
-            provider={groqApiKey ? "groq" : "browser"}
-            groqApiKey={groqApiKey}
-          />
+        {/* Content */}
+        <div
+          className="text-text-secondary whitespace-pre-wrap"
+          style={{
+            fontSize: settings.body,
+            lineHeight: settings.lineHeight,
+          }}
+        >
+          {section.content || (
+            <span className="text-text-muted italic">
+              No content yet. Tap to add...
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-          {/* Section-specific hints */}
-          {section.type === "drill" && (
-            <div className="mt-2 p-3 bg-accent-primary/10 rounded-lg text-xs text-text-secondary">
-              <strong>Drill format:</strong> Include steps, coaching cues, duration, and reps.
-            </div>
-          )}
-          {section.type === "faq" && (
-            <div className="mt-2 p-3 bg-accent-primary/10 rounded-lg text-xs text-text-secondary">
-              <strong>FAQ format:</strong> Question on first line, answer below.
-            </div>
-          )}
+  // Edit mode
+  return (
+    <div
+      className={`py-6 px-4 -mx-4 rounded-lg bg-bg-secondary border-l-4 ${sectionTypeStyles[section.type] || "border-l-accent-primary"}`}
+    >
+      {/* Section label */}
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs uppercase tracking-wider text-accent-primary font-medium">
+          Editing: {section.type}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleVoiceInput}
+            disabled={isRecording}
+            className={`p-2 rounded-full transition-all ${
+              isRecording
+                ? "bg-red-500 text-white animate-pulse"
+                : "bg-bg-tertiary text-text-secondary hover:bg-accent-primary hover:text-black"
+            }`}
+            title="Voice input"
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 12a3 3 0 003-3V5a3 3 0 10-6 0v4a3 3 0 003 3z" />
+              <path d="M5 9a1 1 0 00-2 0 7 7 0 0014 0 1 1 0 10-2 0 5 5 0 01-10 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Section title (if applicable) */}
+      {section.title && section.type !== "body" && (
+        <h2
+          className="font-bold text-text-primary mb-3"
+          style={{ fontSize: settings.heading }}
+        >
+          {section.title}
+        </h2>
+      )}
+
+      {/* Editable textarea */}
+      <textarea
+        ref={textareaRef}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        className="w-full bg-transparent text-text-primary resize-none focus:outline-none"
+        style={{
+          fontSize: settings.body,
+          lineHeight: settings.lineHeight,
+          minHeight: "100px",
+        }}
+        placeholder="Start typing or use voice..."
+      />
+
+      {/* Action buttons */}
+      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border-subtle">
+        <button
+          onClick={handleSave}
+          className="flex-1 py-3 bg-accent-primary text-black font-semibold rounded-xl"
+        >
+          Save Section
+        </button>
+        <button
+          onClick={() => {
+            setContent(section.content);
+            onSave(section.content); // Close without changing
+          }}
+          className="px-4 py-3 text-text-tertiary hover:text-text-primary"
+        >
+          Cancel
+        </button>
+      </div>
+
+      {/* Recording indicator */}
+      {isRecording && (
+        <div className="mt-3 flex items-center gap-2 text-red-500 text-sm">
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
+          Listening... speak now
         </div>
       )}
     </div>
   );
 }
 
-function LoadingState() {
+// ─────────────────────────────────────────────────────────────
+// FONT SIZE TOGGLE
+// ─────────────────────────────────────────────────────────────
+
+function FontSizeToggle({
+  size,
+  onChange,
+}: {
+  size: FontSize;
+  onChange: (size: FontSize) => void;
+}) {
+  const sizes: FontSize[] = ["small", "medium", "large", "xlarge"];
+
   return (
-    <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <div className="text-text-tertiary text-sm">Loading article...</div>
-      </div>
+    <div className="flex items-center gap-1 bg-bg-tertiary rounded-lg p-1">
+      {sizes.map((s) => (
+        <button
+          key={s}
+          onClick={() => onChange(s)}
+          className={`px-2 py-1 rounded text-xs transition-colors ${
+            size === s
+              ? "bg-bg-primary text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
+          }`}
+          title={`${s} font`}
+        >
+          {s === "small" ? "A" : s === "medium" ? "A" : s === "large" ? "A" : "A"}
+          <span
+            className={
+              s === "small"
+                ? "text-[10px]"
+                : s === "medium"
+                  ? "text-[12px]"
+                  : s === "large"
+                    ? "text-[14px]"
+                    : "text-[16px]"
+            }
+          >
+            a
+          </span>
+        </button>
+      ))}
     </div>
   );
 }
 
-function NotFoundState() {
-  const router = useRouter();
+// ─────────────────────────────────────────────────────────────
+// PROGRESS INDICATOR
+// ─────────────────────────────────────────────────────────────
 
+function ProgressIndicator({
+  sections,
+  activeIndex,
+  onJump,
+}: {
+  sections: Section[];
+  activeIndex: number | null;
+  onJump: (index: number) => void;
+}) {
   return (
-    <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-      <div className="text-center max-w-sm">
-        <div className="text-4xl mb-4">📄</div>
-        <h2 className="text-xl font-bold text-text-primary mb-2">Article Not Found</h2>
-        <p className="text-text-tertiary text-sm mb-4">
-          This article doesn&apos;t exist or hasn&apos;t been created yet.
-        </p>
-        <button
-          onClick={() => router.push("/admin/content-strategy")}
-          className="px-4 py-2 bg-accent-primary text-black font-semibold rounded-lg"
-        >
-          Back to Dashboard
-        </button>
-      </div>
+    <div className="flex items-center gap-1">
+      {sections.map((section, i) => {
+        const hasContent = section.content && section.content.length > 0;
+        const isActive = activeIndex === i;
+
+        return (
+          <button
+            key={section.id}
+            onClick={() => onJump(i)}
+            className={`w-2 h-2 rounded-full transition-all ${
+              isActive
+                ? "w-4 bg-accent-primary"
+                : hasContent
+                  ? "bg-green-500"
+                  : "bg-bg-tertiary"
+            }`}
+            title={section.title || section.type}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -153,20 +331,16 @@ function NotFoundState() {
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────
 
-export default function ArticleEditorPage() {
+export default function ArticleReaderEditor() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
 
+  const [activeSection, setActiveSection] = useState<number | null>(null);
+  const [fontSize, setFontSize] = useState<FontSize>("medium");
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<string>("");
-  const [localSections, setLocalSections] = useState<Section[] | null>(null);
-
-  // Get Groq API key from env or localStorage
-  const groqApiKey =
-    typeof window !== "undefined"
-      ? localStorage.getItem("GROQ_API_KEY") || process.env.NEXT_PUBLIC_GROQ_API_KEY
-      : undefined;
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Convex queries
   const brief = useQuery(api.contentStrategy.getBrief, { slug });
@@ -178,102 +352,98 @@ export default function ArticleEditorPage() {
   // Convex mutations
   const getOrCreateDraft = useMutation(api.contentStrategy.getOrCreateDraft);
   const updateSection = useMutation(api.contentStrategy.updateSection);
-  const updateBriefStatus = useMutation(api.contentStrategy.updateBriefStatus);
 
-  // Initialize draft when brief loads
+  // Initialize draft
   useEffect(() => {
     if (brief && !draft) {
-      getOrCreateDraft({ briefId: brief._id }).catch(console.error);
+      getOrCreateDraft({ briefId: brief._id });
     }
   }, [brief, draft, getOrCreateDraft]);
 
-  // Sync local sections with draft
+  // Load font preference from localStorage
   useEffect(() => {
-    if (draft && !localSections) {
-      setLocalSections(draft.sections);
+    const saved = localStorage.getItem("article-font-size") as FontSize;
+    if (saved && FONT_SIZES[saved]) {
+      setFontSize(saved);
     }
-  }, [draft, localSections]);
+  }, []);
 
-  // Update section locally and debounce save
-  const handleSectionUpdate = useCallback(
-    (sectionId: string, content: string) => {
-      if (!localSections) return;
-
-      setLocalSections((prev) =>
-        prev ? prev.map((s) => (s.id === sectionId ? { ...s, content } : s)) : null,
-      );
-    },
-    [localSections],
-  );
-
-  // Save to Convex
-  const handleSave = useCallback(async () => {
-    if (!draft || !localSections) return;
-
-    setIsSaving(true);
-    try {
-      // Save each changed section
-      for (const section of localSections) {
-        const originalSection = draft.sections.find((s) => s.id === section.id);
-        if (originalSection && originalSection.content !== section.content) {
-          await updateSection({
-            draftId: draft._id,
-            sectionId: section.id,
-            content: section.content,
-          });
-        }
-      }
-      setLastSaved(new Date().toLocaleTimeString());
-    } catch (error) {
-      console.error("Failed to save:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  }, [draft, localSections, updateSection]);
-
-  // Auto-save every 30 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleSave();
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [handleSave]);
-
-  // Handle status change
-  const handleStatusChange = async (status: "in_progress" | "review" | "published") => {
-    if (!brief) return;
-
-    try {
-      await updateBriefStatus({ briefId: brief._id, status });
-    } catch (error) {
-      console.error("Failed to update status:", error);
-    }
+  // Save font preference
+  const handleFontSizeChange = (size: FontSize) => {
+    setFontSize(size);
+    localStorage.setItem("article-font-size", size);
   };
 
-  // Loading states
-  if (brief === undefined) {
-    return <LoadingState />;
+  // Save section
+  const handleSaveSection = useCallback(
+    async (sectionId: string, content: string) => {
+      if (!draft) return;
+
+      setIsSaving(true);
+      try {
+        await updateSection({
+          draftId: draft._id,
+          sectionId,
+          content,
+        });
+        setLastSaved(new Date().toLocaleTimeString());
+      } catch (error) {
+        console.error("Failed to save:", error);
+      } finally {
+        setIsSaving(false);
+        setActiveSection(null);
+      }
+    },
+    [draft, updateSection],
+  );
+
+  // Jump to section
+  const handleJumpToSection = (index: number) => {
+    sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  // Loading
+  if (brief === undefined || (brief && draft === undefined)) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
-  if (brief === null) {
-    return <NotFoundState />;
+  // Not found
+  if (!brief) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📄</div>
+          <h2 className="text-xl font-bold text-text-primary mb-2">Not Found</h2>
+          <button
+            onClick={() => router.push("/admin/content-strategy")}
+            className="text-accent-primary"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  // Use local sections or draft sections
-  const sections = localSections || draft?.sections || [];
-  const filledSections = sections.filter((s) => s.content.length > 0).length;
-  const totalSections = sections.length;
-  const progress = totalSections > 0 ? Math.round((filledSections / totalSections) * 100) : 0;
+  const sections = draft?.sections || [];
+  const wordCount = sections.reduce(
+    (sum, s) => sum + (s.content?.split(/\s+/).filter(Boolean).length || 0),
+    0,
+  );
+  const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary pb-24">
-      {/* Header */}
+    <div className="min-h-screen bg-bg-primary">
+      {/* Floating Header */}
       <header className="sticky top-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-default">
-        <div className="px-4 py-4">
-          {/* Back + Status */}
-          <div className="flex items-center justify-between mb-3">
+        <div className="max-w-3xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
             <button
-              onClick={() => router.back()}
+              onClick={() => router.push("/admin/content-strategy")}
               className="flex items-center gap-2 text-text-tertiary hover:text-text-primary"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -284,131 +454,80 @@ export default function ArticleEditorPage() {
                   strokeLinecap="round"
                 />
               </svg>
-              <span className="text-sm">Back</span>
+              <span className="text-sm hidden sm:inline">Back</span>
             </button>
 
-            <div className="flex items-center gap-2">
-              <select
-                value={brief.status}
-                onChange={(e) =>
-                  handleStatusChange(e.target.value as "in_progress" | "review" | "published")
-                }
-                className="px-2 py-1 rounded-full text-xs bg-bg-secondary border border-border-default text-text-secondary"
-              >
-                <option value="planned">Planned</option>
-                <option value="assigned">Assigned</option>
-                <option value="in_progress">In Progress</option>
-                <option value="review">Review</option>
-                <option value="published">Published</option>
-              </select>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="px-3 py-1.5 bg-accent-primary text-black text-sm font-semibold rounded-lg disabled:opacity-50"
-              >
-                {isSaving ? "Saving..." : "Save"}
-              </button>
-            </div>
-          </div>
+            <ProgressIndicator
+              sections={sections}
+              activeIndex={activeSection}
+              onJump={handleJumpToSection}
+            />
 
-          {/* Title */}
-          <h1 className="text-xl font-bold mb-1">{brief.title}</h1>
-          <div className="flex items-center gap-3 text-xs text-text-tertiary">
-            <span className="text-accent-primary">{brief.targetKeyword}</span>
-            <span>•</span>
-            <span>{brief.pillar}</span>
-            <span>•</span>
-            <span className="uppercase">{brief.author === "james" ? "JS" : "AH"}</span>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-text-tertiary mb-1">
-              <span>Progress</span>
-              <span>
-                {filledSections}/{totalSections} sections
-              </span>
-            </div>
-            <div className="h-1.5 bg-bg-tertiary rounded-full overflow-hidden">
-              <div
-                className="h-full bg-accent-primary transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+            <FontSizeToggle size={fontSize} onChange={handleFontSizeChange} />
           </div>
         </div>
       </header>
 
-      {/* Sections */}
-      <main className="px-4 py-4 space-y-3">
-        {/* Voice Provider Toggle */}
-        <div className="flex items-center justify-between p-3 bg-bg-secondary rounded-xl border border-border-default">
-          <div className="text-sm text-text-secondary">Voice Provider</div>
-          <div className="flex items-center gap-2 text-xs">
-            {groqApiKey ? (
-              <span className="px-2 py-1 bg-green-500/20 text-green-500 rounded">Groq (Fast)</span>
-            ) : (
-              <span className="px-2 py-1 bg-blue-500/20 text-blue-500 rounded">Browser (Free)</span>
-            )}
+      {/* Article Content */}
+      <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Title */}
+        <div className="mb-8 pb-8 border-b border-border-subtle">
+          <h1
+            className="font-bold text-text-primary mb-3"
+            style={{ fontSize: FONT_SIZES[fontSize].heading }}
+          >
+            {brief.title}
+          </h1>
+          <div className="flex items-center gap-4 text-sm text-text-tertiary">
+            <span className="text-accent-primary">{brief.targetKeyword}</span>
+            <span>•</span>
+            <span>{brief.pillar}</span>
+            <span>•</span>
+            <span>{wordCount} words</span>
+            <span>•</span>
+            <span>{readTime} min read</span>
           </div>
         </div>
 
-        {/* Brief Outline (if available) */}
-        {brief.outline && (
-          <div className="p-4 bg-bg-secondary rounded-xl border border-border-default">
-            <div className="text-xs text-text-tertiary uppercase tracking-wider mb-2">
-              Article Outline
+        {/* Sections */}
+        <div className="space-y-2">
+          {sections.map((section, index) => (
+            <div
+              key={section.id}
+              ref={(el) => {
+                sectionRefs.current[index] = el;
+              }}
+            >
+              <EditableSection
+                section={section}
+                isActive={activeSection === index}
+                onActivate={() => setActiveSection(index)}
+                onSave={(content) => handleSaveSection(section.id, content)}
+                fontSize={fontSize}
+              />
             </div>
-            <div className="text-sm text-text-secondary whitespace-pre-wrap">{brief.outline}</div>
-          </div>
-        )}
-
-        {/* Key Takeaways (if available) */}
-        {brief.keyTakeaways && brief.keyTakeaways.length > 0 && (
-          <div className="p-4 bg-bg-secondary rounded-xl border border-border-default">
-            <div className="text-xs text-text-tertiary uppercase tracking-wider mb-2">
-              Key Takeaways
-            </div>
-            <ul className="text-sm text-text-secondary space-y-1">
-              {brief.keyTakeaways.map((takeaway, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-accent-primary">•</span>
-                  <span>{takeaway}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Section Cards */}
-        {sections.map((section) => (
-          <SectionCard
-            key={section.id}
-            section={section}
-            onUpdate={(content) => handleSectionUpdate(section.id, content)}
-            groqApiKey={groqApiKey}
-          />
-        ))}
-
-        {/* Add Section Button */}
-        <button className="w-full py-3 border border-dashed border-border-default rounded-xl text-text-tertiary hover:text-text-secondary hover:border-border-subtle transition-colors">
-          + Add Section
-        </button>
+          ))}
+        </div>
       </main>
 
-      {/* Bottom Status Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-bg-secondary border-t border-border-default px-4 py-3">
-        <div className="flex items-center justify-between text-xs text-text-tertiary">
-          <span>{lastSaved ? `Last saved ${lastSaved}` : "Not saved yet"}</span>
-          <div className="flex items-center gap-3">
-            {draft && (
-              <span>
-                {draft.wordCount} words • {Math.ceil(draft.wordCount / 200)} min read
-              </span>
-            )}
-            <button className="text-accent-primary font-medium">Preview Article</button>
-          </div>
-        </div>
+      {/* Floating Save Indicator */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-bg-secondary border border-border-default rounded-full px-4 py-2 shadow-lg flex items-center gap-3 text-sm">
+        {isSaving ? (
+          <>
+            <div className="w-3 h-3 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+            <span className="text-text-tertiary">Saving...</span>
+          </>
+        ) : lastSaved ? (
+          <>
+            <span className="w-2 h-2 bg-green-500 rounded-full" />
+            <span className="text-text-tertiary">Saved {lastSaved}</span>
+          </>
+        ) : (
+          <>
+            <span className="w-2 h-2 bg-bg-tertiary rounded-full" />
+            <span className="text-text-tertiary">Tap any section to edit</span>
+          </>
+        )}
       </div>
     </div>
   );
