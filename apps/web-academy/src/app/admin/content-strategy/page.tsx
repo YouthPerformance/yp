@@ -2,91 +2,49 @@
 // CONTENT STRATEGY DASHBOARD
 // SEO metrics, keyword tracking, and content planning
 // Mobile-optimized for James & Adam
+// Wired to Convex for live data
 // ═══════════════════════════════════════════════════════════
 
 "use client";
 
 import { useState } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@yp/alpha/convex/_generated/api";
+import type { Id } from "@yp/alpha/convex/_generated/dataModel";
+import Link from "next/link";
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
 
-interface KeywordMetric {
-  keyword: string;
-  volume: number;
-  difficulty: number;
-  position: number | null;
-  trend: "up" | "down" | "stable";
-  pillar: string;
-}
-
-interface ContentPiece {
-  title: string;
-  slug: string;
-  status: "published" | "draft" | "planned";
-  pillar: string;
-  targetKeyword: string;
-  volume: number;
-  author: "james" | "adam";
-  lastUpdated: string;
-}
-
-interface PillarMetric {
-  name: string;
-  articles: number;
-  totalTraffic: number;
-  avgPosition: number;
-  topKeyword: string;
-  color: string;
-}
-
-// ─────────────────────────────────────────────────────────────
-// MOCK DATA (Replace with Convex queries)
-// ─────────────────────────────────────────────────────────────
-
-const PILLARS: PillarMetric[] = [
-  { name: "Barefoot Training", articles: 5, totalTraffic: 2400, avgPosition: 12.3, topKeyword: "barefoot training", color: "#00F6E0" },
-  { name: "Basketball", articles: 3, totalTraffic: 1800, avgPosition: 8.7, topKeyword: "youth basketball drills", color: "#F59E0B" },
-  { name: "Speed Training", articles: 0, totalTraffic: 0, avgPosition: 0, topKeyword: "youth speed training", color: "#8B5CF6" },
-  { name: "Agility Training", articles: 0, totalTraffic: 0, avgPosition: 0, topKeyword: "agility drills for kids", color: "#10B981" },
-  { name: "Strength Training", articles: 0, totalTraffic: 0, avgPosition: 0, topKeyword: "youth strength training", color: "#EF4444" },
-];
-
-const KEYWORDS: KeywordMetric[] = [
-  { keyword: "barefoot training", volume: 8400, difficulty: 32, position: 15, trend: "up", pillar: "Barefoot Training" },
-  { keyword: "bulletproof ankles", volume: 200, difficulty: 8, position: 3, trend: "up", pillar: "Barefoot Training" },
-  { keyword: "youth basketball drills", volume: 12100, difficulty: 45, position: 8, trend: "stable", pillar: "Basketball" },
-  { keyword: "youth speed training", volume: 8100, difficulty: 38, position: null, trend: "stable", pillar: "Speed Training" },
-  { keyword: "agility drills for kids", volume: 4800, difficulty: 28, position: null, trend: "stable", pillar: "Agility Training" },
-  { keyword: "youth strength training", volume: 12100, difficulty: 52, position: null, trend: "stable", pillar: "Strength Training" },
-  { keyword: "first step quickness", volume: 2100, difficulty: 18, position: null, trend: "stable", pillar: "Speed Training" },
-  { keyword: "landing mechanics youth", volume: 800, difficulty: 12, position: null, trend: "stable", pillar: "Strength Training" },
-];
-
-const CONTENT: ContentPiece[] = [
-  { title: "Bulletproof Ankles Protocol", slug: "/barefoot-training/injury-rehab/bulletproof-ankles", status: "published", pillar: "Barefoot Training", targetKeyword: "bulletproof ankles", volume: 200, author: "james", lastUpdated: "2025-01-10" },
-  { title: "Barefoot Reset Guide", slug: "/barefoot-training", status: "published", pillar: "Barefoot Training", targetKeyword: "barefoot training", volume: 8400, author: "james", lastUpdated: "2025-01-05" },
-  { title: "Youth Basketball Drills", slug: "/basketball/youth-basketball-drills", status: "published", pillar: "Basketball", targetKeyword: "youth basketball drills", volume: 12100, author: "adam", lastUpdated: "2025-01-02" },
-  { title: "Speed Training for Youth Athletes", slug: "/speed-training", status: "planned", pillar: "Speed Training", targetKeyword: "youth speed training", volume: 8100, author: "james", lastUpdated: "" },
-  { title: "First Step Quickness Protocol", slug: "/speed-training/first-step-quickness", status: "planned", pillar: "Speed Training", targetKeyword: "first step quickness", volume: 2100, author: "james", lastUpdated: "" },
-  { title: "Agility Training Guide", slug: "/agility-training", status: "planned", pillar: "Agility Training", targetKeyword: "agility drills for kids", volume: 4800, author: "james", lastUpdated: "" },
-  { title: "Youth Strength Training Guide", slug: "/strength-training", status: "planned", pillar: "Strength Training", targetKeyword: "youth strength training", volume: 12100, author: "james", lastUpdated: "" },
-  { title: "Landing Mechanics Protocol", slug: "/strength-training/landing-mechanics", status: "planned", pillar: "Strength Training", targetKeyword: "landing mechanics youth", volume: 800, author: "james", lastUpdated: "" },
-];
+type KeywordTrend = "up" | "down" | "stable";
+type BriefStatus = "planned" | "assigned" | "in_progress" | "review" | "published";
+type Author = "james" | "adam";
 
 // ─────────────────────────────────────────────────────────────
 // COMPONENTS
 // ─────────────────────────────────────────────────────────────
 
-function MetricCard({ label, value, subtext, trend }: { label: string; value: string | number; subtext?: string; trend?: "up" | "down" | "stable" }) {
+function MetricCard({
+  label,
+  value,
+  subtext,
+  trend,
+}: {
+  label: string;
+  value: string | number;
+  subtext?: string;
+  trend?: KeywordTrend;
+}) {
   return (
     <div className="bg-bg-secondary rounded-xl p-4 border border-border-default">
       <div className="text-text-tertiary text-xs uppercase tracking-wider mb-1">{label}</div>
       <div className="flex items-end gap-2">
         <div className="text-2xl font-bold text-text-primary">{value}</div>
         {trend && (
-          <span className={`text-sm ${trend === "up" ? "text-green-500" : trend === "down" ? "text-red-500" : "text-text-tertiary"}`}>
+          <span
+            className={`text-sm ${trend === "up" ? "text-green-500" : trend === "down" ? "text-red-500" : "text-text-tertiary"}`}
+          >
             {trend === "up" ? "↑" : trend === "down" ? "↓" : "→"}
           </span>
         )}
@@ -96,8 +54,19 @@ function MetricCard({ label, value, subtext, trend }: { label: string; value: st
   );
 }
 
-function PillarCard({ pillar }: { pillar: PillarMetric }) {
-  const hasContent = pillar.articles > 0;
+function PillarCard({
+  pillar,
+}: {
+  pillar: {
+    _id: Id<"content_pillars">;
+    name: string;
+    color: string;
+    articleCount: number;
+    avgPosition: number | null;
+    primaryKeyword: string;
+  };
+}) {
+  const hasContent = pillar.articleCount > 0;
   return (
     <div
       className={`rounded-xl p-4 border ${hasContent ? "border-border-default bg-bg-secondary" : "border-dashed border-border-subtle bg-bg-tertiary/50"}`}
@@ -109,17 +78,19 @@ function PillarCard({ pillar }: { pillar: PillarMetric }) {
       <div className="grid grid-cols-2 gap-2 text-sm">
         <div>
           <div className="text-text-tertiary">Articles</div>
-          <div className={hasContent ? "text-text-primary" : "text-text-muted"}>{pillar.articles}</div>
+          <div className={hasContent ? "text-text-primary" : "text-text-muted"}>
+            {pillar.articleCount}
+          </div>
         </div>
         <div>
           <div className="text-text-tertiary">Avg Pos</div>
           <div className={hasContent ? "text-text-primary" : "text-text-muted"}>
-            {hasContent ? pillar.avgPosition.toFixed(1) : "—"}
+            {pillar.avgPosition ? pillar.avgPosition.toFixed(1) : "—"}
           </div>
         </div>
         <div className="col-span-2">
           <div className="text-text-tertiary">Target</div>
-          <div className="text-accent-primary text-xs truncate">{pillar.topKeyword}</div>
+          <div className="text-accent-primary text-xs truncate">{pillar.primaryKeyword}</div>
         </div>
       </div>
       {!hasContent && (
@@ -131,9 +102,32 @@ function PillarCard({ pillar }: { pillar: PillarMetric }) {
   );
 }
 
-function KeywordRow({ kw }: { kw: KeywordMetric }) {
-  const positionColor = kw.position ? (kw.position <= 3 ? "text-green-500" : kw.position <= 10 ? "text-yellow-500" : "text-text-secondary") : "text-text-muted";
-  const difficultyColor = kw.difficulty <= 20 ? "text-green-500" : kw.difficulty <= 40 ? "text-yellow-500" : "text-red-500";
+function KeywordRow({
+  kw,
+}: {
+  kw: {
+    _id: Id<"seo_keywords">;
+    keyword: string;
+    pillar: string;
+    volume: number;
+    difficulty: number;
+    position?: number | null;
+    trend: KeywordTrend;
+  };
+}) {
+  const positionColor = kw.position
+    ? kw.position <= 3
+      ? "text-green-500"
+      : kw.position <= 10
+        ? "text-yellow-500"
+        : "text-text-secondary"
+    : "text-text-muted";
+  const difficultyColor =
+    kw.difficulty <= 20
+      ? "text-green-500"
+      : kw.difficulty <= 40
+        ? "text-yellow-500"
+        : "text-red-500";
 
   return (
     <div className="flex items-center gap-3 py-3 border-b border-border-subtle last:border-0">
@@ -154,7 +148,9 @@ function KeywordRow({ kw }: { kw: KeywordMetric }) {
         <div className="text-xs text-text-tertiary">pos</div>
       </div>
       <div className="w-6">
-        <span className={`text-lg ${kw.trend === "up" ? "text-green-500" : kw.trend === "down" ? "text-red-500" : "text-text-tertiary"}`}>
+        <span
+          className={`text-lg ${kw.trend === "up" ? "text-green-500" : kw.trend === "down" ? "text-red-500" : "text-text-tertiary"}`}
+        >
           {kw.trend === "up" ? "↑" : kw.trend === "down" ? "↓" : "→"}
         </span>
       </div>
@@ -162,15 +158,33 @@ function KeywordRow({ kw }: { kw: KeywordMetric }) {
   );
 }
 
-function ContentRow({ content }: { content: ContentPiece }) {
-  const statusStyles = {
+function ContentRow({
+  content,
+}: {
+  content: {
+    _id: Id<"article_briefs">;
+    title: string;
+    slug: string;
+    status: BriefStatus;
+    pillar: string;
+    targetKeyword: string;
+    targetVolume: number;
+    author: Author;
+  };
+}) {
+  const statusStyles: Record<BriefStatus, string> = {
     published: "bg-green-500/20 text-green-500",
-    draft: "bg-yellow-500/20 text-yellow-500",
-    planned: "bg-blue-500/20 text-blue-500",
+    in_progress: "bg-yellow-500/20 text-yellow-500",
+    review: "bg-purple-500/20 text-purple-500",
+    assigned: "bg-blue-500/20 text-blue-500",
+    planned: "bg-gray-500/20 text-gray-400",
   };
 
   return (
-    <div className="flex items-center gap-3 py-3 border-b border-border-subtle last:border-0">
+    <Link
+      href={`/admin/content-strategy/${content.slug}`}
+      className="flex items-center gap-3 py-3 border-b border-border-subtle last:border-0 hover:bg-bg-tertiary/50 -mx-4 px-4 transition-colors"
+    >
       <div className="flex-1 min-w-0">
         <div className="font-medium text-text-primary truncate">{content.title}</div>
         <div className="flex items-center gap-2 text-xs text-text-tertiary">
@@ -180,13 +194,53 @@ function ContentRow({ content }: { content: ContentPiece }) {
         </div>
       </div>
       <div className="text-right">
-        <div className="text-sm text-text-secondary">{(content.volume / 1000).toFixed(1)}K</div>
+        <div className="text-sm text-text-secondary">
+          {(content.targetVolume / 1000).toFixed(1)}K
+        </div>
       </div>
       <div className={`px-2 py-0.5 rounded-full text-xs ${statusStyles[content.status]}`}>
-        {content.status}
+        {content.status.replace("_", " ")}
       </div>
       <div className="w-8 h-8 rounded-full bg-bg-tertiary flex items-center justify-center text-xs font-semibold text-text-secondary uppercase">
         {content.author === "james" ? "JS" : "AH"}
+      </div>
+    </Link>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <div className="text-text-tertiary text-sm">Loading content strategy...</div>
+      </div>
+    </div>
+  );
+}
+
+function EmptyState({
+  onSeedData,
+  isSeeding,
+}: {
+  onSeedData: () => void;
+  isSeeding: boolean;
+}) {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center">
+      <div className="text-center max-w-sm">
+        <div className="text-4xl mb-4">📊</div>
+        <h2 className="text-xl font-bold text-text-primary mb-2">No Content Strategy Data</h2>
+        <p className="text-text-tertiary text-sm mb-4">
+          Get started by importing keywords from Ahrefs or seed with example data.
+        </p>
+        <button
+          onClick={onSeedData}
+          disabled={isSeeding}
+          className="px-4 py-2 bg-accent-primary text-black font-semibold rounded-lg disabled:opacity-50"
+        >
+          {isSeeding ? "Seeding..." : "Seed Example Data"}
+        </button>
       </div>
     </div>
   );
@@ -198,13 +252,221 @@ function ContentRow({ content }: { content: ContentPiece }) {
 
 export default function ContentStrategyDashboard() {
   const [activeTab, setActiveTab] = useState<"overview" | "keywords" | "content">("overview");
+  const [authorFilter, setAuthorFilter] = useState<Author | "all">("all");
+  const [isSeeding, setIsSeeding] = useState(false);
 
-  // Calculate summary stats
-  const totalKeywords = KEYWORDS.length;
-  const rankingKeywords = KEYWORDS.filter(k => k.position !== null).length;
-  const totalVolume = KEYWORDS.reduce((sum, k) => sum + k.volume, 0);
-  const publishedContent = CONTENT.filter(c => c.status === "published").length;
-  const plannedContent = CONTENT.filter(c => c.status === "planned").length;
+  // Convex queries
+  const stats = useQuery(api.contentStrategy.getDashboardStats);
+  const keywords = useQuery(api.contentStrategy.listKeywords, {});
+  const briefs = useQuery(api.contentStrategy.listBriefs, {
+    author: authorFilter === "all" ? undefined : authorFilter,
+  });
+  const pillars = useQuery(api.contentStrategy.listPillars);
+
+  // Mutations
+  const createPillar = useMutation(api.contentStrategy.createPillar);
+  const addKeyword = useMutation(api.contentStrategy.addKeyword);
+  const createBrief = useMutation(api.contentStrategy.createBrief);
+
+  // Seed example data
+  const handleSeedData = async () => {
+    setIsSeeding(true);
+    try {
+      // Create pillars
+      const pillarData = [
+        {
+          name: "Barefoot Training",
+          slug: "barefoot-training",
+          color: "#00F6E0",
+          primaryKeyword: "barefoot training",
+          primaryKeywordVolume: 8400,
+        },
+        {
+          name: "Speed Training",
+          slug: "speed-training",
+          color: "#8B5CF6",
+          primaryKeyword: "youth speed training",
+          primaryKeywordVolume: 8100,
+        },
+        {
+          name: "Agility Training",
+          slug: "agility-training",
+          color: "#10B981",
+          primaryKeyword: "agility drills for kids",
+          primaryKeywordVolume: 4800,
+        },
+        {
+          name: "Strength Training",
+          slug: "strength-training",
+          color: "#EF4444",
+          primaryKeyword: "youth strength training",
+          primaryKeywordVolume: 12100,
+        },
+        {
+          name: "Basketball",
+          slug: "basketball",
+          color: "#F59E0B",
+          primaryKeyword: "youth basketball drills",
+          primaryKeywordVolume: 12100,
+        },
+      ];
+
+      for (const pillar of pillarData) {
+        await createPillar(pillar);
+      }
+
+      // Create keywords
+      const keywordData = [
+        {
+          keyword: "barefoot training",
+          pillar: "Barefoot Training",
+          volume: 8400,
+          difficulty: 32,
+          priority: "high" as const,
+        },
+        {
+          keyword: "bulletproof ankles",
+          pillar: "Barefoot Training",
+          volume: 200,
+          difficulty: 8,
+          position: 3,
+          priority: "high" as const,
+        },
+        {
+          keyword: "youth speed training",
+          pillar: "Speed Training",
+          volume: 8100,
+          difficulty: 38,
+          priority: "high" as const,
+        },
+        {
+          keyword: "first step quickness",
+          pillar: "Speed Training",
+          volume: 2100,
+          difficulty: 18,
+          priority: "medium" as const,
+        },
+        {
+          keyword: "agility drills for kids",
+          pillar: "Agility Training",
+          volume: 4800,
+          difficulty: 28,
+          priority: "high" as const,
+        },
+        {
+          keyword: "youth strength training",
+          pillar: "Strength Training",
+          volume: 12100,
+          difficulty: 52,
+          priority: "high" as const,
+        },
+        {
+          keyword: "landing mechanics youth",
+          pillar: "Strength Training",
+          volume: 800,
+          difficulty: 12,
+          priority: "medium" as const,
+        },
+        {
+          keyword: "youth basketball drills",
+          pillar: "Basketball",
+          volume: 12100,
+          difficulty: 45,
+          position: 8,
+          priority: "high" as const,
+        },
+      ];
+
+      for (const kw of keywordData) {
+        await addKeyword(kw);
+      }
+
+      // Create article briefs
+      const briefData = [
+        {
+          title: "Speed Training for Youth Athletes",
+          slug: "speed-training",
+          targetKeyword: "youth speed training",
+          targetVolume: 8100,
+          pillar: "Speed Training",
+          contentType: "pillar" as const,
+          author: "james" as const,
+        },
+        {
+          title: "First Step Quickness Protocol",
+          slug: "first-step-quickness",
+          targetKeyword: "first step quickness",
+          targetVolume: 2100,
+          pillar: "Speed Training",
+          contentType: "cluster" as const,
+          author: "james" as const,
+        },
+        {
+          title: "Agility Training Guide",
+          slug: "agility-training",
+          targetKeyword: "agility drills for kids",
+          targetVolume: 4800,
+          pillar: "Agility Training",
+          contentType: "pillar" as const,
+          author: "james" as const,
+        },
+        {
+          title: "Youth Strength Training Guide",
+          slug: "strength-training",
+          targetKeyword: "youth strength training",
+          targetVolume: 12100,
+          pillar: "Strength Training",
+          contentType: "pillar" as const,
+          author: "james" as const,
+        },
+        {
+          title: "Landing Mechanics Protocol",
+          slug: "landing-mechanics",
+          targetKeyword: "landing mechanics youth",
+          targetVolume: 800,
+          pillar: "Strength Training",
+          contentType: "cluster" as const,
+          author: "adam" as const,
+        },
+      ];
+
+      for (const brief of briefData) {
+        await createBrief(brief);
+      }
+    } catch (error) {
+      console.error("Failed to seed data:", error);
+    } finally {
+      setIsSeeding(false);
+    }
+  };
+
+  // Loading state
+  if (stats === undefined || keywords === undefined || briefs === undefined) {
+    return <LoadingState />;
+  }
+
+  // Empty state
+  const isEmpty = stats.keywords.total === 0 && stats.content.total === 0;
+  if (isEmpty) {
+    return (
+      <div className="min-h-screen bg-bg-primary text-text-primary">
+        <header className="sticky top-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-default">
+          <div className="px-4 py-4">
+            <h1 className="text-xl font-bold">Content Strategy</h1>
+            <p className="text-sm text-text-tertiary">SEO Performance & Planning</p>
+          </div>
+        </header>
+        <EmptyState onSeedData={handleSeedData} isSeeding={isSeeding} />
+      </div>
+    );
+  }
+
+  // Group briefs by status
+  const publishedBriefs = briefs.filter((b) => b.status === "published");
+  const plannedBriefs = briefs.filter((b) => b.status === "planned" || b.status === "assigned");
+  const inProgressBriefs = briefs.filter(
+    (b) => b.status === "in_progress" || b.status === "review",
+  );
 
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary pb-20">
@@ -216,14 +478,17 @@ export default function ContentStrategyDashboard() {
               <h1 className="text-xl font-bold">Content Strategy</h1>
               <p className="text-sm text-text-tertiary">SEO Performance & Planning</p>
             </div>
-            <button className="px-3 py-1.5 bg-accent-primary text-black text-sm font-semibold rounded-lg">
+            <Link
+              href="/admin/content-strategy/new"
+              className="px-3 py-1.5 bg-accent-primary text-black text-sm font-semibold rounded-lg"
+            >
               + New Article
-            </button>
+            </Link>
           </div>
 
           {/* Tabs */}
           <div className="flex gap-1 bg-bg-secondary rounded-lg p-1">
-            {(["overview", "keywords", "content"] as const).map(tab => (
+            {(["overview", "keywords", "content"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -246,40 +511,61 @@ export default function ContentStrategyDashboard() {
           <div className="space-y-6">
             {/* Summary Metrics */}
             <div className="grid grid-cols-2 gap-3">
-              <MetricCard label="Keywords Tracked" value={totalKeywords} subtext={`${rankingKeywords} ranking`} />
-              <MetricCard label="Total Volume" value={`${(totalVolume / 1000).toFixed(0)}K`} subtext="monthly searches" />
-              <MetricCard label="Published" value={publishedContent} subtext="articles live" trend="up" />
-              <MetricCard label="In Pipeline" value={plannedContent} subtext="articles planned" />
+              <MetricCard
+                label="Keywords Tracked"
+                value={stats.keywords.total}
+                subtext={`${stats.keywords.ranking} ranking`}
+              />
+              <MetricCard
+                label="Total Volume"
+                value={`${(stats.keywords.totalVolume / 1000).toFixed(0)}K`}
+                subtext="monthly searches"
+              />
+              <MetricCard
+                label="Published"
+                value={stats.content.published}
+                subtext="articles live"
+                trend="up"
+              />
+              <MetricCard
+                label="In Pipeline"
+                value={stats.content.planned + stats.content.inProgress}
+                subtext="articles planned"
+              />
             </div>
 
             {/* Pillars */}
-            <div>
-              <h2 className="text-lg font-semibold mb-3">Content Pillars</h2>
-              <div className="grid grid-cols-1 gap-3">
-                {PILLARS.map(pillar => (
-                  <PillarCard key={pillar.name} pillar={pillar} />
-                ))}
-              </div>
-            </div>
-
-            {/* Top Keywords */}
-            <div>
-              <h2 className="text-lg font-semibold mb-3">Top Keywords</h2>
-              <div className="bg-bg-secondary rounded-xl border border-border-default">
-                <div className="px-4 py-2 border-b border-border-subtle flex items-center gap-3 text-xs text-text-tertiary uppercase">
-                  <div className="flex-1">Keyword</div>
-                  <div className="w-12 text-right">Vol</div>
-                  <div className="w-12 text-right">KD</div>
-                  <div className="w-12 text-right">Pos</div>
-                  <div className="w-6"></div>
-                </div>
-                <div className="px-4">
-                  {KEYWORDS.slice(0, 5).map(kw => (
-                    <KeywordRow key={kw.keyword} kw={kw} />
+            {pillars && pillars.length > 0 && (
+              <div>
+                <h2 className="text-lg font-semibold mb-3">Content Pillars</h2>
+                <div className="grid grid-cols-1 gap-3">
+                  {stats.pillars.map((pillar) => (
+                    <PillarCard key={pillar._id} pillar={pillar} />
                   ))}
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Top Keywords */}
+            {keywords.length > 0 && (
+              <div>
+                <h2 className="text-lg font-semibold mb-3">Top Keywords</h2>
+                <div className="bg-bg-secondary rounded-xl border border-border-default">
+                  <div className="px-4 py-2 border-b border-border-subtle flex items-center gap-3 text-xs text-text-tertiary uppercase">
+                    <div className="flex-1">Keyword</div>
+                    <div className="w-12 text-right">Vol</div>
+                    <div className="w-12 text-right">KD</div>
+                    <div className="w-12 text-right">Pos</div>
+                    <div className="w-6"></div>
+                  </div>
+                  <div className="px-4">
+                    {keywords.slice(0, 5).map((kw) => (
+                      <KeywordRow key={kw._id} kw={kw} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -289,16 +575,16 @@ export default function ContentStrategyDashboard() {
             {/* Filter Pills */}
             <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
               <button className="px-3 py-1.5 bg-accent-primary/20 text-accent-primary text-sm rounded-full whitespace-nowrap">
-                All ({KEYWORDS.length})
+                All ({keywords.length})
               </button>
               <button className="px-3 py-1.5 bg-bg-secondary text-text-secondary text-sm rounded-full whitespace-nowrap">
-                Ranking ({rankingKeywords})
+                Ranking ({stats.keywords.ranking})
               </button>
               <button className="px-3 py-1.5 bg-bg-secondary text-text-secondary text-sm rounded-full whitespace-nowrap">
-                Not Ranking ({KEYWORDS.length - rankingKeywords})
+                Not Ranking ({keywords.length - stats.keywords.ranking})
               </button>
               <button className="px-3 py-1.5 bg-bg-secondary text-text-secondary text-sm rounded-full whitespace-nowrap">
-                Low KD (&lt;30)
+                Opportunities ({stats.keywords.opportunities})
               </button>
             </div>
 
@@ -312,8 +598,8 @@ export default function ContentStrategyDashboard() {
                 <div className="w-6"></div>
               </div>
               <div className="px-4">
-                {KEYWORDS.map(kw => (
-                  <KeywordRow key={kw.keyword} kw={kw} />
+                {keywords.map((kw) => (
+                  <KeywordRow key={kw._id} kw={kw} />
                 ))}
               </div>
             </div>
@@ -330,46 +616,93 @@ export default function ContentStrategyDashboard() {
           <div className="space-y-4">
             {/* Author Filter */}
             <div className="flex gap-2">
-              <button className="flex-1 py-2 bg-accent-primary/20 text-accent-primary text-sm rounded-lg">
+              <button
+                onClick={() => setAuthorFilter("all")}
+                className={`flex-1 py-2 text-sm rounded-lg ${
+                  authorFilter === "all"
+                    ? "bg-accent-primary/20 text-accent-primary"
+                    : "bg-bg-secondary text-text-secondary"
+                }`}
+              >
                 All Authors
               </button>
-              <button className="flex-1 py-2 bg-bg-secondary text-text-secondary text-sm rounded-lg flex items-center justify-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-500 flex items-center justify-center text-xs font-bold">JS</span>
+              <button
+                onClick={() => setAuthorFilter("james")}
+                className={`flex-1 py-2 text-sm rounded-lg flex items-center justify-center gap-2 ${
+                  authorFilter === "james"
+                    ? "bg-accent-primary/20 text-accent-primary"
+                    : "bg-bg-secondary text-text-secondary"
+                }`}
+              >
+                <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-500 flex items-center justify-center text-xs font-bold">
+                  JS
+                </span>
                 James
               </button>
-              <button className="flex-1 py-2 bg-bg-secondary text-text-secondary text-sm rounded-lg flex items-center justify-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center text-xs font-bold">AH</span>
+              <button
+                onClick={() => setAuthorFilter("adam")}
+                className={`flex-1 py-2 text-sm rounded-lg flex items-center justify-center gap-2 ${
+                  authorFilter === "adam"
+                    ? "bg-accent-primary/20 text-accent-primary"
+                    : "bg-bg-secondary text-text-secondary"
+                }`}
+              >
+                <span className="w-6 h-6 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center text-xs font-bold">
+                  AH
+                </span>
                 Adam
               </button>
             </div>
 
-            {/* Status Sections */}
-            <div>
-              <h3 className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-2">
-                Published ({CONTENT.filter(c => c.status === "published").length})
-              </h3>
-              <div className="bg-bg-secondary rounded-xl border border-border-default px-4">
-                {CONTENT.filter(c => c.status === "published").map(content => (
-                  <ContentRow key={content.slug} content={content} />
-                ))}
+            {/* In Progress */}
+            {inProgressBriefs.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-2">
+                  In Progress ({inProgressBriefs.length})
+                </h3>
+                <div className="bg-bg-secondary rounded-xl border border-border-default px-4">
+                  {inProgressBriefs.map((content) => (
+                    <ContentRow key={content._id} content={content} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <h3 className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-2">
-                Planned ({CONTENT.filter(c => c.status === "planned").length})
-              </h3>
-              <div className="bg-bg-secondary rounded-xl border border-border-default px-4">
-                {CONTENT.filter(c => c.status === "planned").map(content => (
-                  <ContentRow key={content.slug} content={content} />
-                ))}
+            {/* Published */}
+            {publishedBriefs.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-2">
+                  Published ({publishedBriefs.length})
+                </h3>
+                <div className="bg-bg-secondary rounded-xl border border-border-default px-4">
+                  {publishedBriefs.map((content) => (
+                    <ContentRow key={content._id} content={content} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Planned */}
+            {plannedBriefs.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-2">
+                  Planned ({plannedBriefs.length})
+                </h3>
+                <div className="bg-bg-secondary rounded-xl border border-border-default px-4">
+                  {plannedBriefs.map((content) => (
+                    <ContentRow key={content._id} content={content} />
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Quick Add */}
-            <button className="w-full py-3 bg-accent-primary text-black font-semibold rounded-xl">
+            <Link
+              href="/admin/content-strategy/new"
+              className="block w-full py-3 bg-accent-primary text-black font-semibold rounded-xl text-center"
+            >
               + Create New Article
-            </button>
+            </Link>
           </div>
         )}
       </main>

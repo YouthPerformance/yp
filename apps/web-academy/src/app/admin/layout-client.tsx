@@ -15,6 +15,7 @@ import { UserProvider } from "@/contexts/UserContext";
 const NAV_ITEMS = [
   { href: "/admin/campaigns", label: "Campaigns", icon: "📝" },
   { href: "/admin/content-review", label: "Content Review", icon: "📚" },
+  { href: "/admin/content-strategy", label: "SEO Strategy", icon: "📈" },
 ];
 
 interface AdminLayoutClientProps {

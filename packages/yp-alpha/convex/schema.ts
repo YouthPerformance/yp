@@ -796,4 +796,198 @@ export default defineSchema({
     .index("by_expert", ["expert"])
     .index("by_expert_type", ["expert", "exampleType"])
     .index("by_expert_category", ["expert", "category"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // SEO CONTENT STRATEGY
+  // Keyword tracking and article planning for James & Adam
+  // ═══════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────
+  // SEO KEYWORDS TABLE
+  // Track target keywords with Ahrefs metrics
+  // ─────────────────────────────────────────────────────────────
+  seo_keywords: defineTable({
+    // Keyword identity
+    keyword: v.string(),
+    pillar: v.string(), // "Speed Training", "Barefoot Training", etc.
+
+    // Ahrefs metrics
+    volume: v.number(), // Monthly search volume
+    difficulty: v.number(), // Keyword difficulty (0-100)
+    cpc: v.optional(v.number()), // Cost per click
+    clicks: v.optional(v.number()),
+
+    // Ranking data (updated periodically)
+    position: v.optional(v.number()), // Current SERP position (null = not ranking)
+    url: v.optional(v.string()), // Ranking URL
+    lastPositionUpdate: v.optional(v.number()),
+
+    // Trend tracking
+    trend: v.union(v.literal("up"), v.literal("down"), v.literal("stable")),
+    positionHistory: v.optional(
+      v.array(
+        v.object({
+          position: v.number(),
+          recordedAt: v.number(),
+        }),
+      ),
+    ),
+
+    // Categorization
+    priority: v.union(v.literal("high"), v.literal("medium"), v.literal("low")),
+    status: v.union(
+      v.literal("target"), // We want to rank for this
+      v.literal("ranking"), // Already ranking
+      v.literal("opportunity"), // Low KD, good volume
+      v.literal("monitoring"), // Just watching
+    ),
+
+    // Content mapping
+    assignedArticleId: v.optional(v.id("article_briefs")),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_keyword", ["keyword"])
+    .index("by_pillar", ["pillar"])
+    .index("by_status", ["status"])
+    .index("by_priority", ["priority"])
+    .index("by_volume", ["volume"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // ARTICLE BRIEFS TABLE
+  // Content planning and assignment for James & Adam
+  // ─────────────────────────────────────────────────────────────
+  article_briefs: defineTable({
+    // Identity
+    title: v.string(),
+    slug: v.string(),
+
+    // SEO targeting
+    targetKeyword: v.string(),
+    secondaryKeywords: v.optional(v.array(v.string())),
+    targetVolume: v.number(),
+
+    // Classification
+    pillar: v.string(), // "Speed Training", etc.
+    contentType: v.union(
+      v.literal("pillar"), // 2,500-4,000 words
+      v.literal("cluster"), // 1,200-2,000 words
+      v.literal("support"), // 800-1,200 words
+    ),
+
+    // Assignment
+    author: v.union(v.literal("james"), v.literal("adam")),
+
+    // Brief content
+    outline: v.optional(v.string()), // Markdown outline
+    keyTakeaways: v.optional(v.array(v.string())),
+    targetWordCount: v.optional(v.number()),
+    internalLinks: v.optional(v.array(v.string())), // Slugs to link to
+    competitorUrls: v.optional(v.array(v.string())), // Reference competitors
+
+    // Status workflow
+    status: v.union(
+      v.literal("planned"), // In the content calendar
+      v.literal("assigned"), // Assigned to author
+      v.literal("in_progress"), // Being written
+      v.literal("review"), // Awaiting review
+      v.literal("published"), // Live on site
+    ),
+
+    // Dates
+    dueDate: v.optional(v.number()),
+    publishedAt: v.optional(v.number()),
+    publishedUrl: v.optional(v.string()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_pillar", ["pillar"])
+    .index("by_author", ["author"])
+    .index("by_status", ["status"])
+    .index("by_author_status", ["author", "status"])
+    .index("by_target_keyword", ["targetKeyword"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // ARTICLE DRAFTS TABLE
+  // Voice-dictated content with section-based editing
+  // ─────────────────────────────────────────────────────────────
+  article_drafts: defineTable({
+    // Link to brief
+    briefId: v.id("article_briefs"),
+
+    // Author
+    author: v.union(v.literal("james"), v.literal("adam")),
+
+    // Content sections
+    sections: v.array(
+      v.object({
+        id: v.string(),
+        type: v.union(
+          v.literal("intro"),
+          v.literal("body"),
+          v.literal("drill"),
+          v.literal("faq"),
+          v.literal("cta"),
+        ),
+        title: v.string(),
+        content: v.string(), // Voice-dictated content
+        lastEditedAt: v.optional(v.number()),
+      }),
+    ),
+
+    // Voice metadata
+    voiceProvider: v.optional(
+      v.union(v.literal("groq"), v.literal("deepgram"), v.literal("browser")),
+    ),
+    totalVoiceMinutes: v.optional(v.number()),
+
+    // Progress
+    wordCount: v.number(),
+    completedSections: v.number(),
+    totalSections: v.number(),
+
+    // Auto-save tracking
+    lastSavedAt: v.number(),
+    isDirty: v.boolean(), // Has unsaved changes
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_brief", ["briefId"])
+    .index("by_author", ["author"])
+    .index("by_updated", ["updatedAt"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // CONTENT PILLARS TABLE
+  // High-level topic organization
+  // ─────────────────────────────────────────────────────────────
+  content_pillars: defineTable({
+    name: v.string(), // "Speed Training"
+    slug: v.string(), // "speed-training"
+    color: v.string(), // Hex color for UI
+
+    // Metrics (calculated)
+    articleCount: v.number(),
+    totalTraffic: v.optional(v.number()),
+    avgPosition: v.optional(v.number()),
+
+    // Primary keyword target
+    primaryKeyword: v.string(),
+    primaryKeywordVolume: v.number(),
+
+    // Status
+    isActive: v.boolean(),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_active", ["isActive"]),
 });
