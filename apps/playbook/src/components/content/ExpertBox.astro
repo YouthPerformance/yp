@@ -3,6 +3,11 @@
  * ExpertBox - Author attribution for E-E-A-T
  * Shows the expert's credentials prominently.
  *
+ * Wolf Pack Avatar Design:
+ * - 96px hero size with cyan glow
+ * - Spring physics on hover
+ * - Status ring with depth
+ *
  * Uses CSS variables from global.css - no theme prop needed.
  */
 interface Props {
@@ -11,6 +16,8 @@ interface Props {
   tagline?: string;
   credentials: string;
   badgeText?: string;
+  image?: string;
+  profileUrl?: string;
   class?: string;
 }
 
@@ -20,16 +27,44 @@ const {
   tagline,
   credentials,
   badgeText = "Expert Author",
+  image,
+  profileUrl,
   class: className = "",
 } = Astro.props;
 ---
 
 <div class={`expert-box ${className}`}>
-  <div class="expert-avatar flex items-center justify-center font-bebas text-display-md text-black flex-shrink-0">
-    {initials}
+  <!-- Wolf Pack Avatar -->
+  <div class="group relative flex items-center justify-center flex-shrink-0">
+    <!-- 1. THE GLOW (Wolf Cyan Ambient Light) -->
+    <div class="absolute -inset-1 rounded-full bg-[#00F6E0] opacity-20 blur-md transition-opacity duration-500 group-hover:opacity-50"></div>
+
+    <!-- 2. THE CONTAINER (Separation Ring) -->
+    <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-full bg-black p-[3px] ring-1 ring-white/10">
+      {image ? (
+        <!-- 3a. THE IMAGE (Object Cover) -->
+        <img
+          class="h-full w-full rounded-full object-cover transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105"
+          src={image}
+          alt={`${name} profile`}
+          loading="lazy"
+        />
+      ) : (
+        <!-- 3b. FALLBACK INITIALS -->
+        <div class="h-full w-full rounded-full flex items-center justify-center font-bebas text-display-md transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105" style="background-color: var(--accent-primary); color: var(--bg-primary);">
+          {initials}
+        </div>
+      )}
+    </div>
   </div>
-  <div class="flex-1">
-    <div class="font-bebas text-display-xs mb-0.5" style="color: var(--text-primary);">{name}</div>
+
+  <!-- Expert Info -->
+  <div class="flex-1 min-w-0">
+    {profileUrl ? (
+      <a href={profileUrl} class="font-bebas text-display-xs mb-0.5 hover:underline transition-colors" style="color: var(--text-primary);">{name}</a>
+    ) : (
+      <div class="font-bebas text-display-xs mb-0.5" style="color: var(--text-primary);">{name}</div>
+    )}
     {tagline && (
       <div class="font-mono text-label uppercase tracking-wide mb-0.5" style="color: var(--accent-primary);">
         {tagline}
@@ -37,6 +72,8 @@ const {
     )}
     <div class="text-body-sm leading-snug" style="color: var(--text-secondary);">{credentials}</div>
   </div>
+
+  <!-- Badge -->
   <span class="expert-badge">
     {badgeText}
   </span>

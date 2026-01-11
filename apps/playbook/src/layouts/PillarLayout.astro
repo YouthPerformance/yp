@@ -29,6 +29,8 @@ interface Props {
     initials: string;
     tagline?: string;
     credentials: string[];
+    image?: string;
+    profileUrl?: string;
     socialLinks?: {
       instagram?: string;
       twitter?: string;
@@ -136,6 +138,8 @@ const sameAs = [
         initials={authorData.initials}
         tagline={authorData.tagline}
         credentials={credentialsStr}
+        image={authorData.image}
+        profileUrl={authorData.profileUrl}
       />
     </div>
   </header>

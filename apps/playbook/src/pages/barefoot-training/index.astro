@@ -1,19 +1,28 @@
 ---
+import PillarLayout from "@/layouts/PillarLayout.astro";
+import SectionHeader from "@/components/content/SectionHeader.astro";
+import CoachVoice from "@/components/content/CoachVoice.astro";
+import SafetyBox from "@/components/content/SafetyBox.astro";
+import DrillCard from "@/components/content/DrillCard.astro";
+import FAQSection from "@/components/content/FAQSection.astro";
+import CTABlock from "@/components/content/CTABlock.astro";
+import RelatedGrid from "@/components/content/RelatedGrid.astro";
+
 // Frontmatter
 const frontmatter = {
-  title: "Barefoot Training: The Complete Guide to Stronger, Faster Feet (Barefoot Reset™)",
+  title: "Barefoot Training: The Complete Guide to Stronger, Faster Feet (The R3 Method™)",
   description:
-    "Science-backed barefoot training guide for athletes. Build foot strength, balance, and performance. Safe progressions for youth athletes by movement specialist James Scott.",
+    "Science-backed barefoot training guide using the R3 Method—Release, Restore, Re-Engineer. Build foot strength, balance, and performance. Safe progressions for youth athletes by movement specialist James Scott.",
   author: "james-scott",
   publishedDate: new Date("2025-12-19"),
-  updatedDate: new Date("2026-01-07"),
+  updatedDate: new Date("2026-01-09"),
   readTime: "18 min read",
   directAnswer:
-    "<strong>Barefoot training builds foot strength, balance, and proprioception that translate directly to athletic performance.</strong> Start gradually on soft surfaces for 5–10 minutes, 2–3 times per week. Focus on intrinsic foot muscle activation before adding load or intensity. For youth athletes, it's safe when progressive—and it builds the foundation for quicker feet, better landings, and fewer ankle injuries.",
+    "<strong>Barefoot training builds foot strength, balance, and proprioception using the R3 Method: Release restrictions, Restore capacity, Re-Engineer for performance.</strong> Start with the Release phase—gentle mobility on soft surfaces for 5–10 minutes, 2–3 times per week. Progress to Restore (strength) and Re-Engineer (power). For youth athletes, it's safe when progressive—and it builds the foundation for quicker feet, better landings, and fewer ankle injuries.",
   keyTakeaways: [
     "Your feet have 26 bones, 33 joints, and 100+ muscles—they need training too",
-    "Start on grass, carpet, or rubber flooring before harder surfaces",
-    "5–10 minutes of barefoot work, 2–3x per week, creates measurable change",
+    "The R3 Method: Release → Restore → Re-Engineer (never skip phases)",
+    "Start with Release: 5–10 minutes of mobility work, 2–3x per week",
     "Improved balance and foot awareness in 2–3 weeks; strength gains in 4–6 weeks",
     "Safe for kids when done progressively—stop if there's pain",
   ],
@@ -21,13 +30,14 @@ const frontmatter = {
   keywords: [
     "barefoot training",
     "foot strengthening exercises",
-    "barefoot workout",
+    "R3 method",
     "foot exercises for athletes",
     "barefoot reset",
+    "release restore re-engineer",
   ],
   canonical: "https://playbook.youthperformance.com/barefoot-training/",
   theme: "barefoot" as const,
-  programBadge: "Barefoot Reset™ Program",
+  programBadge: "R3 Method™ Program",
 };
 
 // Author data
@@ -35,6 +45,8 @@ const authorData = {
   name: "James Scott",
   initials: "JS",
   tagline: "Weak Feet Don't Eat",
+  image: "/docs/james/jamessideprofile.png",
+  profileUrl: "https://theplaybook.co/james",
   credentials: [
     "Movement Specialist & Foot Performance Coach",
     "Creator of Weak Feet Don't Eat",
@@ -54,9 +66,9 @@ const toc = [
   { id: "what-is", label: "What Is Barefoot Training?" },
   { id: "benefits", label: "Benefits of Barefoot Training" },
   { id: "safety", label: "Safety & When NOT to Train Barefoot" },
-  { id: "framework", label: "The Barefoot Reset Framework" },
+  { id: "r3-method", label: "The R3 Method Framework" },
   { id: "drills", label: "Core Barefoot Drills" },
-  { id: "30-day", label: "30-Day Barefoot Reset Plan" },
+  { id: "42-day", label: "42-Day R3 Protocol" },
   { id: "youth", label: "Barefoot Training for Youth Athletes" },
   { id: "faq", label: "Frequently Asked Questions" },
 ];
@@ -66,32 +78,43 @@ const faqs = [
   {
     question: "Is barefoot training safe for kids?",
     answer:
-      "Yes, when done progressively and on appropriate surfaces. Start with short sessions (5–10 minutes), avoid hard concrete initially, and stop immediately if there's any pain. Children's feet are naturally adaptable—barefoot training helps build the strength and sensory awareness they need for athletic performance.",
+      "Yes, when done progressively and on appropriate surfaces. Start with the Release phase—short sessions (5–10 minutes), avoid hard concrete initially, and stop immediately if there's any pain. Children's feet are naturally adaptable—barefoot training helps build the strength and sensory awareness they need for athletic performance.",
+  },
+  {
+    question: "What is the R3 Method?",
+    answer:
+      "The R3 Method is a 3-phase progression: Release (restore range of motion), Restore (build strength and capacity), and Re-Engineer (explosive power and sport transfer). It's the same sequence James Scott uses with NBA and NFL athletes. Never skip phases—each one builds on the previous.",
   },
   {
     question: "How long does it take to see results from barefoot training?",
     answer:
-      "Most people notice improved balance and foot awareness within 2–3 weeks of consistent practice. Measurable strength gains typically appear around 4–6 weeks. Full adaptation to barefoot or minimalist training takes 3–6 months of progressive work.",
+      "Most people notice improved balance and foot awareness within 2–3 weeks (end of Release phase). Measurable strength gains typically appear around 4–6 weeks (Restore phase). Full adaptation with explosive power takes 6–8 weeks (Re-Engineer phase) of progressive work.",
   },
   {
     question: "What surfaces are best for barefoot training?",
     answer:
-      "Start on forgiving surfaces: grass, rubber gym flooring, carpet, or foam mats. These allow your feet to adapt without excessive stress. Gradually progress to harder surfaces as foot strength improves. Avoid starting on concrete or asphalt.",
+      "Start on forgiving surfaces: grass, rubber gym flooring, carpet, or foam mats. These allow your feet to adapt without excessive stress. Gradually progress to harder surfaces as foot strength improves during the Restore phase. Avoid starting on concrete or asphalt.",
   },
   {
     question: "Can barefoot training help with basketball performance?",
     answer:
-      "Absolutely. Stronger feet improve first-step quickness, change of direction, balance on drives, and landing stability. Many NBA players incorporate barefoot work into their training. It's foundational for any sport requiring quick footwork.",
+      "Absolutely. The Re-Engineer phase specifically targets first-step quickness, change of direction, balance on drives, and landing stability. Many NBA players incorporate barefoot work into their training. It's foundational for any sport requiring quick footwork.",
   },
   {
     question: "How often should I do barefoot training exercises?",
     answer:
-      "Start with 2–3 sessions per week, 10–15 minutes each. As your feet adapt, you can increase to 4–5 sessions or integrate barefoot drills into your regular warm-up. Consistency matters more than duration.",
+      "During Release phase: 2–3 sessions per week, 5–10 minutes each. During Restore: 3–4 sessions, 10–15 minutes. During Re-Engineer: 4 sessions integrated into your regular training. Consistency matters more than duration—follow the R3 progression.",
   },
 ];
 
 // Related content
 const relatedItems = [
+  {
+    title: "Bulletproof Ankles Protocol",
+    description: "Pro stability routine for steel ankles",
+    url: "https://academy.youthperformance.com/demo/bulletproof-ankles",
+    icon: "⚡",
+  },
   {
     title: "Barefoot Training for Youth",
     description: "Safe progressions by age",
@@ -138,7 +161,7 @@ const relatedItems = [
   <p>Your feet are your foundation. They contain 26 bones, 33 joints, and over 100 muscles, tendons, and ligaments. Most of us spend our lives in supportive shoes that do the work our feet should be doing. Over time, this leads to weak, underdeveloped feet that can't support athletic demands.</p>
 
   <CoachVoice author="james">
-    Weak feet don't eat. That's not just a saying—it's biomechanics. If your feet can't stabilize, absorb, and produce force, you're leaking power at every step. Training your feet is training your entire kinetic chain.
+    Weak feet don't eat. That's not just a saying—it's biomechanics. If your feet can't stabilize, absorb, and produce force, you're leaking power at every step. That's why I developed the R3 Method: Release, Restore, Re-Engineer. It's the same sequence I use with Jimmy Butler, Josh Oliver, and every pro I work with.
   </CoachVoice>
 
   <p><strong>Barefoot training is NOT:</strong></p>
@@ -215,30 +238,45 @@ const relatedItems = [
 
   <p>For most healthy athletes, barefoot training is safe when you follow progressive overload principles: start easy, add duration and intensity gradually, and listen to your body.</p>
 
-  <!-- Chapter 4: Framework -->
+  <!-- Bulletproof Ankles Ad Spot -->
+  <div class="my-8 p-6 bg-gradient-to-r from-[#00f6e0]/10 to-[#00f6e0]/5 border border-[#00f6e0]/30 rounded-xl">
+    <div class="flex items-start gap-4">
+      <div class="text-3xl">⚡</div>
+      <div>
+        <h4 class="font-display font-semibold text-lg mb-2">Got Weak Ankles?</h4>
+        <p class="text-bark-soft mb-3">The <strong>Bulletproof Ankles Protocol</strong> is the exact stability routine I use with NBA athletes to eliminate ankle sprains and build reactive stability. It's the Restore phase on steroids.</p>
+        <a href="https://academy.youthperformance.com/demo/bulletproof-ankles" class="inline-flex items-center gap-2 px-4 py-2 bg-[#00f6e0] text-black font-semibold rounded-lg hover:bg-[#00f6e0]/90 transition-colors">
+          Get the Protocol →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 4: The R3 Method Framework -->
   <SectionHeader
-    id="framework"
+    id="r3-method"
     chapter="Chapter IV"
-    title="The Barefoot Reset Framework"
+    title="The R3 Method Framework"
   />
 
-  <p>The Barefoot Reset is a 3-stage system for building foot strength safely:</p>
+  <p>The R3 Method is my proprietary 3-phase system for building bulletproof feet. <strong>Release, Restore, Re-Engineer.</strong> That's the sequence. Skip a phase and you're building power on a broken foundation.</p>
 
-  <!-- Stage Cards -->
+  <!-- R3 Stage Cards -->
   <div class="space-y-4 my-6">
     <div class="bg-white rounded-lg shadow-card overflow-hidden border border-black/5">
       <div class="flex items-center gap-4 px-5 py-4 bg-earth-dark border-b border-black/5">
-        <div class="w-12 h-12 bg-moss text-white rounded-full flex items-center justify-center font-mono font-bold text-sm">01</div>
+        <div class="w-12 h-12 bg-[#00f6e0] text-black rounded-full flex items-center justify-center font-mono font-bold text-sm">R1</div>
         <div>
-          <h3 class="font-display font-semibold text-lg mb-0.5">Wake Up</h3>
-          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Week 1–2 • 5–10 min/session</div>
+          <h3 class="font-display font-semibold text-lg mb-0.5">RELEASE</h3>
+          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Weeks 1–2 • 5–10 min/session</div>
         </div>
       </div>
       <div class="p-5">
-        <p class="text-bark-soft mb-4">Activate the intrinsic muscles of the foot. Build awareness. No loading yet.</p>
+        <p class="text-bark-soft mb-4"><strong>Goal: Restore range of motion and eliminate pain.</strong> Your feet have been in restrictive shoes for years. Before we strengthen, we need to undo the damage. This phase wakes up dormant muscles and releases restrictions.</p>
         <ul class="ml-5 space-y-1">
           <li>Toe yoga (lift big toe, keep others down, then reverse)</li>
-          <li>Short foot exercise (arch activation without curling toes)</li>
+          <li>Short foot drill (arch activation without curling toes)</li>
+          <li>Ankle circles and mobility work</li>
           <li>Single-leg balance on soft surface</li>
         </ul>
       </div>
@@ -246,14 +284,14 @@ const relatedItems = [
 
     <div class="bg-white rounded-lg shadow-card overflow-hidden border border-black/5">
       <div class="flex items-center gap-4 px-5 py-4 bg-earth-dark border-b border-black/5">
-        <div class="w-12 h-12 bg-moss text-white rounded-full flex items-center justify-center font-mono font-bold text-sm">02</div>
+        <div class="w-12 h-12 bg-[#fbbf24] text-black rounded-full flex items-center justify-center font-mono font-bold text-sm">R2</div>
         <div>
-          <h3 class="font-display font-semibold text-lg mb-0.5">Strengthen</h3>
-          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Week 3–6 • 10–15 min/session</div>
+          <h3 class="font-display font-semibold text-lg mb-0.5">RESTORE</h3>
+          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Weeks 3–4 • 10–15 min/session</div>
         </div>
       </div>
       <div class="p-5">
-        <p class="text-bark-soft mb-4">Add resistance and challenge. Build capacity in the foot muscles.</p>
+        <p class="text-bark-soft mb-4"><strong>Goal: Build structural integrity and load capacity.</strong> This is where you develop "steel ankles"—the ability to handle force without breaking down. We add resistance and challenge the muscles you just woke up.</p>
         <ul class="ml-5 space-y-1">
           <li>Towel scrunches (pull towel toward you with toes)</li>
           <li>Marble pickups (lift small objects with toes)</li>
@@ -265,19 +303,19 @@ const relatedItems = [
 
     <div class="bg-white rounded-lg shadow-card overflow-hidden border border-black/5">
       <div class="flex items-center gap-4 px-5 py-4 bg-earth-dark border-b border-black/5">
-        <div class="w-12 h-12 bg-moss text-white rounded-full flex items-center justify-center font-mono font-bold text-sm">03</div>
+        <div class="w-12 h-12 bg-[#f87171] text-black rounded-full flex items-center justify-center font-mono font-bold text-sm">R3</div>
         <div>
-          <h3 class="font-display font-semibold text-lg mb-0.5">Integrate</h3>
-          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Week 7+ • Part of regular training</div>
+          <h3 class="font-display font-semibold text-lg mb-0.5">RE-ENGINEER</h3>
+          <div class="font-mono text-[0.7rem] text-bark-muted uppercase">Weeks 5–6 • Part of regular training</div>
         </div>
       </div>
       <div class="p-5">
-        <p class="text-bark-soft mb-4">Apply foot strength to sport-specific movements. Build resilience.</p>
+        <p class="text-bark-soft mb-4"><strong>Goal: Explosive power and sport transfer.</strong> Now we take your rebuilt foundation and make it perform. This is where first-step quickness and reactive stability come together.</p>
         <ul class="ml-5 space-y-1">
           <li>Barefoot jump landings (soft surface)</li>
           <li>Lateral shuffle and cut patterns</li>
           <li>Sport-specific footwork drills</li>
-          <li>Gradual transition to minimalist footwear</li>
+          <li>Reactive balance challenges</li>
         </ul>
       </div>
     </div>
@@ -358,54 +396,66 @@ const relatedItems = [
     difficulty="Scalable"
   />
 
-  <!-- Chapter 6: 30-Day Plan -->
+  <!-- Chapter 6: 42-Day R3 Protocol -->
   <SectionHeader
-    id="30-day"
+    id="42-day"
     chapter="Chapter VI"
-    title="30-Day Barefoot Reset Plan"
+    title="42-Day R3 Protocol"
   />
 
-  <p>Here's a simple 4-week progression to get started:</p>
+  <p>Here's the complete 6-week R3 progression. This is the same sequence I use with pro athletes—adapted for youth development:</p>
 
   <table class="content-table">
     <thead>
       <tr>
         <th>Week</th>
-        <th>Focus</th>
+        <th>Phase</th>
         <th>Drills</th>
         <th>Duration</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 1</span></td>
-        <td>Wake Up</td>
-        <td>Short foot, Toe yoga, Seated balance</td>
+        <td><span class="inline-block px-2 py-0.5 bg-[#00f6e0] text-black rounded-sm font-mono text-[0.65rem] font-medium">Week 1</span></td>
+        <td>RELEASE</td>
+        <td>Short foot, Toe yoga, Ankle circles</td>
         <td>5–8 min, 3x/week</td>
       </tr>
       <tr>
-        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 2</span></td>
-        <td>Awareness</td>
-        <td>Add single-leg balance (eyes open), marble pickups</td>
+        <td><span class="inline-block px-2 py-0.5 bg-[#00f6e0] text-black rounded-sm font-mono text-[0.65rem] font-medium">Week 2</span></td>
+        <td>RELEASE</td>
+        <td>Add single-leg balance (eyes open), mobility work</td>
         <td>8–10 min, 3x/week</td>
       </tr>
       <tr>
-        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 3</span></td>
-        <td>Strengthen</td>
-        <td>Towel scrunches, barefoot calf raises, unstable balance</td>
+        <td><span class="inline-block px-2 py-0.5 bg-[#fbbf24] text-black rounded-sm font-mono text-[0.65rem] font-medium">Week 3</span></td>
+        <td>RESTORE</td>
+        <td>Towel scrunches, marble pickups, barefoot calf raises</td>
         <td>10–12 min, 3–4x/week</td>
       </tr>
       <tr>
-        <td><span class="inline-block px-2 py-0.5 bg-copper text-white rounded-sm font-mono text-[0.65rem] font-medium">Week 4</span></td>
-        <td>Integrate</td>
+        <td><span class="inline-block px-2 py-0.5 bg-[#fbbf24] text-black rounded-sm font-mono text-[0.65rem] font-medium">Week 4</span></td>
+        <td>RESTORE</td>
+        <td>Unstable balance, single-leg calf raises, loaded holds</td>
+        <td>10–12 min, 3–4x/week</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-[#f87171] text-black rounded-sm font-mono text-[0.65rem] font-medium">Week 5</span></td>
+        <td>RE-ENGINEER</td>
         <td>Barefoot lateral shuffles, jump landings, sport footwork</td>
-        <td>10–15 min, 4x/week</td>
+        <td>12–15 min, 4x/week</td>
+      </tr>
+      <tr>
+        <td><span class="inline-block px-2 py-0.5 bg-[#f87171] text-black rounded-sm font-mono text-[0.65rem] font-medium">Week 6</span></td>
+        <td>RE-ENGINEER</td>
+        <td>Reactive balance, plyometric integration, sport-specific transfer</td>
+        <td>12–15 min, 4x/week</td>
       </tr>
     </tbody>
   </table>
 
   <CoachVoice author="james">
-    Don't skip weeks. Your feet have been in shoes for years—they need time to adapt. Rush it and you get injured. Follow the progression and you'll have feet that perform, not just feet that exist.
+    Don't skip the Release phase. Your nervous system needs time to rebuild those pathways. Two weeks of Release and you'll feel muscles you didn't know existed. Then we Restore. Most people skip straight to Re-Engineer—that's why they fail. Follow the R3 sequence and you'll have feet that perform, not just feet that exist.
   </CoachVoice>
 
   <!-- Chapter 7: Youth Athletes -->
@@ -453,9 +503,9 @@ const relatedItems = [
   />
 
   <CTABlock
-    title="Start the Barefoot Reset Today"
-    description="Get the complete 30-Day Barefoot Reset program in the Playbook app. Video demos, daily schedules, and progress tracking."
-    buttonText="Get the Program"
+    title="Start the R3 Method Today"
+    description="Get the complete 42-Day R3 Protocol in the Academy app. Video demos for every drill, daily schedules, and progress tracking. Release, Restore, Re-Engineer."
+    buttonText="Start the R3 Protocol"
     buttonUrl="https://academy.youthperformance.com/programs/barefoot-reset"
   />
 

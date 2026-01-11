@@ -5,6 +5,7 @@
 
 import { auth } from "@yp/alpha/auth";
 import { cookies, headers } from "next/headers";
+import { shouldBypassAuthAsync, DEV_USER } from "./dev-bypass-server";
 
 // ---------------------------------------------------------------
 // GET SESSION FROM COOKIES
@@ -23,8 +24,20 @@ interface Session {
 /**
  * Get the current session from cookies
  * Returns null if not authenticated
+ * DEV: Returns mock session when DEV_MODE=true or yp-bypass cookie is set
  */
 export async function getServerSession(): Promise<Session | null> {
+  // Check for dev bypass (Layer A + C)
+  if (await shouldBypassAuthAsync()) {
+    return {
+      user: {
+        id: DEV_USER.id,
+        email: DEV_USER.email,
+        name: DEV_USER.name,
+      },
+    };
+  }
+
   try {
     // Get headers to pass to BetterAuth for session validation
     const headersList = await headers();
@@ -65,16 +78,34 @@ export async function getServerSession(): Promise<Session | null> {
 /**
  * Get the authenticated user ID
  * Returns null if not authenticated
+ * DEV: Returns mock user ID when bypass is active
  */
 export async function getAuthUserId(): Promise<string | null> {
+  // Check for dev bypass (Layer A + C)
+  if (await shouldBypassAuthAsync()) {
+    return DEV_USER.id;
+  }
+
   const session = await getServerSession();
   return session?.user?.id ?? null;
 }
 
 /**
  * Require authentication - throws if not authenticated
+ * DEV: Returns mock session when bypass is active
  */
 export async function requireAuth(): Promise<Session> {
+  // Check for dev bypass (Layer A + C)
+  if (await shouldBypassAuthAsync()) {
+    return {
+      user: {
+        id: DEV_USER.id,
+        email: DEV_USER.email,
+        name: DEV_USER.name,
+      },
+    };
+  }
+
   const session = await getServerSession();
 
   if (!session) {

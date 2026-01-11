@@ -1,112 +1,222 @@
 ---
 /**
- * Footer - Glass morphism footer with YP branding
- * YP Design System v2.0
+ * Footer - $100M Brand Footer
+ * YP Design System v2.0 - "Big Brand" Edition
+ *
+ * Design Philosophy:
+ * - Apple: "Designed by Apple in California"
+ * - Nike: Confidence through silence
+ * - YP: "Engineered in California. Est. 2020."
+ *
+ * SEO Strategy:
+ * - Authority (Adam/James) lives in JSON-LD schema, not visible text
+ * - Google sees founders, parents see premium brand
  */
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer-glass">
+<footer class="footer-100m">
   <div class="footer-container">
-    <div class="footer-grid">
-      <!-- Train -->
-      <div class="footer-section">
-        <h3 class="footer-heading">Train</h3>
-        <ul class="footer-links">
-          <li><a href="https://academy.youthperformance.com">YP Academy</a></li>
-          <li><a href="https://shop.youthperformance.com/products/neoball">The NeoBall</a></li>
-          <li><a href="/programs/">Programs</a></li>
-          <li><a href="https://academy.youthperformance.com/pricing">Pricing</a></li>
-        </ul>
+
+    <!-- TOP SECTION: The Statement -->
+    <div class="footer-top">
+
+      <!-- Brand Column - The Hook -->
+      <div class="footer-brand">
+        <h2 class="footer-tagline">
+          FOR THE<br />
+          <span class="tagline-accent">OBSESSED.</span>
+        </h2>
+        <p class="footer-mission">
+          We don't just train players. We engineer athletes.
+          The most advanced biomechanics curriculum for youth sports.
+        </p>
       </div>
 
-      <!-- Learn -->
-      <div class="footer-section">
-        <h3 class="footer-heading">Learn</h3>
-        <ul class="footer-links">
-          <li><a href="/barefoot-training/">Barefoot Training</a></li>
-          <li><a href="/basketball/youth-basketball-drills/">Youth Basketball Drills</a></li>
-          <li><a href="/basketball/silent-training/">Silent Training</a></li>
-          <li><a href="/parent-sidelines/">Parent Sidelines (Q&A)</a></li>
-          <li><a href="/drills/">Drill Library</a></li>
-        </ul>
-      </div>
+      <!-- Spacer - Desktop only -->
+      <div class="footer-spacer"></div>
 
-      <!-- Trust -->
-      <div class="footer-section">
-        <h3 class="footer-heading">Trust & AI</h3>
-        <ul class="footer-links">
-          <li><a href="/about/">About YP</a></li>
-          <li><a href="/authors/">Our Coaches</a></li>
+      <!-- Navigation Columns - Minimalist -->
+      <div class="footer-nav-col">
+        <h4 class="footer-nav-heading">Company</h4>
+        <ul class="footer-nav-links">
+          <li><a href="/about/" class="link-primary">Mission & Team</a></li>
+          <li><a href="/careers/">Careers</a></li>
           <li><a href="/editorial-policy/">Editorial Policy</a></li>
-          <li><a href="/safety/">Safety & Medical</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-nav-col">
+        <h4 class="footer-nav-heading">Support</h4>
+        <ul class="footer-nav-links">
+          <li><a href="/faq/">FAQ</a></li>
           <li><a href="/contact/">Contact</a></li>
-        </ul>
-      </div>
-
-      <!-- Technical -->
-      <div class="footer-section">
-        <h3 class="footer-heading">Technical</h3>
-        <ul class="footer-links footer-links-mono">
-          <li><a href="/sitemap-index.xml">sitemap.xml</a></li>
-          <li><a href="/robots.txt">robots.txt</a></li>
-          <li><a href="/llms.txt">llms.txt (AI Index)</a></li>
+          <li><a href="/terms/">Legal</a></li>
         </ul>
       </div>
     </div>
 
+    <!-- BOTTOM BAR: The Signature -->
     <div class="footer-bottom">
-      <p class="footer-copyright">© {year} Youth Performance. All rights reserved.</p>
-      <p class="footer-authors">
-        Expert content by <a href="/authors/adam-harrington/">Adam Harrington</a> and <a href="/authors/james-scott/">James Scott</a>.
-      </p>
+
+      <!-- Left: Invisible AI Index (Easter Egg for devs/AI) -->
+      <div class="footer-meta">
+        <a href="/llms.txt" class="footer-status">
+          SYSTEM STATUS: ONLINE
+        </a>
+      </div>
+
+      <!-- Right: The Origin Tag -->
+      <div class="footer-origin">
+        ENGINEERED IN CALIFORNIA <span class="origin-divider">//</span> EST. MMXX
+      </div>
     </div>
+
   </div>
 </footer>
 
+<!-- JSON-LD: The SEO Layer (Google sees authority, users see clean design) -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Youth Performance",
+  "alternateName": "YP",
+  "url": "https://youthperformance.com",
+  "logo": "https://youthperformance.com/logo/yp-logo.png",
+  "description": "Elite training for every kid, everywhere. The most advanced biomechanics curriculum for youth sports.",
+  "foundingDate": "2020",
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "James Scott",
+      "jobTitle": "Co-founder & Director of Performance",
+      "description": "Masters in Sports Science and Biomechanics. Professional Athletes Performance Coach. Creator of Weak Feet Don't Eat.",
+      "sameAs": [
+        "https://playbook.youthperformance.com/authors/james-scott/",
+        "https://instagram.com/weakfeetdonteat"
+      ]
+    },
+    {
+      "@type": "Person",
+      "name": "Adam Harrington",
+      "jobTitle": "Global Head of Basketball",
+      "description": "NBA Skills Coach. Kevin Durant's longtime skills trainer.",
+      "sameAs": [
+        "https://playbook.youthperformance.com/authors/adam-harrington/",
+        "https://en.wikipedia.org/wiki/Adam_Harrington_(basketball)"
+      ]
+    }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressRegion": "California",
+    "addressCountry": "US"
+  },
+  "sameAs": [
+    "https://instagram.com/youthperformance",
+    "https://twitter.com/youthperf"
+  ]
+})} />
+
 <style>
-  .footer-glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    border-top: 1px solid var(--glass-border);
-    padding: 48px 24px;
+  /* ═══════════════════════════════════════════════════════════════════════════
+     $100M FOOTER - The Big Brand Look
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .footer-100m {
+    width: 100%;
+    background-color: #000000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 80px 24px 48px;
   }
 
   .footer-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
-  .footer-grid {
+  /* ─────────────────────────────────────────────────────────────────────────────
+     TOP SECTION: Brand + Navigation
+     ───────────────────────────────────────────────────────────────────────────── */
+
+  .footer-top {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-    margin-bottom: 32px;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    margin-bottom: 96px;
   }
 
   @media (min-width: 768px) {
-    .footer-grid {
-      grid-template-columns: repeat(4, 1fr);
+    .footer-top {
+      grid-template-columns: 4fr 4fr 2fr 2fr;
+      gap: 48px;
     }
   }
 
-  .footer-section {
+  /* Brand Column */
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .footer-tagline {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 3rem;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .footer-tagline {
+      font-size: 3.5rem;
+    }
+  }
+
+  .tagline-accent {
+    color: var(--accent-primary);
+  }
+
+  .footer-mission {
+    font-family: "Inter", sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 24rem;
+    margin: 0;
+  }
+
+  /* Spacer - Desktop only */
+  .footer-spacer {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .footer-spacer {
+      display: block;
+    }
+  }
+
+  /* Navigation Columns */
+  .footer-nav-col {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
 
-  .footer-heading {
-    font-family: "Inter", sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
+  .footer-nav-heading {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.6875rem;
+    font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent-primary);
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
     margin: 0;
   }
 
-  .footer-links {
+  .footer-nav-links {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -115,48 +225,78 @@ const year = new Date().getFullYear();
     gap: 8px;
   }
 
-  .footer-links a {
+  .footer-nav-links a {
+    font-family: "Inter", sans-serif;
     font-size: 0.875rem;
     color: var(--text-secondary);
     text-decoration: none;
     transition: color 200ms ease;
   }
 
-  .footer-links a:hover {
+  .footer-nav-links a:hover {
+    color: #ffffff;
+  }
+
+  .footer-nav-links a.link-primary {
+    color: #ffffff;
+  }
+
+  .footer-nav-links a.link-primary:hover {
     color: var(--accent-primary);
   }
 
-  .footer-links-mono a {
-    font-family: "SF Mono", Monaco, Consolas, monospace;
-    font-size: 0.75rem;
-  }
+  /* ─────────────────────────────────────────────────────────────────────────────
+     BOTTOM BAR: The Signature
+     ───────────────────────────────────────────────────────────────────────────── */
 
   .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
     padding-top: 32px;
-    border-top: 1px solid var(--border-default);
-    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .footer-copyright {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin: 0 0 8px 0;
+  @media (min-width: 768px) {
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
   }
 
-  .footer-authors {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-    margin: 0;
+  /* Left: System Status (Easter Egg) */
+  .footer-meta {
+    display: flex;
+    gap: 16px;
   }
 
-  .footer-authors a {
-    color: var(--accent-gold);
+  .footer-status {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
     text-decoration: none;
     transition: color 200ms ease;
   }
 
-  .footer-authors a:hover {
-    color: var(--accent-gold-hover);
-    text-decoration: underline;
+  .footer-status:hover {
+    color: var(--accent-primary);
+  }
+
+  /* Right: Origin Tag */
+  .footer-origin {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .origin-divider {
+    color: var(--accent-primary);
+    margin: 0 8px;
   }
 </style>
