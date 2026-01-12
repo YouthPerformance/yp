@@ -1,68 +1,55 @@
 // ===================================================================
 // WOLF PACK AUTH CLIENT
-// BetterAuth integration for web-academy
+// Stubbed for local development without better-auth
 // ===================================================================
 
 "use client";
 
-import { emailOTPClient } from "better-auth/client/plugins";
-import { createAuthClient } from "better-auth/react";
-
 // ---------------------------------------------------------------
-// AUTH CLIENT
+// STUB AUTH CLIENT (for testing without better-auth)
 // ---------------------------------------------------------------
 
-export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3003",
-  plugins: [emailOTPClient()],
-});
+export const authClient = {
+  signIn: {
+    social: async (_opts: { provider: string; callbackURL: string }) => {
+      console.log("Auth stub: signIn.social called");
+      return { error: null };
+    },
+  },
+  signUp: async () => ({ error: null }),
+  signOut: async () => ({ error: null }),
+  useSession: () => ({ data: null, isPending: false }),
+};
+
+export const signIn = authClient.signIn;
+export const signUp = authClient.signUp;
+export const signOut = authClient.signOut;
+export const useSession = authClient.useSession;
 
 // ---------------------------------------------------------------
-// CONVENIENCE EXPORTS
+// OTP HELPERS (stubs)
 // ---------------------------------------------------------------
 
-export const { signIn, signUp, signOut, useSession } = authClient;
-
-// ---------------------------------------------------------------
-// OTP HELPERS
-// ---------------------------------------------------------------
-
-/**
- * Send OTP to email - triggers email via server
- */
-export async function sendOTP(email: string) {
-  const client = authClient as unknown as {
-    emailOtp?: {
-      sendVerificationOtp?: (opts: { email: string; type: string }) => Promise<unknown>;
-    };
-  };
-  return client.emailOtp?.sendVerificationOtp?.({ email, type: "sign-in" });
+export async function sendOTP(_email: string) {
+  console.log("Auth stub: sendOTP called");
+  return { error: null };
 }
 
-/**
- * Verify OTP and sign in
- */
-export async function verifyOTP(email: string, otp: string) {
-  const client = authClient as unknown as {
-    signIn: { emailOtp?: (opts: { email: string; otp: string }) => Promise<unknown> };
-  };
-  return client.signIn.emailOtp?.({ email, otp });
+export async function verifyOTP(_email: string, _otp: string) {
+  console.log("Auth stub: verifyOTP called");
+  return { error: null };
 }
 
 // ---------------------------------------------------------------
-// SOCIAL AUTH
+// SOCIAL AUTH (stubs)
 // ---------------------------------------------------------------
 
-export async function signInWithGoogle(callbackURL = "/home") {
-  return authClient.signIn.social({
-    provider: "google",
-    callbackURL,
-  });
+export async function signInWithGoogle(_callbackURL = "/home") {
+  console.log("Auth stub: signInWithGoogle called");
+  return { error: null };
 }
 
-export async function signInWithApple(callbackURL = "/home") {
-  return authClient.signIn.social({
-    provider: "apple",
-    callbackURL,
-  });
+export async function signInWithApple(_callbackURL = "/home") {
+  console.log("Auth stub: signInWithApple called");
+  return { error: null };
 }
