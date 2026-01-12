@@ -1,10 +1,23 @@
 "use client";
 
-import { ConversionCTA, DualTrack, Hero, Navigation, Origin, Receipts } from "./components";
+import {
+  ConversionCTA,
+  DualTrack,
+  Family,
+  Hero,
+  JourneyTimeline,
+  Navigation,
+  Origin,
+  Receipts,
+  VenturesGrid,
+} from "./components";
+import { WolfModeProvider } from "./providers/WolfModeProvider";
+import { WolfModeToggle } from "./components/WolfModeToggle";
+import { AskAdamWidget } from "./components/AskAdamWidget";
 
 export default function AdamPage() {
   return (
-    <>
+    <WolfModeProvider>
       {/* Fixed Navigation */}
       <Navigation />
 
@@ -18,12 +31,25 @@ export default function AdamPage() {
         {/* Section C: Dual-Track Value Props */}
         <DualTrack />
 
-        {/* Section D: The Receipts - Social Proof */}
+        {/* Section D: The Journey - Career Timeline */}
+        <JourneyTimeline />
+
+        {/* Section E: The Receipts - Social Proof */}
         <Receipts />
 
-        {/* Section E: Conversion CTA */}
+        {/* Section F: Current Ventures */}
+        <VenturesGrid />
+
+        {/* Section G: Family - Humanization */}
+        <Family />
+
+        {/* Section H: Conversion CTA */}
         <ConversionCTA />
       </main>
-    </>
+
+      {/* v3 Features */}
+      <WolfModeToggle />
+      <AskAdamWidget />
+    </WolfModeProvider>
   );
 }
