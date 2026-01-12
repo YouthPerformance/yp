@@ -1,46 +1,55 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { VENTURES } from "../constants";
 
 export function VenturesGrid() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
   return (
-    <section className="py-24 px-[60px] bg-[var(--bg-primary)]">
-      <div className="max-w-[1100px] mx-auto">
+    <section
+      ref={sectionRef}
+      id="ventures"
+      className="relative py-24 lg:py-32 bg-bg-secondary overflow-hidden"
+    >
+      <div className="relative z-10 container mx-auto px-6 lg:px-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-[11px] tracking-[4px] text-[var(--accent-primary)] uppercase mb-4">
+          <span className="text-[11px] tracking-[4px] text-accent-primary uppercase">
             Current Ventures
-          </p>
-          <h2 className="font-bebas text-[var(--text-primary)] text-[38px]">
-            Where I&apos;m Building
+          </span>
+          <h2
+            className="font-bebas text-text-primary mt-4 leading-[0.95]"
+            style={{ fontSize: "clamp(40px, 5vw, 56px)" }}
+          >
+            Where I&apos;m <span className="text-accent-primary">Building</span>
           </h2>
         </motion.div>
 
-        {/* Ventures Grid - 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Ventures Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {VENTURES.map((venture, i) => (
             <motion.div
               key={venture.title}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              viewport={{ once: true }}
-              className="card hover:border-[var(--accent-primary)] hover:-translate-y-0.5 transition-all duration-300"
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
+              className="group p-6 border border-border-default bg-text-primary/[0.02] hover:border-accent-primary/30 hover:-translate-y-1 transition-all duration-300"
             >
-              <h3 className="font-bebas text-[20px] text-[var(--text-primary)] mb-1.5">
+              <h3 className="font-bebas text-xl text-text-primary mb-1">
                 {venture.title}
               </h3>
-              <p className="text-[11px] tracking-[1px] text-[var(--accent-primary)] uppercase mb-3.5">
+              <p className="text-[11px] tracking-[2px] text-accent-primary uppercase mb-3">
                 {venture.subtitle}
               </p>
-              <p className="text-[14px] leading-[1.6] text-[var(--text-secondary)]">
+              <p className="text-sm leading-relaxed text-text-secondary">
                 {venture.description}
               </p>
             </motion.div>
