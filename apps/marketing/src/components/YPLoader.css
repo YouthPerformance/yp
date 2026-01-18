@@ -1,0 +1,357 @@
+/**
+ * YPLoader Styles - "Silent Luxury" Edition
+ * ==========================================
+ * ULTRATHINK: Premium loader aesthetics with military-spec typography.
+ * Wolf Cyan: #00f6e0
+ */
+
+/* ==========================================================================
+   Main Container
+   ========================================================================== */
+.yp-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999; /* Above everything including cursors */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  /* Entrance: start invisible */
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  /* Ensure solid coverage */
+  isolation: isolate;
+}
+
+/* Entrance animation */
+.yp-loader.entered {
+  opacity: 1;
+}
+
+/* Exit animation - AWARD-WINNING smooth transition */
+.yp-loader.fade-out {
+  opacity: 0;
+  transform: scale(1.02);
+  filter: blur(8px);
+  transition:
+    opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 1s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Video Container - The Artifact
+   ========================================================================== */
+.yp-loader-video-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Ambient glow - always present, subtle */
+  filter: drop-shadow(0 0 40px rgba(0, 246, 224, 0.15));
+  transition: filter 0.5s ease-out, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Intensify glow when complete */
+.yp-loader-video-container.complete {
+  filter: drop-shadow(0 0 60px rgba(0, 246, 224, 0.4));
+}
+
+/* Scale up slightly on exit for parallax feel */
+.yp-loader.fade-out .yp-loader-video-container {
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .yp-loader-video-container {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+.yp-loader-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen; /* Helps blend black backgrounds in video */
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Video loaded - fade in and show */
+.yp-loader-video.loaded {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Fallback - Smart Visibility
+   ========================================================================== */
+.yp-loader-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+/* Show fallback when video not playing */
+.yp-loader-fallback.visible {
+  opacity: 1;
+}
+
+.yp-loader-yp {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 120px;
+  font-weight: 400;
+  color: #00f6e0;
+  text-shadow: 0 0 60px rgba(0, 246, 224, 0.5);
+  animation: loader-pulse 2s ease-in-out infinite;
+  /* GPU acceleration for glitch */
+  will-change: transform, opacity, text-shadow;
+}
+
+@media (min-width: 768px) {
+  .yp-loader-yp {
+    font-size: 180px;
+  }
+}
+
+@keyframes loader-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+/* ==========================================================================
+   Glitch Effect - Subtle Cyber Distortion
+   ========================================================================== */
+.yp-loader-yp.glitch {
+  animation: loader-glitch 0.15s linear;
+}
+
+@keyframes loader-glitch {
+  0% {
+    transform: translate(0);
+    text-shadow: 0 0 60px rgba(0, 246, 224, 0.5);
+  }
+  20% {
+    transform: translate(-2px, 1px);
+    text-shadow:
+      -2px 0 #ff00ff,
+      2px 0 #00ffff,
+      0 0 60px rgba(0, 246, 224, 0.5);
+  }
+  40% {
+    transform: translate(2px, -1px);
+    text-shadow:
+      2px 0 #ff00ff,
+      -2px 0 #00ffff,
+      0 0 60px rgba(0, 246, 224, 0.5);
+  }
+  60% {
+    transform: translate(-1px, 2px);
+    text-shadow:
+      -1px 0 #ff00ff,
+      1px 0 #00ffff,
+      0 0 60px rgba(0, 246, 224, 0.5);
+  }
+  80% {
+    transform: translate(1px, -2px);
+    text-shadow:
+      1px 0 #ff00ff,
+      -1px 0 #00ffff,
+      0 0 60px rgba(0, 246, 224, 0.5);
+  }
+  100% {
+    transform: translate(0);
+    text-shadow: 0 0 60px rgba(0, 246, 224, 0.5);
+  }
+}
+
+/* ==========================================================================
+   Footer - Typography Section
+   ========================================================================== */
+.yp-loader-footer {
+  position: absolute;
+  bottom: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transition:
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer exits FIRST (staggered) - fades down and out */
+.yp-loader-footer.exit {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Status Line */
+.yp-loader-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   Blinking Dot - "Live" Indicator
+   ========================================================================== */
+.yp-loader-dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+}
+
+.yp-loader-dot-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #00f6e0;
+  opacity: 0.75;
+  animation: loader-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.yp-loader-dot-core {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: #00f6e0;
+  transition: box-shadow 0.3s ease-out;
+}
+
+/* Dot glows brighter when complete */
+.yp-loader-dot.complete .yp-loader-dot-core {
+  box-shadow: 0 0 12px #00f6e0, 0 0 24px rgba(0, 246, 224, 0.5);
+}
+
+.yp-loader-dot.complete .yp-loader-dot-ping {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes loader-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   Typography - "Silent Luxury" Specs
+   ==========================================================================
+   Font: SF Mono / Roboto Mono / JetBrains Mono
+   Size: 11px (military spec)
+   Case: UPPERCASE
+   Tracking: 0.2em (the secret - expensive feel)
+   Color: #666666 (matte grey - doesn't compete with shard)
+   ========================================================================== */
+.yp-loader-text {
+  font-family: 'SF Mono', 'Roboto Mono', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #666666;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: color 0.3s ease-out, text-shadow 0.3s ease-out;
+}
+
+/* Text lights up cyan when complete */
+.yp-loader-text.complete {
+  color: #00f6e0;
+  text-shadow: 0 0 20px rgba(0, 246, 224, 0.5);
+}
+
+/* ==========================================================================
+   Progress Bar - Ultra Thin with Glow
+   ========================================================================== */
+.yp-loader-progress-track {
+  width: 120px;
+  height: 1px;
+  background: #1a1a1a;
+  overflow: visible; /* Allow glow to show */
+  margin-top: 0.5rem;
+  border-radius: 1px;
+  transition: box-shadow 0.3s ease-out;
+}
+
+/* Track glows when complete */
+.yp-loader-progress-track.complete {
+  box-shadow: 0 0 8px rgba(0, 246, 224, 0.3);
+}
+
+.yp-loader-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: #00f6e0;
+  transform-origin: left;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease-out;
+  border-radius: 1px;
+}
+
+/* Bar pulses with glow when complete */
+.yp-loader-progress-bar.complete {
+  box-shadow: 0 0 12px #00f6e0, 0 0 24px rgba(0, 246, 224, 0.4);
+  animation: progress-pulse 1s ease-in-out infinite;
+}
+
+@keyframes progress-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px #00f6e0, 0 0 24px rgba(0, 246, 224, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px #00f6e0, 0 0 40px rgba(0, 246, 224, 0.6);
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion - Accessibility
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .yp-loader-dot-ping {
+    animation: none;
+    opacity: 0;
+  }
+
+  .yp-loader,
+  .yp-loader-video,
+  .yp-loader-fallback,
+  .yp-loader-footer,
+  .yp-loader-video-container {
+    transition: none;
+  }
+
+  .yp-loader.fade-out {
+    filter: none;
+    transform: none;
+  }
+
+  .yp-loader-yp {
+    animation: none;
+  }
+
+  .yp-loader-yp.glitch {
+    animation: none;
+  }
+
+  .yp-loader-progress-bar.complete {
+    animation: none;
+  }
+}
