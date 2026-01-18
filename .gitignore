@@ -35,3 +35,9 @@ yarn-error.log*
 # Convex
 .convex
 .env*.local
+
+# OpenNext build output
+.open-next/
+
+# Private context vault (proprietary docs, brand assets)
+.claude/private/
