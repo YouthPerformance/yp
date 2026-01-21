@@ -1,4 +1,8 @@
 ---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+
 const pillars = [
   {
     title: "Youth Basketball Drills",
@@ -48,9 +52,10 @@ const comingSoon = [
   title="Youth Performance Playbook | Expert Training for Young Athletes"
   description="Expert-reviewed training content for youth athletes. Age-appropriate drills, barefoot training, and skill development guides from NBA coaches and movement specialists."
 >
+  <Header />
+
   <!-- Hero -->
-  <header class="bg-gradient-to-b from-paper-dark to-paper py-16 px-6 border-b-[3px] border-ink relative">
-    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold via-action-orange to-gold"></div>
+  <header class="py-16 px-6 relative" style="background: var(--gradient-dark);">
     <div class="max-w-4xl mx-auto text-center">
       <span class="font-mono text-xs uppercase tracking-widest text-bark-muted mb-4 block">Youth Performance</span>
       <h1 class="font-display text-4xl md:text-6xl font-bold text-ink leading-tight mb-6">
@@ -143,33 +148,5 @@ const comingSoon = [
     </div>
   </section>
 
-  <!-- Footer Links -->
-  <section class="py-12 px-6 bg-paper-dark">
-    <div class="max-w-4xl mx-auto">
-      <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-        <div>
-          <h3 class="font-mono text-xs uppercase tracking-widest text-bark-muted mb-3">Train</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="https://academy.youthperformance.com" class="text-bark-soft hover:text-ink transition-colors">YP Academy</a></li>
-            <li><a href="https://shop.youthperformance.com/products/neoball" class="text-bark-soft hover:text-ink transition-colors">The NeoBall</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-mono text-xs uppercase tracking-widest text-bark-muted mb-3">Learn</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="/barefoot-training/" class="text-bark-soft hover:text-ink transition-colors">Barefoot Training</a></li>
-            <li><a href="/basketball/youth-basketball-drills/" class="text-bark-soft hover:text-ink transition-colors">Youth Basketball Drills</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-mono text-xs uppercase tracking-widest text-bark-muted mb-3">AI & Trust</h3>
-          <ul class="space-y-2 text-sm text-bark-muted">
-            <li><a href="/llms.txt" class="font-mono text-xs hover:text-ink">llms.txt</a> — AI Index</li>
-            <li><a href="/robots.txt" class="font-mono text-xs hover:text-ink">robots.txt</a></li>
-            <li><a href="/sitemap-index.xml" class="font-mono text-xs hover:text-ink">sitemap.xml</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  <Footer />
 </BaseLayout>

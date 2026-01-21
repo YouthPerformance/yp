@@ -108,17 +108,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/logo/blackcyan.png" />
       </head>
       <body className="font-inter antialiased bg-black text-white">
-        {/* Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-FSHVRSHFLQ"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
+        {/* PostHog Analytics - AI-native, privacy-first */}
+        <Script id="posthog-analytics" strategy="afterInteractive">
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-FSHVRSHFLQ');
+            // Check for opt-out before initializing
+            if (typeof window !== 'undefined' && localStorage.getItem('yp_opted_out') !== 'true') {
+              !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group setPersonProperties setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+
+              posthog.init('phc_lcgYo2g4YNIqVcK1d75227vPTROVvlbVBaj9rBxnfvJ', {
+                api_host: 'https://us.i.posthog.com',
+                persistence: 'localStorage',
+                person_profiles: 'identified_only',
+                respect_dnt: true,
+                autocapture: true,
+                capture_pageview: true,
+                capture_pageleave: true,
+                disable_session_recording: ${process.env.NODE_ENV !== "production"},
+                session_recording: {
+                  maskAllInputs: true,
+                  maskTextSelector: '[data-mask]'
+                }
+              });
+            }
           `}
         </Script>
         {children}

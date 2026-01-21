@@ -1,0 +1,8 @@
+# This file should NOT be checked into version control.
+# Copy this to local.properties and fill in your values.
+
+# Android SDK location
+sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
+
+# Optional: NDK location (if using native code)
+# ndk.dir=/Users/YOUR_USERNAME/Library/Android/sdk/ndk/VERSION

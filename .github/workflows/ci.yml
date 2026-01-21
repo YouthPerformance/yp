@@ -113,6 +113,7 @@ jobs:
 
   # ============================================
   # TEST: Run unit and integration tests
+  # Critical tests: auth, payments, data mutations
   # ============================================
   test:
     name: Test
@@ -137,11 +138,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm turbo run test --filter=@yp/alpha
+      - name: Build dependencies
+        run: pnpm turbo run build --filter=@yp/alpha --filter=@yp/ui
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+
+      - name: Run critical tests (auth, payments, data)
+        run: pnpm turbo run test --filter=@yp/web-academy
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ vars.NEXT_PUBLIC_CONVEX_URL }}
+          STRIPE_SECRET_KEY: sk_test_mock_for_ci
+          STRIPE_WEBHOOK_SECRET: whsec_test_mock_for_ci
+          BETTER_AUTH_SECRET: ci-test-secret-32-characters-long
 
   # ============================================
   # BUILD CHECK: Verify all apps can build

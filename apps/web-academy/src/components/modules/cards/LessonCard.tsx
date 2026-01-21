@@ -7,6 +7,7 @@
 
 import Image from "next/image";
 import type { ContentMode, LessonCard as LessonCardType } from "@/data/modules/types";
+import { SwipePrompt } from "../SwipePrompt";
 
 interface LessonCardProps {
   card: LessonCardType;
@@ -68,24 +69,9 @@ export function LessonCard({ card, mode }: LessonCardProps) {
         )}
       </div>
 
-      {/* Swipe indicator */}
-      <div className="mt-6 text-center">
-        <p className="text-sm text-text-tertiary uppercase tracking-widest">Swipe up to continue</p>
-        <div className="mt-2 animate-bounce">
-          <svg
-            className="w-6 h-6 mx-auto text-accent-primary"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 10l7-7m0 0l7 7m-7-7v18"
-            />
-          </svg>
-        </div>
+      {/* Swipe indicator - Premium V2 */}
+      <div className="mt-6">
+        <SwipePrompt showPagination={false} />
       </div>
     </div>
   );

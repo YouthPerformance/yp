@@ -1,4 +1,9 @@
 ---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import Breadcrumb from "@/components/layout/Breadcrumb.astro";
+
 const breadcrumbs = [{ label: "Home", url: "/" }, { label: "Basketball" }];
 
 const categories = [
@@ -48,6 +53,7 @@ const categories = [
   title="Basketball Training & Drills | Youth Performance Playbook"
   description="Expert basketball training content from NBA skills coach Adam Harrington. Age-appropriate drills, practice plans, and skill development guides."
 >
+  <Header />
   <Breadcrumb items={breadcrumbs} />
 
   <header class="bg-gradient-to-b from-paper-dark to-paper py-12 px-6 border-b-[3px] border-gold">
@@ -116,4 +122,6 @@ const categories = [
       </div>
     </div>
   </main>
+
+  <Footer />
 </BaseLayout>

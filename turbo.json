@@ -17,6 +17,13 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "test:critical": {
+      "dependsOn": ["^build"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
     "typecheck": {
       "dependsOn": ["^typecheck"]
     }

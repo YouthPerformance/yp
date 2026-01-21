@@ -1,0 +1,9 @@
+# Secrets
+.env.local
+.env
+
+# Output files (can regenerate)
+output/
+
+# Node
+node_modules/

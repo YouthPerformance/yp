@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ===========================================================================
 // GlassMorphicHeader - Premium liquid glass navigation
@@ -12,6 +12,32 @@ interface GlassMorphicHeaderProps {
 
 export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuAnimating, setMenuAnimating] = useState(false);
+
+  // Handle menu open/close with animation
+  const toggleMenu = () => {
+    if (mobileMenuOpen) {
+      setMenuAnimating(true);
+      setTimeout(() => {
+        setMobileMenuOpen(false);
+        setMenuAnimating(false);
+      }, 300);
+    } else {
+      setMobileMenuOpen(true);
+    }
+  };
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header
@@ -36,28 +62,35 @@ export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
         <div className="px-4 md:px-6 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Left cluster */}
-            <div className="grow basis-0 flex items-center gap-6 md:gap-8">
+            <div className="grow basis-0 flex items-center gap-4 md:gap-6">
               {/* Mobile: Hamburger */}
               <button
                 type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 -ml-2 hover:opacity-70 transition-opacity"
+                onClick={toggleMenu}
+                className="md:hidden p-2 -ml-2 hover:opacity-70 transition-all duration-300"
                 aria-label="Menu"
               >
-                <svg
-                  width="20"
-                  height="14"
-                  viewBox="0 0 20 14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <path d="M1 1h18M1 7h18M1 13h18" />
-                </svg>
+                <div className="relative w-5 h-3.5">
+                  <span
+                    className={`absolute left-0 h-[1.5px] w-5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'top-1.5 rotate-45' : 'top-0'}`}
+                  />
+                  <span
+                    className={`absolute left-0 top-1.5 h-[1.5px] w-5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100'}`}
+                  />
+                  <span
+                    className={`absolute left-0 h-[1.5px] w-5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'top-1.5 -rotate-45' : 'top-3'}`}
+                  />
+                </div>
               </button>
 
+              {/* Beta Badge */}
+              <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-full bg-orange-500/20 border border-orange-500/30">
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                <span className="text-[10px] uppercase tracking-wider text-orange-400 font-medium">Beta</span>
+              </div>
+
               {/* Desktop: Nav links */}
-              <nav className="hidden md:flex items-center gap-8">
+              <nav className="hidden md:flex items-center gap-6">
                 <Link
                   to="/"
                   className="text-[13px] uppercase tracking-[0.15em] font-medium hover:text-cyan transition-colors"
@@ -65,19 +98,23 @@ export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
                   Shop
                 </Link>
                 <Link
-                  to="/collections/all"
+                  to="/products/neoball"
                   className="text-[13px] uppercase tracking-[0.15em] font-medium hover:text-cyan transition-colors"
                 >
-                  Collections
+                  NeoBall
                 </Link>
-                <a
-                  href="https://academy.youthperformance.com"
+                <Link
+                  to="/products/footbag"
                   className="text-[13px] uppercase tracking-[0.15em] font-medium hover:text-cyan transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
-                  Academy
-                </a>
+                  Footbag
+                </Link>
+                <Link
+                  to="/products/neo-mask"
+                  className="text-[13px] uppercase tracking-[0.15em] font-medium hover:text-cyan transition-colors"
+                >
+                  Neo Mask
+                </Link>
               </nav>
             </div>
 
@@ -160,43 +197,69 @@ export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 top-20 z-40"
+          className={`fixed inset-0 top-0 z-40 transition-all duration-300 ${menuAnimating ? 'opacity-0' : 'opacity-100'}`}
           style={{
-            background: "linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%)",
-            backdropFilter: "blur(20px)",
+            background: "linear-gradient(180deg, rgba(8,8,12,0.98) 0%, rgba(4,4,8,0.99) 100%)",
+            backdropFilter: "blur(30px)",
+            WebkitBackdropFilter: "blur(30px)",
           }}
         >
-          <nav className="flex flex-col items-center justify-center h-full gap-8 text-2xl">
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="uppercase tracking-[0.2em] font-display hover:text-cyan transition-colors"
-            >
-              Shop
-            </Link>
-            <Link
-              to="/collections/all"
-              onClick={() => setMobileMenuOpen(false)}
-              className="uppercase tracking-[0.2em] font-display hover:text-cyan transition-colors"
-            >
-              Collections
-            </Link>
+          {/* Subtle gradient accent */}
+          <div
+            className="absolute inset-0 opacity-30 pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse at top right, rgba(0,235,247,0.15) 0%, transparent 50%)",
+            }}
+          />
+
+          {/* Beta badge - mobile */}
+          <div className="absolute top-6 left-6 flex items-center gap-1.5 px-2 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 sm:hidden">
+            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+            <span className="text-[10px] uppercase tracking-wider text-orange-400 font-medium">Beta</span>
+          </div>
+
+          <nav className="flex flex-col items-center justify-center h-full gap-6 px-8">
+            {[
+              { to: "/", label: "Shop", delay: "0ms" },
+              { to: "/products/neoball", label: "NeoBall", delay: "50ms" },
+              { to: "/products/footbag", label: "Footbag", delay: "100ms" },
+              { to: "/products/neo-mask", label: "Neo Mask", delay: "150ms" },
+              { to: "/account", label: "Account", delay: "200ms" },
+            ].map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={toggleMenu}
+                className={`group relative text-3xl uppercase tracking-[0.25em] font-display transition-all duration-500 ${menuAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}
+                style={{ transitionDelay: menuAnimating ? "0ms" : item.delay }}
+              >
+                <span className="relative z-10 text-white/90 group-hover:text-cyan transition-colors duration-300">
+                  {item.label}
+                </span>
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan group-hover:w-full transition-all duration-300" />
+              </Link>
+            ))}
+
+            {/* Divider */}
+            <div className={`w-16 h-[1px] bg-white/10 my-4 transition-all duration-500 ${menuAnimating ? 'opacity-0 scale-0' : 'opacity-100 scale-100'}`} style={{ transitionDelay: "250ms" }} />
+
+            {/* External link */}
             <a
               href="https://academy.youthperformance.com"
-              className="uppercase tracking-[0.2em] font-display hover:text-cyan transition-colors"
+              className={`flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-white/50 hover:text-cyan transition-all duration-500 ${menuAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}
+              style={{ transitionDelay: "300ms" }}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Academy
+              YP Academy
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
             </a>
-            <Link
-              to="/account"
-              onClick={() => setMobileMenuOpen(false)}
-              className="uppercase tracking-[0.2em] font-display hover:text-cyan transition-colors"
-            >
-              Account
-            </Link>
           </nav>
+
+          {/* Bottom decorative line */}
+          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan/30 to-transparent" />
         </div>
       )}
     </header>

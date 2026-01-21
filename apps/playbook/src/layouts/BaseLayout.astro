@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import ScrollProgress from "@/components/ui/ScrollProgress.astro";
 
 interface Props {
   title: string;
@@ -80,6 +81,9 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
   <slot name="head" />
 </head>
 <body>
+  <!-- Reading Progress Bar -->
+  <ScrollProgress variant="cyan" height={3} />
+
   <slot />
 
   <!-- Theme Switcher Script -->

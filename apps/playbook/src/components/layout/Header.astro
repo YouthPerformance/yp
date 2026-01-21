@@ -1,394 +1,316 @@
 ---
 /**
- * Header - Glass morphism navigation with theme switcher
- * YP Design System v2.0
+ * Header - Wolf Pack Glass (Mobile-First Centered)
+ * Matches the YP unified header design:
+ * - Hamburger LEFT
+ * - YP Logo + BETA badge CENTERED
+ * - Avatar RIGHT
  */
 interface Props {
-  showThemeSwitcher?: boolean;
+  showAvatar?: boolean;
+  avatarInitial?: string;
 }
 
-const { showThemeSwitcher = true } = Astro.props;
+const { showAvatar = true, avatarInitial = "M" } = Astro.props;
 
 const navLinks = [
   { href: "/barefoot-training/", label: "Barefoot" },
   { href: "/basketball/", label: "Basketball" },
   { href: "/parent-sidelines/", label: "Parent Q&A" },
   { href: "/drills/", label: "Drills" },
+  { href: "https://academy.youthperformance.com", label: "Academy", external: true },
 ];
 ---
 
-<header class="header-glass">
-  <div class="header-container">
-    <!-- Logo + Beta Badge -->
-    <div class="header-logo-group">
-      <a href="/" class="header-logo">
-        <span class="logo-wolf">YP</span>
-        <span class="logo-text">Playbook</span>
+<header class="header-wrapper">
+  <div class="header-glass">
+    <!-- LEFT: Hamburger Menu -->
+    <button
+      type="button"
+      class="hamburger-btn"
+      aria-label="Toggle menu"
+      onclick="document.querySelector('.mobile-nav').classList.toggle('open'); this.classList.toggle('active')"
+    >
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    <!-- CENTER: Logo + Beta Badge -->
+    <div class="header-center">
+      <a href="/" class="logo-link">
+        <span class="logo-text">YP</span>
       </a>
-      <!-- Beta Badge -->
       <div class="beta-badge">
-        <span class="beta-dot-wrapper">
-          <span class="beta-dot-ping"></span>
-          <span class="beta-dot"></span>
-        </span>
-        BETA
+        <span class="beta-dot"></span>
+        <span class="beta-label">BETA</span>
       </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="header-nav">
+    <!-- RIGHT: Avatar -->
+    {showAvatar && (
+      <div class="avatar">
+        <span class="avatar-initial">{avatarInitial}</span>
+      </div>
+    )}
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <nav class="mobile-nav">
+    <div class="mobile-nav-content">
       {navLinks.map((link) => (
         <a
           href={link.href}
-          class="nav-link"
-          aria-current={Astro.url.pathname.startsWith(link.href) ? "page" : undefined}
+          class="mobile-nav-link"
+          target={link.external ? "_blank" : undefined}
+          rel={link.external ? "noopener noreferrer" : undefined}
         >
           {link.label}
         </a>
       ))}
-    </nav>
-
-    <!-- Actions -->
-    <div class="header-actions">
-      {showThemeSwitcher && (
-        <button
-          type="button"
-          class="theme-switcher"
-          onclick="window.cycleTheme()"
-          aria-label="Toggle theme"
-        >
-          <svg class="theme-icon theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-          </svg>
-          <svg class="theme-icon theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5" />
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-          </svg>
-          <svg class="theme-icon theme-icon-parent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-          </svg>
-        </button>
-      )}
-
-      <!-- CTA Button -->
-      <a href="https://academy.youthperformance.com" class="header-cta">
-        Start Training
+      <a href="https://academy.youthperformance.com" class="mobile-nav-cta">
+        Start Training →
       </a>
-
-      <!-- Mobile Menu Button -->
-      <button
-        type="button"
-        class="mobile-menu-btn"
-        aria-label="Toggle menu"
-        onclick="document.querySelector('.mobile-nav').classList.toggle('open')"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 12h18M3 6h18M3 18h18" />
-        </svg>
-      </button>
     </div>
-  </div>
-
-  <!-- Mobile Navigation -->
-  <nav class="mobile-nav">
-    {navLinks.map((link) => (
-      <a href={link.href} class="mobile-nav-link">
-        {link.label}
-      </a>
-    ))}
-    <a href="https://academy.youthperformance.com" class="mobile-nav-cta">
-      Start Training →
-    </a>
   </nav>
 </header>
 
 <style>
-  .header-glass {
+  /* Wrapper with padding for floating effect */
+  .header-wrapper {
     position: sticky;
     top: 0;
     z-index: 150;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--glass-border);
+    padding: 12px 16px;
   }
 
-  .header-container {
+  /* Floating Glass Container */
+  .header-glass {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1200px;
+    height: 56px;
+    padding: 0 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(100,150,255,0.04) 50%, rgba(0,0,0,0.4) 100%);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.1),
+      0 0 20px rgba(0, 246, 224, 0.1);
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 12px 24px;
   }
 
-  /* Logo Group (logo + beta badge) */
-  .header-logo-group {
+  /* Hamburger Button */
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+  }
+
+  .hamburger-btn:hover {
+    background-color: rgba(0, 246, 224, 0.1);
+  }
+
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Center: Logo + Beta */
+  .header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     gap: 12px;
   }
 
-  /* Logo */
-  .header-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .logo-link {
     text-decoration: none;
+  }
+
+  .logo-text {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #00F6E0;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0, 246, 224, 0.5);
   }
 
   /* Beta Badge */
   .beta-badge {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 9999px;
-    border: 1px solid var(--accent-primary);
-    background-color: #000000;
-    color: var(--accent-primary);
-    box-shadow: 0 0 12px rgba(0, 246, 224, 0.15);
-    font-family: ui-monospace, SFMono-Regular, monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    user-select: none;
-    transition: all 0.3s ease-out;
-  }
-
-  .beta-badge:hover {
-    box-shadow: 0 0 20px rgba(0, 246, 224, 0.4);
-    background-color: rgba(0, 246, 224, 0.05);
-  }
-
-  .beta-dot-wrapper {
-    position: relative;
-    display: flex;
-    height: 6px;
-    width: 6px;
-  }
-
-  .beta-dot-ping {
-    position: absolute;
-    display: inline-flex;
-    height: 100%;
-    width: 100%;
-    border-radius: 9999px;
-    opacity: 0.75;
-    background-color: #22d3ee;
-    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+    border: 1px solid #00F6E0;
+    background-color: transparent;
+    box-shadow: 0 0 12px rgba(0, 246, 224, 0.2);
   }
 
   .beta-dot {
-    position: relative;
-    display: inline-flex;
-    border-radius: 9999px;
-    height: 6px;
     width: 6px;
-    background-color: var(--accent-primary);
+    height: 6px;
+    border-radius: 50%;
+    background-color: #00F6E0;
+    animation: pulse 2s ease-in-out infinite;
   }
 
-  @keyframes ping {
-    75%, 100% {
-      transform: scale(2);
-      opacity: 0;
-    }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
   }
 
-  .logo-wolf {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
-    background: var(--gradient-cyan);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .beta-label {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #00F6E0;
+    text-transform: uppercase;
   }
 
-  .logo-text {
-    font-family: "Inter", sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  /* Navigation */
-  .header-nav {
-    display: none;
-    gap: 8px;
-  }
-
-  @media (min-width: 768px) {
-    .header-nav {
-      display: flex;
-    }
-  }
-
-  .nav-link {
-    padding: 8px 16px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 200ms ease;
-  }
-
-  .nav-link:hover {
-    color: var(--accent-primary);
-    background-color: rgba(var(--accent-primary-rgb), 0.1);
-  }
-
-  .nav-link[aria-current="page"] {
-    color: var(--accent-primary);
-    background-color: rgba(var(--accent-primary-rgb), 0.15);
-  }
-
-  /* Actions */
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  /* Theme Switcher */
-  .theme-switcher {
+  /* Avatar */
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E91E8C 0%, #D4145A 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: all 200ms ease;
+    border: 2px solid rgba(0, 246, 224, 0.2);
+    box-shadow: 0 4px 12px rgba(233, 30, 140, 0.3);
   }
 
-  .theme-switcher:hover {
-    color: var(--accent-primary);
-    background-color: rgba(var(--accent-primary-rgb), 0.1);
+  .avatar-initial {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
   }
 
-  .theme-icon {
-    width: 20px;
-    height: 20px;
-    display: none;
-  }
-
-  /* Show appropriate icon based on current theme */
-  :global([data-theme="athlete"]) .theme-icon-dark {
-    display: block;
-  }
-
-  :global([data-theme="athlete-light"]) .theme-icon-light {
-    display: block;
-  }
-
-  :global([data-theme="parent"]) .theme-icon-parent {
-    display: block;
-  }
-
-  /* Default to dark icon if no theme set */
-  :global(:not([data-theme])) .theme-icon-dark {
-    display: block;
-  }
-
-  /* CTA Button */
-  .header-cta {
-    display: none;
-    padding: 10px 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #000000;
-    text-decoration: none;
-    border-radius: 8px;
-    background: var(--gradient-cyan);
-    transition: all 200ms ease;
-  }
-
-  @media (min-width: 768px) {
-    .header-cta {
-      display: block;
-    }
-  }
-
-  .header-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.4);
-  }
-
-  /* Mobile Menu Button */
-  .mobile-menu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    cursor: pointer;
-    color: var(--text-primary);
-  }
-
-  .mobile-menu-btn svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  @media (min-width: 768px) {
-    .mobile-menu-btn {
-      display: none;
-    }
-  }
-
-  /* Mobile Navigation */
+  /* Mobile Navigation Overlay */
   .mobile-nav {
     display: none;
-    flex-direction: column;
-    gap: 4px;
-    padding: 16px;
-    border-top: 1px solid var(--border-default);
+    position: fixed;
+    top: 80px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 140;
+    overflow: hidden;
   }
 
   .mobile-nav.open {
-    display: flex;
+    display: block;
   }
 
-  @media (min-width: 768px) {
-    .mobile-nav {
-      display: none !important;
-    }
+  .mobile-nav-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 24px;
+    padding: 32px;
   }
 
   .mobile-nav-link {
-    padding: 12px 16px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-primary);
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.1em;
     text-decoration: none;
-    border-radius: 8px;
-    transition: all 200ms ease;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.2s ease;
   }
 
   .mobile-nav-link:hover {
-    background-color: var(--bg-tertiary);
+    color: #00F6E0;
   }
 
   .mobile-nav-cta {
-    margin-top: 8px;
-    padding: 14px 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #000000;
+    margin-top: 16px;
+    padding: 14px 32px;
+    border-radius: 12px;
+    background-color: #00F6E0;
+    color: #0f0f0f;
+    font-size: 14px;
+    font-weight: 700;
     text-decoration: none;
-    text-align: center;
-    border-radius: 8px;
-    background: var(--gradient-cyan);
+    font-family: system-ui, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 246, 224, 0.4);
+  }
+
+  /* Desktop: Show nav links inline, hide hamburger */
+  @media (min-width: 768px) {
+    .hamburger-btn {
+      display: none;
+    }
+
+    .header-glass {
+      justify-content: center;
+    }
+
+    .header-center {
+      position: relative;
+      left: auto;
+      transform: none;
+    }
+
+    .avatar {
+      position: absolute;
+      right: 16px;
+    }
+
+    .mobile-nav {
+      display: none !important;
+    }
   }
 </style>

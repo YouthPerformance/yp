@@ -1,0 +1,4 @@
+module xLENSPackageTests {
+    header "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.build/xLENSPackageTests-Swift.h"
+    requires objc
+}

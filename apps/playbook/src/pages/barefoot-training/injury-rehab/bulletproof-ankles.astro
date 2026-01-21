@@ -4,6 +4,7 @@ import SafetyBox from "@/components/content/SafetyBox.astro";
 import DrillCard from "@/components/content/DrillCard.astro";
 import CTABlock from "@/components/content/CTABlock.astro";
 import FAQSection from "@/components/content/FAQSection.astro";
+import FadeIn from "@/components/ui/FadeIn.astro";
 
 // SEO / Frontmatter
 const title = "Bulletproof Ankles: The NBA Pro Stability Protocol";
@@ -270,137 +271,149 @@ const faqs = [
       <h2 class="font-bebas text-display-lg">6 Exercises. 8 Minutes. Bulletproof.</h2>
     </div>
 
-    <DrillCard
-      number={1}
-      title="Tripod Foot Activation"
-      tags={["Wake Up", "Foundation"]}
-      ageBadge={{ label: "All Ages", class: "age-7-9" }}
-      description="Establish the three-point connection that creates a stable base. This is the foundation of everything else."
-      steps={[
-        { instruction: "Stand barefoot, feet hip-width apart" },
-        { instruction: "Press down through: big toe base, pinky toe base, and heel center" },
-        { instruction: "Feel these three points 'grip' the floor without curling toes" },
-        { instruction: "Hold for 60 seconds. Breathe. Reset if you lose connection." }
-      ]}
-      coachingCues={[
-        "Think 'tripod' - three points of contact",
-        "Toes stay relaxed, not gripping",
-        "You should feel the arch lift slightly"
-      ]}
-      duration="60 sec"
-      reps="1 set"
-      difficulty="Beginner"
-    />
+    <FadeIn delay={0} direction="up">
+      <DrillCard
+        number={1}
+        title="Tripod Foot Activation"
+        tags={["Wake Up", "Foundation"]}
+        ageBadge={{ label: "All Ages", class: "age-7-9" }}
+        description="Establish the three-point connection that creates a stable base. This is the foundation of everything else."
+        steps={[
+          { instruction: "Stand barefoot, feet hip-width apart" },
+          { instruction: "Press down through: big toe base, pinky toe base, and heel center" },
+          { instruction: "Feel these three points 'grip' the floor without curling toes" },
+          { instruction: "Hold for 60 seconds. Breathe. Reset if you lose connection." }
+        ]}
+        coachingCues={[
+          "Think 'tripod' - three points of contact",
+          "Toes stay relaxed, not gripping",
+          "You should feel the arch lift slightly"
+        ]}
+        duration="60 sec"
+        reps="1 set"
+        difficulty="Beginner"
+      />
+    </FadeIn>
 
-    <DrillCard
-      number={2}
-      title="Short Foot Holds"
-      tags={["Strength", "Arch"]}
-      ageBadge={{ label: "All Ages", class: "age-7-9" }}
-      description="Build arch strength by shortening the foot without curling the toes. The most important barefoot drill."
-      steps={[
-        { instruction: "Stand in tripod position" },
-        { instruction: "Without curling toes, pull the ball of foot toward the heel" },
-        { instruction: "Imagine doming your arch up from the floor" },
-        { instruction: "Hold 5 seconds, release. Repeat 10 times each foot." }
-      ]}
-      coachingCues={[
-        "Toes stay flat - no scrunching",
-        "Feel the arch rise, not the toes grip",
-        "Start seated if standing is too hard"
-      ]}
-      duration="45 sec x 2"
-      reps="10 reps each foot"
-      difficulty="Beginner"
-    />
+    <FadeIn delay={100} direction="up">
+      <DrillCard
+        number={2}
+        title="Short Foot Holds"
+        tags={["Strength", "Arch"]}
+        ageBadge={{ label: "All Ages", class: "age-7-9" }}
+        description="Build arch strength by shortening the foot without curling the toes. The most important barefoot drill."
+        steps={[
+          { instruction: "Stand in tripod position" },
+          { instruction: "Without curling toes, pull the ball of foot toward the heel" },
+          { instruction: "Imagine doming your arch up from the floor" },
+          { instruction: "Hold 5 seconds, release. Repeat 10 times each foot." }
+        ]}
+        coachingCues={[
+          "Toes stay flat - no scrunching",
+          "Feel the arch rise, not the toes grip",
+          "Start seated if standing is too hard"
+        ]}
+        duration="45 sec x 2"
+        reps="10 reps each foot"
+        difficulty="Beginner"
+      />
+    </FadeIn>
 
-    <DrillCard
-      number={3}
-      title="Single Leg Balance"
-      tags={["Proprioception", "Sport Transfer"]}
-      ageBadge={{ label: "10+", class: "age-10-13" }}
-      description="Challenge your ankle's position sense. Every cut, jump, and landing happens on one foot."
-      steps={[
-        { instruction: "Stand on one leg, tripod engaged" },
-        { instruction: "Level 1: Eyes open, 30 seconds each side" },
-        { instruction: "Level 2: Eyes closed (much harder)" },
-        { instruction: "Level 3: Add head turns or arm movements" }
-      ]}
-      coachingCues={[
-        "Feel your foot making micro-corrections",
-        "Slight knee bend is fine - don't lock out",
-        "Quality over time - stop if form breaks"
-      ]}
-      duration="30 sec each"
-      reps="3 sets each leg"
-      difficulty="Scalable"
-    />
+    <FadeIn delay={200} direction="up">
+      <DrillCard
+        number={3}
+        title="Single Leg Balance"
+        tags={["Proprioception", "Sport Transfer"]}
+        ageBadge={{ label: "10+", class: "age-10-13" }}
+        description="Challenge your ankle's position sense. Every cut, jump, and landing happens on one foot."
+        steps={[
+          { instruction: "Stand on one leg, tripod engaged" },
+          { instruction: "Level 1: Eyes open, 30 seconds each side" },
+          { instruction: "Level 2: Eyes closed (much harder)" },
+          { instruction: "Level 3: Add head turns or arm movements" }
+        ]}
+        coachingCues={[
+          "Feel your foot making micro-corrections",
+          "Slight knee bend is fine - don't lock out",
+          "Quality over time - stop if form breaks"
+        ]}
+        duration="30 sec each"
+        reps="3 sets each leg"
+        difficulty="Scalable"
+      />
+    </FadeIn>
 
-    <DrillCard
-      number={4}
-      title="Ankle Circles"
-      tags={["Mobility", "Range"]}
-      ageBadge={{ label: "All Ages", class: "age-7-9" }}
-      description="Restore full ankle range of motion. Most athletes are locked up from shoes and surface repetition."
-      steps={[
-        { instruction: "Lift one foot slightly off ground" },
-        { instruction: "Draw slow, controlled circles with your toes" },
-        { instruction: "20 circles clockwise, 20 counterclockwise" },
-        { instruction: "Make circles as LARGE as possible" }
-      ]}
-      coachingCues={[
-        "Slow = better. Speed kills quality",
-        "Go to end range in every direction",
-        "Feel any stiff spots and work them"
-      ]}
-      duration="2 min"
-      reps="20 each direction"
-      difficulty="Beginner"
-    />
+    <FadeIn delay={300} direction="up">
+      <DrillCard
+        number={4}
+        title="Ankle Circles"
+        tags={["Mobility", "Range"]}
+        ageBadge={{ label: "All Ages", class: "age-7-9" }}
+        description="Restore full ankle range of motion. Most athletes are locked up from shoes and surface repetition."
+        steps={[
+          { instruction: "Lift one foot slightly off ground" },
+          { instruction: "Draw slow, controlled circles with your toes" },
+          { instruction: "20 circles clockwise, 20 counterclockwise" },
+          { instruction: "Make circles as LARGE as possible" }
+        ]}
+        coachingCues={[
+          "Slow = better. Speed kills quality",
+          "Go to end range in every direction",
+          "Feel any stiff spots and work them"
+        ]}
+        duration="2 min"
+        reps="20 each direction"
+        difficulty="Beginner"
+      />
+    </FadeIn>
 
-    <DrillCard
-      number={5}
-      title="Calf Raises (Slow)"
-      tags={["Strength", "Loading"]}
-      ageBadge={{ label: "10+", class: "age-10-13" }}
-      description="Controlled loading through full range. Builds the strength that powers push-off and absorbs landing."
-      steps={[
-        { instruction: "Stand barefoot, feet hip-width" },
-        { instruction: "Rise onto balls of feet - 3 seconds up" },
-        { instruction: "Hold at top for 2 seconds" },
-        { instruction: "Lower SLOWLY - 3 seconds down. 10 reps." }
-      ]}
-      coachingCues={[
-        "Control the descent - that's where strength is built",
-        "Keep weight over big toe, not rolling out",
-        "Progress to single-leg when ready"
-      ]}
-      duration="90 sec"
-      reps="10 slow reps"
-      difficulty="Beginner"
-    />
+    <FadeIn delay={400} direction="up">
+      <DrillCard
+        number={5}
+        title="Calf Raises (Slow)"
+        tags={["Strength", "Loading"]}
+        ageBadge={{ label: "10+", class: "age-10-13" }}
+        description="Controlled loading through full range. Builds the strength that powers push-off and absorbs landing."
+        steps={[
+          { instruction: "Stand barefoot, feet hip-width" },
+          { instruction: "Rise onto balls of feet - 3 seconds up" },
+          { instruction: "Hold at top for 2 seconds" },
+          { instruction: "Lower SLOWLY - 3 seconds down. 10 reps." }
+        ]}
+        coachingCues={[
+          "Control the descent - that's where strength is built",
+          "Keep weight over big toe, not rolling out",
+          "Progress to single-leg when ready"
+        ]}
+        duration="90 sec"
+        reps="10 slow reps"
+        difficulty="Beginner"
+      />
+    </FadeIn>
 
-    <DrillCard
-      number={6}
-      title="Landing Prep"
-      tags={["Reactive", "Sport Transfer"]}
-      ageBadge={{ label: "10+", class: "age-10-13" }}
-      description="Train quiet, controlled landings. If your feet slap the ground, you're leaking force and inviting injury."
-      steps={[
-        { instruction: "Small jump in place - just 2-3 inches" },
-        { instruction: "Land SILENT. Absorb through the whole foot." },
-        { instruction: "Stick each landing for 1 second" },
-        { instruction: "5 reps. Every landing should be quiet." }
-      ]}
-      coachingCues={[
-        "Silent = controlled. Loud = force leak",
-        "Land on full foot, not toes only",
-        "Knees track over toes - no collapse"
-      ]}
-      duration="45 sec"
-      reps="5 soft jumps"
-      difficulty="Intermediate"
-    />
+    <FadeIn delay={500} direction="up">
+      <DrillCard
+        number={6}
+        title="Landing Prep"
+        tags={["Reactive", "Sport Transfer"]}
+        ageBadge={{ label: "10+", class: "age-10-13" }}
+        description="Train quiet, controlled landings. If your feet slap the ground, you're leaking force and inviting injury."
+        steps={[
+          { instruction: "Small jump in place - just 2-3 inches" },
+          { instruction: "Land SILENT. Absorb through the whole foot." },
+          { instruction: "Stick each landing for 1 second" },
+          { instruction: "5 reps. Every landing should be quiet." }
+        ]}
+        coachingCues={[
+          "Silent = controlled. Loud = force leak",
+          "Land on full foot, not toes only",
+          "Knees track over toes - no collapse"
+        ]}
+        duration="45 sec"
+        reps="5 soft jumps"
+        difficulty="Intermediate"
+      />
+    </FadeIn>
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════

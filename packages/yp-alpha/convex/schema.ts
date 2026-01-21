@@ -43,6 +43,56 @@ const sortingMethodValidator = v.union(
   v.literal("manual"),
 );
 
+// Wolf Contract validators
+const contractStatusValidator = v.union(
+  v.literal("active"),
+  v.literal("completed"),
+  v.literal("failed"),
+);
+
+// Wolf Contract - The Commitment Ceremony
+const wolfContractValidator = v.object({
+  // Timestamps
+  signedAt: v.number(),
+  startDate: v.number(),
+  expiresAt: v.number(),
+
+  // Contract data
+  signatureData: v.string(), // Base64 signature image
+  checkboxes: v.object({
+    showUp: v.boolean(),
+    trustBlueprint: v.boolean(),
+    earnGear: v.boolean(),
+  }),
+
+  // Geography
+  country: v.string(),
+  countryCode: v.string(),
+
+  // Progress
+  windowDays: v.number(), // 42
+  levelsRequired: v.number(), // 30
+  levelsCompleted: v.number(),
+  levelLog: v.array(
+    v.object({
+      levelNumber: v.number(), // 1-30
+      workoutId: v.string(),
+      completedAt: v.number(),
+      noteText: v.string(),
+      videoWatchPercent: v.number(),
+    }),
+  ),
+
+  // Status
+  status: contractStatusValidator,
+
+  // Reward
+  creditEarned: v.number(), // 0 or 88
+  creditCode: v.optional(v.string()),
+  creditExpiresAt: v.optional(v.number()),
+  creditRedeemedAt: v.optional(v.number()),
+});
+
 // ─────────────────────────────────────────────────────────────
 // SCHEMA DEFINITION
 // ─────────────────────────────────────────────────────────────
@@ -139,6 +189,12 @@ export default defineSchema({
       ),
     ),
 
+    // ═══════════════════════════════════════════════════════════
+    // WOLF CONTRACT
+    // Gamified commitment: 30 Levels in 42 days → $88 credit
+    // ═══════════════════════════════════════════════════════════
+    wolfContract: v.optional(wolfContractValidator),
+
     // COPPA: Age verification for under-13
     dateOfBirth: v.optional(v.string()), // ISO date string
     isUnder13: v.optional(v.boolean()),
@@ -199,6 +255,39 @@ export default defineSchema({
     .index("by_athlete", ["athleteUserId"])
     .index("by_parent_email", ["parentEmail"])
     .index("by_verified", ["verified"]),
+
+  // ═══════════════════════════════════════════════════════════
+  // WOLF CONTRACT RESERVATIONS TABLE
+  // 15-minute holds after payment, before contract signing
+  // ═══════════════════════════════════════════════════════════
+  contractReservations: defineTable({
+    // Link to athlete
+    athleteUserId: v.id("users"),
+
+    // Payment info
+    stripePaymentIntentId: v.string(),
+    amountPaid: v.number(), // 88, 588, 69, 79 depending on currency
+    currency: v.string(), // USD, CNY, GBP, EUR
+
+    // Geography
+    country: v.string(),
+    countryCode: v.string(),
+
+    // Status
+    status: v.union(
+      v.literal("pending"), // Payment received, awaiting contract
+      v.literal("claimed"), // Contract signed within window
+      v.literal("expired"), // 15-min window passed
+    ),
+
+    // Timestamps
+    createdAt: v.number(),
+    expiresAt: v.number(), // createdAt + 15 minutes
+    claimedAt: v.optional(v.number()),
+  })
+    .index("by_athlete", ["athleteUserId"])
+    .index("by_status", ["status"])
+    .index("by_stripe_payment", ["stripePaymentIntentId"]),
 
   // ═══════════════════════════════════════════════════════════
   // ENROLLMENTS TABLE
@@ -796,4 +885,525 @@ export default defineSchema({
     .index("by_expert", ["expert"])
     .index("by_expert_type", ["expert", "exampleType"])
     .index("by_expert_category", ["expert", "category"]),
+
+  // ═══════════════════════════════════════════════════════════════
+  // ANSWER ENGINE - THE WIKIPEDIA OF YOUTH SPORTS
+  // Machine-readable content for AI citation (Perplexity, ChatGPT, etc.)
+  // ═══════════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────────
+  // EXPERTS TABLE (E-E-A-T)
+  // Author profiles for trust signals and citation
+  // ─────────────────────────────────────────────────────────────────
+  experts: defineTable({
+    slug: v.string(), // "james-scott", "adam-harrington"
+    name: v.string(),
+    title: v.string(),
+    icon: v.string(),
+    credentials: v.array(v.string()),
+    bio: v.string(),
+    avatarUrl: v.optional(v.string()),
+    socialLinks: v.optional(
+      v.object({
+        instagram: v.optional(v.string()),
+        twitter: v.optional(v.string()),
+        wikipedia: v.optional(v.string()),
+        youtube: v.optional(v.string()),
+      })
+    ),
+    voiceProfile: v.object({
+      tone: v.string(),
+      avoid: v.array(v.string()),
+      speechPatterns: v.array(v.string()),
+    }),
+    // Stats (computed, updated periodically)
+    drillCount: v.optional(v.number()),
+    articleCount: v.optional(v.number()),
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // ANSWER ENGINE DRILLS TABLE
+  // Structured training content for AI retrieval and programmatic SEO
+  // ─────────────────────────────────────────────────────────────────
+  ae_drills: defineTable({
+    // Identity
+    slug: v.string(),
+    title: v.string(),
+    subtitle: v.optional(v.string()),
+
+    // Categorization (programmatic SEO matrix)
+    sport: v.string(), // "basketball", "soccer", "general"
+    category: v.string(), // "shooting", "ball-handling", "ankle-mobility"
+    cluster: v.optional(v.string()), // "pain-relief", "silent-training"
+
+    // Age targeting
+    ageMin: v.number(),
+    ageMax: v.number(),
+
+    // Filtering
+    difficulty: v.string(), // "beginner", "intermediate", "advanced", "scalable"
+    tags: v.array(v.string()),
+    constraints: v.array(v.string()), // "no-equipment", "indoor", "solo"
+
+    // Core content
+    description: v.string(),
+    benefits: v.array(v.string()),
+    coachNote: v.optional(v.string()),
+
+    // Steps (structured for Schema.org HowTo)
+    steps: v.array(
+      v.object({
+        order: v.number(),
+        title: v.optional(v.string()),
+        instruction: v.string(),
+        duration: v.optional(v.string()),
+        durationSeconds: v.optional(v.number()),
+        coachingCue: v.optional(v.string()),
+        commonMistake: v.optional(v.string()),
+        videoUrl: v.optional(v.string()),
+      })
+    ),
+
+    // Coaching metadata
+    coachingCues: v.array(v.string()),
+    commonMistake: v.optional(v.string()),
+    mistakeFix: v.optional(v.string()),
+    warmup: v.optional(v.string()),
+    cooldown: v.optional(v.string()),
+
+    // Practical info
+    duration: v.string(), // "5-10 min"
+    reps: v.optional(v.string()), // "3 sets x 10 reps"
+    equipment: v.array(v.string()),
+
+    // Variations
+    variations: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          description: v.string(),
+          difficulty: v.string(),
+        })
+      )
+    ),
+
+    // Author (E-E-A-T)
+    authorId: v.id("experts"),
+    reviewedBy: v.optional(v.string()),
+    sources: v.optional(v.array(v.string())),
+
+    // Media
+    videoUrl: v.optional(v.string()),
+    thumbnailUrl: v.optional(v.string()),
+    gifUrl: v.optional(v.string()),
+
+    // Related content
+    relatedDrills: v.array(v.string()), // Slugs
+    parentProtocol: v.optional(v.string()),
+
+    // SEO
+    keywords: v.array(v.string()),
+    metaTitle: v.optional(v.string()),
+    metaDescription: v.optional(v.string()),
+
+    // Status & timestamps
+    status: v.string(), // "draft", "published", "archived"
+    publishedAt: v.optional(v.number()),
+    updatedAt: v.number(),
+
+    // Vector embedding (Phase 2 - semantic search)
+    embedding: v.optional(v.array(v.float64())),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_sport", ["sport", "status"])
+    .index("by_category", ["sport", "category", "status"])
+    .index("by_status", ["status"])
+    .index("by_author", ["authorId"])
+    .index("by_cluster", ["cluster"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // ANSWER ENGINE ARTICLES TABLE
+  // Q&A Pages / Parent Sidelines for featured snippets
+  // ─────────────────────────────────────────────────────────────────
+  ae_articles: defineTable({
+    // Identity
+    slug: v.string(),
+    question: v.string(),
+    category: v.string(),
+
+    // AEO Critical Elements (Featured Snippet targets)
+    directAnswer: v.string(), // 2-3 sentence answer for AI citation
+    keyTakeaways: v.array(v.string()),
+    safetyNote: v.optional(v.string()),
+
+    // Full content
+    body: v.string(), // MDX/Markdown
+
+    // Author (E-E-A-T)
+    authorId: v.id("experts"),
+    expertTitle: v.optional(v.string()),
+
+    // Linking
+    relatedPillar: v.optional(v.string()),
+    relatedDrills: v.array(v.string()), // Slugs
+
+    // SEO
+    keywords: v.array(v.string()),
+
+    // CTA
+    ctaText: v.optional(v.string()),
+    ctaUrl: v.optional(v.string()),
+
+    // Status & timestamps
+    status: v.string(), // "draft", "published", "archived"
+    publishedAt: v.number(),
+    updatedAt: v.number(),
+
+    // Vector embedding (Phase 2 - semantic search)
+    embedding: v.optional(v.array(v.float64())),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_category", ["category", "status"])
+    .index("by_status", ["status"])
+    .index("by_author", ["authorId"]),
+
+  // ═══════════════════════════════════════════════════════════════
+  // YP JUMP - xLENS VERIFICATION PROTOCOL
+  // Post-AGI Resilient Athletic Performance Verification
+  // "Proof of Physical Work" - The missing standard
+  // ═══════════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────────
+  // JUMP USERS TABLE
+  // Athlete profiles specific to YP Jump
+  // ─────────────────────────────────────────────────────────────────
+  jumpUsers: defineTable({
+    // Link to BetterAuth
+    authUserId: v.string(),
+
+    // Profile
+    displayName: v.string(),
+    birthYear: v.number(),
+    gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
+
+    // Location (city-level only for privacy)
+    city: v.string(),
+    state: v.optional(v.string()),
+    country: v.string(), // ISO 3166-1 alpha-2
+
+    // Privacy settings
+    profileVisibility: v.union(
+      v.literal("public"),
+      v.literal("regional"),
+      v.literal("private")
+    ),
+    showOnLeaderboards: v.boolean(),
+
+    // Daily cap tracking
+    dailyJumpsUsed: v.number(),
+    lastJumpResetAt: v.number(),
+
+    // Device binding
+    primaryDeviceKeyId: v.optional(v.id("deviceKeys")),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_auth_user", ["authUserId"])
+    .index("by_country", ["country"])
+    .index("by_city", ["country", "state", "city"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // SESSIONS TABLE (xLENS)
+  // Server-issued nonces for challenge-response verification
+  // Prevents pre-recorded video attacks
+  // ─────────────────────────────────────────────────────────────────
+  sessions: defineTable({
+    // Owner
+    userId: v.id("jumpUsers"),
+    deviceKeyId: v.optional(v.id("deviceKeys")),
+
+    // Nonce data
+    nonce: v.string(), // 16 bytes, base64 encoded
+    nonceDisplay: v.string(), // 6-8 alphanumeric chars for video overlay
+    nonceChirpFreqs: v.optional(v.array(v.number())), // Audio pattern frequencies (Phase C)
+
+    // Lifecycle
+    expiresAt: v.number(), // 120 seconds from creation
+    used: v.boolean(), // Can only use once
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_nonce", ["nonce"])
+    .index("by_expires", ["expiresAt"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // DEVICE KEYS TABLE (xLENS)
+  // Hardware-attested signing keys for proof of capture
+  // Layer 1 + 2 of the Three-Layer Defense
+  // ─────────────────────────────────────────────────────────────────
+  deviceKeys: defineTable({
+    // Owner
+    userId: v.id("jumpUsers"),
+
+    // Key identity
+    keyId: v.string(), // Unique identifier
+    publicKey: v.string(), // Base64 encoded public key (ES256)
+
+    // Platform info
+    platform: v.union(v.literal("ios"), v.literal("android")),
+    deviceModel: v.string(),
+    osVersion: v.string(),
+
+    // Attestation data (platform-specific)
+    attestationData: v.optional(v.any()), // App Attest / Play Integrity chain
+
+    // Trust scoring (0-1, degradable)
+    trustScore: v.number(), // Starts at 1.0
+    hardwareLevel: v.union(
+      v.literal("strongbox"), // Hardware-backed (Gold eligible)
+      v.literal("tee"), // Trusted Execution Environment (Silver max)
+      v.literal("software") // Software-only (Bronze max)
+    ),
+
+    // Lifecycle
+    createdAt: v.number(),
+    lastUsedAt: v.number(),
+    revokedAt: v.optional(v.number()),
+    revocationReason: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_key_id", ["keyId"])
+    .index("by_platform", ["platform"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // JUMPS TABLE (xLENS)
+  // Individual jump records with full proof packs
+  // THE MOAT: Always captures IMU data
+  // ─────────────────────────────────────────────────────────────────
+  jumps: defineTable({
+    // Owner
+    userId: v.id("jumpUsers"),
+    sessionId: v.id("sessions"),
+
+    // Measurement results
+    heightInches: v.optional(v.number()),
+    heightCm: v.optional(v.number()),
+    flightTimeMs: v.optional(v.number()),
+
+    // Verification
+    confidence: v.optional(v.number()), // 0-1 overall confidence
+    verificationTier: v.union(
+      v.literal("measured"), // Phase A: No tier claim
+      v.literal("bronze"), // Phase B+: Basic verification
+      v.literal("silver"), // Phase B+: Attested + correlated
+      v.literal("gold"), // Phase C: Full 4-gate
+      v.literal("rejected") // Failed crypto verification
+    ),
+
+    // VPC reference (Phase B+)
+    vpcId: v.optional(v.id("vpcs")),
+
+    // Evidence storage
+    videoStorageId: v.id("_storage"),
+    sensorStorageId: v.id("_storage"), // IMU data - ALWAYS CAPTURED
+
+    // Proof payload (what the device signed)
+    proofPayload: v.object({
+      sessionId: v.string(),
+      nonce: v.string(),
+      capture: v.object({
+        testType: v.literal("VERT_JUMP"),
+        startedAtMs: v.number(),
+        endedAtMs: v.number(),
+        fps: v.number(),
+        device: v.object({
+          platform: v.union(v.literal("ios"), v.literal("android")),
+          model: v.string(),
+          osVersion: v.string(),
+          appVersion: v.string(),
+        }),
+      }),
+      hashes: v.object({
+        videoSha256: v.string(),
+        sensorSha256: v.string(),
+        metadataSha256: v.string(),
+      }),
+      signature: v.object({
+        alg: v.literal("ES256"),
+        keyId: v.string(),
+        sig: v.string(), // Base64
+      }),
+      gps: v.optional(
+        v.object({
+          lat: v.number(),
+          lng: v.number(),
+          accuracyM: v.number(),
+          capturedAtMs: v.number(),
+        })
+      ),
+    }),
+
+    // Gate scores (ALWAYS computed, enforcement varies by phase)
+    gateScores: v.optional(
+      v.object({
+        attestation: v.number(), // Gate A: Device trust (0-1)
+        cryptoValid: v.boolean(), // Gate B: Hash + signature valid
+        liveness: v.number(), // Gate C: Nonce detection (0-1)
+        physics: v.number(), // Gate D: IMU correlation (0-1) - THE MOAT
+      })
+    ),
+
+    // AI analysis results
+    aiAnalysis: v.optional(
+      v.object({
+        takeoffFrame: v.number(),
+        landingFrame: v.number(),
+        nonceDetected: v.boolean(),
+        chirpDetected: v.optional(v.boolean()), // Phase C
+        imuCorrelation: v.number(),
+        confidence: v.union(v.literal("high"), v.literal("medium"), v.literal("low")),
+        issues: v.optional(v.array(v.string())),
+      })
+    ),
+
+    // Status
+    status: v.union(
+      v.literal("uploading"),
+      v.literal("processing"),
+      v.literal("complete"),
+      v.literal("flagged"),
+      v.literal("challenged")
+    ),
+    isPractice: v.boolean(), // Over daily cap
+
+    // Location (reverse geocoded from GPS)
+    gpsCity: v.optional(v.string()),
+    gpsState: v.optional(v.string()),
+    gpsCountry: v.optional(v.string()),
+
+    // Timestamps
+    createdAt: v.number(),
+    processedAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_created", ["userId", "createdAt"])
+    .index("by_session", ["sessionId"])
+    .index("by_status", ["status"])
+    .index("by_tier", ["verificationTier"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // VPCS TABLE (Phase B+)
+  // Verified Performance Certificates - Portable credentials
+  // "Proof of Physical Work" standard
+  // ─────────────────────────────────────────────────────────────────
+  vpcs: defineTable({
+    // Public identifiers
+    vpcId: v.string(), // vpc_xxx format
+    athleteId: v.string(), // ath_xxx pseudonymous ID
+
+    // Internal references
+    userId: v.id("jumpUsers"),
+    jumpId: v.id("jumps"),
+
+    // Test info
+    testType: v.literal("VERT_JUMP"),
+
+    // Result
+    result: v.object({
+      heightInches: v.number(),
+      heightCm: v.number(),
+      flightTimeMs: v.number(),
+    }),
+
+    // Verification details
+    verification: v.object({
+      tier: v.union(v.literal("bronze"), v.literal("silver"), v.literal("gold")),
+      confidence: v.number(),
+      gatesPassed: v.array(v.string()),
+      phase: v.union(v.literal("A"), v.literal("B"), v.literal("C")),
+    }),
+
+    // Evidence hashes (for independent verification)
+    proofs: v.object({
+      videoHash: v.string(),
+      sensorHash: v.string(),
+      sessionNonce: v.string(),
+    }),
+
+    // Capture metadata
+    capture: v.object({
+      deviceModel: v.string(),
+      appVersion: v.string(),
+      capturedAtUtc: v.string(),
+      fps: v.number(),
+    }),
+
+    // Certificate signing
+    issuedAtUtc: v.string(),
+    expiresAtUtc: v.optional(v.string()), // null = never expires
+    ypCaSignature: v.string(), // Base64 ES256 signature
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_vpc_id", ["vpcId"])
+    .index("by_athlete_id", ["athleteId"])
+    .index("by_user", ["userId"])
+    .index("by_jump", ["jumpId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // LEADERBOARD ENTRIES TABLE
+  // Cached rankings for fast queries (< 3 second load)
+  // ─────────────────────────────────────────────────────────────────
+  leaderboardEntries: defineTable({
+    // User reference
+    userId: v.id("jumpUsers"),
+
+    // Best jump reference
+    bestJumpId: v.id("jumps"),
+    bestVpcId: v.optional(v.id("vpcs")),
+
+    // Cached data for fast filtering
+    bestHeightInches: v.number(),
+    verificationTier: v.string(),
+
+    // Demographics (for filtering)
+    ageGroup: v.union(
+      v.literal("13-14"),
+      v.literal("15-16"),
+      v.literal("17-18"),
+      v.literal("19-22")
+    ),
+    gender: v.union(v.literal("male"), v.literal("female"), v.literal("other")),
+
+    // Location (for geographic filtering)
+    city: v.string(),
+    state: v.optional(v.string()),
+    country: v.string(),
+
+    // Computed ranks (updated periodically)
+    rankGlobal: v.optional(v.number()),
+    rankCountry: v.optional(v.number()),
+    rankState: v.optional(v.number()),
+    rankCity: v.optional(v.number()),
+
+    // Timestamps
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_global_rank", ["bestHeightInches"])
+    .index("by_country", ["country", "bestHeightInches"])
+    .index("by_state", ["country", "state", "bestHeightInches"])
+    .index("by_city", ["country", "state", "city", "bestHeightInches"])
+    .index("by_age_group", ["ageGroup", "bestHeightInches"])
+    .index("by_gender", ["gender", "bestHeightInches"])
+    .index("by_tier", ["verificationTier", "bestHeightInches"]),
 });

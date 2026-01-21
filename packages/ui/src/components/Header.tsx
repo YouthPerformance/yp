@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BetaBadge, type BetaBadgeVariant } from "./BetaBadge";
+import { VelocityLogo } from "./VelocityLogo";
 
 /**
  * YP Unified Header - "Wolf Pack Glass"
@@ -37,6 +38,10 @@ export interface HeaderProps {
   logoHref?: string;
   /** Logo image source (optional - falls back to text if not provided) */
   logoSrc?: string;
+  /** Enable WebGL velocity warp effect on logo (award-winning animation) */
+  enableVelocityWarp?: boolean;
+  /** Velocity warp intensity 0-1 (default: 1) */
+  velocityWarpIntensity?: number;
   /** Cart page URL */
   cartHref?: string;
   /** Login page URL */
@@ -66,6 +71,8 @@ export function Header({
   activePath,
   logoHref = "/",
   logoSrc,
+  enableVelocityWarp = false,
+  velocityWarpIntensity = 1,
   cartHref = "https://shop.youthperformance.com/cart",
   loginHref = "https://shop.youthperformance.com/account/login",
   showLogin = false,
@@ -112,37 +119,55 @@ export function Header({
           }}
         >
           {/* Left: Logo + Brand */}
-          <a
-            href={logoHref}
+          <div
             style={{
               display: "flex",
               alignItems: "center",
-              textDecoration: "none",
               gap: "12px",
             }}
           >
-            {logoSrc ? (
-              <img
+            {enableVelocityWarp && logoSrc ? (
+              <VelocityLogo
                 src={logoSrc}
+                href={logoHref}
+                width={100}
+                height={32}
+                intensity={velocityWarpIntensity}
                 alt="YP"
-                style={{
-                  height: "32px",
-                  width: "auto",
-                }}
               />
             ) : (
-              <span
+              <a
+                href={logoHref}
                 style={{
-                  fontFamily: "'Bebas Neue', Impact, sans-serif",
-                  fontSize: "36px",
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
-                  color: YP_CYAN,
-                  lineHeight: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
                 }}
               >
-                YP
-              </span>
+                {logoSrc ? (
+                  <img
+                    src={logoSrc}
+                    alt="YP"
+                    style={{
+                      height: "32px",
+                      width: "auto",
+                    }}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'Bebas Neue', Impact, sans-serif",
+                      fontSize: "36px",
+                      fontWeight: 700,
+                      letterSpacing: "-0.02em",
+                      color: YP_CYAN,
+                      lineHeight: 1,
+                    }}
+                  >
+                    YP
+                  </span>
+                )}
+              </a>
             )}
             {!hideSubtitle && (
               <span
@@ -158,7 +183,7 @@ export function Header({
                 WOLF PACK
               </span>
             )}
-          </a>
+          </div>
           {showBetaBadge && <BetaBadge variant={betaBadgeVariant} />}
 
           {/* Center: Desktop Navigation */}

@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/master.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/Capture/CaptureManager.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/CaptureManager.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/CaptureManager.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/CaptureManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/CaptureManager.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/Crypto/DeviceKeyManager.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/DeviceKeyManager.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/DeviceKeyManager.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/DeviceKeyManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/DeviceKeyManager.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/Crypto/ProofGenerator.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ProofGenerator.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ProofGenerator.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ProofGenerator~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ProofGenerator.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/Network/ConvexClient.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ConvexClient.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ConvexClient.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ConvexClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/ConvexClient.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/XLensClient.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensClient.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensClient.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensClient.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/XLensError.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensError.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensError.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensError~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/XLensError.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/Sources/xLENS/xLENS.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/xLENS.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/xLENS.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/xLENS~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENS.build/xLENS.swiftdeps"
+  }
+}

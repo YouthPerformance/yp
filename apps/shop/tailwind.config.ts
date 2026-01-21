@@ -30,6 +30,9 @@ export default {
         rotate: {
           to: { transform: "rotate(360deg)" },
         },
+        "spin-slow": {
+          to: { transform: "rotate(360deg)" },
+        },
         bloop: {
           "0%": { transform: "scale(0.9)" },
           "40%": { transform: "scale(1.1)" },
@@ -49,6 +52,7 @@ export default {
         rotate: "rotate 10s linear infinite",
         "rotate-slow": "rotate 20s linear infinite",
         "rotate-fast": "rotate 3s linear infinite",
+        "spin-slow": "spin-slow 8s linear infinite",
         bloop: "bloop 0.3s linear",
         shine: "shine 0.8s ease-out",
         float: "float 3s ease-in-out infinite",

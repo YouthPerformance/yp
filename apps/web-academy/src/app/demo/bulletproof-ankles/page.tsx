@@ -6,10 +6,18 @@
 "use client";
 
 import { X } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CardSwiper, ModuleProgress, XpCounter } from "@/components/modules";
+import { CardSwiper, ModuleProgressV2, XpCounterV2 } from "@/components/modules";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { bulletproofAnklesModule } from "@/data/modules/bulletproof-ankles";
 import { useModuleStore } from "@/stores/moduleStore";
 
@@ -64,21 +72,22 @@ export default function DemoBulletproofAnklesPage() {
 
   return (
     <div className="fixed inset-0 bg-[#0d0d0d] flex flex-col">
-      {/* Header */}
-      <header className="flex-none border-b border-gray-800 bg-[#1a1a1a]">
-        <div className="flex items-center justify-between px-4 py-3">
+      {/* Header - Premium V2 */}
+      <header className="flex-none border-b border-white/5 bg-gradient-to-b from-[#1a1a1a] to-[#141414]">
+        <div className="flex items-center justify-between px-4 py-4">
           {/* Left: Exit button */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleExit}
-            className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
             aria-label="Exit demo"
           >
-            <X className="w-5 h-5 text-gray-400" />
-          </button>
+            <X className="w-5 h-5" />
+          </Button>
 
-          {/* Center: Progress */}
-          <div className="flex-1 max-w-sm mx-4">
-            <ModuleProgress
+          {/* Center: Progress V2 */}
+          <div className="flex-1 flex justify-center mx-4">
+            <ModuleProgressV2
               sections={module.sections}
               currentSectionIndex={currentSectionIndex}
               currentCardIndex={currentCardIndex}
@@ -86,8 +95,8 @@ export default function DemoBulletproofAnklesPage() {
             />
           </div>
 
-          {/* Right: XP Counter */}
-          <XpCounter count={xpEarned} />
+          {/* Right: XP Counter V2 */}
+          <XpCounterV2 count={xpEarned} />
         </div>
       </header>
 
@@ -101,35 +110,33 @@ export default function DemoBulletproofAnklesPage() {
         />
       </main>
 
-      {/* Exit confirmation modal */}
-      {showExitConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-          <div className="bg-[#1a1a1a] border border-gray-700 rounded-2xl p-6 mx-4 max-w-sm w-full">
-            <h3 className="text-xl font-bebas uppercase tracking-wide text-white mb-2">
-              Exit Demo?
-            </h3>
-            <p className="text-gray-400 mb-6">
+      {/* Exit confirmation modal - ShadCN Dialog */}
+      <Dialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Exit Demo?</DialogTitle>
+            <DialogDescription>
               Return to the demo index.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowExitConfirm(false)}
-                className="flex-1 py-3 rounded-xl border border-gray-600 text-gray-300
-                         hover:border-cyan-500/50 hover:text-white transition-all"
-              >
-                Keep Learning
-              </button>
-              <button
-                onClick={confirmExit}
-                className="flex-1 py-3 rounded-xl bg-gray-800 text-white font-medium
-                         hover:bg-red-900/30 transition-colors"
-              >
-                Exit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-row gap-3 sm:gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowExitConfirm(false)}
+              className="flex-1"
+            >
+              Keep Learning
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmExit}
+              className="flex-1"
+            >
+              Exit
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Completion overlay */}
       {isCompleted && (
@@ -139,18 +146,16 @@ export default function DemoBulletproofAnklesPage() {
             <p className="text-3xl font-bebas text-cyan-400 mb-2">YOU'RE READY!</p>
             <p className="text-gray-400 mb-2">+{xpEarned} XP earned</p>
             <p className="text-white text-lg mb-6">Time to start the Barefoot Reset Challenge</p>
-            <button
+            <Button
+              size="lg"
               onClick={() => {
                 // Reset for replay in demo
                 setIsCompleted(false);
                 startModule(module.id, module.sections);
               }}
-              className="px-8 py-4 bg-accent-primary text-black font-bold uppercase tracking-wide rounded-xl
-                       hover:bg-accent-primary-hover transition-colors
-                       shadow-[0_0_20px_rgba(0,246,224,0.3)]"
             >
               Day One →
-            </button>
+            </Button>
             <p className="text-gray-600 text-xs mt-4">(Demo will reset)</p>
           </div>
         </div>

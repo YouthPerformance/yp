@@ -1,28 +1,43 @@
 import type { Metadata } from "next";
-import { SEO } from "./constants";
+
+// ═══════════════════════════════════════════════════════════
+// JAMES SCOTT - PROJECT BLACKOUT
+// "The Movement Scientist" Profile Page
+// ═══════════════════════════════════════════════════════════
 
 export const metadata: Metadata = {
-  title: SEO.title,
-  description: SEO.description,
-  keywords: SEO.keywords,
+  title: "James Scott | Movement Specialist & Foot Performance Coach",
+  description:
+    "James Scott is the Movement Scientist behind Weak Feet Don't Eat. Trainer of Jimmy Butler, NFL athletes, and global icons. Creator of the Barefoot Reset methodology.",
+  keywords: [
+    "james scott",
+    "weak feet don't eat",
+    "barefoot training",
+    "jimmy butler trainer",
+    "foot performance coach",
+    "youth athlete training",
+    "movement specialist",
+    "barefoot reset",
+  ],
   openGraph: {
-    title: SEO.title,
-    description: SEO.description,
+    title: "James Scott | The Movement Scientist",
+    description:
+      "Trainer of Jimmy Butler, NFL athletes, and global icons. Fix the feet, fix everything upstream.",
     type: "profile",
     images: [
       {
-        url: "/images/james/og-image.jpg",
+        url: "/images/james/jamesjimmyside.webp",
         width: 1200,
         height: 630,
-        alt: "James Scott - Founder of Youth Performance",
+        alt: "James Scott - Movement Specialist",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: SEO.title,
-    description: SEO.description,
-    images: ["/images/james/og-image.jpg"],
+    title: "James Scott | The Movement Scientist",
+    description: "Weak feet don't eat. Fix the feet, fix everything upstream.",
+    images: ["/images/james/jamesjimmyside.webp"],
   },
   alternates: {
     canonical: "https://academy.youthperformance.com/james",
@@ -35,7 +50,8 @@ const jsonLd = {
   "@type": "Person",
   name: "James Scott",
   jobTitle: "Movement Specialist & Foot Performance Coach",
-  description: SEO.description,
+  description:
+    "James Scott is the Movement Scientist behind Weak Feet Don't Eat. Trainer of Jimmy Butler, NFL athletes, and global icons. Creator of the Barefoot Reset methodology.",
   url: "https://academy.youthperformance.com/james",
   sameAs: ["https://instagram.com/weakfeetdonteat", "https://twitter.com/weakfeetdonteat"],
   worksFor: {

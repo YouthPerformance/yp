@@ -1,24 +1,60 @@
 // Hero - The Initiation
-// E14-2: Cinematic hero with clip-path text reveal
+// E14-2: Cinematic hero with clip-path text reveal + 3D Obsidian Wolf
+// Optimized: Delayed load, timeout fallback, reduced motion support
 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { clipReveal, fadeUp, scaleUp, staggerContainer } from "./motion";
+
+// Spline URL - centralized for easy updates (original wolf with built-in cyan eyes)
+const SPLINE_URL = "https://my.spline.design/untitled-4UQX0QNH8WggRoUO03X7u6CL/";
+const LOAD_TIMEOUT_MS = 10000; // 10s timeout before showing fallback
+const INITIAL_DELAY_MS = 150; // Let text paint first
 
 export function Hero() {
   const navigate = useNavigate();
+  const [wolfLoaded, setWolfLoaded] = useState(false);
+  const [shouldLoadWolf, setShouldLoadWolf] = useState(false);
+  const [loadTimedOut, setLoadTimedOut] = useState(false);
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  // Delayed load - let critical content paint first
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShouldLoadWolf(true);
+    }, INITIAL_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Timeout fallback - if Spline doesn't load in time
+  useEffect(() => {
+    if (!shouldLoadWolf || wolfLoaded) return;
+
+    const timeout = setTimeout(() => {
+      if (!wolfLoaded) {
+        setLoadTimedOut(true);
+        console.warn('3D Wolf load timed out, showing fallback');
+      }
+    }, LOAD_TIMEOUT_MS);
+
+    return () => clearTimeout(timeout);
+  }, [shouldLoadWolf, wolfLoaded]);
 
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#050505]">
-      {/* Background Video/Image with rim lighting effect */}
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-[#050505]">
+      {/* Background with rim lighting effect */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
         className="absolute inset-0"
       >
-        {/* Video placeholder - replace with actual video */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#050505]" />
+        {/* Pure black base for transparent wolf */}
+        <div className="absolute inset-0 bg-[#050505]" />
 
         {/* Cyan rim light glow - bottom right (smaller on mobile) */}
         <div className="absolute bottom-0 right-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-cyan-400/20 blur-[100px] md:blur-[150px] rounded-full translate-x-1/4 translate-y-1/4" />
@@ -26,6 +62,77 @@ export function Hero() {
         {/* Subtle top left glow (hidden on mobile for performance) */}
         <div className="hidden md:block absolute top-0 left-0 w-[400px] h-[400px] bg-cyan-400/10 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2" />
       </motion.div>
+
+      {/* 3D Obsidian Wolf - Spline Embed (Optimized) */}
+      {!prefersReducedMotion && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: wolfLoaded ? 1 : 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{ willChange: 'opacity, transform' }}
+        >
+          {/* Responsive cage for the wolf */}
+          <div
+            className="relative w-full max-w-[90vw] md:max-w-[800px] h-[50vh] md:h-[60vh] lg:h-[600px]"
+            style={{
+              background: 'transparent',
+              touchAction: 'pan-y',
+              willChange: 'transform',
+            }}
+          >
+            {/* Loading state - wolf silhouette pulse */}
+            {!wolfLoaded && !loadTimedOut && (
+              <div className="absolute inset-0 bg-[#050505] flex flex-col items-center justify-center gap-4">
+                {/* Pulsing wolf icon placeholder */}
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-full bg-cyan-400/10 animate-ping absolute inset-0" />
+                  <div className="w-16 h-16 rounded-full bg-cyan-400/20 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-cyan-400/60" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2L8 6H4v4l-2 2 2 2v4h4l4 4 4-4h4v-4l2-2-2-2V6h-4l-4-4zm0 4a6 6 0 110 12 6 6 0 010-12z"/>
+                    </svg>
+                  </div>
+                </div>
+                <span className="text-cyan-400/50 text-sm font-light tracking-wider">INITIALIZING</span>
+              </div>
+            )}
+
+            {/* Timeout fallback - static glow effect */}
+            {loadTimedOut && !wolfLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-48 h-48 rounded-full bg-cyan-400/20 blur-3xl animate-pulse" />
+              </div>
+            )}
+
+            {/* Spline iframe - only render when ready */}
+            {shouldLoadWolf && !loadTimedOut && (
+              <iframe
+                src={SPLINE_URL}
+                frameBorder="0"
+                width="100%"
+                height="100%"
+                title="3D Obsidian Wolf"
+                loading="lazy"
+                onLoad={() => setWolfLoaded(true)}
+                style={{
+                  background: 'transparent',
+                  pointerEvents: 'auto',
+                  opacity: wolfLoaded ? 1 : 0,
+                  transition: 'opacity 0.3s ease-out',
+                }}
+                allow="autoplay"
+              />
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Reduced motion fallback - static glow */}
+      {prefersReducedMotion && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-64 h-64 rounded-full bg-cyan-400/15 blur-3xl" />
+        </div>
+      )}
 
       {/* Content */}
       <motion.div

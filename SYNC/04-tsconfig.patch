@@ -1,0 +1,33 @@
+diff --git a/packages/knowledge-graph/tsconfig.json b/packages/knowledge-graph/tsconfig.json
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/packages/knowledge-graph/tsconfig.json
+@@ -0,0 +1,27 @@
++{
++  "compilerOptions": {
++    "target": "ES2022",
++    "module": "CommonJS",
++    "moduleResolution": "node",
++    "esModuleInterop": true,
++    "strict": true,
++    "skipLibCheck": true,
++    "outDir": "./dist",
++    "rootDir": ".",
++    "declaration": true,
++    "resolveJsonModule": true,
++    "baseUrl": ".",
++    "paths": {
++      "@/*": ["./*"]
++    }
++  },
++  "include": [
++    "data/**/*",
++    "scripts/**/*",
++    "convex/**/*"
++  ],
++  "exclude": [
++    "node_modules",
++    "dist"
++  ]
++}

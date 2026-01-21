@@ -1,0 +1,526 @@
+#!/usr/bin/env npx ts-node
+/**
+ * Entity Matrix Generator v2 - "Enterprise Edition"
+ *
+ * Generates entity stubs from the new hub-based architecture:
+ * 1. Uses anchor hub intent patterns for keyword generation
+ * 2. Generates spoke pages for each hub
+ * 3. Creates age × constraint variants
+ * 4. Applies parent safety questions ("Is X safe for Y year olds?")
+ *
+ * Matrix Structure:
+ * - Hub → Spoke → Age Band → Constraint = Entity Stub
+ *
+ * Intent Pattern Types:
+ * - Safety Anxiety: "Is {topic} safe for {age} year olds?"
+ * - Drill Patterns: "{topic} drills for {age} year olds"
+ * - Program Patterns: "{topic} program for youth athletes"
+ * - Test Patterns: "{test} norms by age"
+ * - Constraint Patterns: "{topic} at home / no equipment / silent"
+ *
+ * Usage:
+ *   export CONVEX_URL="https://your-project.convex.cloud"
+ *   npx ts-node scripts/generate-entity-matrix.ts
+ *   npx ts-node scripts/generate-entity-matrix.ts --execute
+ *   npx ts-node scripts/generate-entity-matrix.ts --hub=strength-training
+ */
+
+import {
+  ANCHOR_ENTITIES,
+  getAllAnchors,
+  getAllSpokes,
+  type AnchorEntity,
+  type PageType,
+} from "../data/anchor-entities";
+
+// Dynamic imports for Convex - only loaded when needed
+let client: any = null;
+
+async function initConvex() {
+  const CONVEX_URL = process.env.CONVEX_URL || "";
+  if (!CONVEX_URL) return null;
+
+  try {
+    // Use require to avoid TypeScript static analysis of missing modules
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { ConvexHttpClient } = require("convex/browser");
+    client = new ConvexHttpClient(CONVEX_URL);
+    return client;
+  } catch (error) {
+    console.log("   ⚠️  Convex not initialized - running in standalone mode");
+    return null;
+  }
+}
+
+function getApi() {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require("../convex/_generated/api").api;
+  } catch {
+    return null;
+  }
+}
+
+// =============================================================================
+// MATRIX DIMENSIONS
+// =============================================================================
+
+const AGE_BANDS = [
+  { slug: "8-10", label: "8-10 year olds", min: 8, max: 10 },
+  { slug: "11-12", label: "11-12 year olds", min: 11, max: 12 },
+  { slug: "13-15", label: "13-15 year olds", min: 13, max: 15 },
+  { slug: "16-18", label: "16-18 year olds", min: 16, max: 18 },
+] as const;
+
+const CONSTRAINTS = [
+  { slug: "home", name: "at home", keywords: ["at home", "home workout", "no gym"] },
+  { slug: "silent", name: "silent/apartment", keywords: ["apartment", "silent", "quiet"] },
+  { slug: "no-equipment", name: "no equipment", keywords: ["no equipment", "bodyweight"] },
+  { slug: "5-minute", name: "5 minutes", keywords: ["quick", "5 minute", "fast"] },
+  { slug: "beginner", name: "beginner", keywords: ["beginner", "first time", "starting out"] },
+] as const;
+
+// =============================================================================
+// INTENT PATTERN TEMPLATES
+// =============================================================================
+
+/**
+ * Safety anxiety patterns - what parents search when worried
+ */
+const SAFETY_PATTERNS = [
+  "Is {topic} safe for {age}?",
+  "Can {age} do {topic}?",
+  "{topic} dangers for kids",
+  "When can kids start {topic}?",
+  "{topic} risks for youth athletes",
+];
+
+/**
+ * Action/drill patterns - what to actually do
+ */
+const DRILL_PATTERNS = [
+  "{topic} drills for {age}",
+  "{topic} exercises for {age}",
+  "{topic} workout for {age}",
+  "best {topic} for {age}",
+  "{topic} progression for youth",
+];
+
+/**
+ * Program patterns - structured plans
+ */
+const PROGRAM_PATTERNS = [
+  "{topic} program for {age}",
+  "{topic} plan for youth athletes",
+  "{age} {topic} training plan",
+  "weekly {topic} routine for {age}",
+];
+
+/**
+ * Constraint patterns - specific situations
+ */
+const CONSTRAINT_PATTERNS = [
+  "{topic} {constraint}",
+  "{topic} drills {constraint}",
+  "{topic} for {age} {constraint}",
+  "{age} {topic} {constraint}",
+];
+
+// =============================================================================
+// ENTITY STUB TYPES
+// =============================================================================
+
+interface EntityStub {
+  id: string;
+  hubId: string;
+  hubSlug: string;
+  type: "hub_page" | "spoke_page" | "age_variant" | "constraint_variant" | "safety_page";
+  pageType: PageType;
+  slug: string;
+  title: string;
+  primaryKeyword: string;
+  secondaryKeywords: string[];
+  ageBand?: { min: number; max: number; label: string };
+  constraint?: string;
+  priority: number;
+  author: "james" | "adam" | "editorial";
+  riskLevel: "low" | "medium" | "medical_referral";
+  parentUrl: string;
+}
+
+// =============================================================================
+// GENERATION FUNCTIONS
+// =============================================================================
+
+/**
+ * Generate stubs from a hub's intent patterns
+ */
+function generateFromIntentPatterns(hub: AnchorEntity): EntityStub[] {
+  const stubs: EntityStub[] = [];
+  const topic = hub.primaryKeyword.replace(" for kids", "").replace(" for youth", "");
+
+  // 1. Safety pages - high priority, parent anxiety queries
+  for (const ageBand of AGE_BANDS) {
+    const safetyStub: EntityStub = {
+      id: `${hub.id}-safety-${ageBand.slug}`,
+      hubId: hub.id,
+      hubSlug: hub.slug,
+      type: "safety_page",
+      pageType: "faq",
+      slug: `${hub.slug}-safe-for-${ageBand.slug}`,
+      title: `Is ${hub.title.replace("Youth ", "")} Safe for ${ageBand.label.replace(" year olds", " Year Olds")}?`,
+      primaryKeyword: `is ${topic} safe for ${ageBand.label}`,
+      secondaryKeywords: [
+        `can ${ageBand.label} do ${topic}`,
+        `${topic} for ${ageBand.label}`,
+        `when to start ${topic}`,
+        `${ageBand.label} ${topic} risks`,
+      ],
+      ageBand: { min: ageBand.min, max: ageBand.max, label: ageBand.label },
+      priority: 90, // Safety pages are high priority
+      author: hub.author as "james" | "adam" | "editorial",
+      riskLevel: hub.riskLevel,
+      parentUrl: `/${hub.slug}`,
+    };
+    stubs.push(safetyStub);
+  }
+
+  // 2. Age-specific drill/guide pages
+  for (const ageBand of AGE_BANDS) {
+    const ageStub: EntityStub = {
+      id: `${hub.id}-drills-${ageBand.slug}`,
+      hubId: hub.id,
+      hubSlug: hub.slug,
+      type: "age_variant",
+      pageType: "drill",
+      slug: `${hub.slug}-for-${ageBand.slug}`,
+      title: `${hub.title.replace("Youth ", "")} for ${ageBand.label.replace(" year olds", " Year Olds")}`,
+      primaryKeyword: `${topic} for ${ageBand.label}`,
+      secondaryKeywords: [
+        `${topic} drills for ${ageBand.label}`,
+        `${ageBand.label} ${topic}`,
+        `${topic} exercises ${ageBand.label}`,
+      ],
+      ageBand: { min: ageBand.min, max: ageBand.max, label: ageBand.label },
+      priority: 75,
+      author: hub.author as "james" | "adam" | "editorial",
+      riskLevel: hub.riskLevel,
+      parentUrl: `/${hub.slug}`,
+    };
+    stubs.push(ageStub);
+  }
+
+  // 3. Constraint variants (at home, no equipment, etc.)
+  for (const constraint of CONSTRAINTS) {
+    // Skip nonsensical combinations
+    if (hub.slug === "nutrition" && constraint.slug === "no-equipment") continue;
+    if (hub.slug === "recovery" && constraint.slug === "5-minute") continue;
+
+    const constraintStub: EntityStub = {
+      id: `${hub.id}-${constraint.slug}`,
+      hubId: hub.id,
+      hubSlug: hub.slug,
+      type: "constraint_variant",
+      pageType: "drill",
+      slug: `${hub.slug}-${constraint.slug}`,
+      title: `${hub.title.replace("Youth ", "")} ${capitalize(constraint.name)}`,
+      primaryKeyword: `${topic} ${constraint.name}`,
+      secondaryKeywords: [
+        ...constraint.keywords.map((k) => `${topic} ${k}`),
+        `${topic} drills ${constraint.name}`,
+      ],
+      constraint: constraint.slug,
+      priority: 60,
+      author: hub.author as "james" | "adam" | "editorial",
+      riskLevel: hub.riskLevel,
+      parentUrl: `/${hub.slug}`,
+    };
+    stubs.push(constraintStub);
+
+    // Also create age + constraint combos for high-value hubs
+    if (hub.category === "foundation" || hub.category === "skill") {
+      for (const ageBand of AGE_BANDS.slice(0, 2)) {
+        // Just younger ages
+        const comboStub: EntityStub = {
+          id: `${hub.id}-${ageBand.slug}-${constraint.slug}`,
+          hubId: hub.id,
+          hubSlug: hub.slug,
+          type: "constraint_variant",
+          pageType: "drill",
+          slug: `${hub.slug}-${ageBand.slug}-${constraint.slug}`,
+          title: `${hub.title.replace("Youth ", "")} for ${ageBand.label.replace(" year olds", " Year Olds")} (${capitalize(constraint.name)})`,
+          primaryKeyword: `${topic} for ${ageBand.label} ${constraint.name}`,
+          secondaryKeywords: [
+            `${ageBand.label} ${topic} ${constraint.name}`,
+            `${topic} ${constraint.name} ${ageBand.label}`,
+          ],
+          ageBand: { min: ageBand.min, max: ageBand.max, label: ageBand.label },
+          constraint: constraint.slug,
+          priority: 50,
+          author: hub.author as "james" | "adam" | "editorial",
+          riskLevel: hub.riskLevel,
+          parentUrl: `/${hub.slug}`,
+        };
+        stubs.push(comboStub);
+      }
+    }
+  }
+
+  return stubs;
+}
+
+/**
+ * Generate spoke pages from hub spokes
+ */
+function generateSpokePages(hub: AnchorEntity): EntityStub[] {
+  return hub.spokes.map((spoke) => ({
+    id: `${hub.id}-spoke-${spoke.id}`,
+    hubId: hub.id,
+    hubSlug: hub.slug,
+    type: "spoke_page" as const,
+    pageType: spoke.pageType,
+    slug: spoke.slug,
+    title: spoke.title,
+    primaryKeyword: spoke.primaryKeyword,
+    secondaryKeywords: [
+      `${spoke.primaryKeyword} youth`,
+      `${spoke.primaryKeyword} kids`,
+    ],
+    priority: 80, // Spokes are high priority (branded content)
+    author: hub.author as "james" | "adam" | "editorial",
+    riskLevel: spoke.riskLevel,
+    parentUrl: `/${hub.slug}`,
+  }));
+}
+
+/**
+ * Generate hub landing page
+ */
+function generateHubPage(hub: AnchorEntity): EntityStub {
+  return {
+    id: `${hub.id}-hub`,
+    hubId: hub.id,
+    hubSlug: hub.slug,
+    type: "hub_page",
+    pageType: "faq", // Hub pages are comprehensive
+    slug: hub.slug,
+    title: hub.title,
+    primaryKeyword: hub.primaryKeyword,
+    secondaryKeywords: hub.secondaryKeywords,
+    priority: 100, // Hub pages are highest priority
+    author: hub.author as "james" | "adam" | "editorial",
+    riskLevel: hub.riskLevel,
+    parentUrl: "/",
+  };
+}
+
+// =============================================================================
+// FULL MATRIX GENERATION
+// =============================================================================
+
+function generateFullMatrix(hubFilter?: string): EntityStub[] {
+  const allStubs: EntityStub[] = [];
+  const hubs = hubFilter
+    ? getAllAnchors().filter((h) => h.slug === hubFilter)
+    : getAllAnchors();
+
+  for (const hub of hubs) {
+    // 1. Hub landing page
+    allStubs.push(generateHubPage(hub));
+
+    // 2. Spoke pages (branded systems)
+    allStubs.push(...generateSpokePages(hub));
+
+    // 3. Intent pattern variants (age, constraint, safety)
+    allStubs.push(...generateFromIntentPatterns(hub));
+  }
+
+  // Sort by priority
+  allStubs.sort((a, b) => b.priority - a.priority);
+
+  return allStubs;
+}
+
+// =============================================================================
+// CONTENT QUEUE INSERTION
+// =============================================================================
+
+async function addToContentQueue(stubs: EntityStub[]): Promise<void> {
+  const api = getApi();
+  if (!client || !api) {
+    console.log("⚠️  Convex not available. Skipping queue insertion.");
+    return;
+  }
+
+  console.log(`\n📥 Adding ${stubs.length} entities to content queue...`);
+
+  let added = 0;
+  let skipped = 0;
+
+  for (const stub of stubs) {
+    try {
+      await client.mutation(api.mutations.addToContentQueue, {
+        keyword: stub.primaryKeyword,
+        searchVolume: stub.priority >= 80 ? 1000 : stub.priority >= 60 ? 500 : 200,
+        difficulty: stub.riskLevel === "medical_referral" ? 80 : stub.riskLevel === "medium" ? 60 : 40,
+        source: "entity-matrix-v2",
+        targetEntityType: stub.pageType === "drill" ? "drill" : stub.pageType === "faq" ? "qna" : "guide",
+        sport: stub.hubSlug.includes("basketball") ? "basketball" : "general",
+        skill: stub.hubSlug,
+        priority: stub.priority,
+      });
+      added++;
+
+      if (added % 50 === 0) {
+        console.log(`   ... added ${added} entities`);
+      }
+    } catch (error) {
+      skipped++;
+    }
+  }
+
+  console.log(`   ✅ Added: ${added}, Skipped: ${skipped}`);
+}
+
+// =============================================================================
+// REPORTING
+// =============================================================================
+
+function printMatrixSummary(stubs: EntityStub[]): void {
+  console.log("\n" + "═".repeat(70));
+  console.log("📊 Entity Matrix v2 Summary");
+  console.log("═".repeat(70));
+
+  // By type
+  console.log("\n📌 By Entity Type:");
+  const types = ["hub_page", "spoke_page", "safety_page", "age_variant", "constraint_variant"];
+  for (const type of types) {
+    const count = stubs.filter((s) => s.type === type).length;
+    const emoji = {
+      hub_page: "🏠",
+      spoke_page: "🔗",
+      safety_page: "⚠️",
+      age_variant: "👶",
+      constraint_variant: "🔒",
+    }[type];
+    console.log(`   ${emoji} ${type}: ${count}`);
+  }
+
+  // By hub
+  console.log("\n📁 By Hub:");
+  const hubCounts = new Map<string, number>();
+  for (const stub of stubs) {
+    hubCounts.set(stub.hubSlug, (hubCounts.get(stub.hubSlug) || 0) + 1);
+  }
+  for (const [hub, count] of Array.from(hubCounts.entries()).sort((a, b) => b[1] - a[1])) {
+    console.log(`   ${hub}: ${count}`);
+  }
+
+  // By author
+  console.log("\n👤 By Author:");
+  console.log(`   James Scott: ${stubs.filter((s) => s.author === "james").length}`);
+  console.log(`   Adam Harrington: ${stubs.filter((s) => s.author === "adam").length}`);
+  console.log(`   Editorial: ${stubs.filter((s) => s.author === "editorial").length}`);
+
+  // By priority tier
+  console.log("\n🎯 By Priority Tier:");
+  console.log(`   P1 (90-100): ${stubs.filter((s) => s.priority >= 90).length}`);
+  console.log(`   P2 (70-89):  ${stubs.filter((s) => s.priority >= 70 && s.priority < 90).length}`);
+  console.log(`   P3 (50-69):  ${stubs.filter((s) => s.priority >= 50 && s.priority < 70).length}`);
+  console.log(`   P4 (<50):    ${stubs.filter((s) => s.priority < 50).length}`);
+
+  // Top 15 priority
+  console.log("\n🏆 Top 15 Priority Entities:");
+  for (const stub of stubs.slice(0, 15)) {
+    console.log(`   [P${stub.priority}] ${stub.title}`);
+    console.log(`         → ${stub.primaryKeyword}`);
+  }
+
+  console.log("\n" + "═".repeat(70));
+  console.log(`📊 Total Entities: ${stubs.length}`);
+  console.log("═".repeat(70));
+}
+
+function printUrlStructure(stubs: EntityStub[]): void {
+  console.log("\n🔗 URL Structure Preview:");
+  console.log("─".repeat(60));
+
+  const hubSlugs = [...new Set(stubs.map((s) => s.hubSlug))];
+
+  for (const hubSlug of hubSlugs.slice(0, 3)) {
+    console.log(`\n/${hubSlug}/`);
+    const hubStubs = stubs.filter((s) => s.hubSlug === hubSlug);
+
+    for (const stub of hubStubs.slice(0, 5)) {
+      if (stub.type === "hub_page") continue;
+      console.log(`  └── /${stub.slug}`);
+    }
+    if (hubStubs.length > 5) {
+      console.log(`  └── ... and ${hubStubs.length - 5} more`);
+    }
+  }
+}
+
+// =============================================================================
+// UTILITIES
+// =============================================================================
+
+function capitalize(str: string): string {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+// =============================================================================
+// MAIN
+// =============================================================================
+
+async function main() {
+  console.log("🔢 Entity Matrix Generator v2 - Enterprise Edition");
+  console.log("═".repeat(70));
+
+  // Parse args
+  const args = process.argv.slice(2);
+  const dryRun = !args.includes("--execute");
+  const hubArg = args.find((a: string) => a.startsWith("--hub="));
+  const hubFilter = hubArg?.split("=")[1];
+
+  // Initialize Convex if executing
+  if (!dryRun) {
+    client = await initConvex();
+  }
+
+  if (hubFilter) {
+    console.log(`\n🔍 Filtering to hub: ${hubFilter}`);
+  }
+
+  // Generate matrix
+  const stubs = generateFullMatrix(hubFilter);
+  printMatrixSummary(stubs);
+  printUrlStructure(stubs);
+
+  if (dryRun) {
+    console.log("\n⚠️  DRY RUN MODE - no data written");
+    console.log("   Use --execute to add to content queue.");
+    console.log("   Use --hub=slug to filter to a specific hub.");
+    console.log("\nExamples:");
+    console.log("   npx ts-node scripts/generate-entity-matrix.ts --execute");
+    console.log("   npx ts-node scripts/generate-entity-matrix.ts --hub=strength-training");
+    console.log("   npx ts-node scripts/generate-entity-matrix.ts --hub=basketball-skills --execute");
+
+    // Output sample JSON
+    console.log("\n📄 Sample Entity JSON (first entity):");
+    console.log(JSON.stringify(stubs[0], null, 2));
+  } else {
+    await addToContentQueue(stubs);
+    console.log("\n✅ Entity matrix added to content queue!");
+    console.log("   Next: Run content pipeline to generate content.");
+    console.log("   npx ts-node scripts/content-pipeline.ts --stage=queued --limit=10");
+  }
+}
+
+main().catch((err) => {
+  console.error("❌ Error:", err);
+  process.exit(1);
+});

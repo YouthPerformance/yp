@@ -1,26 +1,12 @@
 // ═══════════════════════════════════════════════════════════
-// ADAM HARRINGTON v2.5 / v3.0 - THE WOLF ARCHITECT
-// Component Exports
+// ADAM HARRINGTON PAGE COMPONENTS
+// Project Blueprint - "The Architect"
 // ═══════════════════════════════════════════════════════════
 
-// v2.5 Core Sections (in page order)
-export { Hero } from "./Hero";
-export { Navigation } from "./Navigation";
-export { Origin } from "./Origin";
-export { DualTrack } from "./DualTrack";
-export { JourneyTimeline } from "./JourneyTimeline";
-export { Receipts } from "./Receipts";
-export { VenturesGrid } from "./VenturesGrid";
-export { Family } from "./Family";
-export { ConversionCTA } from "./ConversionCTA";
-
-// v3.0 Interactive Features
-export { WolfModeToggle } from "./WolfModeToggle";
-export { AskAdamWidget } from "./AskAdamWidget";
-
-// Legacy Components (kept for compatibility)
-export { AthletesSection } from "./AthletesSection";
-export { CredentialsBar } from "./CredentialsBar";
-export { FinalCTA } from "./FinalCTA";
-export { Philosophy } from "./Philosophy";
-export { TestimonialCarousel } from "./TestimonialCarousel";
+export { HeroSection } from "./HeroSection";
+export { PhilosophySection } from "./PhilosophySection";
+export { RosterMarquee } from "./RosterMarquee";
+export { TestimonialDeck } from "./TestimonialDeck";
+export { Timeline } from "./Timeline";
+export { CTASection } from "./CTASection";
+export { GrainOverlay } from "./GrainOverlay";

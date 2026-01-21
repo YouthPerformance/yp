@@ -465,6 +465,139 @@ export const sendWelcomeEmail = internalAction({
 });
 
 // ─────────────────────────────────────────────────────────────
+// Send Bulletproof Ankles PDF (Lead Magnet)
+// ─────────────────────────────────────────────────────────────
+
+export const sendBulletproofAnklesPDF = internalAction({
+  args: {
+    to: v.string(),
+  },
+  handler: async (_ctx, args) => {
+    const pdfUrl = "https://youthperformance.com/pdf/bulletproof-ankles-guide.pdf";
+    const playbookUrl = "https://academy.youthperformance.com/playbook/bulletproof-ankles";
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #000; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px;">
+
+          <!-- Eyebrow -->
+          <tr>
+            <td style="padding: 0 0 24px; text-align: center;">
+              <p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #00f6e0;">
+                LOCK IN. LEVEL UP.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 0 16px; text-align: center;">
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; color: #ffffff; line-height: 1.2;">
+                Your Bulletproof Ankles Guide
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Subhead -->
+          <tr>
+            <td style="padding: 0 0 32px; text-align: center;">
+              <p style="margin: 0; font-size: 16px; color: #888888; line-height: 1.6;">
+                The same protocol used by elite prospects.<br>No fluff. Just results.
+              </p>
+            </td>
+          </tr>
+
+          <!-- PDF Download Button -->
+          <tr>
+            <td style="padding: 0 0 24px; text-align: center;">
+              <a href="${pdfUrl}" style="display: inline-block; background: #00f6e0; color: #000; font-weight: 700; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; letter-spacing: 0.05em;">
+                DOWNLOAD PDF →
+              </a>
+            </td>
+          </tr>
+
+          <!-- Playbook Access Card -->
+          <tr>
+            <td style="padding: 32px 0 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background: #111; border: 1px solid #222; border-radius: 12px;">
+                <tr>
+                  <td style="padding: 24px;">
+                    <h2 style="margin: 0 0 12px; font-size: 18px; font-weight: 700; color: #ffffff;">
+                      🎮 Unlock Interactive Training
+                    </h2>
+                    <p style="margin: 0 0 16px; font-size: 14px; color: #888; line-height: 1.6;">
+                      Go deeper with our Playbook Stack Cards. Swipe through drills, test your knowledge, earn XP.
+                    </p>
+                    <a href="${playbookUrl}" style="font-size: 14px; font-weight: 600; color: #00f6e0; text-decoration: none;">
+                      Start the Module →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 40px 0 0; text-align: center; border-top: 1px solid #222;">
+              <p style="margin: 24px 0 0; font-size: 12px; color: #444;">
+                YouthPerformance — Elite training for every kid, everywhere.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
+    const text = `LOCK IN. LEVEL UP.
+
+Your Bulletproof Ankles Guide
+
+The same protocol used by elite prospects. No fluff. Just results.
+
+DOWNLOAD PDF: ${pdfUrl}
+
+---
+
+UNLOCK INTERACTIVE TRAINING:
+Go deeper with our Playbook Stack Cards. Swipe through drills, test your knowledge, earn XP.
+Start the Module: ${playbookUrl}
+
+---
+
+YouthPerformance — Elite training for every kid, everywhere.`;
+
+    const result = await sendEmail({
+      to: args.to,
+      subject: "🔒 Your Bulletproof Ankles Guide",
+      html,
+      text,
+      lane: "coach",
+      tags: [
+        { name: "type", value: "lead-magnet" },
+        { name: "content", value: "bulletproof-ankles-pdf" },
+      ],
+    });
+
+    return result;
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
 // Test Email Action (for development)
 // ─────────────────────────────────────────────────────────────
 
@@ -504,3 +637,434 @@ export const sendTestEmail = action({
 
 // Import internal reference
 import { internal } from "./_generated/api";
+
+// ═══════════════════════════════════════════════════════════
+// WOLF CONTRACT EMAIL TEMPLATES
+// ═══════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────
+// Contract Signed - Sent to parent after athlete signs
+// ─────────────────────────────────────────────────────────────
+
+function contractSignedTemplate(
+  athleteName: string,
+  expiresAt: number
+): { html: string; text: string } {
+  const expiryDate = new Date(expiresAt).toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; padding: 40px 20px; margin: 0;">
+  <div style="max-width: 480px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h1 style="font-size: 28px; margin: 0; color: #00E5FF; letter-spacing: 2px;">WOLF CONTRACT SIGNED</h1>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <p style="margin: 0 0 16px; color: #888;">Hey there,</p>
+      <p style="margin: 0 0 16px; font-size: 18px;"><strong style="color: #00E5FF;">${athleteName}</strong> just signed the Wolf Contract.</p>
+      <p style="margin: 0 0 16px; color: #888;">The challenge:</p>
+      <ul style="margin: 0 0 16px; padding-left: 20px; color: #ccc;">
+        <li style="margin-bottom: 8px;"><strong>30 training levels</strong></li>
+        <li style="margin-bottom: 8px;"><strong>42 days</strong> to complete</li>
+        <li><strong>$88 NeoBall credit</strong> on completion</li>
+      </ul>
+      <p style="margin: 0; color: #888;">Contract expires: <strong style="color: #fff;">${expiryDate}</strong></p>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <h3 style="margin: 0 0 12px; color: #00E5FF;">YOUR ROLE</h3>
+      <p style="margin: 0; color: #888;">Check in weekly. Ask about their training. The Pack respects parents who hold athletes accountable.</p>
+    </div>
+
+    <p style="text-align: center; color: #666; font-size: 12px;">
+      Youth Performance · Building springs, not pistons.
+    </p>
+  </div>
+</body>
+</html>
+`;
+
+  const text = `
+WOLF CONTRACT SIGNED
+
+${athleteName} just signed the Wolf Contract.
+
+The challenge:
+- 30 training levels
+- 42 days to complete
+- $88 NeoBall credit on completion
+
+Contract expires: ${expiryDate}
+
+YOUR ROLE
+Check in weekly. Ask about their training. The Pack respects parents who hold athletes accountable.
+
+---
+Youth Performance · Building springs, not pistons.
+`;
+
+  return { html, text };
+}
+
+export const sendContractSignedEmail = internalAction({
+  args: {
+    to: v.string(),
+    athleteName: v.string(),
+    expiresAt: v.number(),
+  },
+  handler: async (_ctx, args) => {
+    const { html, text } = contractSignedTemplate(args.athleteName, args.expiresAt);
+    return sendEmail({
+      to: args.to,
+      subject: `🐺 ${args.athleteName} joined the Wolf Pack`,
+      html,
+      text,
+      lane: "pack",
+      tags: [
+        { name: "type", value: "contract-signed" },
+        { name: "athlete", value: args.athleteName },
+      ],
+    });
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// Weekly Progress - Sent to parent every Sunday
+// ─────────────────────────────────────────────────────────────
+
+function weeklyProgressTemplate(
+  athleteName: string,
+  levelsCompleted: number,
+  levelsRequired: number,
+  daysRemaining: number,
+  isOnTrack: boolean
+): { html: string; text: string } {
+  const progressPercent = Math.round((levelsCompleted / levelsRequired) * 100);
+  const statusColor = isOnTrack ? "#4CAF50" : "#FF9800";
+  const statusText = isOnTrack ? "ON TRACK" : "NEEDS TO CATCH UP";
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; padding: 40px 20px; margin: 0;">
+  <div style="max-width: 480px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h1 style="font-size: 28px; margin: 0; color: #00E5FF; letter-spacing: 2px;">WEEKLY UPDATE</h1>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; background: ${statusColor}20; color: ${statusColor};">${statusText}</span>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 48px; font-weight: bold; color: #00E5FF;">${levelsCompleted}</div>
+        <div style="color: #888;">of ${levelsRequired} levels completed</div>
+      </div>
+
+      <div style="background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+        <div style="background: #00E5FF; height: 100%; width: ${progressPercent}%;"></div>
+      </div>
+
+      <p style="margin: 0; text-align: center; color: #888;">
+        <strong style="color: #fff;">${daysRemaining} days</strong> remaining
+      </p>
+    </div>
+
+    ${!isOnTrack ? `
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid #FF9800;">
+      <h3 style="margin: 0 0 12px; color: #FF9800;">💬 CONVERSATION STARTER</h3>
+      <p style="margin: 0; color: #ccc;">"Hey, I noticed you're a bit behind on your Wolf Contract. What's getting in the way? Let's figure it out together."</p>
+    </div>
+    ` : `
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid #4CAF50;">
+      <h3 style="margin: 0 0 12px; color: #4CAF50;">🔥 KEEP THE MOMENTUM</h3>
+      <p style="margin: 0; color: #ccc;">${athleteName} is crushing it. A quick "proud of you" goes a long way.</p>
+    </div>
+    `}
+
+    <p style="text-align: center; color: #666; font-size: 12px;">
+      Youth Performance · Building springs, not pistons.
+    </p>
+  </div>
+</body>
+</html>
+`;
+
+  const text = `
+WEEKLY UPDATE - ${athleteName}
+
+Status: ${statusText}
+
+${levelsCompleted} of ${levelsRequired} levels completed (${progressPercent}%)
+${daysRemaining} days remaining
+
+${!isOnTrack
+    ? `CONVERSATION STARTER
+"Hey, I noticed you're a bit behind on your Wolf Contract. What's getting in the way? Let's figure it out together."`
+    : `KEEP THE MOMENTUM
+${athleteName} is crushing it. A quick "proud of you" goes a long way.`
+  }
+
+---
+Youth Performance · Building springs, not pistons.
+`;
+
+  return { html, text };
+}
+
+export const sendWeeklyProgressEmail = internalAction({
+  args: {
+    to: v.string(),
+    athleteName: v.string(),
+    levelsCompleted: v.number(),
+    levelsRequired: v.number(),
+    daysRemaining: v.number(),
+    isOnTrack: v.boolean(),
+  },
+  handler: async (_ctx, args) => {
+    const { html, text } = weeklyProgressTemplate(
+      args.athleteName,
+      args.levelsCompleted,
+      args.levelsRequired,
+      args.daysRemaining,
+      args.isOnTrack
+    );
+    return sendEmail({
+      to: args.to,
+      subject: `📊 ${args.athleteName}'s Weekly Contract Update: ${args.levelsCompleted}/${args.levelsRequired}`,
+      html,
+      text,
+      lane: "pack",
+      tags: [
+        { name: "type", value: "weekly-progress" },
+        { name: "athlete", value: args.athleteName },
+      ],
+    });
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// Contract Complete - Sent to parent with credit code
+// ─────────────────────────────────────────────────────────────
+
+function contractCompleteTemplate(
+  athleteName: string,
+  creditCode: string,
+  creditExpiresAt: number
+): { html: string; text: string } {
+  const expiryDate = new Date(creditExpiresAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; padding: 40px 20px; margin: 0;">
+  <div style="max-width: 480px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <div style="font-size: 64px; margin-bottom: 16px;">🏆</div>
+      <h1 style="font-size: 28px; margin: 0; color: #FFD700; letter-spacing: 2px;">CONTRACT COMPLETE</h1>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <p style="margin: 0 0 16px; font-size: 18px; text-align: center;">
+        <strong style="color: #00E5FF;">${athleteName}</strong> did it.
+      </p>
+      <p style="margin: 0; color: #888; text-align: center;">
+        30 levels. No shortcuts. They earned their credit.
+      </p>
+    </div>
+
+    <div style="background: linear-gradient(135deg, #00E5FF20 0%, #FFD70020 100%); border: 2px solid #00E5FF; border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center;">
+      <p style="margin: 0 0 8px; color: #888; font-size: 12px;">$88 NEOBALL CREDIT CODE</p>
+      <div style="font-family: monospace; font-size: 28px; letter-spacing: 4px; color: #00E5FF; margin-bottom: 8px;">
+        ${creditCode}
+      </div>
+      <p style="margin: 0; color: #666; font-size: 12px;">
+        Valid until ${expiryDate}
+      </p>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <h3 style="margin: 0 0 12px; color: #00E5FF;">HOW TO REDEEM</h3>
+      <ol style="margin: 0; padding-left: 20px; color: #ccc;">
+        <li style="margin-bottom: 8px;">Visit neoball.io/shop</li>
+        <li style="margin-bottom: 8px;">Add items to cart</li>
+        <li>Enter code at checkout</li>
+      </ol>
+    </div>
+
+    <p style="text-align: center; color: #666; font-size: 12px;">
+      Youth Performance · Building springs, not pistons.
+    </p>
+  </div>
+</body>
+</html>
+`;
+
+  const text = `
+🏆 CONTRACT COMPLETE
+
+${athleteName} did it.
+
+30 levels. No shortcuts. They earned their credit.
+
+$88 NEOBALL CREDIT CODE
+${creditCode}
+Valid until ${expiryDate}
+
+HOW TO REDEEM
+1. Visit neoball.io/shop
+2. Add items to cart
+3. Enter code at checkout
+
+---
+Youth Performance · Building springs, not pistons.
+`;
+
+  return { html, text };
+}
+
+export const sendContractCompleteEmail = internalAction({
+  args: {
+    to: v.string(),
+    athleteName: v.string(),
+    creditCode: v.string(),
+    creditExpiresAt: v.number(),
+  },
+  handler: async (_ctx, args) => {
+    const { html, text } = contractCompleteTemplate(
+      args.athleteName,
+      args.creditCode,
+      args.creditExpiresAt
+    );
+    return sendEmail({
+      to: args.to,
+      subject: `🏆 ${args.athleteName} completed the Wolf Contract!`,
+      html,
+      text,
+      lane: "pack",
+      tags: [
+        { name: "type", value: "contract-complete" },
+        { name: "athlete", value: args.athleteName },
+      ],
+    });
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// Contract Failed - Sent to parent when contract expires
+// ─────────────────────────────────────────────────────────────
+
+function contractFailedTemplate(
+  athleteName: string,
+  levelsCompleted: number,
+  levelsRequired: number
+): { html: string; text: string } {
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; padding: 40px 20px; margin: 0;">
+  <div style="max-width: 480px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h1 style="font-size: 28px; margin: 0; color: #888; letter-spacing: 2px;">CONTRACT EXPIRED</h1>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <p style="margin: 0 0 16px; color: #888;">
+        ${athleteName}'s Wolf Contract has expired.
+      </p>
+      <p style="margin: 0 0 16px;">
+        <strong style="color: #fff;">${levelsCompleted}</strong> of <strong>${levelsRequired}</strong> levels completed.
+      </p>
+      <p style="margin: 0; color: #888;">
+        The $88 credit wasn't earned. But every level they completed still counts — the training is theirs forever.
+      </p>
+    </div>
+
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <h3 style="margin: 0 0 12px; color: #00E5FF;">WHAT NOW?</h3>
+      <p style="margin: 0; color: #ccc;">
+        The Pack is still here. ${athleteName} can continue training anytime — they just won't earn the credit this round.
+      </p>
+    </div>
+
+    <p style="text-align: center; color: #666; font-size: 12px;">
+      Youth Performance · Building springs, not pistons.
+    </p>
+  </div>
+</body>
+</html>
+`;
+
+  const text = `
+CONTRACT EXPIRED
+
+${athleteName}'s Wolf Contract has expired.
+
+${levelsCompleted} of ${levelsRequired} levels completed.
+
+The $88 credit wasn't earned. But every level they completed still counts — the training is theirs forever.
+
+WHAT NOW?
+The Pack is still here. ${athleteName} can continue training anytime — they just won't earn the credit this round.
+
+---
+Youth Performance · Building springs, not pistons.
+`;
+
+  return { html, text };
+}
+
+export const sendContractFailedEmail = internalAction({
+  args: {
+    to: v.string(),
+    athleteName: v.string(),
+    levelsCompleted: v.number(),
+    levelsRequired: v.number(),
+  },
+  handler: async (_ctx, args) => {
+    const { html, text } = contractFailedTemplate(
+      args.athleteName,
+      args.levelsCompleted,
+      args.levelsRequired
+    );
+    return sendEmail({
+      to: args.to,
+      subject: `Wolf Contract expired - ${args.athleteName}`,
+      html,
+      text,
+      lane: "pack",
+      tags: [
+        { name: "type", value: "contract-failed" },
+        { name: "athlete", value: args.athleteName },
+      ],
+    });
+  },
+});

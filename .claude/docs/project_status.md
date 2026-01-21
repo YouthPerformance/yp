@@ -1,14 +1,64 @@
 # Project Status: The Grind
 
 > **Current Phase:** Phase 8 (Governance & Production Hardening)
-> **Last Updated:** January 8, 2026 @ 18:00 PST
-> **Sprint:** BetterAuth Migration + Unified UI
+> **Last Updated:** January 17, 2026
+> **Sprint:** WolfGrow Content Strategy + Hydration Calculator
 
 ---
 
 ## Active Context (What We're Doing RIGHT NOW)
 
 ### Completed This Session
+- [x] **WolfGrow Content Strategy Spec** - 2026 Content Quality Standard
+  - Spec: `.specify/specs/011-wolfgrow-content-strategy/spec.md`
+  - Part 1: E-E-A-T 2.0 Protocol, Answer Engine Optimization, Interactive Utility pillars
+  - Part 2: Hydro-Wolf Calculator PRD with Wolf Algorithm formulas
+  - Constitution alignment verified, success metrics defined
+
+- [x] **Hydro-Wolf Calculator** - Premium 2026 UI implementation
+  - Route: `/hydration-calculator` on youthperformance.com
+  - Component: `apps/marketing/src/pages/HydrationCalculator.jsx`
+  - Styling: `apps/marketing/src/pages/HydrationCalculator.css`
+  - Features: Reactive sliders, animated numbers, water level indicator
+  - Wolf Algorithm: Weight × 0.75oz baseline + activity adder
+  - Electrolyte Alert triggers at 60+ min duration
+  - Email capture modal for printable plan (Resend integration TODO)
+  - SoftwareApplication JSON-LD schema for SEO
+  - Build verified: passing
+
+### Previous Session
+- [x] **WolfLoader Academy Integration** - Premium WebGL loader across apps
+  - Academy root page (`/`) now uses WolfLoader (Unicorn WebGL mode)
+  - Marketing LP upgraded from YPLoader to WolfLoader
+  - Fixed type errors in `WolfEvolution.tsx` (accessory types, ring colors)
+  - All apps build successfully
+
+- [x] **WolfLoader Component** - Premium WebGL loader with progressive enhancement
+  - Created `packages/ui/src/components/WolfLoader/` (shared component)
+  - `useUnicornStudio.ts` - Lazy SDK loading hook with timeout fallback
+  - `WolfLoader.tsx` - Orchestrating component (Instant → Video → WebGL)
+  - `WolfLoader.css` - Premium animations, reduced motion support
+  - Integrated into Marketing LP as first consumer
+  - Unicorn Studio project: `J6lD9h4nUQCDLGwKF7Aw`
+  - Progressive enhancement: Black+typography (0ms) → Video (~200ms) → WebGL (~1s)
+
+### Previous Session
+- [x] **Test Infrastructure Setup** - Critical path testing for auth, payments, data
+  - Added Vitest with config: `apps/web-academy/vitest.config.ts`
+  - Created test mocks: `src/__tests__/mocks/` (stripe.ts, auth.ts, convex.ts)
+  - Written auth tests: `src/__tests__/auth.test.ts`
+  - Written Stripe webhook tests: `src/__tests__/stripe-webhook.test.ts`
+  - Written Convex mutation tests: `src/__tests__/convex-mutations.test.ts`
+  - Created agent guide: `TESTING.md`
+  - Updated CI workflow with test job
+
+- [x] **Commerce Architecture Documentation** - Clarified Shop vs Academy payments
+  - Updated `CLAUDE.md` with commerce systems table
+  - Shop = Shopify Hydrogen (physical goods)
+  - Academy = Stripe (digital: SaaS, programs, info products)
+  - Added Testing Strategy section to CLAUDE.md
+
+### Previous Session
 - [x] **Unified BetaBadge Component** - Created shared `@yp/ui` BetaBadge component
   - Added to `packages/ui/src/components/BetaBadge.tsx`
   - 3 variants: stealth, glow, holographic
@@ -41,9 +91,10 @@
 - [x] Production verified at https://academy.youthperformance.com
 
 ### Current Focus
+- Hydration Calculator live at `/hydration-calculator` - needs Resend email integration
+- WolfGrow Content Strategy spec ready for rollout to other content pages
 - Adam v2.0 spec ready for design/dev handoff
-- Voice onboarding ready for mobile testing
-- Dev server: http://localhost:3003 | Network: http://192.168.2.1:3003
+- Dev server: http://localhost:3004 (marketing)
 
 ---
 
@@ -123,7 +174,7 @@ GOOGLE_CLIENT_SECRET=     # Optional - OAuth
 | Security Issues | 0 | 1 (tokens) | Improved |
 | Broken Links | 0 | 0 | Stable |
 | CI Coverage | 100% | 75% | - |
-| Test Coverage | 30% | 0% | - |
+| Test Coverage | 30% | 15% | +15% (critical paths)
 
 ---
 
@@ -145,13 +196,19 @@ e76bc8a fix(academy): SSG-safe providers for Vercel build
 
 ## Notes for Next Session
 
-1. **Test voice onboarding** on mobile device (192.168.2.1:3003/voice-sorting)
-2. **Rotate Shopify tokens** (security P0) - user handling
-3. **Configure Linear MCP** (user has API key ready)
-4. **Set production OAuth credentials** - Google/Apple client IDs for BetterAuth
-5. **Test auth flow end-to-end** - sign-up → OTP → session → Convex queries
+1. **Hydration Calculator Enhancements:**
+   - Integrate Resend API for email capture (printable plan + electrolyte recipes)
+   - Add PostHog events: `hydration_calc_complete`, `hydration_email_capture`
+   - Test mobile UX at 375px viewport
+2. **WolfGrow Rollout:**
+   - Apply WolfGrow Content Standard to existing drill pages
+   - Add "Proof of Life" video embeds for Adam/James
+   - Create Author Entity schemas
+3. **Rotate Shopify tokens** (security P0) - user handling
+4. **Configure Linear MCP** (user has API key ready)
+5. **Set production OAuth credentials** - Google/Apple client IDs for BetterAuth
 
 ---
 
 *Updated by: Claude (Wolf Pack Protocol)*
-*Session: BetterAuth Audit + Unified BetaBadge*
+*Session: WolfGrow Content Strategy + Hydration Calculator*

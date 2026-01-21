@@ -63,10 +63,39 @@ This monorepo uses **layered CLAUDE.md files**. Read only what you need:
 | YP Vision | Next.js 14 | - | 3005 |
 | Playbook | Astro | Vercel | 3006 |
 | Database | Convex | Convex Cloud | 8188 |
-| Auth | Clerk | - | - |
+| Auth | BetterAuth | - | - |
 | AI | Claude (Anthropic) | - | - |
 
 > **Port conflicts?** See `.claude/docs/ports.md` for full registry and troubleshooting.
+
+---
+
+## Commerce Systems
+
+YP has **two separate commerce systems**. Don't confuse them.
+
+| System | Platform | Payments | Products | Location |
+|--------|----------|----------|----------|----------|
+| **Shop** | Shopify Hydrogen | Shopify Payments | Physical goods (NeoBall, merch) | `apps/shop/` (Oxygen) |
+| **Academy** | Next.js | Stripe | Digital (SaaS, programs, info products) | `apps/web-academy/` (Vercel) |
+
+### Academy Stripe Products (Digital)
+| Product | Type | Price | Status |
+|---------|------|-------|--------|
+| Barefoot Reset 88 | One-time | $88 | Live |
+| Pro Subscription | SaaS | TBD | Planned |
+| Season Pass | Subscription | TBD | Planned |
+| Info Products | One-time | Varies | Planned |
+
+### Stripe Integration (Academy)
+- **Checkout:** `apps/web-academy/src/app/api/checkout/route.ts`
+- **Webhooks:** `apps/web-academy/src/app/api/webhooks/stripe/route.ts`
+- **Flow:** Checkout → Stripe → Webhook → Convex (entitlements + subscription)
+
+### Shopify Integration (Shop)
+- Separate from Academy - physical products only
+- Uses Shopify Payments (not Stripe)
+- Golden tickets connect purchases to Academy entitlements
 
 ---
 
@@ -84,6 +113,34 @@ This monorepo uses **layered CLAUDE.md files**. Read only what you need:
 | `.claude/docs/cheatsheet.md` | Common commands |
 | `.claude/docs/troubleshooting.md` | Error fixes |
 | `.claude/docs/architecture.md` | System design |
+
+---
+
+## Private Context Vault
+
+Proprietary brand documents are stored locally and never committed to git.
+
+```
+.claude/
+├── private/           # GITIGNORED - Proprietary docs stay local
+│   ├── adam/          # Adam Harrington brand assets
+│   ├── james/         # James Scott brand assets
+│   └── mike/          # Mike Di brand assets
+├── derived/           # COMMITTED - Sanitized voice guides for agents
+│   ├── adam-voice-guide.md
+│   ├── james-voice-guide.md
+│   └── mike-voice-guide.md
+└── docs/              # COMMITTED - Agent context docs
+```
+
+### For Content Generation
+1. Read derived guides from `.claude/derived/` for voice patterns
+2. Reference TypeScript voice definitions in `packages/yp-alpha/src/voices/` for production AI
+
+### For Updating Voice Guides
+1. Read private docs from `.claude/private/`
+2. Update derived guides (commit-safe)
+3. Update TS voice files if needed
 
 ---
 
@@ -106,10 +163,39 @@ pnpm dev                    # Start all apps
 pnpm build                  # Build all
 pnpm typecheck              # Type check all
 pnpm lint                   # Lint all
+pnpm test                   # Run all tests
+pnpm test:critical          # Run critical path tests only
 
 # Single app
 pnpm turbo run dev --filter=@yp/web-academy
+pnpm turbo run test --filter=@yp/web-academy
 ```
+
+---
+
+## Testing Strategy
+
+> **Philosophy:** Test what matters. Auth, payments, and data mutations are critical. UI can be manually tested.
+
+### Critical Test Coverage
+| Area | What We Test | Why |
+|------|--------------|-----|
+| Auth | Session validation, OTP flow, user creation | Login breaks = everything breaks |
+| Stripe | Webhook signatures, checkout creation, subscription updates | Money = trust |
+| Convex | Authorization, user mutations, entitlement updates | Data corruption = disaster |
+
+### Test Locations
+```
+packages/yp-alpha/src/__tests__/     # Shared logic, Convex mocks
+apps/web-academy/src/__tests__/      # Academy-specific (Stripe, auth)
+```
+
+### For Onboarding Agents
+Before making changes:
+1. Run `pnpm test:critical` - must pass
+2. If adding auth/payment/data logic, add tests
+3. Never skip webhook signature validation
+4. See `TESTING.md` for mocking patterns
 
 ---
 

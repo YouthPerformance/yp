@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.build/master.swiftdeps"
+  },
+  "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.build/runner.d",
+    "object": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/magicmike/yp-monorepo/packages/xlens-ios/.build/arm64-apple-macosx/debug/xLENSPackageTests.build/runner.swiftdeps"
+  }
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- YP Brand Colors -->
+    <color name="yp_primary">#007AFF</color>
+    <color name="yp_primary_dark">#0056B3</color>
+    <color name="yp_accent">#34C759</color>
+
+    <!-- Background -->
+    <color name="yp_background">#FAFAFA</color>
+    <color name="yp_surface">#FFFFFF</color>
+    <color name="yp_surface_variant">#F2F2F7</color>
+
+    <!-- Text -->
+    <color name="yp_on_background">#1C1C1E</color>
+    <color name="yp_on_surface">#1C1C1E</color>
+    <color name="yp_on_surface_variant">#8E8E93</color>
+
+    <!-- Verification Tiers -->
+    <color name="tier_bronze">#CD7F32</color>
+    <color name="tier_silver">#C0C0C0</color>
+    <color name="tier_gold">#FFD700</color>
+    <color name="tier_platinum">#E5E4E2</color>
+
+    <!-- Semantic -->
+    <color name="success">#34C759</color>
+    <color name="warning">#FF9500</color>
+    <color name="error">#FF3B30</color>
+</resources>

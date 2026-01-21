@@ -108,6 +108,18 @@ export default function ContentReviewPage() {
             Review and approve AI-generated Playbook content
           </p>
         </div>
+        {/* Quick Review Mode Button */}
+        <Link
+          href="/admin/quick-review"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all"
+          style={{
+            backgroundColor: "var(--accent-primary)",
+            color: "var(--bg-primary)",
+          }}
+        >
+          <span>🎙️</span>
+          <span>Quick Review Mode</span>
+        </Link>
       </div>
 
       {/* Stats Cards */}

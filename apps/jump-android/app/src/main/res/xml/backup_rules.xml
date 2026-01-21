@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Backup rules file for Android Auto Backup. Specifies what files to
+   backup. See https://developer.android.com/guide/topics/data/autobackup
+-->
+<full-backup-content>
+    <!-- Include shared preferences -->
+    <include domain="sharedpref" path="."/>
+    <!-- Exclude cached data -->
+    <exclude domain="cache" path="."/>
+    <!-- Exclude temporary video files -->
+    <exclude domain="file" path="videos/"/>
+    <!-- Exclude no-backup directory -->
+    <exclude domain="file" path="no_backup/"/>
+</full-backup-content>

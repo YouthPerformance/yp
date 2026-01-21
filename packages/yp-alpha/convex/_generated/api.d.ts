@@ -8,12 +8,16 @@
  * @module
  */
 
+import type * as answerEngine from "../answerEngine.js";
 import type * as campaigns from "../campaigns.js";
+import type * as contracts from "../contracts.js";
+import type * as crons from "../crons.js";
 import type * as emails from "../emails.js";
 import type * as gamification from "../gamification.js";
 import type * as http from "../http.js";
 import type * as leads from "../leads.js";
 import type * as learningModules from "../learningModules.js";
+import type * as loops from "../loops.js";
 import type * as memory_ingest from "../memory/ingest.js";
 import type * as memory_retrieve from "../memory/retrieve.js";
 import type * as playbook from "../playbook.js";
@@ -29,12 +33,16 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  answerEngine: typeof answerEngine;
   campaigns: typeof campaigns;
+  contracts: typeof contracts;
+  crons: typeof crons;
   emails: typeof emails;
   gamification: typeof gamification;
   http: typeof http;
   leads: typeof leads;
   learningModules: typeof learningModules;
+  loops: typeof loops;
   "memory/ingest": typeof memory_ingest;
   "memory/retrieve": typeof memory_retrieve;
   playbook: typeof playbook;

@@ -1,5 +1,6 @@
 console.log("[YP Debug] main.jsx loading...");
 
+import posthog from "posthog-js";
 import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
@@ -11,6 +12,62 @@ import { UIProvider } from "./context/UIContext";
 import "./index.css";
 
 console.log("[YP Debug] imports complete");
+
+// PostHog Analytics Initialization - Full Funnel Tracking
+const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY;
+const POSTHOG_HOST = import.meta.env.VITE_POSTHOG_HOST || "https://us.i.posthog.com";
+
+if (POSTHOG_KEY) {
+  posthog.init(POSTHOG_KEY, {
+    api_host: POSTHOG_HOST,
+    // Autocapture everything
+    autocapture: true,
+    capture_pageview: true,
+    capture_pageleave: true,
+    // Session recordings for full user journey
+    disable_session_recording: false,
+    session_recording: {
+      maskAllInputs: false, // We want to see email inputs
+      maskInputOptions: {
+        password: true, // Mask passwords only
+      },
+    },
+    // Heatmaps
+    enable_heatmaps: true,
+    // Error tracking
+    capture_performance: true,
+    // Cross-domain tracking
+    cross_subdomain_cookie: true,
+    // Persistence
+    persistence: "localStorage+cookie",
+    // Bootstrap for faster loading
+    bootstrap: {
+      distinctID: localStorage.getItem("yp_user_id") || undefined,
+    },
+    // Loaded callback
+    loaded: (ph) => {
+      console.log("[PostHog] Initialized with full tracking");
+      // Capture UTM params
+      const params = new URLSearchParams(window.location.search);
+      const utm = {
+        utm_source: params.get("utm_source"),
+        utm_medium: params.get("utm_medium"),
+        utm_campaign: params.get("utm_campaign"),
+        utm_content: params.get("utm_content"),
+        utm_term: params.get("utm_term"),
+        referrer: document.referrer,
+        landing_page: window.location.pathname,
+      };
+      if (Object.values(utm).some((v) => v)) {
+        ph.register(utm); // Attach to all future events
+      }
+    },
+  });
+  // Make globally available for LP and other components
+  window.posthog = posthog;
+} else {
+  console.warn("[PostHog] No API key found - analytics disabled");
+}
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;

@@ -25,7 +25,9 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
         <ThemeProvider>
           <Header
             logoHref="/"
-            logoSrc="/logo/yp-logo.png"
+            logoSrc="/logo/YP-LOGO.svg"
+            enableVelocityWarp
+            velocityWarpIntensity={1}
             hideSubtitle
             showCart={false}
             links={[

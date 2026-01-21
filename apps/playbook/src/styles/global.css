@@ -324,6 +324,54 @@
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TABLE OF CONTENTS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .toc-nav {
+    @apply rounded-lg overflow-hidden;
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-default);
+  }
+
+  .toc-header {
+    @apply flex items-center gap-2 px-3 py-2 font-mono text-label uppercase tracking-widest;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .toc-list {
+    @apply list-none p-0 m-0;
+  }
+
+  .toc-list li {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .toc-list li:last-child {
+    border-bottom: none;
+  }
+
+  .toc-link {
+    @apply flex items-center gap-3 px-3 py-2.5 text-body-sm transition-all;
+    color: var(--text-secondary);
+  }
+
+  .toc-link:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+
+  .toc-link:hover .toc-num {
+    background-color: var(--accent-primary);
+    color: #000;
+  }
+
+  .toc-num {
+    @apply font-mono text-label px-1.5 py-0.5 rounded transition-all;
+    background-color: var(--bg-elevated);
+    color: var(--text-muted);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      DRILL CARD
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   .drill-card {

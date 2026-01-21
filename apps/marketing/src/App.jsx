@@ -34,6 +34,9 @@ import PortalFrameTest from "./pages/test/PortalFrameTest";
 import Waitlist from "./pages/Waitlist";
 import WolfChat from "./pages/WolfChat";
 import WolfGrow from "./pages/WolfGrow";
+import Partnerships from "./pages/Partnerships";
+import HydrationCalculator from "./pages/HydrationCalculator";
+import LP3 from "./pages/LP3";
 import GlobeTest from "./tests/GlobeTest";
 
 function App() {
@@ -49,6 +52,8 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/manifesto" element={<Manifesto />} />
         <Route path="/lp" element={<LP />} />
+        <Route path="/partnerships" element={<Partnerships />} />
+        <Route path="/hydration-calculator" element={<HydrationCalculator />} />
 
         {/* Test pages for Iridescence backgrounds */}
         <Route path="/test/oil-spill" element={<OilSpill />} />

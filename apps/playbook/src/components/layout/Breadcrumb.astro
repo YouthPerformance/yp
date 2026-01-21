@@ -1,6 +1,7 @@
 ---
 /**
- * Breadcrumb - Navigation breadcrumb
+ * Breadcrumb - Minimal Navigation
+ * Subtle, doesn't compete with content
  */
 interface BreadcrumbItem {
   label: string;
@@ -14,15 +15,69 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<nav class="py-4 px-6 text-sm text-ink-muted bg-paper-dark border-b border-black/5" aria-label="Breadcrumb">
-  {items.map((item, i) => (
-    <>
-      {i > 0 && <span class="mx-2">›</span>}
-      {item.url ? (
-        <a href={item.url} class="text-trust-blue-light hover:underline">{item.label}</a>
-      ) : (
-        <span>{item.label}</span>
-      )}
-    </>
-  ))}
+<nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    {items.map((item, i) => (
+      <li class="breadcrumb-item">
+        {i > 0 && <span class="breadcrumb-sep">/</span>}
+        {item.url ? (
+          <a href={item.url} class="breadcrumb-link">{item.label}</a>
+        ) : (
+          <span class="breadcrumb-current">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
 </nav>
+
+<style>
+  .breadcrumb-nav {
+    padding: 8px 16px;
+    background-color: var(--bg-secondary);
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumb-sep {
+    margin: 0 8px;
+    color: var(--text-muted);
+    opacity: 0.4;
+    font-size: 0.7rem;
+  }
+
+  .breadcrumb-link {
+    font-size: 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--accent-primary);
+  }
+
+  .breadcrumb-current {
+    font-size: 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+</style>

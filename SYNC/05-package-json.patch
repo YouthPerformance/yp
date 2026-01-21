@@ -1,0 +1,13 @@
+diff --git a/packages/knowledge-graph/package.json b/packages/knowledge-graph/package.json
+index 1234567..abcdefg 100644
+--- a/packages/knowledge-graph/package.json
++++ b/packages/knowledge-graph/package.json
+@@ -9,6 +9,7 @@
+   "dependencies": {
+     "convex": "^1.17.0"
+   },
+   "devDependencies": {
++    "@types/node": "^25.0.9",
+     "typescript": "^5.0.0"
+   }
+ }

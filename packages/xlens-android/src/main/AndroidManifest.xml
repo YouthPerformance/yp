@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ═══════════════════════════════════════════════════════════════
+     xLENS Android SDK
+     Verified Performance Capture for YP Jump
+     ═══════════════════════════════════════════════════════════════ -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Camera permission for video capture -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Audio permission for chirp detection (Phase C) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Internet for API calls -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Location for GPS tagging (optional) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Camera hardware features -->
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <!-- Sensor hardware features -->
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true" />
+
+</manifest>

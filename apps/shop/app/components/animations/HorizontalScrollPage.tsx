@@ -120,7 +120,7 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
   // Wheel scroll target
   const wheelTargetRef = useRef(0);
 
-  const title1 = useMemo(() => splitLetters("WINTER ARC"), []);
+  const title1 = useMemo(() => splitLetters("YOUTH"), []);
   const title2 = useMemo(() => splitLetters("PERFORMANCE"), []);
 
   // Reduced motion listener
@@ -673,21 +673,29 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
           {/* Section 1: Hero spacer (scroll past cards) */}
           <div className="w-[150vw] sm:w-[120vw] lg:w-[130vw] xl:w-[120vw] h-full" />
 
-          {/* Section 2: Product - NeoBall 3D */}
-          <section className="relative h-full w-[100vw] flex items-center justify-center border-l border-white/10">
-            {/* Radial gradient background */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, rgba(0,235,247,0.12) 0%, transparent 70%)",
-              }}
-            />
+          {/* Section 2: Product - NeoBall 3D (Shopify Supply Style) */}
+          <section className="relative h-full w-[100vw] flex border-l border-white/10">
+            {/* Left Half - Product Display */}
+            <div className="relative w-1/2 h-full flex flex-col items-center justify-center">
+              {/* Diagonal gradient background */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(135deg, rgba(20,20,20,1) 0%, rgba(10,10,10,1) 100%)",
+                }}
+              />
+              {/* Subtle grid pattern */}
+              <div
+                className="absolute inset-0 opacity-10 pointer-events-none"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+                  backgroundSize: "50px 50px",
+                }}
+              />
 
-            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-12 px-4 sm:px-8 w-full max-w-7xl">
-              {/* 3D Ball - Responsive sizing that fills frame better */}
-              {/* Ball only rotates when scrolling through THIS section (35%-60% of total scroll) */}
-              <div className="w-[min(70vw,400px)] h-[min(70vw,400px)] sm:w-[min(50vw,450px)] sm:h-[min(50vw,450px)] lg:w-[min(45vw,550px)] lg:h-[min(45vw,550px)] pointer-events-auto flex-shrink-0">
+              {/* 3D Ball */}
+              <div className="relative z-10 w-[min(60vw,350px)] h-[min(60vw,350px)] lg:w-[min(35vw,400px)] lg:h-[min(35vw,400px)] pointer-events-auto">
                 <NeoBall3D
                   progress={progress}
                   impulse={impulse}
@@ -697,90 +705,345 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
                 />
               </div>
 
-              {/* Product Info */}
-              <div className="text-center lg:text-left max-w-xl pointer-events-auto">
-                <div className="uppercase tracking-[0.2em] text-xs sm:text-sm text-gray-400 mb-2 sm:mb-4">
-                  YP Academy Gear
-                </div>
-                <h2 className="font-display text-[10vw] sm:text-[7vw] lg:text-[5vw] xl:text-[72px] leading-[0.9] uppercase tracking-tight">
+              {/* Product Info - Below Ball */}
+              <div className="relative z-10 text-center mt-6 pointer-events-auto">
+                <h2 className="font-body text-xl md:text-2xl tracking-wide">
                   {featuredProduct?.title || "NeoBall"}
                 </h2>
-                <p className="mt-2 sm:mt-3 text-gray-400 text-sm sm:text-base max-w-[36ch] mx-auto lg:mx-0">
-                  The world's first regulation-weight silent basketball. Train at midnight.
-                </p>
-                <p className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-display text-cyan">
-                  $
-                  {featuredProduct
-                    ? parseFloat(featuredProduct.priceRange.minVariantPrice.amount).toFixed(0)
-                    : "168"}
+                <p className="mt-2 text-lg md:text-xl text-white/80">
+                  $68.00
                 </p>
                 <Link
-                  to={`/products/${featuredProduct?.handle || "n"}`}
-                  className="mt-4 sm:mt-6 inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-cyan text-wolf-black font-bold text-base sm:text-lg rounded-lg hover:scale-105 transition-transform"
+                  to={`/products/${featuredProduct?.handle || "neoball"}`}
+                  className="mt-4 inline-block px-8 py-3 bg-[#eeece2] text-wolf-black font-mono text-sm uppercase tracking-[0.15em] hover:bg-white transition-colors"
                 >
-                  SHOP NOW
+                  Quick View
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Half - Lookbook Image with Floating Card */}
+            <div className="relative w-1/2 h-full">
+              {/* Lookbook Image - You'll need to provide this */}
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url(/images/neoball-lookbook.jpg)" }}
+              />
+              {/* Fallback gradient if no image */}
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-cyan/20 via-transparent to-black/50"
+                style={{ mixBlendMode: "overlay" }}
+              />
+
+              {/* Floating Glass Card */}
+              <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 z-20">
+                <Link
+                  to={`/products/${featuredProduct?.handle || "neoball"}`}
+                  className="group flex items-center gap-3 px-4 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: "rgba(0,0,0,0.6)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  <div className="w-2 h-2 rounded-full bg-white" />
+                  <div className="text-left">
+                    <p className="text-xs font-mono text-white/70">NeoBall</p>
+                    <p className="text-xs font-mono text-white/50">USD $68.00</p>
+                  </div>
                   <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    className="w-4 h-4 text-white/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
                   </svg>
                 </Link>
               </div>
             </div>
           </section>
 
-          {/* Section 3: Lookbook Ad */}
-          <section className="relative h-full w-[100vw] md:w-[90vw] flex items-center justify-center border-l border-white/10">
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url(/images/13.png)" }}
-            />
-            <div className="absolute inset-0 bg-black/50" />
-            <div className="relative z-10 text-center px-6 max-w-2xl">
-              <div className="uppercase tracking-[0.3em] text-sm text-gray-300 mb-6">The Pack</div>
-              <h3 className="font-display text-[10vw] md:text-[6vw] xl:text-[80px] leading-[0.9] uppercase mb-6">
-                TRAIN LIKE
-                <br />
-                <span className="text-cyan">A PRO</span>
-              </h3>
-              <p className="text-lg text-gray-300 mb-8">
-                Join thousands of athletes who refuse to settle for average.
-              </p>
-              <a
-                href="https://youthperformance.com"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-white/30 text-white font-medium rounded-lg hover:bg-white/10 transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
+          {/* Vertical Scrolling Text Banner - YOUTH PERFORMANCE */}
+          <div className="relative h-full w-[80px] md:w-[100px] flex-shrink-0 overflow-hidden bg-cyan">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="whitespace-nowrap font-display text-wolf-black text-xl md:text-2xl tracking-[0.3em] uppercase"
+                style={{
+                  writingMode: "vertical-rl",
+                  textOrientation: "mixed",
+                  transform: "rotate(180deg)",
+                }}
               >
-                Join YP Academy
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
-              </a>
+                <span className="inline-flex items-center gap-4">
+                  <svg className="w-6 h-6 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  </svg>
+                  YOUTH PERFORMANCE
+                  <svg className="w-6 h-6 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  </svg>
+                  YOUTH PERFORMANCE
+                  <svg className="w-6 h-6 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Footbag Product (Shopify Supply Style) */}
+          <section className="relative h-full w-[100vw] flex border-l border-white/10">
+            {/* Left Half - Lookbook Image */}
+            <div className="relative w-1/2 h-full">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url(/images/footbag-lookbook.jpg)" }}
+              />
+              {/* Fallback gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-black/60" />
+
+              {/* Floating Glass Card */}
+              <div className="absolute top-1/3 left-1/2 -translate-x-1/2 z-20">
+                <Link
+                  to="/products/footbag"
+                  className="group flex items-center gap-3 px-4 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: "rgba(0,0,0,0.6)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  <div className="w-2 h-2 rounded-full bg-purple-400" />
+                  <div className="text-left">
+                    <p className="text-xs font-mono text-white/70">Footbag</p>
+                    <p className="text-xs font-mono text-white/50">USD $24.00</p>
+                  </div>
+                  <svg
+                    className="w-4 h-4 text-white/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Half - Product Display */}
+            <div className="relative w-1/2 h-full flex flex-col items-center justify-center">
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(135deg, rgba(20,20,20,1) 0%, rgba(10,10,10,1) 100%)",
+                }}
+              />
+              {/* Subtle grid */}
+              <div
+                className="absolute inset-0 opacity-10 pointer-events-none"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+                  backgroundSize: "50px 50px",
+                }}
+              />
+
+              {/* 3D Footbag Visualization */}
+              <div className="relative z-10 w-[min(50vw,300px)] h-[min(50vw,300px)] flex items-center justify-center pointer-events-none">
+                {/* Center footbag */}
+                <div
+                  className="absolute w-28 h-28 sm:w-36 sm:h-36 rounded-full animate-spin-slow"
+                  style={{
+                    background: "radial-gradient(circle at 30% 30%, #8b5cf6 0%, #6d28d9 50%, #4c1d95 100%)",
+                    boxShadow: "0 10px 40px rgba(139,92,246,0.4), inset 0 -5px 20px rgba(0,0,0,0.3)",
+                    animationDuration: "8s",
+                  }}
+                >
+                  <div className="absolute inset-0 rounded-full" style={{
+                    background: "repeating-conic-gradient(from 0deg, transparent 0deg 10deg, rgba(255,255,255,0.1) 10deg 12deg)"
+                  }} />
+                </div>
+
+                {/* Left footbag */}
+                <div
+                  className="absolute -left-8 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full animate-spin-slow opacity-70"
+                  style={{
+                    background: "radial-gradient(circle at 30% 30%, #f97316 0%, #ea580c 50%, #9a3412 100%)",
+                    boxShadow: "0 8px 30px rgba(249,115,22,0.3), inset 0 -4px 15px rgba(0,0,0,0.3)",
+                    animationDuration: "10s",
+                    animationDirection: "reverse",
+                  }}
+                />
+
+                {/* Right footbag */}
+                <div
+                  className="absolute -right-8 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full animate-spin-slow opacity-70"
+                  style={{
+                    background: "radial-gradient(circle at 30% 30%, #22d3ee 0%, #0891b2 50%, #164e63 100%)",
+                    boxShadow: "0 8px 30px rgba(34,211,238,0.3), inset 0 -4px 15px rgba(0,0,0,0.3)",
+                    animationDuration: "12s",
+                  }}
+                />
+              </div>
+
+              {/* Product Info */}
+              <div className="relative z-10 text-center mt-6 pointer-events-auto">
+                <h2 className="font-body text-xl md:text-2xl tracking-wide">Footbag</h2>
+                <p className="mt-2 text-lg md:text-xl text-white/80">$24.00</p>
+                <Link
+                  to="/products/footbag"
+                  className="mt-4 inline-block px-8 py-3 bg-[#eeece2] text-wolf-black font-mono text-sm uppercase tracking-[0.15em] hover:bg-white transition-colors"
+                >
+                  Quick View
+                </Link>
+              </div>
             </div>
           </section>
 
-          {/* Section 4: Newsletter Signup */}
-          <section className="relative h-full w-[100vw] md:w-[80vw] flex items-center justify-center border-l border-white/10">
+          {/* Section 4: Neo Mask Product (Shopify Supply Style) */}
+          <section className="relative h-full w-[100vw] flex border-l border-white/10">
+            {/* Left Half - Lookbook Image with Floating Card */}
+            <div className="relative w-1/2 h-full">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url(/images/neomask-lookbook.jpg)" }}
+              />
+              {/* Fallback gradient - teal themed */}
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 via-transparent to-black/60" />
+
+              {/* Floating Glass Card */}
+              <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 z-20">
+                <Link
+                  to="/products/neo-mask"
+                  className="group flex items-center gap-3 px-4 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: "rgba(0,0,0,0.6)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  <div className="w-2 h-2 rounded-full bg-teal-400" />
+                  <div className="text-left">
+                    <p className="text-xs font-mono text-white/70">Neo Mask</p>
+                    <p className="text-xs font-mono text-white/50">USD $32.00</p>
+                  </div>
+                  <svg
+                    className="w-4 h-4 text-white/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Half - Product Display */}
+            <div className="relative w-1/2 h-full flex flex-col items-center justify-center">
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(135deg, rgba(20,20,20,1) 0%, rgba(10,10,10,1) 100%)",
+                }}
+              />
+              {/* Subtle grid */}
+              <div
+                className="absolute inset-0 opacity-10 pointer-events-none"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+                  backgroundSize: "50px 50px",
+                }}
+              />
+
+              {/* Eye Mask Visualization */}
+              <div className="relative z-10 w-[min(80vw,400px)] h-[min(40vw,220px)] flex items-center justify-center pointer-events-none">
+                {/* Main mask shape */}
+                <div
+                  className="relative w-full max-w-[320px] h-20 sm:h-24 rounded-[100px] flex items-center justify-center animate-float"
+                  style={{
+                    background: "linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%)",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.05), 0 0 80px rgba(20,184,166,0.2)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  {/* Eye cutouts */}
+                  <div className="flex gap-12 sm:gap-16">
+                    <div className="w-10 h-6 sm:w-14 sm:h-8 bg-black/80 rounded-full" style={{ boxShadow: "inset 0 2px 8px rgba(0,0,0,0.8)" }} />
+                    <div className="w-10 h-6 sm:w-14 sm:h-8 bg-black/80 rounded-full" style={{ boxShadow: "inset 0 2px 8px rgba(0,0,0,0.8)" }} />
+                  </div>
+
+                  {/* Subtle glow effect */}
+                  <div className="absolute -inset-4 rounded-[120px] opacity-30" style={{
+                    background: "radial-gradient(ellipse at center, rgba(20,184,166,0.3) 0%, transparent 70%)",
+                  }} />
+                </div>
+
+                {/* Floating particles */}
+                <div className="absolute top-4 left-1/4 w-1 h-1 bg-teal-400 rounded-full animate-pulse opacity-50" />
+                <div className="absolute bottom-8 right-1/3 w-1.5 h-1.5 bg-teal-300 rounded-full animate-pulse opacity-40" style={{ animationDelay: "0.5s" }} />
+                <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-teal-500 rounded-full animate-pulse opacity-60" style={{ animationDelay: "1s" }} />
+              </div>
+
+              {/* Product Info */}
+              <div className="relative z-10 text-center mt-6 pointer-events-auto">
+                <h2 className="font-body text-xl md:text-2xl tracking-wide">Neo Mask</h2>
+                <p className="mt-2 text-lg md:text-xl text-white/80">$32.00</p>
+                <Link
+                  to="/products/neo-mask"
+                  className="mt-4 inline-block px-8 py-3 bg-[#eeece2] text-wolf-black font-mono text-sm uppercase tracking-[0.15em] hover:bg-white transition-colors"
+                >
+                  Quick View
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          {/* Vertical Scrolling Text Banner - LOCK IN LEVEL UP */}
+          <div className="relative h-full w-[80px] md:w-[100px] flex-shrink-0 overflow-hidden bg-cyan">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="whitespace-nowrap font-display text-wolf-black text-xl md:text-2xl tracking-[0.3em] uppercase"
+                style={{
+                  writingMode: "vertical-rl",
+                  textOrientation: "mixed",
+                  transform: "rotate(180deg)",
+                }}
+              >
+                <span className="inline-flex items-center gap-4">
+                  <svg className="w-5 h-5 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                  LOCK IN
+                  <svg className="w-5 h-5 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                  LEVEL UP
+                  <svg className="w-5 h-5 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                  LOCK IN
+                  <svg className="w-5 h-5 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                  LEVEL UP
+                  <svg className="w-5 h-5 rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 5: Join The Pack + Footer */}
+          <section className="relative h-full w-[100vw] md:w-[90vw] flex flex-col items-center justify-center border-l border-white/10">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: "url(/images/4.jpg)" }}
             />
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="relative z-10 text-center px-6 max-w-lg">
+            <div className="absolute inset-0 bg-black/70" />
+
+            {/* Main Content */}
+            <div className="relative z-10 text-center px-6 max-w-lg flex-1 flex flex-col justify-center">
               <div className="uppercase tracking-[0.3em] text-sm text-gray-300 mb-4">
                 Stay Connected
               </div>
@@ -800,12 +1063,95 @@ export function HorizontalScrollPage({ products }: HorizontalScrollPageProps) {
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-cyan text-wolf-black font-bold rounded-lg hover:scale-105 transition-transform"
+                  className="group relative px-8 py-3.5 bg-cyan text-wolf-black font-bold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,235,247,0.5)] hover:scale-[1.02]"
                 >
-                  SUBSCRIBE
+                  <span className="relative z-10 flex items-center gap-2">
+                    SUBSCRIBE
+                    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan via-white to-cyan opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                 </button>
               </form>
               <p className="mt-4 text-xs text-gray-500">No spam. Unsubscribe anytime.</p>
+
+              {/* Social Icons */}
+              <div className="flex justify-center gap-6 mt-10">
+                <a
+                  href="https://x.com/youthperformance"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/40 hover:text-cyan transition-colors"
+                  aria-label="X (Twitter)"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://instagram.com/youthperformance"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/40 hover:text-cyan transition-colors"
+                  aria-label="Instagram"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://tiktok.com/@youthperformance"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/40 hover:text-cyan transition-colors"
+                  aria-label="TikTok"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Footer Bar */}
+            <div className="relative z-10 w-full border-t border-white/10 py-6 px-6">
+              <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                {/* Trust Links */}
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/40">
+                  <Link to="/products" className="hover:text-white transition-colors">
+                    Shop
+                  </Link>
+                  <a
+                    href="https://neoball.co"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
+                    NeoBall
+                  </a>
+                  <Link to="/legal/terms" className="hover:text-white transition-colors">
+                    Terms
+                  </Link>
+                  <Link to="/legal/privacy" className="hover:text-white transition-colors">
+                    Privacy
+                  </Link>
+                </div>
+
+                {/* Powered by Shopify */}
+                <div className="flex items-center gap-2 text-white/25 text-xs">
+                  <span>powered by</span>
+                  <svg width="16" height="18" viewBox="0 0 109 124" fill="currentColor">
+                    <path d="M95.5 25.5c-.1-.7-.7-1.1-1.2-1.1-.5 0-10.9-.2-10.9-.2s-7.2-7.1-8-7.9c-.8-.8-2.4-.6-3-.4-.1 0-1.6.5-4.3 1.3-2.6-7.4-7.1-14.2-15.1-14.2h-.7c-2.3-3-5.1-4.3-7.4-4.3-18.3 0-27 22.9-29.7 34.5-7 2.2-12 3.7-12.5 3.9-3.9 1.2-4 1.3-4.5 5-.4 2.8-10.7 82.5-10.7 82.5l85.3 14.7 36.5-9.1s-13.5-78.1-13.8-79.2zM67.3 18.7l-6.6 2c0-.7 0-1.4 0-2.1 0-6.4-1-11.6-2.6-15.3 6.4 1 9.4 8.5 9.2 15.4zm-13.3-13.1c1.7 3.5 2.9 8.5 2.9 15.4 0 .5 0 1 0 1.5l-13.6 4.2c2.6-10 7.5-16.8 10.7-21.1zm-6.1-4c.7 0 1.4.2 2.1.7-5.1 6-10.5 15.4-13 23.7l-10.8 3.3c3-10.2 10.1-27.7 21.7-27.7z" />
+                  </svg>
+                </div>
+
+                {/* Copyright */}
+                <p className="text-[10px] font-mono tracking-widest uppercase text-white/20">
+                  © {new Date().getFullYear()} YOUTHPERFORMANCE | YP ALL RIGHTS RESERVED.
+                </p>
+              </div>
             </div>
           </section>
 

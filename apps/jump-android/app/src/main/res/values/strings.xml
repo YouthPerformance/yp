@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YP Jump</string>
+    <string name="app_description">Verified vertical jump measurement</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_jump">Jump</string>
+    <string name="nav_leaderboard">Leaderboard</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Auth -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_apple">Continue with Apple</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+
+    <!-- Onboarding -->
+    <string name="create_profile">Create Profile</string>
+    <string name="display_name">Display Name</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="gender">Gender</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="country">Country</string>
+    <string name="age_requirement">You must be at least 13 years old to use YP Jump</string>
+
+    <!-- Home -->
+    <string name="daily_jumps">Daily Jumps</string>
+    <string name="remaining">remaining</string>
+    <string name="best_jump">Best Jump</string>
+    <string name="recent_jumps">Recent Jumps</string>
+    <string name="view_all">View All</string>
+    <string name="start_jumping">Start Jumping</string>
+
+    <!-- Capture -->
+    <string name="position_camera">Position your camera</string>
+    <string name="stand_in_frame">Stand in the frame facing the camera</string>
+    <string name="full_body_visible">Full body must be visible</string>
+    <string name="ready">Ready</string>
+    <string name="jump_now">Jump Now!</string>
+    <string name="analyzing">Analyzing...</string>
+    <string name="camera_permission_required">Camera permission is required to capture jumps</string>
+
+    <!-- Result -->
+    <string name="great_jump">Great Jump!</string>
+    <string name="jump_height">Jump Height</string>
+    <string name="verification">Verification</string>
+    <string name="confidence">Confidence</string>
+    <string name="save_jump">Save Jump</string>
+    <string name="try_again">Try Again</string>
+    <string name="share">Share</string>
+
+    <!-- Leaderboard -->
+    <string name="leaderboard">Leaderboard</string>
+    <string name="global">Global</string>
+    <string name="country_scope">Country</string>
+    <string name="state_scope">State</string>
+    <string name="city_scope">City</string>
+    <string name="all_ages">All Ages</string>
+    <string name="all_genders">All</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+
+    <!-- Profile -->
+    <string name="profile">Profile</string>
+    <string name="jump_stats">Jump Stats</string>
+    <string name="total_jumps">Total Jumps</string>
+    <string name="average_jump">Average</string>
+    <string name="personal_record">Personal Record</string>
+    <string name="your_rankings">Your Rankings</string>
+    <string name="progression">Progression</string>
+    <string name="settings">Settings</string>
+    <string name="profile_visibility">Profile Visibility</string>
+    <string name="show_on_leaderboards">Show on Leaderboards</string>
+    <string name="notifications">Notifications</string>
+    <string name="share_profile">Share Profile</string>
+    <string name="sign_out">Sign Out</string>
+
+    <!-- Verification Tiers -->
+    <string name="tier_bronze">Bronze</string>
+    <string name="tier_silver">Silver</string>
+    <string name="tier_gold">Gold</string>
+    <string name="tier_platinum">Platinum</string>
+
+    <!-- Units -->
+    <string name="inches_format">%.1f\"</string>
+    <string name="rank_format">#%d</string>
+    <string name="of_total">of %d</string>
+</resources>

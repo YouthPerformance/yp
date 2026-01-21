@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DashboardApp from "../components/DashboardApp.tsx";
+
+const convexUrl = import.meta.env.PUBLIC_CONVEX_URL || "";
+---
+
+<Layout title="NeoBall - Your Alpha 8 Dashboard">
+  <div id="dashboard-root">
+    <DashboardApp client:load convexUrl={convexUrl} />
+  </div>
+</Layout>

@@ -8,15 +8,16 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import AskJamesWidget from "../components/AskJamesWidget";
 
 // ═══════════════════════════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════════════════════════
 
 const JAMES = {
-  name: "James Scott",
+  name: "JAMES SCOTT",
   tagline: "Weak Feet Don't Eat",
-  title: "Movement Specialist & Foot Performance Coach",
+  title: "Master's in Sports Science & Biomechanics | Professional Athletes Performance Coach",
   heroImage: "/images/james/jamesmug.webp",
   bio: `I've spent 15+ years training some of the world's best athletes. NBA All-Stars. NFL Pro Bowlers. Global icons. The pattern was always the same—weak feet creating problems upstream.
 
@@ -126,7 +127,7 @@ function FeaturedInTicker() {
     <div className="relative py-12 bg-[#0a0a0a] border-y border-white/5">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <p className="text-center text-xs font-mono uppercase tracking-[0.3em] text-white/30 mb-8">
-          As Seen In
+          Trusted By
         </p>
       </div>
 
@@ -265,8 +266,8 @@ export default function JamesScott() {
         {/* Background - will be video later */}
         <div className="absolute inset-0">
           <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(/images/james/jameschina.webp)` }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat grayscale"
+            style={{ backgroundImage: `url(/images/james/jamessideprofile.png)` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/80 to-transparent" />
@@ -274,35 +275,15 @@ export default function JamesScott() {
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full">
-          {/* Breadcrumb */}
-          <nav className="text-sm mb-6 text-white/50">
-            <Link to="/" className="hover:text-cyan-400 transition-colors">Home</Link>
-            <span className="mx-2">/</span>
-            <span className="text-white/80">James Scott</span>
-          </nav>
-
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-4">
-              <span className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse" />
-              <span className="text-xs font-mono uppercase tracking-wider text-cyan-400">
-                Founder & Head Coach
-              </span>
-            </div>
-
-            {/* Name */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4">
+            {/* Name - Bebas Neue style */}
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bebas tracking-tight mb-4">
               {JAMES.name}
             </h1>
-
-            {/* Tagline */}
-            <p className="text-2xl md:text-3xl font-bold text-cyan-400 mb-4">
-              "{JAMES.tagline}"
-            </p>
 
             {/* Title */}
             <p className="text-lg md:text-xl text-white/60 mb-8 max-w-xl">
@@ -332,7 +313,7 @@ export default function JamesScott() {
       <FeaturedInTicker />
 
       {/* ─────────────────────────────────────────────────────────
-          AS SEEN TRAINING SECTION
+          THE RECEIPTS SECTION
       ───────────────────────────────────────────────────────── */}
       <section className="py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -342,11 +323,8 @@ export default function JamesScott() {
             viewport={{ once: true }}
             className="mb-12"
           >
-            <p className="text-sm font-mono uppercase tracking-widest text-cyan-400 mb-2">
+            <h2 className="text-3xl md:text-5xl font-bebas">
               The Receipts
-            </p>
-            <h2 className="text-3xl md:text-5xl font-bold">
-              As Seen Training
             </h2>
           </motion.div>
 
@@ -625,6 +603,9 @@ export default function JamesScott() {
           </div>
         </div>
       </footer>
+
+      {/* Ask James Widget */}
+      <AskJamesWidget />
     </div>
   );
 }

@@ -19,3 +19,5 @@ export * from "./router";
 export * from "./shopify";
 // Voice exports
 export * from "./voices";
+// Analytics exports
+export * from "./analytics";

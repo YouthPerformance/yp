@@ -16,21 +16,20 @@ function Home() {
   const { openModal } = useOnboarding();
 
   useEffect(() => {
+    const fetchCourses = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_URL}/courses?limit=6`);
+        const data = await res.json();
+        setCourses(data);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchCourses();
-  }, [fetchCourses]);
-
-  const fetchCourses = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/courses?limit=6`);
-      const data = await res.json();
-      setCourses(data);
-    } catch (error) {
-      console.error("Failed to fetch courses:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, []);
 
   const r3Stages = [
     {

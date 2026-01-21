@@ -30,11 +30,19 @@ export default function ModulePlayerPage({ params }: PageProps) {
   const isTeaser = module ? isTeaserModule(module) : false;
 
   // Auth state - check if user is logged in
-  const { data: session } = useSession();
+  const { data: session, isPending: authLoading } = useSession();
   const isAnonymous = !session?.user;
 
   // Anonymous progress for teaser modules
   const { saveTeaserCompletion, isLoaded: progressLoaded } = useAnonymousProgress();
+
+  // Auth gate: redirect to login if not a teaser module and user is anonymous
+  useEffect(() => {
+    if (!authLoading && isAnonymous && module && !isTeaser) {
+      const returnTo = encodeURIComponent(`/playbook/modules/${slug}/play`);
+      router.push(`/auth?returnTo=${returnTo}`);
+    }
+  }, [authLoading, isAnonymous, module, isTeaser, slug, router]);
 
   // Store state
   const {
@@ -108,6 +116,30 @@ export default function ModulePlayerPage({ params }: PageProps) {
           <Link href="/playbook/modules" className="text-accent-primary hover:underline">
             Back to modules
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading auth state for non-teaser modules
+  if (authLoading && !isTeaser) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-secondary">Checking access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect in progress for non-teaser anonymous users
+  if (isAnonymous && !isTeaser) {
+    return (
+      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-secondary">Redirecting to login...</p>
         </div>
       </div>
     );

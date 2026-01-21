@@ -236,6 +236,16 @@ export default function ContentReviewDetailPage() {
           >
             ← Back to Queue
           </Link>
+          <Link
+            href="/admin/quick-review"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+            style={{
+              backgroundColor: "rgba(0, 246, 224, 0.2)",
+              color: "#00F6E0",
+            }}
+          >
+            🎙️ Quick Review Mode
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           {/* Author Badge */}

@@ -1,80 +1,59 @@
 // ═══════════════════════════════════════════════════════════
 // ROOT PAGE - SMART ROUTER
-// Checks onboarding status and redirects appropriately
+// Premium WolfLoader + onboarding status check
 // ═══════════════════════════════════════════════════════════
 
 "use client";
 
-import { motion } from "framer-motion";
+import { WolfLoader } from "@yp/ui";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const STORAGE_KEY = "barefoot_onboarding_state";
 
 export default function RootPage() {
   const router = useRouter();
-  const [_isChecking, _setIsChecking] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [targetRoute, setTargetRoute] = useState<string | null>(null);
 
+  // Check onboarding status on mount
   useEffect(() => {
-    // Check if onboarding is complete
-    const checkOnboarding = () => {
-      if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
 
-      const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(STORAGE_KEY);
 
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          if (data.onboardingComplete) {
-            // Onboarding complete - go to main app
-            router.replace("/home");
-          } else {
-            // Onboarding in progress - resume
-            router.replace("/role");
-          }
-        } catch {
-          // Invalid data - start fresh
-          router.replace("/role");
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.onboardingComplete) {
+          setTargetRoute("/home");
+        } else {
+          setTargetRoute("/role");
         }
-      } else {
-        // No saved state - start onboarding
-        router.replace("/role");
+      } catch {
+        setTargetRoute("/role");
       }
-    };
+    } else {
+      setTargetRoute("/role");
+    }
 
-    // Small delay to show loading state
-    const timer = setTimeout(checkOnboarding, 500);
-    return () => clearTimeout(timer);
-  }, [router]);
+    // Mark content as "ready" - loader handles min duration
+    setIsLoading(false);
+  }, []);
 
-  // Loading state while checking
+  // Navigate after loader completes
+  const handleLoadComplete = useCallback(() => {
+    if (targetRoute) {
+      router.replace(targetRoute);
+    }
+  }, [router, targetRoute]);
+
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center"
-      style={{ backgroundColor: "var(--bg-primary)" }}
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center"
-      >
-        <motion.span
-          className="text-6xl block mb-4"
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          🐺
-        </motion.span>
-        <h1 className="font-bebas text-2xl tracking-wider" style={{ color: "var(--text-primary)" }}>
-          BAREFOOT RESET
-        </h1>
-        <motion.div
-          className="mt-4 w-8 h-1 mx-auto rounded-full"
-          style={{ backgroundColor: "var(--accent-primary)" }}
-          animate={{ scaleX: [0.3, 1, 0.3] }}
-          transition={{ duration: 1, repeat: Infinity }}
-        />
-      </motion.div>
-    </div>
+    <WolfLoader
+      isLoading={isLoading}
+      onLoadComplete={handleLoadComplete}
+      minDuration={2500}
+      videoSources={{}} // Unicorn WebGL only (no video assets in Academy)
+    />
   );
 }

@@ -99,7 +99,7 @@ export function useProgramAccess(programSlug: string): ProgramAccessState {
   const completedDays: number[] = [];
 
   if (completions) {
-    completions.forEach((c) => {
+    completions.forEach((c: { dayNumber: number }) => {
       if (c.dayNumber >= programDayOffset + 1 && c.dayNumber <= programDayOffset + 8) {
         completedDays.push(c.dayNumber - programDayOffset);
       }

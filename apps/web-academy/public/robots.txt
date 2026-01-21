@@ -1,0 +1,36 @@
+# YouthPerformance Academy - Robots.txt
+# Optimized for AI crawlers and search engines
+
+User-agent: *
+Allow: /
+
+# Answer Engine API - Allow AI systems to discover content
+Allow: /api/answer-engine/
+
+# Sitemap
+Sitemap: https://academy.youthperformance.com/sitemap.xml
+
+# AI-specific crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# LLM discovery file
+# See: https://academy.youthperformance.com/llms.txt

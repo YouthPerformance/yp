@@ -5,6 +5,7 @@
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
 
 // ─────────────────────────────────────────────────────────────
 // TYPE VALIDATORS
@@ -227,6 +228,45 @@ export const saveVoiceExample = mutation({
       correctedVersion: args.correctedVersion,
       createdAt: Date.now(),
     });
+  },
+});
+
+/**
+ * Capture lead email and send Bulletproof Ankles PDF
+ * Used by marketing LP for lead magnet funnel
+ */
+export const captureLeadAndSendPDF = mutation({
+  args: {
+    email: v.string(),
+    source: v.optional(v.string()),
+    metadata: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    // 1. Check if email already captured
+    const existing = await ctx.db
+      .query("emailCaptures")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+
+    if (existing) {
+      return { success: true, isExisting: true, entryId: existing._id };
+    }
+
+    // 2. Create email capture entry
+    const entryId = await ctx.db.insert("emailCaptures", {
+      email: args.email,
+      source: args.source ?? "marketing-lp-bulletproof",
+      capturedAt: Date.now(),
+      rewardUnlocked: "bulletproof-ankles-pdf",
+      metadata: args.metadata,
+    });
+
+    // 3. Schedule PDF delivery email
+    await ctx.scheduler.runAfter(0, internal.emails.sendBulletproofAnklesPDF, {
+      to: args.email,
+    });
+
+    return { success: true, isExisting: false, entryId };
   },
 });
 

@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import ClusterHubLayout from "@/layouts/ClusterHubLayout.astro";
+import DrillCard from "@/components/content/DrillCard.astro";
 
 // Get Pain Relief drills
 const allDrills = await getCollection("drills");

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.YPJump" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="android:colorPrimary">@color/yp_primary</item>
+        <item name="android:colorPrimaryDark">@color/yp_primary_dark</item>
+        <item name="android:colorAccent">@color/yp_accent</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Window -->
+        <item name="android:windowBackground">@color/yp_background</item>
+    </style>
+</resources>
