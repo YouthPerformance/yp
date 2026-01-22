@@ -2564,7 +2564,7 @@
   position: absolute;
   /* FLUID POSITIONING: scales smoothly across all screens */
   /* clamp(minimum, preferred, maximum) */
-  top: clamp(100px, 18vw, 220px);
+  top: clamp(160px, 25vw, 320px);
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
