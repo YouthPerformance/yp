@@ -2,6 +2,12 @@
 // CAPTURE MANAGER
 // Coordinates video and sensor capture for jump verification
 // Uses AVCaptureSession for video and CoreMotion for IMU
+//
+// Swift 2026 Best Practices:
+// - @MainActor isolation for UI state
+// - Sendable conformance where needed
+// - nonisolated delegate methods
+// - Pure async/await (no Combine)
 // ═══════════════════════════════════════════════════════════════
 
 import AVFoundation
@@ -10,7 +16,7 @@ import UIKit
 
 /// Manages synchronized video and sensor capture
 @MainActor
-public final class CaptureManager: NSObject {
+public final class CaptureManager: NSObject, Sendable {
 
     // MARK: - Properties
 
@@ -226,9 +232,12 @@ public final class CaptureManager: NSObject {
         motionManager.deviceMotionUpdateInterval = imuSampleRate
         motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical)
 
-        // Sample at high frequency
+        // Sample at high frequency using RunLoop timer
         imuTimer = Timer.scheduledTimer(withTimeInterval: imuSampleRate, repeats: true) { [weak self] _ in
-            guard let self = self, let motion = self.motionManager.deviceMotion else { return }
+            guard let self = self else { return }
+
+            // Access motion data synchronously (Timer already on main thread)
+            guard let motion = self.motionManager.deviceMotion else { return }
 
             let sample = IMUSample(
                 timestamp: Date().timeIntervalSince1970,
@@ -240,8 +249,9 @@ public final class CaptureManager: NSObject {
                 rotationZ: motion.rotationRate.z
             )
 
-            Task { @MainActor in
-                self.imuSamples.append(sample)
+            // MainActor-isolated append
+            Task { @MainActor [weak self] in
+                self?.imuSamples.append(sample)
             }
         }
     }

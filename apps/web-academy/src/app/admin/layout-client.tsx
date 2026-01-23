@@ -13,9 +13,10 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProvider } from "@/contexts/UserContext";
 
 const NAV_ITEMS = [
-  { href: "/admin/campaigns", label: "Campaigns", icon: "📝" },
+  { href: "/admin/seo", label: "Command Center", icon: "🐺" },
   { href: "/admin/content-review", label: "Content Review", icon: "📚" },
-  { href: "/admin/content-strategy", label: "SEO", icon: "📈" },
+  { href: "/admin/quick-review", label: "Voice Review", icon: "🎙️" },
+  { href: "/admin/campaigns", label: "Campaigns", icon: "📝" },
 ];
 
 interface AdminLayoutClientProps {

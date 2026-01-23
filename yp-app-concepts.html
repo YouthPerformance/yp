@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouthPerformance App Concepts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Archivo+Black&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0A0A0A;
+      min-height: 100vh;
+      font-family: 'Source Sans Pro', system-ui, sans-serif;
+      color: #fff;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .header h1 {
+      font-family: 'Archivo Black', 'Arial Black', sans-serif;
+      font-size: 48px;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #00D4AA 0%, #00FFD1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      color: #6B7280;
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .concepts {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .concept {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .concept-label {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .concept-label h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      letter-spacing: 3px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .concept-label p {
+      color: #6B7280;
+      font-size: 14px;
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      background: #0A0A0A;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      border: 8px solid #1a1a1a;
+      box-shadow: 0 25px 80px rgba(0, 212, 170, 0.15);
+    }
+
+    /* ============ CONCEPT A: THE FEED ============ */
+    .feed-phone {
+      font-family: 'Bebas Neue', 'Arial Black', sans-serif;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    .status-bar span {
+      color: #fff;
+      font-size: 14px;
+      font-family: system-ui;
+    }
+
+    .video-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, transparent 60%, rgba(0,0,0,0.9) 100%),
+                  radial-gradient(circle at 50% 30%, #1a3a4a 0%, #0A0A0A 70%);
+    }
+
+    .player-silhouette {
+      position: absolute;
+      bottom: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      opacity: 0.3;
+    }
+
+    .side-actions {
+      position: absolute;
+      right: 12px;
+      bottom: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .action-btn {
+      text-align: center;
+    }
+
+    .action-btn .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .action-btn .label {
+      color: #fff;
+      font-size: 12px;
+      font-family: system-ui;
+    }
+
+    .coach-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%);
+      border: 2px solid #00D4AA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-family: system-ui;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .follow-btn {
+      background: #00D4AA;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #000;
+    }
+
+    .bottom-content {
+      position: absolute;
+      bottom: 90px;
+      left: 16px;
+      right: 80px;
+    }
+
+    .coach-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .coach-name span {
+      color: #fff;
+      font-size: 16px;
+      font-family: system-ui;
+      font-weight: 600;
+    }
+
+    .pro-badge {
+      background: #00D4AA;
+      color: #000;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: system-ui;
+      font-weight: 700;
+    }
+
+    .drill-title {
+      color: #fff;
+      font-size: 28px;
+      margin: 0 0 8px 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-family: system-ui;
+    }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 80px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .progress-fill {
+      width: 35%;
+      height: 100%;
+      background: #00D4AA;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: #0A0A0A;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 20px;
+    }
+
+    .nav-item {
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .nav-item.inactive {
+      opacity: 0.5;
+    }
+
+    .nav-item .icon {
+      font-size: 24px;
+    }
+
+    .nav-item .label {
+      color: #fff;
+      font-size: 10px;
+      font-family: system-ui;
+      margin-top: 2px;
+    }
+
+    .nav-item.active .label {
+      color: #00D4AA;
+      font-weight: 600;
+    }
+
+    .start-btn {
+      text-align: center;
+      cursor: pointer;
+      margin-top: -30px;
+    }
+
+    .start-btn .icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,212,170,0.4);
+      font-size: 28px;
+    }
+
+    .start-btn .label {
+      color: #00D4AA;
+      font-size: 10px;
+      font-family: system-ui;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* ============ CONCEPT B: SKILL TREE ============ */
+    .skill-phone {
+      font-family: 'Oswald', 'Arial Black', sans-serif;
+    }
+
+    .skill-header {
+      padding: 50px 20px 16px;
+      background: linear-gradient(180deg, rgba(0,212,170,0.15) 0%, transparent 100%);
+    }
+
+    .skill-header h1 {
+      color: #fff;
+      margin: 0 0 4px 0;
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    .level-badge {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      color: #000;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .xp-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .xp-fill {
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(90deg, #00D4AA 0%, #00FFD1 100%);
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0,212,170,0.5);
+    }
+
+    .skill-tree-content {
+      padding: 20px;
+    }
+
+    .skill-category {
+      margin-bottom: 32px;
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .category-header h2 {
+      color: #fff;
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 3px;
+    }
+
+    .level-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .level-dot {
+      width: 16px;
+      height: 6px;
+      border-radius: 3px;
+    }
+
+    .level-dot.filled {
+      background: #00D4AA;
+    }
+
+    .level-dot.empty {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .skills-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .skill-node {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .skill-node.complete {
+      background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .skill-node.unlocked {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .skill-node.locked {
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(255,255,255,0.05);
+      opacity: 0.4;
+    }
+
+    .skill-node.selected {
+      border: 3px solid #00D4AA;
+      transform: scale(1.1);
+    }
+
+    .skill-node .icon {
+      font-size: 28px;
+    }
+
+    .skill-progress {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 6px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .skill-progress-fill {
+      height: 100%;
+      background: #00D4AA;
+      border-radius: 3px;
+    }
+
+    .complete-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      background: #FFD700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .connector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .connector-dot {
+      width: 6px;
+      height: 3px;
+      border-radius: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .connector-dot.active {
+      background: #00D4AA;
+    }
+
+    /* ============ CONCEPT C: AI COACH ============ */
+    .chat-phone {
+      font-family: 'Source Sans Pro', system-ui, sans-serif;
+    }
+
+    .chat-header {
+      padding: 50px 20px 16px;
+      background: linear-gradient(180deg, #0F1419 0%, #0A0A0A 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .coach-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .coach-avatar-large {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #000;
+      position: relative;
+    }
+
+    .online-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      background: #22C55E;
+      border-radius: 50%;
+      border: 2px solid #0A0A0A;
+    }
+
+    .coach-details h1 {
+      color: #fff;
+      margin: 0 0 2px 0;
+      font-size: 18px;
+      font-family: 'Archivo Black', 'Arial Black', sans-serif;
+    }
+
+    .coach-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .coach-status .online {
+      color: #22C55E;
+      font-size: 12px;
+    }
+
+    .coach-status .role {
+      color: #6B7280;
+      font-size: 12px;
+    }
+
+    .quick-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat .value {
+      color: #00D4AA;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .stat .label {
+      color: #6B7280;
+      font-size: 11px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .messages {
+      padding: 20px;
+      height: calc(100% - 340px);
+      overflow-y: auto;
+    }
+
+    .focus-badge {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .focus-badge span {
+      display: inline-block;
+      background: rgba(255,255,255,0.05);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .focus-badge .label {
+      color: #6B7280;
+    }
+
+    .focus-badge .value {
+      color: #00D4AA;
+      font-weight: 600;
+    }
+
+    .message {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .message-content {
+      max-width: 75%;
+    }
+
+    .message-bubble {
+      padding: 14px 16px;
+      border-radius: 18px 18px 18px 4px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%);
+      border-radius: 18px 18px 4px 18px;
+    }
+
+    .message-bubble p {
+      color: #fff;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .message.user .message-bubble p {
+      color: #000;
+    }
+
+    .message-time {
+      margin-top: 6px;
+      color: #6B7280;
+      font-size: 11px;
+    }
+
+    .message.user .message-time {
+      text-align: right;
+    }
+
+    .drill-card {
+      background: linear-gradient(135deg, rgba(0,212,170,0.15) 0%, rgba(0,212,170,0.05) 100%);
+      border: 1px solid rgba(0,212,170,0.3);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .drill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .drill-label {
+      color: #00D4AA;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .drill-name {
+      color: #fff;
+      font-size: 18px;
+      font-family: 'Archivo Black', 'Arial Black', sans-serif;
+    }
+
+    .drill-xp {
+      background: rgba(0,212,170,0.2);
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: #00D4AA;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .drill-meta {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .drill-meta span {
+      color: #9CA3AF;
+      font-size: 13px;
+    }
+
+    .drill-start-btn {
+      width: 100%;
+      padding: 14px;
+      background: #00D4AA;
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
+      font-family: 'Archivo Black', sans-serif;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .input-area {
+      padding: 12px 20px 40px;
+      background: #0A0A0A;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .video-btn, .voice-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .text-input {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 12px 16px;
+    }
+
+    .text-input input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .text-input input::placeholder {
+      color: #6B7280;
+    }
+
+    /* Footer */
+    .page-footer {
+      text-align: center;
+      margin-top: 60px;
+      padding: 40px 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .page-footer h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: #6B7280;
+      margin-bottom: 20px;
+    }
+
+    .comparison {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .comparison-item {
+      text-align: left;
+    }
+
+    .comparison-item h4 {
+      color: #00D4AA;
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .comparison-item ul {
+      list-style: none;
+      color: #6B7280;
+      font-size: 14px;
+    }
+
+    .comparison-item li {
+      margin-bottom: 4px;
+    }
+
+    .comparison-item li::before {
+      content: "→ ";
+      color: #00D4AA;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>YOUTHPERFORMANCE</h1>
+    <p>Three UX concepts for how youth athletes learn on mobile. Each represents a different learning philosophy.</p>
+  </div>
+
+  <div class="concepts">
+    <!-- CONCEPT A: THE FEED -->
+    <div class="concept">
+      <div class="concept-label">
+        <h2>CONCEPT A: THE FEED</h2>
+        <p>TikTok-native. Swipe through drills like content.</p>
+      </div>
+      <div class="phone feed-phone">
+        <div class="status-bar"><span>9:41</span></div>
+        <div class="video-bg">
+          <svg class="player-silhouette" viewBox="0 0 200 300">
+            <ellipse cx="100" cy="280" rx="60" ry="15" fill="#00D4AA" opacity="0.3" />
+            <circle cx="100" cy="60" r="25" fill="#00D4AA" />
+            <path d="M100 85 L100 180 M100 110 L60 150 M100 110 L140 130 M100 180 L70 260 M100 180 L130 250"
+                  stroke="#00D4AA" stroke-width="8" stroke-linecap="round" fill="none" />
+            <circle cx="75" cy="240" r="20" fill="none" stroke="#00D4AA" stroke-width="3" stroke-dasharray="4 4" />
+          </svg>
+        </div>
+
+        <div class="side-actions">
+          <div class="action-btn">
+            <div class="coach-avatar">AH</div>
+            <div class="follow-btn">+</div>
+          </div>
+          <div class="action-btn">
+            <div class="icon">⚡</div>
+            <div class="label">50 XP</div>
+          </div>
+          <div class="action-btn">
+            <div class="icon">💬</div>
+            <div class="label">Ask</div>
+          </div>
+          <div class="action-btn">
+            <div class="icon">🔖</div>
+            <div class="label">Save</div>
+          </div>
+          <div class="action-btn">
+            <div class="icon">↗</div>
+            <div class="label">Share</div>
+          </div>
+        </div>
+
+        <div class="bottom-content">
+          <div class="coach-name">
+            <span>@adamharrington</span>
+            <span class="pro-badge">PRO</span>
+          </div>
+          <h2 class="drill-title">CROSSOVER KILLER</h2>
+          <div class="tags">
+            <span class="tag">🔥 45 sec</span>
+            <span class="tag">#handles</span>
+            <span class="tag">#foundation</span>
+          </div>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+
+        <div class="bottom-nav">
+          <div class="nav-item active">
+            <div class="icon">🏠</div>
+            <div class="label">Feed</div>
+          </div>
+          <div class="nav-item inactive">
+            <div class="icon">🎯</div>
+            <div class="label">Skills</div>
+          </div>
+          <div class="start-btn">
+            <div class="icon">▶</div>
+            <div class="label">START</div>
+          </div>
+          <div class="nav-item inactive">
+            <div class="icon">🏆</div>
+            <div class="label">Ranks</div>
+          </div>
+          <div class="nav-item inactive">
+            <div class="icon">👤</div>
+            <div class="label">Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCEPT B: SKILL TREE -->
+    <div class="concept">
+      <div class="concept-label">
+        <h2>CONCEPT B: SKILL TREE</h2>
+        <p>RPG-style progression. Level up your character.</p>
+      </div>
+      <div class="phone skill-phone">
+        <div class="skill-header">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h1>YOUR JOURNEY</h1>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="level-badge">LVL 12</span>
+                <span style="color: #6B7280; font-size: 14px; font-family: system-ui;">2,450 XP</span>
+              </div>
+            </div>
+            <div class="coach-avatar" style="width: 40px; height: 40px; font-size: 14px;">AH</div>
+          </div>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+        </div>
+
+        <div class="skill-tree-content">
+          <div class="skill-category">
+            <div class="category-header">
+              <h2>FOUNDATION</h2>
+              <div class="level-dots">
+                <div class="level-dot filled"></div>
+                <div class="level-dot filled"></div>
+                <div class="level-dot filled"></div>
+                <div class="level-dot empty"></div>
+                <div class="level-dot empty"></div>
+              </div>
+            </div>
+            <div class="skills-row">
+              <div class="skill-node complete">
+                <span class="icon">🏀</span>
+                <div class="complete-badge">✓</div>
+              </div>
+              <div class="connector">
+                <div class="connector-dot active"></div>
+                <div class="connector-dot active"></div>
+                <div class="connector-dot active"></div>
+              </div>
+              <div class="skill-node unlocked">
+                <span class="icon">🦵</span>
+                <div class="skill-progress"><div class="skill-progress-fill" style="width: 85%;"></div></div>
+              </div>
+              <div class="connector">
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+              </div>
+              <div class="skill-node unlocked">
+                <span class="icon">👀</span>
+                <div class="skill-progress"><div class="skill-progress-fill" style="width: 60%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="category-header">
+              <h2>HANDLES</h2>
+              <div class="level-dots">
+                <div class="level-dot filled"></div>
+                <div class="level-dot filled"></div>
+                <div class="level-dot empty"></div>
+                <div class="level-dot empty"></div>
+                <div class="level-dot empty"></div>
+              </div>
+            </div>
+            <div class="skills-row">
+              <div class="skill-node unlocked selected">
+                <span class="icon">↔️</span>
+                <div class="skill-progress"><div class="skill-progress-fill" style="width: 45%;"></div></div>
+              </div>
+              <div class="connector">
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+              </div>
+              <div class="skill-node unlocked">
+                <span class="icon">🦿</span>
+                <div class="skill-progress"><div class="skill-progress-fill" style="width: 20%;"></div></div>
+              </div>
+              <div class="connector">
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+              </div>
+              <div class="skill-node locked">
+                <span class="icon">🔒</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <div class="category-header">
+              <h2>FINISHING</h2>
+              <div class="level-dots">
+                <div class="level-dot filled"></div>
+                <div class="level-dot empty"></div>
+                <div class="level-dot empty"></div>
+                <div class="level-dot empty"></div>
+                <div class="level-dot empty"></div>
+              </div>
+            </div>
+            <div class="skills-row">
+              <div class="skill-node unlocked">
+                <span class="icon">🎯</span>
+                <div class="skill-progress"><div class="skill-progress-fill" style="width: 30%;"></div></div>
+              </div>
+              <div class="connector">
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+              </div>
+              <div class="skill-node locked">
+                <span class="icon">🔒</span>
+              </div>
+              <div class="connector">
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+                <div class="connector-dot"></div>
+              </div>
+              <div class="skill-node locked">
+                <span class="icon">🔒</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Skill Panel -->
+        <div style="position: absolute; bottom: 80px; left: 16px; right: 16px; background: linear-gradient(180deg, rgba(20,30,40,0.95) 0%, rgba(10,15,20,0.98) 100%); border-radius: 20px; padding: 20px; border: 1px solid rgba(0,212,170,0.3);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <div>
+              <h3 style="color: #fff; margin: 0 0 4px 0; font-size: 20px; letter-spacing: 1px;">CROSSOVER</h3>
+              <span style="color: #00D4AA; font-size: 14px; font-family: system-ui;">45% Complete • 8 drills</span>
+            </div>
+            <span style="font-size: 36px;">↔️</span>
+          </div>
+          <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+            <div style="width: 45%; height: 100%; background: linear-gradient(90deg, #00D4AA 0%, #00FFD1 100%); border-radius: 4px;"></div>
+          </div>
+          <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, #00D4AA 0%, #00A388 100%); border: none; border-radius: 12px; color: #000; font-size: 16px; font-weight: bold; font-family: 'Oswald', sans-serif; letter-spacing: 2px; cursor: pointer;">
+            TRAIN NOW <span style="font-size: 12px; opacity: 0.8;">+50 XP</span>
+          </button>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item inactive">
+            <div class="icon">🏠</div>
+            <div class="label">Home</div>
+          </div>
+          <div class="nav-item active">
+            <div class="icon">🌳</div>
+            <div class="label">Skills</div>
+          </div>
+          <div class="nav-item inactive">
+            <div class="icon">📹</div>
+            <div class="label">Drills</div>
+          </div>
+          <div class="nav-item inactive">
+            <div class="icon">🏆</div>
+            <div class="label">Ranks</div>
+          </div>
+          <div class="nav-item inactive">
+            <div class="icon">👤</div>
+            <div class="label">Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCEPT C: AI COACH -->
+    <div class="concept">
+      <div class="concept-label">
+        <h2>CONCEPT C: AI COACH</h2>
+        <p>Conversation-first. The coach relationship is primary.</p>
+      </div>
+      <div class="phone chat-phone">
+        <div class="chat-header">
+          <div class="coach-info">
+            <div class="coach-avatar-large">
+              AH
+              <div class="online-dot"></div>
+            </div>
+            <div class="coach-details">
+              <h1>Coach Adam Harrington</h1>
+              <div class="coach-status">
+                <span class="online">● Online</span>
+                <span class="role">• NBA Skills Coach</span>
+              </div>
+            </div>
+          </div>
+          <div class="quick-stats">
+            <div class="stat">
+              <div class="value">12</div>
+              <div class="label">Day Streak</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <div class="value">2,450</div>
+              <div class="label">Total XP</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <div class="value">47</div>
+              <div class="label">Drills Done</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="messages">
+          <div class="focus-badge">
+            <span><span class="label">Today's Focus: </span><span class="value">Ball Handling</span></span>
+          </div>
+
+          <div class="message">
+            <div class="message-avatar">AH</div>
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>What's up! I watched your crossover video from yesterday. Your hand placement is solid, but I noticed you're looking down too much. Want to work on that today?</p>
+              </div>
+              <div class="message-time">2 min ago</div>
+            </div>
+          </div>
+
+          <div class="message user">
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>Yeah I keep losing the ball when I try to go faster</p>
+              </div>
+              <div class="message-time">1 min ago</div>
+            </div>
+          </div>
+
+          <div class="message">
+            <div class="message-avatar">AH</div>
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>That's actually super common. Speed comes from confidence, and confidence comes from reps. I've got a 10-minute drill that'll help. It's the same one I used with Jayson Tatum when he was coming up.</p>
+              </div>
+              <div class="drill-card">
+                <div class="drill-header">
+                  <div>
+                    <div class="drill-label">Recommended Drill</div>
+                    <div class="drill-name">Eyes Up Crossover</div>
+                  </div>
+                  <div class="drill-xp">+75 XP</div>
+                </div>
+                <div class="drill-meta">
+                  <span>⏱ 10 min</span>
+                  <span>🔥🔥</span>
+                </div>
+                <button class="drill-start-btn">
+                  <span>▶</span>
+                  <span>START DRILL</span>
+                </button>
+              </div>
+              <div class="message-time">Just now</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-area">
+          <div class="quick-actions">
+            <button class="quick-action">🎯 Today's workout</button>
+            <button class="quick-action">📹 Review my form</button>
+            <button class="quick-action">💪 Harder drills</button>
+          </div>
+          <div class="input-row">
+            <button class="video-btn">📹</button>
+            <div class="text-input">
+              <input type="text" placeholder="Ask Coach Adam anything...">
+            </div>
+            <button class="voice-btn">🎤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <h3>DESIGN PHILOSOPHY COMPARISON</h3>
+    <div class="comparison">
+      <div class="comparison-item">
+        <h4>A: THE FEED</h4>
+        <ul>
+          <li>Passive discovery</li>
+          <li>Endless scroll habit</li>
+          <li>Social/shareable first</li>
+          <li>Low commitment per drill</li>
+        </ul>
+      </div>
+      <div class="comparison-item">
+        <h4>B: SKILL TREE</h4>
+        <ul>
+          <li>Active progression</li>
+          <li>Clear goals/unlocks</li>
+          <li>Gamification-heavy</li>
+          <li>Completionist appeal</li>
+        </ul>
+      </div>
+      <div class="comparison-item">
+        <h4>C: AI COACH</h4>
+        <ul>
+          <li>Relationship-first</li>
+          <li>Personalized journey</li>
+          <li>Conversational UX</li>
+          <li>Coach credibility front</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

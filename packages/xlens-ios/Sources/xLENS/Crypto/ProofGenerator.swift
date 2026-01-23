@@ -2,6 +2,11 @@
 // PROOF GENERATOR
 // Creates cryptographic proofs for jump verification
 // Generates hashes and signatures for the proof payload
+//
+// Swift 2026 Best Practices:
+// - Sendable conformance for concurrency safety
+// - Pure async/await
+// - @MainActor for UI-related operations
 // ═══════════════════════════════════════════════════════════════
 
 import Foundation
@@ -9,7 +14,7 @@ import CryptoKit
 import UIKit
 
 /// Generates cryptographic proofs for captured jump data
-final class ProofGenerator {
+final class ProofGenerator: Sendable {
 
     // MARK: - Initialization
 
@@ -18,6 +23,7 @@ final class ProofGenerator {
     // MARK: - Public Interface
 
     /// Generate a complete proof payload for submission
+    @MainActor
     func generateProof(
         session: Session,
         captureResult: CaptureResult,
@@ -41,7 +47,7 @@ final class ProofGenerator {
         let metadataData = try JSONEncoder().encode(metadata)
         let metadataHash = sha256Hash(data: metadataData)
 
-        // Get device info
+        // Get device info (requires MainActor for UIDevice access)
         let deviceInfo = getDeviceInfo()
 
         // Create the capture info
@@ -70,7 +76,7 @@ final class ProofGenerator {
         )
 
         // Sign the payload
-        let signature = try await sign(payload: signaturePayload, with: deviceKey)
+        let signature = try sign(payload: signaturePayload, with: deviceKey)
 
         return ProofPayload(
             sessionId: session.id,
@@ -92,6 +98,7 @@ final class ProofGenerator {
         return digest.map { String(format: "%02x", $0) }.joined()
     }
 
+    @MainActor
     private func getDeviceInfo() -> ProofPayload.DeviceInfo {
         let device = UIDevice.current
         let model = getDeviceModel()
@@ -116,7 +123,7 @@ final class ProofGenerator {
         return modelCode
     }
 
-    private func sign(payload: SignaturePayload, with deviceKey: DeviceKey) async throws -> String {
+    private func sign(payload: SignaturePayload, with deviceKey: DeviceKey) throws -> String {
         // Encode payload to JSON
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
@@ -132,7 +139,7 @@ final class ProofGenerator {
 
 // MARK: - Supporting Types
 
-private struct ProofMetadata: Codable {
+private struct ProofMetadata: Codable, Sendable {
     let sessionId: String
     let nonce: String
     let startedAtMs: Int64
@@ -140,7 +147,7 @@ private struct ProofMetadata: Codable {
     let fps: Int
 }
 
-private struct SignaturePayload: Codable {
+private struct SignaturePayload: Codable, Sendable {
     let sessionId: String
     let nonce: String
     let videoHash: String

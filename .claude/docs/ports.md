@@ -14,7 +14,7 @@
 | 3003 | Academy | Next.js | `pnpm --filter @yp/web-academy dev` |
 | 3004 | Marketing | Vite/React | `pnpm --filter @yp/marketing dev` |
 | 3005 | YP Vision | Next.js | `pnpm --filter @yp/vision dev` |
-| 3006 | Playbook | Astro | `pnpm --filter playbook dev` |
+| 3006 | (Available) | - | - |
 
 ---
 

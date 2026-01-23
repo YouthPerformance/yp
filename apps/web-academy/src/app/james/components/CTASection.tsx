@@ -54,7 +54,7 @@ export function CTASection() {
           {/* Primary CTA */}
           <Link
             href="/programs/barefoot-reset"
-            className="group relative inline-flex items-center gap-2 rounded-full bg-[#FF4500] px-8 py-4 text-sm font-semibold uppercase tracking-wider text-white transition-all hover:bg-[#FF5500] hover:shadow-[0_0_30px_rgba(255,69,0,0.4)]"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-cyan-500 px-8 py-4 text-sm font-semibold uppercase tracking-wider text-black transition-all hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(0,246,224,0.4)]"
           >
             Start the Barefoot Reset
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -82,8 +82,8 @@ export function CTASection() {
 
       {/* Decorative Elements */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-[#FF4500]/5 blur-3xl" />
-        <div className="absolute -right-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-[#FF4500]/5 blur-3xl" />
+        <div className="absolute -left-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-cyan-500/5 blur-3xl" />
+        <div className="absolute -right-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-cyan-500/5 blur-3xl" />
       </div>
     </section>
   );

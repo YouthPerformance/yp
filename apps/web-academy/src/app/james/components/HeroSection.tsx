@@ -5,9 +5,8 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 
 // ═══════════════════════════════════════════════════════════
-// HERO SECTION - "The Liquid Lab" (Simplified v1)
-// Full-screen video hero with massive typography
-// v2 will add Unicorn Studio WebGL liquid distortion
+// HERO SECTION - "The Performance Scientist"
+// Full-screen cinematic hero with script tagline
 // ═══════════════════════════════════════════════════════════
 
 export function HeroSection() {
@@ -21,7 +20,7 @@ export function HeroSection() {
           alt="James Scott training"
           fill
           priority
-          className="object-cover object-center grayscale"
+          className="object-cover object-center"
           style={{ filter: "grayscale(100%) contrast(1.1)" }}
         />
 
@@ -47,8 +46,8 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-6"
         >
-          <span className="rounded-full border border-[#FF4500]/40 bg-[#FF4500]/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-[#FF4500]">
-            Movement Specialist
+          <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-cyan-400">
+            Human Performance Specialist
           </span>
         </motion.div>
 
@@ -57,21 +56,21 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-4 font-bebas text-[15vw] font-bold uppercase leading-[0.85] tracking-tight text-white mix-blend-difference md:text-[12vw]"
+          className="mb-6 font-bebas text-[15vw] font-bold uppercase leading-[0.85] tracking-tight text-white mix-blend-difference md:text-[12vw]"
         >
-          The Movement
+          The Performance
           <br />
           Scientist
         </motion.h1>
 
-        {/* Tagline */}
+        {/* Tagline - Script/Philosophy Font */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mb-2 text-xl font-medium text-[#FF4500] md:text-2xl"
+          className="mb-4 font-playfair text-2xl italic text-cyan-400 md:text-3xl lg:text-4xl"
         >
-          Weak feet don&apos;t eat.
+          "Weak feet don&apos;t eat."
         </motion.p>
 
         {/* Name */}
@@ -81,7 +80,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-sm uppercase tracking-[0.3em] text-white/50"
         >
-          James Scott
+          Coach James Scott
         </motion.p>
       </div>
 

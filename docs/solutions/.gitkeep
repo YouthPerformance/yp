@@ -1,0 +1,14 @@
+# Solutions Directory
+
+Documented problem solutions created by /workflows:compound go here.
+
+Categories (subdirectories):
+- build-errors/
+- test-failures/
+- runtime-errors/
+- performance-issues/
+- database-issues/
+- security-issues/
+- ui-bugs/
+- integration-issues/
+- logic-errors/

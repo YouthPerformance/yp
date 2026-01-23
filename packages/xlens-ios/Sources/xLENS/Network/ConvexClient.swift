@@ -2,6 +2,11 @@
 // CONVEX CLIENT
 // HTTP client for Convex backend communication
 // Handles mutations, queries, and file uploads
+//
+// Swift 2026 Best Practices:
+// - Actor isolation for thread safety
+// - Sendable nested types
+// - Pure async/await (no Combine)
 // ═══════════════════════════════════════════════════════════════
 
 import Foundation
@@ -35,7 +40,7 @@ actor ConvexClient {
 
     // MARK: - Session Management
 
-    struct CreateSessionResponse: Codable {
+    struct CreateSessionResponse: Codable, Sendable {
         let sessionId: String
         let nonce: String
         let nonceDisplay: String
@@ -44,10 +49,10 @@ actor ConvexClient {
     }
 
     func createSession(userId: String, deviceKeyId: String?) async throws -> CreateSessionResponse {
-        let args: [String: Any] = [
-            "userId": userId,
-            "deviceKeyId": deviceKeyId as Any
-        ].compactMapValues { $0 }
+        var args: [String: Any] = ["userId": userId]
+        if let deviceKeyId = deviceKeyId {
+            args["deviceKeyId"] = deviceKeyId
+        }
 
         return try await mutation(
             path: "jump/sessions:create",
@@ -55,7 +60,7 @@ actor ConvexClient {
         )
     }
 
-    struct SessionValidationResponse: Codable {
+    struct SessionValidationResponse: Codable, Sendable {
         let valid: Bool
         let reason: String?
     }
@@ -72,7 +77,7 @@ actor ConvexClient {
 
     // MARK: - Jump Submission
 
-    struct SubmitJumpResponse: Codable {
+    struct SubmitJumpResponse: Codable, Sendable {
         let jumpId: String
         let status: String
     }
@@ -94,11 +99,14 @@ actor ConvexClient {
         ]
 
         if let gps = gps {
-            args["gps"] = [
+            var gpsDict: [String: Any] = [
                 "city": gps.city,
-                "state": gps.state as Any,
                 "country": gps.country
-            ].compactMapValues { $0 }
+            ]
+            if let state = gps.state {
+                gpsDict["state"] = state
+            }
+            args["gps"] = gpsDict
         }
 
         return try await mutation(
@@ -107,7 +115,7 @@ actor ConvexClient {
         )
     }
 
-    struct MarkUploadedResponse: Codable {
+    struct MarkUploadedResponse: Codable, Sendable {
         let success: Bool
     }
 
@@ -121,7 +129,7 @@ actor ConvexClient {
     // MARK: - Jump Queries
 
     func listJumps(userId: String, limit: Int, excludePractice: Bool = false) async throws -> [Jump] {
-        struct JumpResponse: Codable {
+        struct JumpResponse: Codable, Sendable {
             let _id: String
             let userId: String
             let sessionId: String
@@ -159,7 +167,7 @@ actor ConvexClient {
     }
 
     func getBestJump(userId: String, minTier: VerificationTier?) async throws -> Jump? {
-        struct JumpResponse: Codable {
+        struct JumpResponse: Codable, Sendable {
             let _id: String
             let userId: String
             let sessionId: String
@@ -198,7 +206,7 @@ actor ConvexClient {
     // MARK: - Daily Cap
 
     func checkDailyCap(userId: String) async throws -> DailyCapStatus {
-        struct CapResponse: Codable {
+        struct CapResponse: Codable, Sendable {
             let jumpsUsed: Int
             let remaining: Int
             let cap: Int
@@ -233,7 +241,7 @@ actor ConvexClient {
         let (responseData, response) = try await session.upload(for: request, from: data)
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw XLensError.networkError(URLError(.badServerResponse))
+            throw XLensError.networkError("Invalid response type")
         }
 
         guard httpResponse.statusCode == 200 else {
@@ -241,7 +249,7 @@ actor ConvexClient {
             throw XLensError.uploadFailed("Status \(httpResponse.statusCode): \(message)")
         }
 
-        struct UploadResponse: Codable {
+        struct UploadResponse: Codable, Sendable {
             let storageId: String
         }
 
@@ -279,7 +287,7 @@ actor ConvexClient {
         let (data, response) = try await session.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw XLensError.networkError(URLError(.badServerResponse))
+            throw XLensError.networkError("Invalid response type")
         }
 
         guard httpResponse.statusCode == 200 else {
@@ -303,7 +311,7 @@ actor ConvexClient {
 
 // MARK: - Proof Payload
 
-struct ProofPayload {
+struct ProofPayload: Sendable {
     let sessionId: String
     let nonce: String
     let capture: CaptureInfo
@@ -311,7 +319,7 @@ struct ProofPayload {
     let signature: Signature
     let gps: GPSCoordinates?
 
-    struct CaptureInfo {
+    struct CaptureInfo: Sendable {
         let testType: String = "VERT_JUMP"
         let startedAtMs: Int64
         let endedAtMs: Int64
@@ -319,26 +327,26 @@ struct ProofPayload {
         let device: DeviceInfo
     }
 
-    struct DeviceInfo {
+    struct DeviceInfo: Sendable {
         let platform: String = "ios"
         let model: String
         let osVersion: String
         let appVersion: String
     }
 
-    struct Hashes {
+    struct Hashes: Sendable {
         let videoSha256: String
         let sensorSha256: String
         let metadataSha256: String
     }
 
-    struct Signature {
+    struct Signature: Sendable {
         let alg: String = "ES256"
         let keyId: String
         let sig: String
     }
 
-    struct GPSCoordinates {
+    struct GPSCoordinates: Sendable {
         let lat: Double
         let lng: Double
         let accuracyM: Double

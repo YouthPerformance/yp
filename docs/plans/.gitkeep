@@ -1,0 +1,9 @@
+# Plans Directory
+
+Implementation plans created by /workflows:plan go here.
+
+Naming convention: YYYY-MM-DD-<type>-<descriptive-name>-plan.md
+
+Examples:
+- 2026-01-15-feat-user-authentication-flow-plan.md
+- 2026-02-03-fix-checkout-race-condition-plan.md

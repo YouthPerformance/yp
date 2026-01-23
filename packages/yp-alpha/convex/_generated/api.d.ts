@@ -32,6 +32,7 @@ import type * as memory_retrieve from "../memory/retrieve.js";
 import type * as playbook from "../playbook.js";
 import type * as programs from "../programs.js";
 import type * as progress from "../progress.js";
+import type * as seoAnalytics from "../seoAnalytics.js";
 import type * as users from "../users.js";
 import type * as waitlist from "../waitlist.js";
 
@@ -66,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   playbook: typeof playbook;
   programs: typeof programs;
   progress: typeof progress;
+  seoAnalytics: typeof seoAnalytics;
   users: typeof users;
   waitlist: typeof waitlist;
 }>;

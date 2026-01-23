@@ -2,6 +2,11 @@
 // DEVICE KEY MANAGER
 // Manages hardware-backed signing keys for device attestation
 // Uses Secure Enclave for key storage and App Attest for verification
+//
+// Swift 2026 Best Practices:
+// - Actor isolation for thread-safe key management
+// - Sendable conformance for DeviceKey
+// - Pure async/await
 // ═══════════════════════════════════════════════════════════════
 
 import Foundation
@@ -11,7 +16,7 @@ import DeviceCheck
 
 /// Manages device-specific signing keys
 /// Uses Secure Enclave when available for hardware-backed security
-final class DeviceKeyManager {
+actor DeviceKeyManager {
 
     // MARK: - Properties
 
@@ -42,7 +47,7 @@ final class DeviceKeyManager {
         }
 
         // Create new key
-        let newKey = try await createKey()
+        let newKey = try createKey()
         cachedKey = newKey
         return newKey
     }
@@ -81,12 +86,12 @@ final class DeviceKeyManager {
             throw XLensError.storageError("Failed to load key: \(status)")
         }
 
-        guard let secKey = item else {
+        guard let secKey = item as! SecKey? else {
             return nil
         }
 
         // Get public key
-        guard let publicKey = SecKeyCopyPublicKey(secKey as! SecKey) else {
+        guard let publicKey = SecKeyCopyPublicKey(secKey) else {
             throw XLensError.keyGenerationFailed
         }
 
@@ -100,14 +105,14 @@ final class DeviceKeyManager {
         return DeviceKey(
             keyId: keyId,
             publicKey: publicKeyData.base64EncodedString(),
-            privateKeyRef: secKey as! SecKey,
+            privateKeyRef: secKey,
             hardwareLevel: determineHardwareLevel()
         )
     }
 
-    private func createKey() async throws -> DeviceKey {
+    private func createKey() throws -> DeviceKey {
         // Determine if Secure Enclave is available
-        let hasSecureEnclave = SecureEnclave.isAvailable
+        let hasSecureEnclave = SecureEnclaveCheck.isAvailable
 
         var attributes: [String: Any] = [
             kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
@@ -126,7 +131,6 @@ final class DeviceKeyManager {
 
         var error: Unmanaged<CFError>?
         guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
-            let errorMessage = error?.takeRetainedValue().localizedDescription ?? "Unknown error"
             throw XLensError.keyGenerationFailed
         }
 
@@ -156,13 +160,14 @@ final class DeviceKeyManager {
     }
 
     private func determineHardwareLevel() -> HardwareLevel {
-        return SecureEnclave.isAvailable ? .strongbox : .software
+        return SecureEnclaveCheck.isAvailable ? .strongbox : .software
     }
 }
 
 // MARK: - Device Key
 
 /// Represents a device-specific signing key
+/// Note: Not Sendable due to SecKey reference, but safely used within actor isolation
 struct DeviceKey {
     let keyId: String
     let publicKey: String // Base64 encoded
@@ -179,7 +184,6 @@ struct DeviceKey {
             data as CFData,
             &error
         ) else {
-            let errorMessage = error?.takeRetainedValue().localizedDescription ?? "Unknown error"
             throw XLensError.signatureFailed
         }
 
@@ -189,7 +193,7 @@ struct DeviceKey {
 
 // MARK: - Hardware Level
 
-enum HardwareLevel: String, Codable {
+enum HardwareLevel: String, Codable, Sendable {
     case strongbox // Secure Enclave (Gold eligible)
     case tee       // Trusted Execution Environment (Silver max)
     case software  // Software-only (Bronze max)
@@ -197,7 +201,7 @@ enum HardwareLevel: String, Codable {
 
 // MARK: - Secure Enclave Check
 
-private enum SecureEnclave {
+private enum SecureEnclaveCheck {
     static var isAvailable: Bool {
         let attributes: [String: Any] = [
             kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,

@@ -51,7 +51,7 @@ export function MethodSteps() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <span className="text-xs font-medium uppercase tracking-[0.3em] text-[#FF4500]">
+          <span className="text-xs font-medium uppercase tracking-[0.3em] text-cyan-400">
             The Method
           </span>
           <h2 className="mt-4 font-bebas text-5xl uppercase tracking-tight text-white md:text-7xl">
@@ -70,15 +70,15 @@ export function MethodSteps() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 * index }}
-              className="group relative border-l-2 border-white/10 py-4 pl-8 transition-colors hover:border-[#FF4500]/50"
+              className="group relative border-l-2 border-white/10 py-4 pl-8 transition-colors hover:border-cyan-400/50"
             >
               {/* Step Number */}
-              <span className="absolute -left-[1px] top-0 -translate-x-1/2 bg-[#0a0a0a] px-1 font-mono text-xs text-[#FF4500]">
+              <span className="absolute -left-[1px] top-0 -translate-x-1/2 bg-[#0a0a0a] px-1 font-mono text-xs text-cyan-400">
                 {step.number}
               </span>
 
               {/* Step Title */}
-              <h3 className="mb-2 font-bebas text-2xl uppercase tracking-wide text-white group-hover:text-[#FF4500] transition-colors">
+              <h3 className="mb-2 font-bebas text-2xl uppercase tracking-wide text-white group-hover:text-cyan-400 transition-colors">
                 {step.title}
               </h3>
 

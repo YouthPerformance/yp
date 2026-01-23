@@ -43,7 +43,7 @@ export function StatsGrid() {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <span className="text-xs font-medium uppercase tracking-[0.3em] text-[#FF4500]">
+          <span className="text-xs font-medium uppercase tracking-[0.3em] text-cyan-400">
             The Credentials
           </span>
         </motion.div>
@@ -64,7 +64,7 @@ export function StatsGrid() {
               </div>
 
               {/* Label */}
-              <div className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-[#FF4500]">
+              <div className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-cyan-400">
                 {stat.label}
               </div>
 

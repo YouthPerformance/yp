@@ -1,75 +1,107 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 // ═══════════════════════════════════════════════════════════
 // PHILOSOPHY SECTION
-// Split screen with animated text reveal
+// Textured, cinematic text reveal with depth
 // ═══════════════════════════════════════════════════════════
 
 const PHILOSOPHY_LINES = [
-  "Your feet have 26 bones, 33 joints, and over 100 muscles.",
-  "They've been locked in coffins called shoes for years.",
-  "",
-  "I don't fix symptoms. I rebuild foundations.",
-  "Every injury starts somewhere—usually, it's the feet.",
-  "",
-  "Fix the feet, fix everything upstream.",
+  { text: "Your feet have 26 bones, 33 joints, and over 100 muscles.", highlight: false },
+  { text: "They've been locked in coffins called shoes for years.", highlight: false },
+  { text: "", highlight: false },
+  { text: "I don't fix symptoms.", highlight: false },
+  { text: "I rebuild foundations.", highlight: true },
+  { text: "", highlight: false },
+  { text: "Fix the feet, fix everything upstream.", highlight: true },
 ];
 
 export function PhilosophySection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen bg-[#050505] px-6 py-24 md:px-12 lg:px-24"
+      className="relative min-h-screen overflow-hidden bg-[#050505] px-6 py-32 md:px-12 lg:px-24"
     >
-      <div className="mx-auto max-w-6xl">
+      {/* Textured Background */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{ y: backgroundY }}
+      >
+        {/* Noise Texture */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          }}
+        />
+
+        {/* Gradient Orbs */}
+        <div className="absolute -left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-cyan-500/5 blur-[120px]" />
+        <div className="absolute -right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-cyan-400/5 blur-[100px]" />
+      </motion.div>
+
+      <div className="relative z-10 mx-auto max-w-5xl">
         {/* Section Label */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <span className="text-xs font-medium uppercase tracking-[0.3em] text-[#FF4500]">
+          <span className="inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.3em] text-cyan-400">
+            <span className="h-px w-8 bg-cyan-400/50" />
             The Philosophy
           </span>
         </motion.div>
 
         {/* Philosophy Text */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           {PHILOSOPHY_LINES.map((line, i) => (
             <motion.p
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 * i }}
-              className={`text-2xl font-light leading-relaxed md:text-3xl lg:text-4xl ${
-                line === "" ? "h-4" : ""
+              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+              animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+              transition={{
+                duration: 0.8,
+                delay: 0.12 * i,
+                ease: [0.25, 0.4, 0.25, 1]
+              }}
+              className={`text-2xl font-light leading-relaxed md:text-3xl lg:text-5xl ${
+                line.text === "" ? "h-6" : ""
               } ${
-                line.includes("Fix the feet")
-                  ? "font-medium text-[#FF4500]"
-                  : "text-white/80"
+                line.highlight
+                  ? "font-medium text-cyan-400"
+                  : "text-white/70"
               }`}
             >
-              {line}
+              {line.text}
             </motion.p>
           ))}
         </div>
 
-        {/* Signature */}
+        {/* Signature with line */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16 flex items-center gap-4"
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
+          transition={{ duration: 0.8, delay: 1 }}
+          className="mt-20 flex items-center gap-6 origin-left"
         >
-          <div className="h-px flex-1 bg-white/10" />
-          <span className="text-sm text-white/40">— James Scott</span>
+          <div className="h-px flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent" />
+          <span className="font-playfair text-lg italic text-white/50">
+            — Coach James
+          </span>
         </motion.div>
       </div>
     </section>

@@ -1,6 +1,10 @@
 // ═══════════════════════════════════════════════════════════════
 // xLENS CLIENT TESTS
 // Unit tests for XLensClient
+//
+// Swift 2026 Best Practices:
+// - Async test methods
+// - @MainActor for client access
 // ═══════════════════════════════════════════════════════════════
 
 import XCTest
@@ -8,17 +12,15 @@ import XCTest
 
 final class XLensClientTests: XCTestCase {
 
+    @MainActor
     func testClientInitialization() async {
-        let client = await XLens.createClient(
+        let client = XLens.createClient(
             convexUrl: URL(string: "https://test.convex.cloud")!,
             userId: "test_user"
         )
 
-        let state = await client.state
-        XCTAssertEqual(state, .idle)
-
-        let session = await client.currentSession
-        XCTAssertNil(session)
+        XCTAssertEqual(client.state, .idle)
+        XCTAssertNil(client.currentSession)
     }
 
     func testSessionExpiration() {
@@ -83,5 +85,58 @@ final class XLensClientTests: XCTestCase {
         XCTAssertEqual(XLensState.idle, XLensState.idle)
         XCTAssertEqual(XLensState.capturing, XLensState.capturing)
         XCTAssertNotEqual(XLensState.idle, XLensState.capturing)
+    }
+
+    func testIMUSampleCoding() throws {
+        let sample = IMUSample(
+            timestamp: 1234567890.123,
+            accelerationX: 0.1,
+            accelerationY: 0.2,
+            accelerationZ: 9.8,
+            rotationX: 0.01,
+            rotationY: 0.02,
+            rotationZ: 0.03
+        )
+
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(sample)
+
+        let decoder = JSONDecoder()
+        let decoded = try decoder.decode(IMUSample.self, from: data)
+
+        XCTAssertEqual(decoded.timestamp, sample.timestamp)
+        XCTAssertEqual(decoded.accelerationX, sample.accelerationX)
+        XCTAssertEqual(decoded.accelerationY, sample.accelerationY)
+        XCTAssertEqual(decoded.accelerationZ, sample.accelerationZ)
+    }
+
+    func testDailyCapStatus() {
+        let status = DailyCapStatus(
+            jumpsUsed: 3,
+            remaining: 2,
+            cap: 5,
+            isOverCap: false
+        )
+
+        XCTAssertEqual(status.jumpsUsed, 3)
+        XCTAssertEqual(status.remaining, 2)
+        XCTAssertEqual(status.cap, 5)
+        XCTAssertFalse(status.isOverCap)
+    }
+
+    @MainActor
+    func testClientStateTransitions() async {
+        let client = XLens.createClient(
+            convexUrl: URL(string: "https://test.convex.cloud")!,
+            userId: "test_user"
+        )
+
+        // Initial state
+        XCTAssertEqual(client.state, .idle)
+
+        // Reset should maintain idle
+        client.reset()
+        XCTAssertEqual(client.state, .idle)
+        XCTAssertNil(client.lastJump)
     }
 }

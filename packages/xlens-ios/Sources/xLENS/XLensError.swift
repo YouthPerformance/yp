@@ -1,11 +1,15 @@
 // ═══════════════════════════════════════════════════════════════
 // xLENS ERRORS
 // Error types for the xLENS SDK
+//
+// Swift 2026 Best Practices:
+// - Sendable conformance for concurrency safety
+// - LocalizedError for user-facing messages
 // ═══════════════════════════════════════════════════════════════
 
 import Foundation
 
-public enum XLensError: LocalizedError {
+public enum XLensError: LocalizedError, Sendable {
     // Session errors
     case invalidState(String)
     case sessionExpired
@@ -30,7 +34,7 @@ public enum XLensError: LocalizedError {
     case attestationFailed(String)
 
     // Network errors
-    case networkError(Error)
+    case networkError(String) // Changed from Error to String for Sendable
     case uploadFailed(String)
     case serverError(Int, String)
     case decodingError(String)
@@ -79,8 +83,8 @@ public enum XLensError: LocalizedError {
         case .attestationFailed(let reason):
             return "Device attestation failed: \(reason)"
 
-        case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
+        case .networkError(let message):
+            return "Network error: \(message)"
         case .uploadFailed(let reason):
             return "Upload failed: \(reason)"
         case .serverError(let code, let message):

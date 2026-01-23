@@ -2,21 +2,31 @@
 // xLENS CLIENT
 // Main entry point for xLENS SDK
 // Coordinates session management, capture, and proof generation
+//
+// Swift 2026 Best Practices Applied:
+// - @Observable macro (not ObservableObject)
+// - @MainActor for UI state isolation
+// - Sendable conformance for concurrency safety
+// - Environment-based dependency injection
+// - No Combine - pure async/await
 // ═══════════════════════════════════════════════════════════════
 
 import Foundation
-import Combine
+import Observation
+import SwiftUI
+import AVFoundation
 
 /// Main xLENS SDK client for iOS
 /// Handles session management, video/sensor capture, and proof generation
 @MainActor
-public final class XLensClient: ObservableObject {
+@Observable
+public final class XLensClient {
 
-    // MARK: - Published State
+    // MARK: - Observable State
 
-    @Published public private(set) var state: XLensState = .idle
-    @Published public private(set) var currentSession: Session?
-    @Published public private(set) var lastJump: Jump?
+    public private(set) var state: XLensState = .idle
+    public private(set) var currentSession: Session?
+    public private(set) var lastJump: Jump?
 
     // MARK: - Private Properties
 
@@ -25,11 +35,9 @@ public final class XLensClient: ObservableObject {
     private let proofGenerator: ProofGenerator
     private let deviceKeyManager: DeviceKeyManager
 
-    private var cancellables = Set<AnyCancellable>()
-
     // MARK: - Configuration
 
-    public struct Configuration {
+    public struct Configuration: Sendable {
         public let convexUrl: URL
         public let authToken: String?
         public let userId: String
@@ -228,11 +236,16 @@ public final class XLensClient: ObservableObject {
     public func getBestJump(userId: String, minTier: VerificationTier? = nil) async throws -> Jump? {
         return try await convexClient.getBestJump(userId: userId, minTier: minTier)
     }
+
+    /// Get the camera preview layer for UI display
+    public var previewLayer: AVCaptureVideoPreviewLayer? {
+        captureManager.preview
+    }
 }
 
 // MARK: - Supporting Types
 
-public enum XLensState: Equatable {
+public enum XLensState: Equatable, Sendable {
     case idle
     case preparingSession
     case sessionReady
@@ -260,7 +273,7 @@ public enum XLensState: Equatable {
     }
 }
 
-public struct Session {
+public struct Session: Sendable {
     public let id: String
     public let nonce: String
     public let nonceDisplay: String
@@ -276,7 +289,7 @@ public struct Session {
     }
 }
 
-public struct Jump: Identifiable {
+public struct Jump: Identifiable, Sendable {
     public let id: String
     public var status: JumpStatus
     public let sessionId: String
@@ -287,7 +300,7 @@ public struct Jump: Identifiable {
     public var confidence: Double?
 }
 
-public enum JumpStatus: String, Codable {
+public enum JumpStatus: String, Codable, Sendable {
     case uploading
     case processing
     case complete
@@ -295,7 +308,7 @@ public enum JumpStatus: String, Codable {
     case challenged
 }
 
-public enum VerificationTier: String, Codable {
+public enum VerificationTier: String, Codable, Sendable {
     case measured
     case bronze
     case silver
@@ -303,7 +316,7 @@ public enum VerificationTier: String, Codable {
     case rejected
 }
 
-public struct GPSLocation: Codable {
+public struct GPSLocation: Codable, Sendable {
     public let city: String
     public let state: String?
     public let country: String
@@ -315,19 +328,19 @@ public struct GPSLocation: Codable {
     }
 }
 
-public struct DailyCapStatus {
+public struct DailyCapStatus: Sendable {
     public let jumpsUsed: Int
     public let remaining: Int
     public let cap: Int
     public let isOverCap: Bool
 }
 
-public struct JumpSubmissionResult {
+public struct JumpSubmissionResult: Sendable {
     public let jumpId: String
     public let status: String
 }
 
-public struct CaptureResult {
+public struct CaptureResult: Sendable {
     public let videoData: Data
     public let videoURL: URL
     public let sensorData: Data
@@ -337,7 +350,7 @@ public struct CaptureResult {
     public let imuSamples: [IMUSample]
 }
 
-public struct IMUSample: Codable {
+public struct IMUSample: Codable, Sendable {
     public let timestamp: TimeInterval
     public let accelerationX: Double
     public let accelerationY: Double
@@ -345,4 +358,24 @@ public struct IMUSample: Codable {
     public let rotationX: Double
     public let rotationY: Double
     public let rotationZ: Double
+}
+
+// MARK: - Environment Key for Dependency Injection
+
+public struct XLensClientKey: EnvironmentKey {
+    public static let defaultValue: XLensClient? = nil
+}
+
+public extension EnvironmentValues {
+    var xlensClient: XLensClient? {
+        get { self[XLensClientKey.self] }
+        set { self[XLensClientKey.self] = newValue }
+    }
+}
+
+public extension View {
+    /// Inject xLENS client into the environment
+    func xlensClient(_ client: XLensClient) -> some View {
+        environment(\.xlensClient, client)
+    }
 }

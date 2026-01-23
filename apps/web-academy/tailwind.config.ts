@@ -48,6 +48,7 @@ const config: Config = {
       fontFamily: {
         bebas: ["var(--font-bebas)", "Bebas Neue", "sans-serif"],
         inter: ["var(--font-inter)", "Inter", "sans-serif"],
+        playfair: ["var(--font-playfair)", "Playfair Display", "Georgia", "serif"],
         mono: ["SF Mono", "Monaco", "Consolas", "monospace"],
       },
       fontSize: {

@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
@@ -31,6 +31,13 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-space-grotesk",
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
+  style: ["normal", "italic"],
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -98,7 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${bebasNeue.variable} ${spaceGrotesk.variable}`}
+      className={`${inter.variable} ${bebasNeue.variable} ${spaceGrotesk.variable} ${playfairDisplay.variable}`}
       suppressHydrationWarning
     >
       <head>

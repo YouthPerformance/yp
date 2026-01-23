@@ -1,0 +1,9 @@
+{
+	"/": [],
+	"/capture": [
+		"src/routes/capture/+page.ts"
+	],
+	"/result/[jumpId]": [
+		"src/routes/result/[jumpId]/+page.ts"
+	]
+}

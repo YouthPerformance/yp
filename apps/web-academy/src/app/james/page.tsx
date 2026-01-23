@@ -4,16 +4,15 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { HeroSection } from "./components/HeroSection";
 import { PhilosophySection } from "./components/PhilosophySection";
-import { RosterDeck } from "./components/RosterDeck";
+import { OriginStorySection } from "./components/OriginStorySection";
 import { MethodSteps } from "./components/MethodSteps";
 import { StatsGrid } from "./components/StatsGrid";
 import { LogoMarquee } from "./components/LogoMarquee";
-import { CTASection } from "./components/CTASection";
 import { GrainOverlay } from "./components/GrainOverlay";
 
 // ═══════════════════════════════════════════════════════════
-// JAMES SCOTT - PROJECT BLACKOUT
-// "The Movement Scientist" - Industrial, Cinematic, The Lab
+// JAMES SCOTT - THE PERFORMANCE SCIENTIST
+// Founder Story Page - Pure About Us, No CTA
 // ═══════════════════════════════════════════════════════════
 
 export default function JamesPage() {
@@ -34,7 +33,7 @@ export default function JamesPage() {
       {/* Film Grain Overlay */}
       <GrainOverlay opacity={0.04} />
 
-      {/* Section A: Hero - "The Liquid Lab" (simplified for v1) */}
+      {/* Section A: Hero */}
       <motion.div style={{ opacity: heroOpacity }}>
         <HeroSection />
       </motion.div>
@@ -42,8 +41,8 @@ export default function JamesPage() {
       {/* Section B: Philosophy */}
       <PhilosophySection />
 
-      {/* Section C: Roster Cards - "The Sticky Stack" */}
-      <RosterDeck />
+      {/* Section C: Origin Story - Why He Built This */}
+      <OriginStorySection />
 
       {/* Section D: Method Steps */}
       <MethodSteps />
@@ -51,11 +50,17 @@ export default function JamesPage() {
       {/* Section E: Stats/Credentials */}
       <StatsGrid />
 
-      {/* Section F: Logo Marquee */}
+      {/* Section F: Logo Marquee - Trusted By */}
       <LogoMarquee />
 
-      {/* Section G: CTA */}
-      <CTASection />
+      {/* Footer */}
+      <footer className="border-t border-white/10 bg-[#050505] px-6 py-12">
+        <div className="mx-auto max-w-6xl text-center">
+          <p className="text-sm text-white/40">
+            © {new Date().getFullYear()} YouthPerformance. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

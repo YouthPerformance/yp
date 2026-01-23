@@ -1,0 +1,8 @@
+# Todos Directory
+
+Code review findings and work items created by /workflows:review and /triage go here.
+
+Naming convention: {id}-{status}-{priority}-{description}.md
+
+Status: pending, ready, in-progress, done
+Priority: p1, p2, p3

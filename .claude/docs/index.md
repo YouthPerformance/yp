@@ -26,7 +26,7 @@
 | Academy | 3003 | `apps/web-academy/CLAUDE.md` | `apps/web-academy/src/app/page.tsx` |
 | Marketing | 3004 | `apps/marketing/CLAUDE.md` | `apps/marketing/src/App.jsx` |
 | Vision | 3005 | - | `apps/yp-vision/src/app/page.tsx` |
-| Playbook | 3006 | - | `apps/playbook/src/pages/index.astro` |
+| ~~Playbook~~ | ~~3006~~ | - | *(Merged into Academy)* |
 
 ---
 
