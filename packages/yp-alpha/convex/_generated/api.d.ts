@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as agentFs from "../agentFs.js";
 import type * as answerEngine from "../answerEngine.js";
 import type * as campaigns from "../campaigns.js";
 import type * as contracts from "../contracts.js";
@@ -15,6 +16,14 @@ import type * as crons from "../crons.js";
 import type * as emails from "../emails.js";
 import type * as gamification from "../gamification.js";
 import type * as http from "../http.js";
+import type * as jump_deviceKeys from "../jump/deviceKeys.js";
+import type * as jump_index from "../jump/index.js";
+import type * as jump_jumpUsers from "../jump/jumpUsers.js";
+import type * as jump_jumps from "../jump/jumps.js";
+import type * as jump_leaderboards from "../jump/leaderboards.js";
+import type * as jump_measureJump from "../jump/measureJump.js";
+import type * as jump_sessions from "../jump/sessions.js";
+import type * as jump_vpcs from "../jump/vpcs.js";
 import type * as leads from "../leads.js";
 import type * as learningModules from "../learningModules.js";
 import type * as loops from "../loops.js";
@@ -33,6 +42,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  agentFs: typeof agentFs;
   answerEngine: typeof answerEngine;
   campaigns: typeof campaigns;
   contracts: typeof contracts;
@@ -40,6 +50,14 @@ declare const fullApi: ApiFromModules<{
   emails: typeof emails;
   gamification: typeof gamification;
   http: typeof http;
+  "jump/deviceKeys": typeof jump_deviceKeys;
+  "jump/index": typeof jump_index;
+  "jump/jumpUsers": typeof jump_jumpUsers;
+  "jump/jumps": typeof jump_jumps;
+  "jump/leaderboards": typeof jump_leaderboards;
+  "jump/measureJump": typeof jump_measureJump;
+  "jump/sessions": typeof jump_sessions;
+  "jump/vpcs": typeof jump_vpcs;
   leads: typeof leads;
   learningModules: typeof learningModules;
   loops: typeof loops;

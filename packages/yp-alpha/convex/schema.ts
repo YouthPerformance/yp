@@ -746,6 +746,7 @@ export default defineSchema({
 
     // Product preference
     size: v.union(v.literal("6"), v.literal("7")),
+    product: v.optional(v.string()), // "neoball" etc.
 
     // Referral system
     referralCode: v.string(), // Unique code for sharing (nanoid)
@@ -755,6 +756,14 @@ export default defineSchema({
     // Position tracking
     // Effective position = basePosition - (referralCount * 10)
     basePosition: v.number(), // Original signup order (immutable)
+
+    // Tier system
+    currentTier: v.optional(v.string()), // "recruit", "starter", "captain", etc.
+    tierHistory: v.optional(v.array(v.object({
+      tier: v.string(),
+      unlockedAt: v.number(),
+      referralCountAtUnlock: v.number(),
+    }))),
 
     // Source tracking
     source: v.string(), // "neoball-waitlist"
@@ -1406,4 +1415,104 @@ export default defineSchema({
     .index("by_age_group", ["ageGroup", "bestHeightInches"])
     .index("by_gender", ["gender", "bestHeightInches"])
     .index("by_tier", ["verificationTier", "bestHeightInches"]),
+
+  // ═══════════════════════════════════════════════════════════════
+  // AGENT FILE SYSTEM - CROSS-SESSION TASK COORDINATION
+  // Enables multiple Claude agents to share work across sessions
+  // ═══════════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────────
+  // AGENT TASKS TABLE
+  // Persistent task queue readable/writable by any agent session
+  // ─────────────────────────────────────────────────────────────────
+  agent_tasks: defineTable({
+    // Identity
+    taskId: v.string(), // Unique identifier (nanoid)
+    title: v.string(), // Short task name
+    description: v.optional(v.string()), // Detailed description
+
+    // Categorization
+    domain: v.string(), // "seo", "content", "dev", "ops"
+    project: v.optional(v.string()), // "gap-miner", "wolfgrow", etc.
+
+    // Status workflow
+    status: v.union(
+      v.literal("pending"), // Not started
+      v.literal("in_progress"), // Agent working on it
+      v.literal("blocked"), // Waiting on something
+      v.literal("completed"), // Done
+      v.literal("cancelled") // Abandoned
+    ),
+
+    // Priority (lower = higher priority)
+    priority: v.number(), // 1=critical, 2=high, 3=normal, 4=low
+
+    // Ownership
+    createdBy: v.string(), // Agent session ID or "human"
+    assignedTo: v.optional(v.string()), // Agent session ID currently working
+    completedBy: v.optional(v.string()),
+
+    // Dependencies
+    blockedBy: v.optional(v.array(v.string())), // Task IDs that must complete first
+    blocks: v.optional(v.array(v.string())), // Task IDs that depend on this
+
+    // Context/payload (flexible JSON for task-specific data)
+    payload: v.optional(v.any()), // e.g., { keyword: "...", cluster: "..." }
+
+    // Progress tracking
+    progressPercent: v.optional(v.number()), // 0-100
+    progressNotes: v.optional(v.string()),
+
+    // Results (populated on completion)
+    result: v.optional(v.any()), // Task-specific output data
+    errorMessage: v.optional(v.string()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    startedAt: v.optional(v.number()),
+    completedAt: v.optional(v.number()),
+
+    // TTL for auto-cleanup (optional)
+    expiresAt: v.optional(v.number()),
+  })
+    .index("by_task_id", ["taskId"])
+    .index("by_status", ["status"])
+    .index("by_domain", ["domain", "status"])
+    .index("by_project", ["project", "status"])
+    .index("by_priority", ["status", "priority"])
+    .index("by_assigned", ["assignedTo"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // AGENT LOGS TABLE
+  // Audit trail of agent actions for debugging and learning
+  // ─────────────────────────────────────────────────────────────────
+  agent_logs: defineTable({
+    // Task reference (optional - some logs are task-independent)
+    taskId: v.optional(v.string()),
+
+    // Log metadata
+    agentId: v.string(), // Session identifier
+    action: v.string(), // "task_claimed", "task_completed", "error", etc.
+    domain: v.string(), // "seo", "content", etc.
+
+    // Content
+    message: v.string(),
+    data: v.optional(v.any()), // Structured payload
+
+    // Severity
+    level: v.union(
+      v.literal("debug"),
+      v.literal("info"),
+      v.literal("warn"),
+      v.literal("error")
+    ),
+
+    // Timestamp
+    createdAt: v.number(),
+  })
+    .index("by_task", ["taskId"])
+    .index("by_agent", ["agentId"])
+    .index("by_domain", ["domain", "createdAt"])
+    .index("by_level", ["level", "createdAt"]),
 });

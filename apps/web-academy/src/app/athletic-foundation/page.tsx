@@ -4,7 +4,7 @@ import {
   FOUNDATION_DRILLS,
   FOUNDATION_WORKOUTS,
   FOUNDATION_PAGES,
-} from '@/src/data/athletic-foundation-data';
+} from '@/data/athletic-foundation-data';
 
 export const metadata = {
   title: 'Athletic Foundation: The Ground Force System | YouthPerformance',

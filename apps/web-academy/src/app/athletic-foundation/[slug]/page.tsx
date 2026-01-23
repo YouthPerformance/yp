@@ -5,7 +5,7 @@ import {
   FOUNDATION_DRILLS,
   FOUNDATION_WORKOUTS,
   getFoundationPageBySlug,
-} from '@/src/data/athletic-foundation-data';
+} from '@/data/athletic-foundation-data';
 
 export async function generateStaticParams() {
   return FOUNDATION_PAGES.map((page) => ({

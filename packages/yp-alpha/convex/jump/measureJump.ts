@@ -364,20 +364,20 @@ export const processPendingJumps = action({
   args: {
     batchSize: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<{ processed: number; results: Array<{ jumpId: string }> }> => {
     const batchSize = args.batchSize ?? 10;
 
     const pendingJumps = await ctx.runQuery(api.jump.jumps.getPending, {
       limit: batchSize,
     });
 
-    const results = [];
+    const results: Array<{ jumpId: string }> = [];
 
     for (const jump of pendingJumps) {
       const result = await ctx.runAction(api.jump.measureJump.measureJump, {
         jumpId: jump._id
       });
-      results.push({ jumpId: jump._id, ...result });
+      results.push({ jumpId: jump._id, ...(result as object) });
     }
 
     return {

@@ -37,6 +37,12 @@ interface Opportunity {
 
 // Pillar mappings
 const PILLAR_MAP: Record<string, { path: string; expert: string; asset: string }> = {
+  // SILENT BASKETBALL - NeoBall landing pages (highest priority)
+  'silent-basketball': {
+    path: '/basketball/silent-training',
+    expert: 'adam-harrington',
+    asset: 'neoball-cta',
+  },
   'home-training': {
     path: '/basketball/home-training',
     expert: 'adam-harrington',
@@ -135,6 +141,7 @@ function calculatePriorityScore(gap: Gap): number {
 
   // Prioritize our key clusters
   const clusterMultiplier: Record<string, number> = {
+    'silent-basketball': 2.0, // HIGHEST PRIORITY - NeoBall revenue driver
     'home-training': 1.5,  // Our differentiation
     'shooting': 1.3,
     'barefoot': 1.4,
@@ -159,14 +166,22 @@ export async function runOppsFactory(config: {
   maxOpportunities: number;
   openaiApiKey?: string;
   existingEmbeddings?: Array<{ slug: string; embedding: number[] }>;
+  clusterFilter?: string; // Filter to specific cluster (e.g., "silent-basketball")
 }): Promise<Opportunity[]> {
   console.log('🏭 Starting Opps Factory...\n');
 
   // 1. Load gaps
   const gapsFile = path.join(config.gapsPath, 'gaps.json');
   const gapsData = JSON.parse(await fs.readFile(gapsFile, 'utf-8'));
-  const gaps: Gap[] = gapsData.gaps;
+  let gaps: Gap[] = gapsData.gaps;
   console.log(`📥 Loaded ${gaps.length} gaps`);
+
+  // 1.5 Apply cluster filter if specified
+  if (config.clusterFilter) {
+    const filterLower = config.clusterFilter.toLowerCase();
+    gaps = gaps.filter(g => g.cluster.toLowerCase().includes(filterLower));
+    console.log(`🎯 Filtered to ${gaps.length} gaps matching "${config.clusterFilter}"`);
+  }
 
   // 2. Convert to opportunities
   let opportunities: Opportunity[] = gaps.map((gap, index) => {

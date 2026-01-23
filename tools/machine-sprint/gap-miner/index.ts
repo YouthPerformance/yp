@@ -2,6 +2,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { AhrefsGapMiner, SEED_KEYWORDS, type Gap } from './sources/ahrefs';
 import { AnswerEngineGapMiner } from './sources/answer-engine';
+import { CsvGapMiner } from './sources/csv';
+import { getMockGaps } from '../seed/mock-gaps';
 
 // ============================================================================
 // GAP MINER ORCHESTRATOR
@@ -11,8 +13,10 @@ import { AnswerEngineGapMiner } from './sources/answer-engine';
 interface GapMinerConfig {
   ahrefsApiKey?: string;
   answerEngineLogsPath?: string;
+  csvPath?: string; // Path to CSV imports folder (the "free" path)
   ourDomain: string;
   outputPath: string;
+  useMock?: boolean; // Use mock data for testing
 }
 
 interface GapMinerOutput {
@@ -28,8 +32,22 @@ export async function runGapMiner(config: GapMinerConfig): Promise<GapMinerOutpu
 
   const allGaps: Gap[] = [];
 
-  // 1. Ahrefs Content Gaps
-  if (config.ahrefsApiKey) {
+  // Mock mode for testing
+  if (config.useMock) {
+    console.log('🧪 Using mock data for testing...');
+    const mockGaps = getMockGaps();
+    console.log(`   Loaded ${mockGaps.length} mock gaps`);
+    allGaps.push(...mockGaps);
+  }
+  // CSV mode - the "free intelligence" path
+  else if (config.csvPath) {
+    console.log('📂 CSV Mode: Mining from exported files...');
+    const csvMiner = new CsvGapMiner();
+    const csvGaps = await csvMiner.getGaps(config.csvPath);
+    allGaps.push(...csvGaps);
+  }
+  // 1. Ahrefs API Content Gaps (paid path)
+  else if (config.ahrefsApiKey) {
     console.log('📊 Mining Ahrefs content gaps...');
     const ahrefs = new AhrefsGapMiner(config.ahrefsApiKey);
 
