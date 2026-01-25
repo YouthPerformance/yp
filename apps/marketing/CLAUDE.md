@@ -3,6 +3,7 @@
 > Landing page and marketing site.
 > **URL:** youthperformance.com
 > **Deploy:** Cloudflare Pages
+> **Auth:** None - all auth redirects to app.youthperformance.com
 
 ---
 
@@ -40,6 +41,23 @@ src/
 
 ---
 
+## Brand Assets
+
+**All brand assets are centralized in `packages/brand-assets/`.** Do not add new assets to `public/` - import from the shared package instead.
+
+```typescript
+import { LOGOS, IMAGES, VIDEOS } from '@yp/brand-assets';
+
+// Usage
+<img src={LOGOS.primary.svg} alt="YP Logo" />
+<video src={VIDEOS.loaders.main.webm} />
+```
+
+### Existing assets in `public/` are legacy
+Assets in `public/logo/`, `public/images/`, etc. are duplicates. Use `@yp/brand-assets` for new work.
+
+---
+
 ## Key Routes
 
 | Route | Purpose |
@@ -71,8 +89,8 @@ npx wrangler pages deploy dist --project-name=yp-landing
 ## Environment Variables
 
 ```bash
-VITE_CONVEX_URL=
-VITE_CLERK_PUBLISHABLE_KEY=
+VITE_APP_URL=https://app.youthperformance.com   # Main app URL for redirects
+VITE_POSTHOG_KEY=                                # Analytics (optional)
 ```
 
 ---

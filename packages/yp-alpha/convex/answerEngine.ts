@@ -649,7 +649,7 @@ export const getQnAPairs = query({
               credentials: author.credentials,
             }
           : null,
-        url: `https://academy.youthperformance.com/guides/${article.slug}`,
+        url: `https://app.youthperformance.com/guides/${article.slug}`,
         lastUpdated: new Date(article.updatedAt).toISOString().split("T")[0],
       };
     });

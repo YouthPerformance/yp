@@ -59,7 +59,7 @@ export interface HeaderProps {
 }
 
 const defaultLinks: NavLink[] = [
-  { label: "ACADEMY", href: "https://academy.youthperformance.com" },
+  { label: "ACADEMY", href: "https://app.youthperformance.com" },
   { label: "SHOP", href: "https://shop.youthperformance.com" },
   { label: "NEOBALL", href: "https://neoball.co" },
 ];

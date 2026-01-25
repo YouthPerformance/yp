@@ -1,9 +1,14 @@
 // ===================================================================
-// DEV BYPASS SYSTEM
-// Three-layer auth bypass for testing and demos
-// Layer A: DEV_MODE=true (local dev)
-// Layer B: /demo/* routes (shareable prototypes)
-// Layer C: yp-bypass cookie (personal access anywhere)
+// DEV BYPASS SYSTEM - UNIFIED
+// Consolidated auth bypass with PRODUCTION GUARD
+//
+// SECURITY: Production bypass is BLOCKED by default.
+// Only emergency bypass with correct secret can override in prod.
+//
+// Layers (evaluated in order):
+// 1. PRODUCTION GUARD - Always first, blocks bypass in prod
+// 2. DEV_MODE=true - Local development
+// 3. Cookie bypass - For staging/demo with YP_BYPASS_SECRET
 //
 // NOTE: This file is imported by both server and client components.
 // Server-only functions that need cookies are in dev-bypass-server.ts
@@ -60,22 +65,37 @@ export const DEV_ENROLLMENT = {
 };
 
 // ---------------------------------------------------------------
-// SERVER-SIDE BYPASS CHECK
+// UNIFIED BYPASS CHECK (SYNC - no cookie check)
 // ---------------------------------------------------------------
 
 /**
  * Check if auth should be bypassed (server-side) - SYNC version
- * Just checks DEV_MODE env var (no cookie check - that requires async)
+ *
+ * SECURITY: Production guard ALWAYS runs first.
+ * This function cannot be bypassed in production.
  */
 export function shouldBypassAuth(): boolean {
-  // Layer A: Local dev mode - this is sync and always works
+  // ═══════════════════════════════════════════════════════════════
+  // PRODUCTION GUARD - NEVER bypass in production
+  // ═══════════════════════════════════════════════════════════════
+  if (process.env.NODE_ENV === "production") {
+    // No sync bypass available in production
+    // Emergency bypass requires async cookie check (see dev-bypass-server.ts)
+    return false;
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // LOCAL DEV MODE
+  // ═══════════════════════════════════════════════════════════════
   if (process.env.DEV_MODE === "true") {
+    if (process.env.NODE_ENV === "development") {
+      console.log("[DEV-BYPASS] Auth bypassed via DEV_MODE=true");
+    }
     return true;
   }
 
   return false;
 }
-
 
 // ---------------------------------------------------------------
 // CLIENT-SIDE BYPASS CHECK
@@ -83,10 +103,18 @@ export function shouldBypassAuth(): boolean {
 
 /**
  * Check if auth should be bypassed (client-side)
- * Checks for NEXT_PUBLIC_DEV_MODE or yp-bypass cookie
+ *
+ * SECURITY: Production guard ALWAYS runs first.
  */
 export function shouldBypassAuthClient(): boolean {
   if (typeof window === "undefined") {
+    return false;
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // PRODUCTION GUARD - NEVER bypass in production client
+  // ═══════════════════════════════════════════════════════════════
+  if (process.env.NODE_ENV === "production") {
     return false;
   }
 
@@ -100,7 +128,7 @@ export function shouldBypassAuthClient(): boolean {
     return true;
   }
 
-  // Check for bypass cookie
+  // Check for bypass cookie (only in non-production)
   return document.cookie.includes("yp-bypass=");
 }
 
@@ -109,4 +137,22 @@ export function shouldBypassAuthClient(): boolean {
  */
 export function isDevUser(userId: string | null | undefined): boolean {
   return userId === DEV_USER.id;
+}
+
+/**
+ * Get bypass status for debugging
+ */
+export function getBypassStatus(): {
+  isProduction: boolean;
+  devModeEnabled: boolean;
+  canBypass: boolean;
+} {
+  const isProduction = process.env.NODE_ENV === "production";
+  const devModeEnabled = process.env.DEV_MODE === "true";
+
+  return {
+    isProduction,
+    devModeEnabled,
+    canBypass: !isProduction && devModeEnabled,
+  };
 }

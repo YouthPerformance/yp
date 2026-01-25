@@ -1,12 +1,18 @@
-import { UserButton, useUser } from "@clerk/clerk-react";
+// ═══════════════════════════════════════════════════════════
+// MARKETING HEADER - PUBLIC ONLY
+// No auth state - login CTA redirects to app.youthperformance.com
+// ═══════════════════════════════════════════════════════════
+
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useUI } from "../context/UIContext";
 import BetaBadge from "./BetaBadge";
 import CardNav from "./CardNav";
 
+// App URL for login redirect
+const APP_URL = import.meta.env.VITE_APP_URL || "https://app.youthperformance.com";
+
 export default function Header() {
-  const { isSignedIn } = useUser();
   const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu, toggleSearch } = useUI();
   const _location = useLocation();
 
@@ -128,35 +134,24 @@ export default function Header() {
                   </svg>
                 </button>
 
-                {/* Account / Sign In */}
-                {isSignedIn ? (
-                  <UserButton
-                    afterSignOutUrl="/"
-                    appearance={{
-                      elements: {
-                        avatarBox: "w-8 h-8 ring-2 ring-white/10",
-                      },
-                    }}
-                  />
-                ) : (
-                  <Link
-                    to="/login"
-                    className="p-2 text-dark-text-secondary hover:text-cyan-500 transition-colors duration-fast"
-                    aria-label="Sign In"
+                {/* Login CTA - Redirects to app.youthperformance.com */}
+                <a
+                  href={`${APP_URL}/auth`}
+                  className="p-2 text-dark-text-secondary hover:text-cyan-500 transition-colors duration-fast"
+                  aria-label="Sign In"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    >
-                      <circle cx="12" cy="8" r="4" />
-                      <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" />
-                    </svg>
-                  </Link>
-                )}
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>

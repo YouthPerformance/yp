@@ -118,7 +118,7 @@ function buildWelcomeEmail(name: string): string {
                 Your YP ID is locked in. Your training journey starts now.<br>
                 No shortcuts. No excuses. Just work.
               </p>
-              <a href="https://academy.youthperformance.com" style="display: inline-block; padding: 14px 32px; background: #00f6e0; color: #0a0a0a; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 100px;">
+              <a href="https://app.youthperformance.com" style="display: inline-block; padding: 14px 32px; background: #00f6e0; color: #0a0a0a; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 100px;">
                 START TRAINING
               </a>
             </td>
@@ -196,7 +196,7 @@ You're In, ${name}.
 Your YP ID is locked in. Your training journey starts now.
 No shortcuts. No excuses. Just work.
 
-START TRAINING: https://academy.youthperformance.com
+START TRAINING: https://app.youthperformance.com
 
 ---
 

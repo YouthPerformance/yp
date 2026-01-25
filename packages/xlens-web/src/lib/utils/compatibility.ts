@@ -13,8 +13,12 @@ export async function checkCompatibility(): Promise<CompatibilityResult> {
 	const errors: string[] = [];
 
 	// Check WebCodecs support
-	const hasWebCodecs = 'VideoEncoder' in window && 'VideoFrame' in window;
-	if (!hasWebCodecs) {
+	// Note: iOS Safari WebCodecs has bugs with mp4-muxer metadata, so we disable it
+	const hasWebCodecsApi = 'VideoEncoder' in window && 'VideoFrame' in window;
+	const hasWebCodecs = hasWebCodecsApi && !isIOSSafari();
+	if (hasWebCodecsApi && isIOSSafari()) {
+		warnings.push('WebCodecs disabled on iOS Safari due to compatibility issues - using MediaRecorder');
+	} else if (!hasWebCodecs) {
 		warnings.push('WebCodecs not available - using MediaRecorder fallback');
 	}
 

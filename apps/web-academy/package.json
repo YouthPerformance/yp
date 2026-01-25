@@ -33,6 +33,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@vercel/edge-config": "^1.4.3",
     "@yp/alpha": "workspace:*",
+    "@yp/brand-assets": "workspace:*",
     "@yp/ui": "workspace:*",
     "better-auth": "^1.4.10",
     "better-sqlite3": "^12.5.0",

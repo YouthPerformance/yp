@@ -245,7 +245,7 @@ export function GlassMorphicHeader({ cartCount = 0 }: GlassMorphicHeaderProps) {
 
             {/* External link */}
             <a
-              href="https://academy.youthperformance.com"
+              href="https://app.youthperformance.com"
               className={`flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-white/50 hover:text-cyan transition-all duration-500 ${menuAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}
               style={{ transitionDelay: "300ms" }}
               target="_blank"

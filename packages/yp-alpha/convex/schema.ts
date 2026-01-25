@@ -1154,6 +1154,63 @@ export default defineSchema({
     .index("by_expires", ["expiresAt"]),
 
   // ─────────────────────────────────────────────────────────────────
+  // xLENS WEB SESSIONS TABLE
+  // Simplified sessions for web demo (no jumpUser required)
+  // ─────────────────────────────────────────────────────────────────
+  xlensWebSessions: defineTable({
+    nonce: v.string(),
+    nonceDisplay: v.string(),
+    expiresAt: v.number(),
+    deviceId: v.string(),
+    used: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_nonce", ["nonce"])
+    .index("by_device", ["deviceId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // WEB JUMPS TABLE (xLENS Web Demo)
+  // Simplified jump records for web-based capture
+  // No jumpUser required - uses deviceId for tracking
+  // ─────────────────────────────────────────────────────────────────
+  xlensWebJumps: defineTable({
+    // Session reference (string to work with HTTP API)
+    sessionId: v.string(),
+    deviceId: v.string(),
+
+    // Video storage
+    storageId: v.string(), // Convex storage ID
+
+    // Recording metadata
+    durationMs: v.number(),
+    fps: v.number(),
+    nonce: v.string(),
+    nonceDisplay: v.string(),
+
+    // User calibration (for improved accuracy)
+    userHeightInches: v.optional(v.number()), // User's standing height for scale reference
+
+    // Measurement results (from Gemini analysis)
+    heightInches: v.optional(v.number()), // Measured jump height
+
+    // Verification
+    verificationTier: v.string(), // "measured" | "bronze" | "silver" | "rejected"
+
+    // Status
+    status: v.string(), // "processing" | "complete" | "failed"
+
+    // Flags from analysis
+    flags: v.optional(v.array(v.string())),
+
+    // Timestamps
+    createdAt: v.number(),
+    processedAt: v.optional(v.number()),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_device", ["deviceId"])
+    .index("by_status", ["status"]),
+
+  // ─────────────────────────────────────────────────────────────────
   // DEVICE KEYS TABLE (xLENS)
   // Hardware-attested signing keys for proof of capture
   // Layer 1 + 2 of the Three-Layer Defense
@@ -1291,7 +1348,7 @@ export default defineSchema({
       v.literal("flagged"),
       v.literal("challenged")
     ),
-    isPractice: v.boolean(), // Over daily cap
+    isPractice: v.optional(v.boolean()), // Over daily cap (optional for legacy data)
 
     // Location (reverse geocoded from GPS)
     gpsCity: v.optional(v.string()),

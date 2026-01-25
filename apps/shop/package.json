@@ -21,6 +21,7 @@
     "@shopify/hydrogen": "^2024.10.0",
     "@shopify/remix-oxygen": "^2.0.9",
     "@yp/alpha": "workspace:*",
+    "@yp/brand-assets": "workspace:*",
     "@yp/ui": "workspace:*",
     "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",

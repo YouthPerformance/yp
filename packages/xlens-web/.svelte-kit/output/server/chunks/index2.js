@@ -1,5 +1,5 @@
 import { n as noop } from "./utils3.js";
-import { s as safe_not_equal } from "./escaping.js";
+import { s as safe_not_equal } from "./equality.js";
 const subscriber_queue = [];
 function readable(value, start) {
   return {

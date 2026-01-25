@@ -63,7 +63,7 @@ This is the **YouthPerformance** main marketing site — the brand home.
 
 - [Manifesto](https://youthperformance.com/manifesto)
 - [Editorial Policy](https://youthperformance.com/editorial-policy)
-- [Academy](https://academy.youthperformance.com)
+- [Academy](https://app.youthperformance.com)
 - [Shop](https://shop.youthperformance.com)
 
 ## Citation Guidance

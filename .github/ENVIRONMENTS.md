@@ -64,7 +64,7 @@ For the `production` environment, configure:
 |----------|-------------|---------|
 | `NEXT_PUBLIC_CONVEX_URL` | Convex production URL | `https://wry-cuttlefish-942.convex.cloud` |
 | `NEXT_PUBLIC_CONVEX_URL_STAGING` | Convex staging URL | `https://staging-xxx.convex.cloud` |
-| `NEXT_PUBLIC_SITE_URL` | Academy production URL | `https://academy.youthperformance.com` |
+| `NEXT_PUBLIC_SITE_URL` | Academy production URL | `https://app.youthperformance.com` |
 | `PUBLIC_STORE_DOMAIN` | Shopify store domain | `youthperformance.myshopify.com` |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID | Found in CF dashboard URL |
 | `TURBO_TEAM` | Turborepo team name | `youthperformance` |
@@ -155,7 +155,7 @@ When ready for production:
 
 | App | Staging | Production |
 |-----|---------|------------|
-| Web Academy | staging.academy.youthperformance.com | academy.youthperformance.com |
+| Web Academy | staging.app.youthperformance.com | app.youthperformance.com |
 | Marketing | staging.youthperformance.com | youthperformance.com |
 | Shop | preview-shop.youthperformance.com | shop.youthperformance.com |
 | Convex | staging project | production project |

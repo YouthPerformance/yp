@@ -17,6 +17,11 @@ const nextConfig = {
   output: "standalone",
 
   // ─────────────────────────────────────────────────────────
+  // URL CONSISTENCY
+  // ─────────────────────────────────────────────────────────
+  trailingSlash: false,
+
+  // ─────────────────────────────────────────────────────────
   // TRANSPILE PACKAGES (for CSS imports from @yp/ui)
   // ─────────────────────────────────────────────────────────
   transpilePackages: ["@yp/ui"],
@@ -53,6 +58,21 @@ const nextConfig = {
       },
     ],
     formats: ["image/avif", "image/webp"],
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // REDIRECTS (Domain Migration)
+  // ─────────────────────────────────────────────────────────
+  async redirects() {
+    return [
+      // Redirect old domain to new domain (301 permanent)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "academy.youthperformance.com" }],
+        destination: "https://app.youthperformance.com/:path*",
+        permanent: true,
+      },
+    ];
   },
 
   // ─────────────────────────────────────────────────────────

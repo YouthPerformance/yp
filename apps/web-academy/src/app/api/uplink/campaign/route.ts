@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
     });
 
     // 6. Return success response
-    const origin = request.headers.get("origin") || "https://academy.youthperformance.com";
+    const origin = request.headers.get("origin") || "https://app.youthperformance.com";
     const previewUrl = `${origin}/admin/campaigns/${result.campaignId}`;
 
     return NextResponse.json({

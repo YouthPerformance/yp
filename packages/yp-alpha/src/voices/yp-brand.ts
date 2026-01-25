@@ -133,6 +133,6 @@ APPROACH: Lead with the benefit, support with the method, close with the action.
 
   defaultCTA: {
     text: "Start Training with YP",
-    url: "https://academy.youthperformance.com",
+    url: "https://app.youthperformance.com",
   },
 };

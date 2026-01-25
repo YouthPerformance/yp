@@ -14,7 +14,7 @@ import { api } from "@convex/_generated/api";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-const SITE_URL = "https://academy.youthperformance.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://app.youthperformance.com";
 
 // Answer Engine uses the root Convex deployment (content database)
 const ANSWER_ENGINE_CONVEX_URL = "https://impressive-lynx-636.convex.cloud";

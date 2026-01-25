@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import type { JumpResult, VerificationTier } from '$lib';
 
 	// Get jump ID from URL
@@ -12,20 +13,23 @@
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let pollInterval: ReturnType<typeof setInterval> | null = null;
+	let convexUrl = '';
 
 	// Fetch result on mount
 	onMount(() => {
-		fetchResult().then(() => {
-			// Poll for updates if still processing
-			if (result && result.status !== 'complete') {
-				pollInterval = setInterval(async () => {
-					await fetchResult();
-					if (result?.status === 'complete') {
-						if (pollInterval) clearInterval(pollInterval);
-					}
-				}, 3000);
-			}
-		});
+		if (!browser) return;
+
+		// Get Convex URL and convert to HTTP endpoint
+		const cloudUrl = import.meta.env.VITE_CONVEX_URL || '';
+		convexUrl = cloudUrl.replace('.convex.cloud', '.convex.site');
+
+		// Start polling immediately
+		pollInterval = setInterval(async () => {
+			await fetchResult();
+		}, 2000);
+
+		// Also fetch immediately
+		fetchResult();
 
 		return () => {
 			if (pollInterval) clearInterval(pollInterval);
@@ -34,159 +38,240 @@
 
 	async function fetchResult() {
 		try {
-			// TODO: Replace with actual Convex call
-			const response = await fetch(`/api/jumps/${jumpId}`);
+			const response = await fetch(`${convexUrl}/xlens/result`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ jumpId })
+			});
+
 			if (response.ok) {
-				result = await response.json();
+				const data = await response.json();
+				result = {
+					jumpId: data.jumpId,
+					userId: '',
+					status: data.status,
+					verificationTier: data.verificationTier,
+					height: data.heightInches
+						? {
+								inches: data.heightInches,
+								centimeters: data.heightCm || data.heightInches * 2.54
+							}
+						: undefined,
+					videoUrl: data.videoUrl,
+					thumbnailUrl: undefined,
+					processedAt: data.processedAt ? new Date(data.processedAt) : undefined,
+					flags: data.flags
+				};
+
+				// Stop polling when result is final
+				if (data.status === 'complete' || data.status === 'failed') {
+					if (pollInterval) {
+						clearInterval(pollInterval);
+						pollInterval = null;
+					}
+				}
 			} else {
-				error = 'Failed to load result';
+				const errData = await response.json();
+				error = errData.error || 'Failed to load result';
+				if (pollInterval) {
+					clearInterval(pollInterval);
+					pollInterval = null;
+				}
 			}
 		} catch (err) {
-			error = 'Network error';
+			error = 'Network error - please try again';
+			console.error('[xLENS] Result fetch error:', err);
 		} finally {
 			loading = false;
 		}
 	}
 
-	// Tier badge colors
-	function getTierColor(tier: VerificationTier): string {
+	// Tier badge colors and styles
+	function getTierStyles(tier: VerificationTier): { bg: string; text: string; glow: string } {
 		switch (tier) {
 			case 'gold':
-				return 'bg-yellow-500';
+				return { 
+					bg: 'bg-gradient-to-r from-yellow-500 to-amber-400', 
+					text: 'text-black',
+					glow: 'shadow-[0_0_30px_rgba(251,191,36,0.4)]'
+				};
 			case 'silver':
-				return 'bg-gray-400';
+				return { 
+					bg: 'bg-gradient-to-r from-gray-300 to-gray-400', 
+					text: 'text-black',
+					glow: 'shadow-[0_0_30px_rgba(156,163,175,0.3)]'
+				};
 			case 'bronze':
-				return 'bg-amber-600';
+				return { 
+					bg: 'bg-gradient-to-r from-amber-600 to-amber-500', 
+					text: 'text-black',
+					glow: 'shadow-[0_0_30px_rgba(217,119,6,0.3)]'
+				};
 			case 'measured':
-				return 'bg-blue-500';
+				return { 
+					bg: 'bg-gradient-to-r from-yp-cyan to-yp-cyan-dark', 
+					text: 'text-black',
+					glow: 'shadow-glow-cyan'
+				};
 			default:
-				return 'bg-red-500';
+				return { 
+					bg: 'bg-red-500', 
+					text: 'text-white',
+					glow: ''
+				};
 		}
 	}
 
 	function getTierLabel(tier: VerificationTier): string {
 		switch (tier) {
-			case 'gold':
-				return 'Gold Verified';
-			case 'silver':
-				return 'Silver Verified';
-			case 'bronze':
-				return 'Bronze Verified';
-			case 'measured':
-				return 'Measured';
-			default:
-				return 'Rejected';
+			case 'gold': return 'GOLD VERIFIED';
+			case 'silver': return 'SILVER VERIFIED';
+			case 'bronze': return 'BRONZE VERIFIED';
+			case 'measured': return 'MEASURED';
+			default: return 'REJECTED';
 		}
 	}
 </script>
 
-<div class="min-h-screen bg-yp-dark p-6">
-	<div class="max-w-md mx-auto">
+<div class="min-h-screen p-6 relative overflow-hidden">
+	<!-- Background Effects -->
+	<div class="absolute inset-0 pointer-events-none">
+		<div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-yp-cyan/5 rounded-full blur-[120px]"></div>
+	</div>
+
+	<div class="max-w-md mx-auto relative z-10">
 		<!-- Header -->
 		<div class="flex items-center justify-between mb-8">
-			<button onclick={() => goto('/')} aria-label="Go back" class="p-2 -ml-2 text-white/60 hover:text-white">
+			<button onclick={() => goto('/')} aria-label="Go back" class="p-2 -ml-2 text-white/60 hover:text-yp-cyan transition-colors">
 				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 				</svg>
 			</button>
-			<h1 class="text-xl font-semibold">Jump Result</h1>
+			<h1 class="font-bebas text-2xl tracking-wider">JUMP RESULT</h1>
 			<div class="w-10"></div>
 		</div>
 
 		{#if loading}
 			<!-- Loading State -->
 			<div class="flex flex-col items-center justify-center py-20">
-				<div
-					class="w-12 h-12 border-2 border-yp-primary/30 border-t-yp-primary rounded-full animate-spin"
-				></div>
-				<p class="mt-4 text-white/60">Loading result...</p>
+				<div class="w-16 h-16 relative">
+					<div class="absolute inset-0 rounded-full border-2 border-yp-cyan/20"></div>
+					<div class="absolute inset-0 rounded-full border-2 border-transparent border-t-yp-cyan animate-spin"></div>
+				</div>
+				<p class="mt-6 text-white/50">Loading result...</p>
 			</div>
 		{:else if error}
 			<!-- Error State -->
 			<div class="text-center py-20">
-				<div class="text-yp-error text-lg mb-2">Error</div>
-				<p class="text-white/60">{error}</p>
-				<button onclick={() => goto('/capture')} class="btn-primary mt-6"> Try Again </button>
+				<div class="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+					<svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+					</svg>
+				</div>
+				<p class="text-white/60 mb-6">{error}</p>
+				<button onclick={() => goto('/capture')} class="btn-primary">TRY AGAIN</button>
 			</div>
 		{:else if result}
 			<!-- Result Card -->
-			<div class="bg-white/5 rounded-2xl overflow-hidden">
+			<div class="glass-panel overflow-hidden">
 				<!-- Video Thumbnail -->
 				{#if result.thumbnailUrl}
 					<div class="aspect-video bg-black/50">
 						<img src={result.thumbnailUrl} alt="Jump thumbnail" class="w-full h-full object-cover" />
 					</div>
-				{:else}
-					<div class="aspect-video bg-black/50 flex items-center justify-center">
-						<div class="text-white/40">Processing video...</div>
+				{:else if result.status !== 'processing'}
+					<div class="aspect-video bg-black/30 flex items-center justify-center border-b border-white/5">
+						<div class="text-center">
+							<svg class="w-12 h-12 text-yp-cyan/40 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+							</svg>
+							<p class="text-white/30 text-sm">Video captured</p>
+						</div>
 					</div>
 				{/if}
 
 				<!-- Result Info -->
-				<div class="p-6">
+				<div class="p-8">
 					<!-- Height Display -->
 					{#if result.height}
-						<div class="text-center mb-6">
-							<div class="text-5xl font-bold text-yp-primary">
-								{result.height.inches.toFixed(1)}"
+						<div class="text-center mb-8">
+							<div class="result-number">
+								{result.height.inches.toFixed(1)}
 							</div>
-							<div class="text-white/60 mt-1">
+							<div class="result-unit mt-1">INCHES</div>
+							<div class="text-white/40 mt-2 text-lg">
 								{result.height.centimeters.toFixed(1)} cm
 							</div>
 						</div>
 					{:else if result.status === 'processing'}
-						<div class="text-center mb-6">
-							<div class="text-2xl text-white/60">Processing...</div>
-							<div
-								class="w-8 h-8 border-2 border-yp-primary/30 border-t-yp-primary rounded-full animate-spin mx-auto mt-4"
-							></div>
+						<div class="text-center mb-8 py-4">
+							<div class="w-20 h-20 relative mx-auto mb-6">
+								<div class="absolute inset-0 rounded-full border-2 border-yp-cyan/20"></div>
+								<div class="absolute inset-0 rounded-full border-2 border-transparent border-t-yp-cyan animate-spin"></div>
+								<div class="absolute inset-2 rounded-full bg-yp-cyan/5"></div>
+							</div>
+							<div class="font-bebas text-3xl tracking-wide text-white mb-2">ANALYZING...</div>
+							<div class="text-sm text-white/50">AI is measuring your vertical</div>
+						</div>
+					{:else if result.status === 'failed'}
+						<div class="text-center mb-8 py-4">
+							<div class="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+								<svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</div>
+							<div class="font-bebas text-3xl tracking-wide text-white mb-2">ANALYSIS FAILED</div>
+							<div class="text-sm text-white/50">
+								{result.flags?.join(', ') || 'Could not process the video'}
+							</div>
 						</div>
 					{/if}
 
 					<!-- Verification Badge -->
-					<div class="flex justify-center mb-6">
-						<div
-							class="inline-flex items-center gap-2 px-4 py-2 rounded-full {getTierColor(
-								result.verificationTier
-							)}"
-						>
-							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-								<path
-									fill-rule="evenodd"
-									d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-									clip-rule="evenodd"
-								/>
-							</svg>
-							<span class="font-semibold">{getTierLabel(result.verificationTier)}</span>
+					{#if result.status === 'complete' || result.height}
+						{@const tierStyles = getTierStyles(result.verificationTier)}
+						<div class="flex justify-center mb-6">
+							<div class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bebas tracking-wider {tierStyles.bg} {tierStyles.text} {tierStyles.glow}">
+								<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+								</svg>
+								<span>{getTierLabel(result.verificationTier)}</span>
+							</div>
 						</div>
-					</div>
+					{/if}
 
-					<!-- Status -->
+					<!-- Status Flags -->
 					{#if result.status === 'flagged'}
-						<div class="bg-yp-warning/20 text-yp-warning rounded-lg p-4 mb-4">
-							<p class="font-semibold">Flagged for Review</p>
-							<p class="text-sm mt-1">
+						<div class="bg-yp-warning/10 border border-yp-warning/30 rounded-xl p-4 mb-6">
+							<p class="font-semibold text-yp-warning">Flagged for Review</p>
+							<p class="text-sm text-white/60 mt-1">
 								{result.flags?.join(', ') || 'This jump requires manual verification.'}
 							</p>
 						</div>
 					{/if}
 
 					<!-- Jump ID -->
-					<div class="text-center text-sm text-white/40">
-						Jump ID: {result.jumpId.slice(0, 8)}
+					<div class="text-center text-sm text-white/30 font-mono">
+						ID: {result.jumpId.slice(0, 8)}
 					</div>
 				</div>
 			</div>
 
 			<!-- Actions -->
 			<div class="mt-8 space-y-3">
-				<button onclick={() => goto('/capture')} class="btn-primary w-full"> Try Another Jump </button>
+				<button onclick={() => goto('/capture')} class="btn-primary w-full">
+					TRY ANOTHER JUMP
+				</button>
 
 				{#if result.videoUrl}
 					<a href={result.videoUrl} target="_blank" class="btn-secondary w-full block text-center">
-						View Full Video
+						VIEW FULL VIDEO
 					</a>
 				{/if}
+
+				<button onclick={() => goto('/')} class="btn-ghost w-full">
+					Back to Home
+				</button>
 			</div>
 		{/if}
 	</div>

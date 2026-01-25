@@ -5,7 +5,7 @@
 > **Status:** Ready for Dev
 > **Created:** 2026-01-08
 > **Author:** WolfGrow (CMO) / Claude (Wolf Pack Protocol)
-> **Target URL:** `academy.youthperformance.com/adam`
+> **Target URL:** `app.youthperformance.com/adam`
 
 ---
 

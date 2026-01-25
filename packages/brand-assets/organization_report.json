@@ -1,0 +1,709 @@
+{
+  "copied": [
+    {
+      "source": "apps/marketing/public/logo/YP-LOGO.svg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/primary/YP-LOGO.svg",
+      "size": 787
+    },
+    {
+      "source": "apps/marketing/public/logo/YOUTHPERFORMANCE.svg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/primary/YOUTHPERFORMANCE.svg",
+      "size": 13275
+    },
+    {
+      "source": "apps/marketing/public/logo/yp-logo.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/primary/yp-logo.png",
+      "size": 193214
+    },
+    {
+      "source": "apps/marketing/public/logo/wolffront.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/variants/wolffront.png",
+      "size": 1222024
+    },
+    {
+      "source": "apps/marketing/public/logo/ypfavblk.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/variants/ypfavblk.png",
+      "size": 1214567
+    },
+    {
+      "source": "apps/web-academy/public/logo/blackcyan.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/variants/blackcyan.png",
+      "size": 192793
+    },
+    {
+      "source": "apps/neoball-lp/public/favicon.svg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/variants/favicon.svg",
+      "size": 273
+    },
+    {
+      "source": "apps/marketing/public/logos/nba.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/nba.webp",
+      "size": 63624
+    },
+    {
+      "source": "apps/marketing/public/logos/nfl.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/nfl.webp",
+      "size": 31228
+    },
+    {
+      "source": "apps/marketing/public/logos/nhl.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/nhl.png",
+      "size": 226976
+    },
+    {
+      "source": "apps/marketing/public/logos/mlb.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/mlb.webp",
+      "size": 57747
+    },
+    {
+      "source": "apps/marketing/public/logos/ncaa.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/ncaa.webp",
+      "size": 49852
+    },
+    {
+      "source": "apps/marketing/public/logos/fifa.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/fifa.webp",
+      "size": 10970
+    },
+    {
+      "source": "apps/marketing/public/logos/soccer.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/soccer.webp",
+      "size": 96751
+    },
+    {
+      "source": "apps/marketing/public/logos/olympics.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/olympics.webp",
+      "size": 22724
+    },
+    {
+      "source": "apps/web-academy/public/logos/premier.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/logos/sports/premier.webp",
+      "size": 96751
+    },
+    {
+      "source": "apps/marketing/public/images/authyp.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/hero/authyp.png",
+      "size": 193214
+    },
+    {
+      "source": "apps/marketing/public/images/youthperformancewhite.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/hero/youthperformancewhite.webp",
+      "size": 93754
+    },
+    {
+      "source": "apps/neoball-lp/public/images/neoballnaked.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/hero/neoballnaked.png",
+      "size": 62528
+    },
+    {
+      "source": "apps/neoball-lp/public/images/court.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/hero/court.webp",
+      "size": 63394
+    },
+    {
+      "source": "apps/marketing/public/images/james/hero.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/hero.jpeg",
+      "size": 148688
+    },
+    {
+      "source": "apps/marketing/public/images/james/james1.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/james1.jpeg",
+      "size": 185775
+    },
+    {
+      "source": "apps/marketing/public/images/james/jamesmug.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesmug.jpeg",
+      "size": 111202
+    },
+    {
+      "source": "apps/marketing/public/images/james/jameslebron.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameslebron.jpeg",
+      "size": 169700
+    },
+    {
+      "source": "apps/marketing/public/images/james/jameskobe.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameskobe.jpeg",
+      "size": 43940
+    },
+    {
+      "source": "apps/marketing/public/images/james/jameskd.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameskd.jpeg",
+      "size": 156195
+    },
+    {
+      "source": "apps/marketing/public/images/james/jamesjimmy2.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesjimmy2.jpeg",
+      "size": 133310
+    },
+    {
+      "source": "apps/marketing/public/images/james/jamesjimmyside.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesjimmyside.jpeg",
+      "size": 193089
+    },
+    {
+      "source": "apps/marketing/public/images/james/jameschina.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameschina.jpeg",
+      "size": 139098
+    },
+    {
+      "source": "apps/marketing/public/images/james/jameschinakids.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameschinakids.jpeg",
+      "size": 50695
+    },
+    {
+      "source": "apps/marketing/public/images/james/jamesfamily.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesfamily.jpeg",
+      "size": 294622
+    },
+    {
+      "source": "apps/marketing/public/images/james/james2.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/james2.jpeg",
+      "size": 263962
+    },
+    {
+      "source": "apps/marketing/public/images/james/jamesjimmy3.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesjimmy3.jpeg",
+      "size": 100681
+    },
+    {
+      "source": "apps/marketing/public/images/james/jamessideprofile.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamessideprofile.png",
+      "size": 776701
+    },
+    {
+      "source": "apps/web-academy/public/images/adam/adamprofile.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/adamprofile.png",
+      "size": 2988697
+    },
+    {
+      "source": "apps/marketing/public/images/academy/1.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/1.jpeg",
+      "size": 4767620
+    },
+    {
+      "source": "apps/marketing/public/images/academy/2.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/2.jpeg",
+      "size": 4208627
+    },
+    {
+      "source": "apps/marketing/public/images/academy/3.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/3.jpeg",
+      "size": 7577996
+    },
+    {
+      "source": "apps/marketing/public/images/academy/4.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/4.jpeg",
+      "size": 5906128
+    },
+    {
+      "source": "apps/marketing/public/images/courticon.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/courticon.webp",
+      "size": 1186
+    },
+    {
+      "source": "apps/marketing/public/images/libraryicon.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/libraryicon.webp",
+      "size": 850
+    },
+    {
+      "source": "apps/marketing/public/images/performanceicon.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/performanceicon.webp",
+      "size": 832
+    },
+    {
+      "source": "apps/marketing/public/images/shoefoot.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/shoefoot.webp",
+      "size": 68122
+    },
+    {
+      "source": "apps/marketing/public/images/spring.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/spring.webp",
+      "size": 71800
+    },
+    {
+      "source": "apps/web-academy/public/icons/shardcyan.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/shardcyan.png",
+      "size": 945084
+    },
+    {
+      "source": "apps/marketing/public/images/thumb-court.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/thumbnails/thumb-court.webp",
+      "size": 34722
+    },
+    {
+      "source": "apps/marketing/public/images/thumb-gym.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/thumbnails/thumb-gym.webp",
+      "size": 55426
+    },
+    {
+      "source": "apps/marketing/public/images/thumb-library.webp",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/thumbnails/thumb-library.webp",
+      "size": 46802
+    },
+    {
+      "source": "apps/shop/public/images/1.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/1.png",
+      "size": 1234388
+    },
+    {
+      "source": "apps/shop/public/images/2.jpg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/2.jpg",
+      "size": 4255120
+    },
+    {
+      "source": "apps/shop/public/images/3.jpg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/3.jpg",
+      "size": 10389682
+    },
+    {
+      "source": "apps/shop/public/images/4.jpg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/4.jpg",
+      "size": 6989874
+    },
+    {
+      "source": "apps/shop/public/images/6.jpg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/6.jpg",
+      "size": 5233271
+    },
+    {
+      "source": "apps/shop/public/images/7.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/7.png",
+      "size": 1400328
+    },
+    {
+      "source": "apps/shop/public/images/8.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/8.png",
+      "size": 17480030
+    },
+    {
+      "source": "apps/shop/public/images/9.jpg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/9.jpg",
+      "size": 3206442
+    },
+    {
+      "source": "apps/shop/public/images/10.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/10.png",
+      "size": 1582348
+    },
+    {
+      "source": "apps/shop/public/images/11.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/11.png",
+      "size": 1472153
+    },
+    {
+      "source": "apps/shop/public/images/12.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/12.png",
+      "size": 975834
+    },
+    {
+      "source": "apps/shop/public/images/13.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/13.png",
+      "size": 1168382
+    },
+    {
+      "source": "apps/shop/public/images/14.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/14.png",
+      "size": 1227757
+    },
+    {
+      "source": "apps/shop/public/images/16.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/16.png",
+      "size": 19353183
+    },
+    {
+      "source": "apps/shop/public/images/17.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/17.png",
+      "size": 1233918
+    },
+    {
+      "source": "apps/shop/public/images/18.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/18.png",
+      "size": 19716085
+    },
+    {
+      "source": "apps/shop/public/images/neoball-hero.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/neoball-hero.png",
+      "size": 261818
+    },
+    {
+      "source": "apps/shop/public/images/neoball-texture.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/neoball-texture.png",
+      "size": 11469865
+    },
+    {
+      "source": "apps/shop/public/images/shopbg6.jpeg",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/backgrounds/shopbg6.jpeg",
+      "size": 9006543
+    },
+    {
+      "source": "apps/neoball-lp/public/images/neoball-texture.png",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/backgrounds/neoball-texture.png",
+      "size": 11469865
+    },
+    {
+      "source": "apps/marketing/public/loader/loader.mp4",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/loaders/loader.mp4",
+      "size": 4341826
+    },
+    {
+      "source": "apps/marketing/public/loader/loader.webm",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/loaders/loader.webm",
+      "size": 1862447
+    },
+    {
+      "source": "apps/marketing/public/loader/loadernew.mp4",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/loaders/loadernew.mp4",
+      "size": 2957914
+    },
+    {
+      "source": "apps/marketing/public/loader/loadernew.webm",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/loaders/loadernew.webm",
+      "size": 968327
+    },
+    {
+      "source": "apps/marketing/public/webm/3dyp.mp4",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/promotional/3dyp.mp4",
+      "size": 13897025
+    },
+    {
+      "source": "apps/marketing/public/webm/3dyp.webm",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/promotional/3dyp.webm",
+      "size": 7641009
+    },
+    {
+      "source": "apps/marketing/public/webm/3dyp.gif",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/promotional/3dyp.gif",
+      "size": 726556
+    },
+    {
+      "source": "apps/marketing/public/videos/newspin.mp4",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/videos/product-demos/newspin.mp4",
+      "size": 19978848
+    },
+    {
+      "source": "apps/web-academy/public/sounds/locker_latch.mp3",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/audio/sfx/locker_latch.mp3",
+      "size": 28800
+    },
+    {
+      "source": "apps/web-academy/public/sounds/plate_drop_heavy.mp3",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/audio/sfx/plate_drop_heavy.mp3",
+      "size": 21600
+    },
+    {
+      "source": "apps/marketing/public/fonts/SpaceGrotesk-VariableFont_wght.ttf",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/fonts/SpaceGrotesk-VariableFont_wght.ttf",
+      "size": 134112
+    },
+    {
+      "source": "apps/marketing/public/fonts/PowerGroteskTrial-Bold.woff",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/fonts/PowerGroteskTrial-Bold.woff",
+      "size": 15596
+    },
+    {
+      "source": "apps/web-academy/public/fonts/BebasNeue-Regular.ttf",
+      "dest": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/fonts/BebasNeue-Regular.ttf",
+      "size": 57676
+    }
+  ],
+  "skipped_duplicates": [],
+  "not_found": [],
+  "optimizations": [
+    {
+      "original_size": 193214,
+      "optimized_size": 155066,
+      "webp_size": 21488,
+      "savings": 38148,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/hero/authyp.webp"
+    },
+    {
+      "original_size": 62528,
+      "optimized_size": 59529,
+      "webp_size": 33126,
+      "savings": 2999,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/hero/neoballnaked.webp"
+    },
+    {
+      "original_size": 169700,
+      "optimized_size": 192438,
+      "webp_size": 130198,
+      "savings": -22738,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameslebron.webp"
+    },
+    {
+      "original_size": 193089,
+      "optimized_size": 222996,
+      "webp_size": 191576,
+      "savings": -29907,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesjimmyside.webp"
+    },
+    {
+      "original_size": 263962,
+      "optimized_size": 305722,
+      "webp_size": 291516,
+      "savings": -41760,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/james2.webp"
+    },
+    {
+      "original_size": 139098,
+      "optimized_size": 159240,
+      "webp_size": 112424,
+      "savings": -20142,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameschina.webp"
+    },
+    {
+      "original_size": 50695,
+      "optimized_size": 58105,
+      "webp_size": 51798,
+      "savings": -7410,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameschinakids.webp"
+    },
+    {
+      "original_size": 294622,
+      "optimized_size": 343539,
+      "webp_size": 296254,
+      "savings": -48917,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesfamily.webp"
+    },
+    {
+      "original_size": 2988697,
+      "optimized_size": 2177818,
+      "webp_size": 122586,
+      "savings": 810879,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/adamprofile.webp"
+    },
+    {
+      "original_size": 776701,
+      "optimized_size": 551273,
+      "webp_size": 35644,
+      "savings": 225428,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamessideprofile.webp"
+    },
+    {
+      "original_size": 156195,
+      "optimized_size": 182558,
+      "webp_size": 126598,
+      "savings": -26363,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameskd.webp"
+    },
+    {
+      "original_size": 111202,
+      "optimized_size": 129682,
+      "webp_size": 86920,
+      "savings": -18480,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesmug.webp"
+    },
+    {
+      "original_size": 148688,
+      "optimized_size": 170659,
+      "webp_size": 106972,
+      "savings": -21971,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/hero.webp"
+    },
+    {
+      "original_size": 100681,
+      "optimized_size": 113598,
+      "webp_size": 70046,
+      "savings": -12917,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesjimmy3.webp"
+    },
+    {
+      "original_size": 43940,
+      "optimized_size": 49618,
+      "webp_size": 37168,
+      "savings": -5678,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jameskobe.webp"
+    },
+    {
+      "original_size": 133310,
+      "optimized_size": 151947,
+      "webp_size": 101582,
+      "savings": -18637,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/jamesjimmy2.webp"
+    },
+    {
+      "original_size": 185775,
+      "optimized_size": 220463,
+      "webp_size": 176588,
+      "savings": -34688,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/team/james1.webp"
+    },
+    {
+      "original_size": 4767620,
+      "optimized_size": 166648,
+      "webp_size": 83322,
+      "savings": 4600972,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/1.webp"
+    },
+    {
+      "original_size": 5906128,
+      "optimized_size": 173562,
+      "webp_size": 93950,
+      "savings": 5732566,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/4.webp"
+    },
+    {
+      "original_size": 4208627,
+      "optimized_size": 212629,
+      "webp_size": 118000,
+      "savings": 3995998,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/2.webp"
+    },
+    {
+      "original_size": 7577996,
+      "optimized_size": 360200,
+      "webp_size": 246616,
+      "savings": 7217796,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/academy/3.webp"
+    },
+    {
+      "original_size": 17480030,
+      "optimized_size": 3083306,
+      "webp_size": 85100,
+      "savings": 14396724,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/8.webp"
+    },
+    {
+      "original_size": 3206442,
+      "optimized_size": 137786,
+      "webp_size": 60308,
+      "savings": 3068656,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/9.webp"
+    },
+    {
+      "original_size": 1227757,
+      "optimized_size": 1202155,
+      "webp_size": 60322,
+      "savings": 25602,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/14.webp"
+    },
+    {
+      "original_size": 1233918,
+      "optimized_size": 1179106,
+      "webp_size": 59620,
+      "savings": 54812,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/17.webp"
+    },
+    {
+      "original_size": 19353183,
+      "optimized_size": 3760165,
+      "webp_size": 166076,
+      "savings": 15593018,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/16.webp"
+    },
+    {
+      "original_size": 975834,
+      "optimized_size": 909812,
+      "webp_size": 24288,
+      "savings": 66022,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/12.webp"
+    },
+    {
+      "original_size": 1168382,
+      "optimized_size": 1133543,
+      "webp_size": 25698,
+      "savings": 34839,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/13.webp"
+    },
+    {
+      "original_size": 1472153,
+      "optimized_size": 1443760,
+      "webp_size": 89716,
+      "savings": 28393,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/11.webp"
+    },
+    {
+      "original_size": 1582348,
+      "optimized_size": 1441005,
+      "webp_size": 99120,
+      "savings": 141343,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/10.webp"
+    },
+    {
+      "original_size": 19716085,
+      "optimized_size": 4877437,
+      "webp_size": 256694,
+      "savings": 14838648,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/18.webp"
+    },
+    {
+      "original_size": 6989874,
+      "optimized_size": 124788,
+      "webp_size": 71136,
+      "savings": 6865086,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/4.webp"
+    },
+    {
+      "original_size": 261818,
+      "optimized_size": 275908,
+      "webp_size": 97056,
+      "savings": -14090,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/neoball-hero.webp"
+    },
+    {
+      "original_size": 1400328,
+      "optimized_size": 1370838,
+      "webp_size": 90570,
+      "savings": 29490,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/7.webp"
+    },
+    {
+      "original_size": 5233271,
+      "optimized_size": 519049,
+      "webp_size": 332046,
+      "savings": 4714222,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/6.webp"
+    },
+    {
+      "original_size": 4255120,
+      "optimized_size": 283274,
+      "webp_size": 132792,
+      "savings": 3971846,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/2.webp"
+    },
+    {
+      "original_size": 10389682,
+      "optimized_size": 389265,
+      "webp_size": 260956,
+      "savings": 10000417,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/3.webp"
+    },
+    {
+      "original_size": 1234388,
+      "optimized_size": 1180196,
+      "webp_size": 68640,
+      "savings": 54192,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/1.webp"
+    },
+    {
+      "original_size": 11469865,
+      "optimized_size": 2763193,
+      "webp_size": 207858,
+      "savings": 8706672,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/products/neoball-texture.webp"
+    },
+    {
+      "original_size": 945084,
+      "optimized_size": 286701,
+      "webp_size": 37890,
+      "savings": 658383,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/icons/shardcyan.webp"
+    },
+    {
+      "original_size": 9006543,
+      "optimized_size": 347600,
+      "webp_size": 253672,
+      "savings": 8658943,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/backgrounds/shopbg6.webp"
+    },
+    {
+      "original_size": 11469865,
+      "optimized_size": 2763193,
+      "webp_size": 207858,
+      "savings": 8706672,
+      "webp_path": "/sessions/serene-youthful-shannon/mnt/yp-monorepo/packages/brand-assets/images/backgrounds/neoball-texture.webp"
+    }
+  ],
+  "total_original_size": 215106618,
+  "total_optimized_size": 35629370
+}

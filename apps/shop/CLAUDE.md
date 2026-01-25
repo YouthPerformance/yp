@@ -99,6 +99,23 @@ const { product } = await storefront.query(PRODUCT_QUERY, {
 
 ---
 
+## Brand Assets
+
+**All brand assets are centralized in `packages/brand-assets/`.** Do not add new assets to `public/images/` - import from the shared package instead.
+
+```typescript
+import { LOGOS, IMAGES } from '@yp/brand-assets';
+
+// Usage - optimized WebP versions available
+<img src={IMAGES.products.product1.webp} alt="Product" />
+<img src={LOGOS.primary.png} alt="YP Logo" />
+```
+
+### Existing product images
+Product images in `public/images/` are duplicates. The centralized versions in `packages/brand-assets/images/products/` are optimized (WebP versions generated).
+
+---
+
 ## Notes
 
 - Products managed in Shopify Admin

@@ -32,7 +32,7 @@ keywords:
   - "[secondary keyword - variation]"
   - "[long-tail - related query]"
 ctaText: "[Get the [X] Program | Try This Drill | Download the Guide]"
-ctaUrl: "[https://academy.youthperformance.com/...]"
+ctaUrl: "[https://app.youthperformance.com/...]"
 ---
 ```
 

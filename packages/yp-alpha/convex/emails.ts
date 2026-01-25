@@ -429,7 +429,7 @@ export const sendWelcomeEmail = internalAction({
                 Your YP ID is locked in. Your training journey starts now.<br>
                 No shortcuts. No excuses. Just work.
               </p>
-              <a href="https://academy.youthperformance.com" style="display: inline-block; padding: 14px 32px; background: #00f6e0; color: #0a0a0a; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 100px;">
+              <a href="https://app.youthperformance.com" style="display: inline-block; padding: 14px 32px; background: #00f6e0; color: #0a0a0a; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 100px;">
                 START TRAINING
               </a>
             </td>
@@ -449,7 +449,7 @@ export const sendWelcomeEmail = internalAction({
 </html>
 `;
 
-    const text = `Welcome to the Pack, ${args.name}!\n\nYour YP ID is locked in. Your training journey starts now.\n\nNo shortcuts. No excuses. Just work.\n\nSTART TRAINING: https://academy.youthperformance.com\n\nLock In. Level Up.\nYouth Performance`;
+    const text = `Welcome to the Pack, ${args.name}!\n\nYour YP ID is locked in. Your training journey starts now.\n\nNo shortcuts. No excuses. Just work.\n\nSTART TRAINING: https://app.youthperformance.com\n\nLock In. Level Up.\nYouth Performance`;
 
     const result = await sendEmail({
       to: args.to,
@@ -474,7 +474,7 @@ export const sendBulletproofAnklesPDF = internalAction({
   },
   handler: async (_ctx, args) => {
     const pdfUrl = "https://youthperformance.com/pdf/bulletproof-ankles-guide.pdf";
-    const playbookUrl = "https://academy.youthperformance.com/playbook/bulletproof-ankles";
+    const playbookUrl = "https://app.youthperformance.com/playbook/bulletproof-ankles";
 
     const html = `
 <!DOCTYPE html>

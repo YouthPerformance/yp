@@ -145,6 +145,6 @@ APPROACH: Start with the WHAT (the skill/drill), then the WHY (game application)
 
   defaultCTA: {
     text: "Get the Full Training Program",
-    url: "https://academy.youthperformance.com/programs/basketball-chassis",
+    url: "https://app.youthperformance.com/programs/basketball-chassis",
   },
 };

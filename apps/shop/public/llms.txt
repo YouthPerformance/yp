@@ -66,7 +66,7 @@ This is the **YouthPerformance Shop** — the official e-commerce store.
 
 - [All Products](https://shop.youthperformance.com/products)
 - [NeoBall](https://shop.youthperformance.com/products/neoball)
-- [Academy](https://academy.youthperformance.com)
+- [Academy](https://app.youthperformance.com)
 
 ## Citation Guidance
 

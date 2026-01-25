@@ -31,7 +31,7 @@ export function BatonPassScreen() {
   }, []);
 
   // QR code URL - links directly to voice sorting with context
-  const handoffUrl = `https://academy.youthperformance.com/handoff/${handoffToken}`;
+  const handoffUrl = `https://app.youthperformance.com/handoff/${handoffToken}`;
   const qrUrl = handoffToken
     ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(handoffUrl)}&bgcolor=0A0F0F&color=00F6E0`
     : "";

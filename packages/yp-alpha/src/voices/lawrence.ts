@@ -136,6 +136,6 @@ APPROACH: Start with the PROBLEM (what goes wrong), then the PRINCIPLE (why it m
 
   defaultCTA: {
     text: "Get the Program Management Playbook",
-    url: "https://academy.youthperformance.com/coaching",
+    url: "https://app.youthperformance.com/coaching",
   },
 };

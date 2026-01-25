@@ -1,7 +1,7 @@
 # web-academy
 
 > Core training platform with AI coach, ILM modules, and gamification.
-> **URL:** academy.youthperformance.com
+> **URL:** app.youthperformance.com
 > **Deploy:** Vercel (auto on main merge)
 
 ---
@@ -32,7 +32,7 @@ src/
 │   │   └── shop/           # Crystal shop
 │   ├── (onboarding)/       # Onboarding flow
 │   ├── api/                # API routes
-│   └── sign-in/            # Clerk auth
+│   └── auth/               # BetterAuth
 ├── components/             # React components
 │   ├── modules/            # ILM (CardSwiper, cards)
 │   ├── programs/           # Workout player
@@ -145,6 +145,20 @@ EMAIL_FROM=
 
 ---
 
+## Brand Assets
+
+**All brand assets are centralized in `packages/brand-assets/`.** Do not add new assets to `public/` - import from the shared package instead.
+
+```typescript
+import { LOGOS, IMAGES, AUDIO, FONTS } from '@yp/brand-assets';
+
+// Usage - optimized WebP versions available
+<img src={IMAGES.team.james.hero.webp} alt="James" />
+<img src={LOGOS.primary.svg} alt="YP Logo" />
+```
+
+---
+
 ## Anti-Patterns (Don't Repeat)
 
 > **Pattern:** App-specific mistakes captured via `/retro`.
@@ -157,6 +171,7 @@ EMAIL_FROM=
 | Skip `suppressHydrationWarning` for timestamps | Add attribute or use ClientOnly wrapper | SSR/client mismatch warnings | 2026-01 |
 | Put API keys in `NEXT_PUBLIC_*` vars | Use server-only env vars for secrets | Public vars are exposed to client | 2026-01 |
 | Use relative imports for @yp packages | Use `@yp/alpha/...` absolute paths | Build resolution failures | 2026-01 |
+| Duplicate brand assets in `public/` | Import from `@yp/brand-assets` | Single source, optimized WebP | 2026-01 |
 
 ---
 

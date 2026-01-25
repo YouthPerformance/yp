@@ -557,7 +557,7 @@ GET /api/answer?q=best+basketball+drills+for+8+year+olds&limit=5&type=drill
       "id": "d_abc123",
       "title": "Form Shooting Basics",
       "description": "The foundation of every great shooter. This drill focuses on proper hand placement, elbow alignment, and follow-through.",
-      "url": "https://academy.youthperformance.com/drills/basketball/shooting/form-shooting-basics",
+      "url": "https://app.youthperformance.com/drills/basketball/shooting/form-shooting-basics",
       "author": {
         "name": "Adam Harrington",
         "title": "Elite Basketball Coach",
@@ -645,7 +645,7 @@ GET /api/qna?category=health-safety&limit=10
         "Surface Matters: Train on grass, not concrete",
         "The 10% Rule: Barefoot volume < 10% in first month"
       ],
-      "url": "https://academy.youthperformance.com/guides/is-barefoot-training-safe-kids",
+      "url": "https://app.youthperformance.com/guides/is-barefoot-training-safe-kids",
       "lastUpdated": "2026-01-08"
     }
   ],

@@ -152,6 +152,6 @@ APPROACH: Start with the WHY (biomechanics), then the WHAT (the drill/protocol),
 
   defaultCTA: {
     text: "Start the Barefoot Reset",
-    url: "https://academy.youthperformance.com/programs/barefoot-reset",
+    url: "https://app.youthperformance.com/programs/barefoot-reset",
   },
 };

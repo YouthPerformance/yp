@@ -13,8 +13,9 @@
 import { MetadataRoute } from "next";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@convex/_generated/api";
+import { APP_URL } from "@/lib/env";
 
-const SITE_URL = "https://academy.youthperformance.com";
+const SITE_URL = APP_URL;
 
 // Answer Engine uses the root Convex deployment (content database)
 const ANSWER_ENGINE_CONVEX_URL = "https://impressive-lynx-636.convex.cloud";

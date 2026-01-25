@@ -106,7 +106,7 @@ jobs:
     if: needs.detect-changes.outputs.web-academy == 'true'
     environment:
       name: staging
-      url: https://staging.academy.youthperformance.com
+      url: https://staging.app.youthperformance.com
 
     steps:
       - name: Checkout
@@ -138,7 +138,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_WEB_ACADEMY }}
           working-directory: ./apps/web-academy
-          alias-domains: staging.academy.youthperformance.com
+          alias-domains: staging.app.youthperformance.com
 
   # ============================================
   # DEPLOY MARKETING: Cloudflare Pages

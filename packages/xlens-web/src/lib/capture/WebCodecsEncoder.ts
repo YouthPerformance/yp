@@ -71,8 +71,16 @@ export class WebCodecsEncoder {
 		// Create video encoder
 		this.encoder = new VideoEncoder({
 			output: (chunk, meta) => {
-				if (this.muxer && meta) {
-					this.muxer.addVideoChunk(chunk, meta);
+				if (this.muxer) {
+					// iOS Safari may not provide full metadata - provide fallback
+					const safeMeta = meta ?? undefined;
+					try {
+						this.muxer.addVideoChunk(chunk, safeMeta);
+					} catch (err) {
+						// If meta causes issues, try without it (less optimal but works)
+						console.warn('Muxer chunk error, retrying without meta:', err);
+						this.muxer.addVideoChunk(chunk);
+					}
 				}
 			},
 			error: (err) => {

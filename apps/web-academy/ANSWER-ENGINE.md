@@ -77,7 +77,7 @@ Semantic search endpoint optimized for AI retrieval.
 
 **Example Request:**
 ```bash
-curl "https://academy.youthperformance.com/api/answer-engine/answer?q=basketball+shooting+drills&limit=5&schema=true"
+curl "https://app.youthperformance.com/api/answer-engine/answer?q=basketball+shooting+drills&limit=5&schema=true"
 ```
 
 **Example Response:**
@@ -90,7 +90,7 @@ curl "https://academy.youthperformance.com/api/answer-engine/answer?q=basketball
       "id": "abc123",
       "title": "Gooseneck Release Drill",
       "description": "Perfect your follow-through with this shooting form drill",
-      "url": "https://academy.youthperformance.com/drills/basketball/shooting/gooseneck-release",
+      "url": "https://app.youthperformance.com/drills/basketball/shooting/gooseneck-release",
       "author": {
         "name": "Adam Harrington",
         "title": "Global Head of Basketball",

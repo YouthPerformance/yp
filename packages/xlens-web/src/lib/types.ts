@@ -147,6 +147,7 @@ export type JumpStatus =
 	| 'uploading'
 	| 'processing'
 	| 'complete'
+	| 'failed'
 	| 'flagged'
 	| 'challenged'
 	| 'rejected';
@@ -212,9 +213,58 @@ export type XLensErrorCode =
 
 export interface XLensWebConfig {
 	convexUrl: string;
-	userId: string;
+	userId?: string; // Optional - auto-generates anonymous ID if not provided
 	cloudflareAccountId?: string;
 	onStateChange?: (state: CaptureState) => void;
 	onProgress?: (progress: UploadProgress) => void;
 	onError?: (error: XLensError) => void;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// User Calibration Data
+// For accurate height measurement using visual reference method
+// ─────────────────────────────────────────────────────────────────
+
+export interface UserCalibration {
+	heightInches: number; // User's standing height in inches
+	heightFeet: number; // Feet component (for UI display)
+	heightInchesRemainder: number; // Inches component (for UI display)
+	armSpanInches?: number; // Optional: arm span for additional reference
+	cameraDistanceFeet: number; // Recommended 8-10 feet
+	cameraHeightPosition: 'floor' | 'hip' | 'tripod'; // Where camera is placed
+}
+
+export interface SetupGuidance {
+	distanceRecommendation: string; // "Place your phone 8-10 feet away"
+	orientationRecommendation: string; // "Landscape mode, camera at hip height"
+	lightingRecommendation: string; // "Ensure good lighting, avoid backlight"
+	positioningRecommendation: string; // "Stand in center of frame"
+	surfaceRecommendation: string; // "Jump on flat, non-slip surface"
+}
+
+export const DEFAULT_SETUP_GUIDANCE: SetupGuidance = {
+	distanceRecommendation: "Place your phone 5-6 feet away - just far enough to see your full body",
+	orientationRecommendation: "Landscape mode, prop phone at hip height (use a chair or stack books)",
+	lightingRecommendation: "Face a window or light source - avoid backlight",
+	positioningRecommendation: "Full body in frame with some headroom for the jump",
+	surfaceRecommendation: "Flat, non-slip surface"
+};
+
+// Height conversion utilities
+export function feetInchesToTotalInches(feet: number, inches: number): number {
+	return feet * 12 + inches;
+}
+
+export function totalInchesToFeetInches(totalInches: number): { feet: number; inches: number } {
+	const feet = Math.floor(totalInches / 12);
+	const inches = Math.round(totalInches % 12);
+	return { feet, inches };
+}
+
+export function inchesToCm(inches: number): number {
+	return Math.round(inches * 2.54 * 10) / 10;
+}
+
+export function cmToInches(cm: number): number {
+	return Math.round((cm / 2.54) * 10) / 10;
 }

@@ -919,4 +919,37 @@ export default defineSchema({
     .index("by_entity", ["entityType", "entityId"])
     .index("by_type", ["feedbackType"])
     .index("by_timestamp", ["timestamp"]),
+
+  // ==========================================================================
+  // MIGRATION LOGS
+  // Track auth system unification & domain migration progress
+  // ==========================================================================
+
+  migrationLogs: defineTable({
+    // Migration identification
+    migrationId: v.string(), // "auth-unification-2026-01"
+    phase: v.string(), // "0", "0.5", "1", "2", "3", "4", "5"
+    phaseName: v.string(), // "Production Safety", "Inventory & Audit", etc.
+
+    // Action details
+    action: v.string(), // "remove_bypass", "update_url", "add_redirect"
+    file: v.optional(v.string()), // File path affected
+    description: v.string(), // What was done
+
+    // Status
+    status: v.string(), // "started", "completed", "failed", "rolled_back"
+    error: v.optional(v.string()), // Error message if failed
+
+    // Metadata
+    details: v.optional(v.any()), // Additional context (JSON)
+    executedBy: v.string(), // "claude-code", "manual"
+
+    // Timestamps
+    startedAt: v.number(),
+    completedAt: v.optional(v.number()),
+  })
+    .index("by_migration", ["migrationId"])
+    .index("by_phase", ["phase"])
+    .index("by_status", ["status"])
+    .index("by_timestamp", ["startedAt"]),
 });

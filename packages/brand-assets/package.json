@@ -1,0 +1,31 @@
+{
+  "name": "@yp/brand-assets",
+  "version": "1.0.0",
+  "description": "Centralized brand assets for Youth Performance monorepo",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./logos/*": "./logos/*",
+    "./images/*": "./images/*",
+    "./videos/*": "./videos/*",
+    "./audio/*": "./audio/*",
+    "./fonts/*": "./fonts/*"
+  },
+  "files": [
+    "logos",
+    "images",
+    "videos",
+    "audio",
+    "fonts",
+    "index.ts"
+  ],
+  "keywords": [
+    "brand",
+    "assets",
+    "logos",
+    "images",
+    "youth-performance"
+  ]
+}

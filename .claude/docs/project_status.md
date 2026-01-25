@@ -1,14 +1,37 @@
 # Project Status: The Grind
 
 > **Current Phase:** Phase 8 (Governance & Production Hardening)
-> **Last Updated:** January 17, 2026
-> **Sprint:** WolfGrow Content Strategy + Hydration Calculator
+> **Last Updated:** January 23, 2026
+> **Sprint:** Auth System Unification + Domain Migration
 
 ---
 
 ## Active Context (What We're Doing RIGHT NOW)
 
 ### Completed This Session
+- [x] **Auth System Unification + Domain Migration** - Full SSO consolidation
+  - Plan: `.claude/plans/polymorphic-hugging-breeze.md`
+  - Phase 0: Removed hardcoded `hasAccess = true` bypass in production
+  - Phase 0.5: Audited auth state, URL inventory (49 files with academy.* URLs)
+  - Phase 1: Created unified dev pass-through system (`apps/web-academy/src/lib/dev-bypass.ts`)
+  - Phase 2: Cleaned up marketing site auth (removed Clerk, simplified to redirect CTA)
+  - Phase 3: Domain migration code - replaced all `academy.youthperformance.com` → `app.youthperformance.com`
+  - Phase 4: Added 301 redirects in `next.config.mjs` for domain migration
+  - Phase 5: Created `/academy` portal route as logged-in landing page
+  - All apps build successfully (web-academy, marketing, shop)
+
+### Domain Migration Status
+| Before | After |
+|--------|-------|
+| `academy.youthperformance.com` | `app.youthperformance.com` |
+| `youthperformance.com` (marketing) | `youthperformance.com` (unchanged) |
+
+### Infrastructure TODO (Requires Vercel/DNS Access)
+- [ ] Add `app.youthperformance.com` as domain alias in Vercel
+- [ ] Create DNS CNAME `app.youthperformance.com` → Vercel
+- [ ] Update OAuth callback URLs in Google/Apple consoles
+
+### Previous Session
 - [x] **WolfGrow Content Strategy Spec** - 2026 Content Quality Standard
   - Spec: `.specify/specs/011-wolfgrow-content-strategy/spec.md`
   - Part 1: E-E-A-T 2.0 Protocol, Answer Engine Optimization, Interactive Utility pillars
@@ -88,7 +111,7 @@
   - `/api/voice/deepgram-token` - STT token generation
 - [x] Fixed Vercel deployment config issues
 - [x] Added turbo-ignore for smarter monorepo deploys
-- [x] Production verified at https://academy.youthperformance.com
+- [x] Production verified at https://app.youthperformance.com
 
 ### Current Focus
 - Hydration Calculator live at `/hydration-calculator` - needs Resend email integration
@@ -196,17 +219,24 @@ e76bc8a fix(academy): SSG-safe providers for Vercel build
 
 ## Notes for Next Session
 
-1. **Hydration Calculator Enhancements:**
+1. **Domain Migration Infrastructure** (BEFORE CODE DEPLOY):
+   - Add `app.youthperformance.com` as domain alias in Vercel dashboard
+   - Create DNS CNAME `app.youthperformance.com` → Vercel
+   - Update OAuth callback URLs in Google/Apple consoles:
+     - `https://app.youthperformance.com/api/auth/callback/google`
+     - `https://app.youthperformance.com/api/auth/callback/apple`
+   - Verify: `curl -I https://app.youthperformance.com` returns 200
+   - Test 301 redirects: `curl -I https://academy.youthperformance.com/drills`
+2. **Hydration Calculator Enhancements:**
    - Integrate Resend API for email capture (printable plan + electrolyte recipes)
    - Add PostHog events: `hydration_calc_complete`, `hydration_email_capture`
    - Test mobile UX at 375px viewport
-2. **WolfGrow Rollout:**
+3. **WolfGrow Rollout:**
    - Apply WolfGrow Content Standard to existing drill pages
    - Add "Proof of Life" video embeds for Adam/James
    - Create Author Entity schemas
-3. **Rotate Shopify tokens** (security P0) - user handling
-4. **Configure Linear MCP** (user has API key ready)
-5. **Set production OAuth credentials** - Google/Apple client IDs for BetterAuth
+4. **Rotate Shopify tokens** (security P0) - user handling
+5. **Configure Linear MCP** (user has API key ready)
 
 ---
 

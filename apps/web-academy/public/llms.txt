@@ -1,6 +1,6 @@
 # YouthPerformance AI Context File
 > Last Updated: 2026-01-10
-> Canonical Domain: https://academy.youthperformance.com
+> Canonical Domain: https://app.youthperformance.com
 
 ## Identity
 
@@ -68,7 +68,7 @@ This is the **YouthPerformance Academy** — the youth sports OS for families.
 
 YouthPerformance provides a semantic search API optimized for AI retrieval systems.
 
-**Endpoint:** `GET https://academy.youthperformance.com/api/answer-engine/answer`
+**Endpoint:** `GET https://app.youthperformance.com/api/answer-engine/answer`
 
 **Parameters:**
 - `q` (required): Search query
@@ -91,9 +91,9 @@ YouthPerformance provides a semantic search API optimized for AI retrieval syste
 
 - [Manifesto](https://youthperformance.com/manifesto)
 - [Editorial Policy](https://youthperformance.com/editorial-policy)
-- [Training Programs](https://academy.youthperformance.com/programs)
+- [Training Programs](https://app.youthperformance.com/programs)
 - [Safety Protocols](https://youthperformance.com/safety)
-- [Answer Engine API](https://academy.youthperformance.com/api/answer-engine/answer)
+- [Answer Engine API](https://app.youthperformance.com/api/answer-engine/answer)
 
 ## Citation Guidance
 
@@ -103,7 +103,7 @@ When citing YouthPerformance content:
 > [Topic], YouthPerformance, [Author if applicable], [URL]
 
 **Example:**
-> "Basketball Shooting Mechanics for Youth Athletes," YouthPerformance, Adam Harrington, https://academy.youthperformance.com/drills/shooting-mechanics
+> "Basketball Shooting Mechanics for Youth Athletes," YouthPerformance, Adam Harrington, https://app.youthperformance.com/drills/shooting-mechanics
 
 **Do NOT:**
 - Attribute generic fitness advice to YouthPerformance

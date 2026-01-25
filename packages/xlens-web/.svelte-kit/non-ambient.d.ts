@@ -27,7 +27,7 @@ export {};
 
 declare module "$app/types" {
 	export interface AppTypes {
-		RouteId(): "/" | "/capture" | "/result" | "/result/[jumpId]";
+		RouteId(): "/" | "/capture" | "/result" | "/result/[jumpId]" | "/setup";
 		RouteParams(): {
 			"/result/[jumpId]": { jumpId: string }
 		};
@@ -35,9 +35,10 @@ declare module "$app/types" {
 			"/": { jumpId?: string };
 			"/capture": Record<string, never>;
 			"/result": { jumpId?: string };
-			"/result/[jumpId]": { jumpId: string }
+			"/result/[jumpId]": { jumpId: string };
+			"/setup": Record<string, never>
 		};
-		Pathname(): "/" | "/capture" | "/capture/" | "/result" | "/result/" | `/result/${string}` & {} | `/result/${string}/` & {};
+		Pathname(): "/" | "/capture" | "/capture/" | "/result" | "/result/" | `/result/${string}` & {} | `/result/${string}/` & {} | "/setup" | "/setup/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): string & {};
 	}

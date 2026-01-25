@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     images: ["/images/adam/adamprofile.png"],
   },
   alternates: {
-    canonical: "https://academy.youthperformance.com/adam",
+    canonical: "https://app.youthperformance.com/adam",
   },
 };
 
@@ -55,7 +55,7 @@ const jsonLd = {
   ],
   description:
     "Adam Harrington: Former NBA Shooting Coach (OKC, Nets), Kevin Durant's skills trainer, Head Coach of Phantom BC (Unrivaled), and Founder of Youth Performance.",
-  url: "https://academy.youthperformance.com/adam",
+  url: "https://app.youthperformance.com/adam",
   sameAs: [
     "https://twitter.com/AdamHarrington",
     "https://instagram.com/CoachAHarrington",

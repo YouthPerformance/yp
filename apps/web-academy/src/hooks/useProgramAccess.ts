@@ -90,8 +90,7 @@ export function useProgramAccess(programSlug: string): ProgramAccessState {
   }
 
   // Check access via entitlements
-  // TODO: Remove bypass before production
-  const hasAccess = true; // BYPASS FOR TESTING - was: accessResult === true;
+  const hasAccess = accessResult === true;
 
   // Calculate completed days from completions
   // Filter for this program's day range (1000-1007 for basketball-chassis)

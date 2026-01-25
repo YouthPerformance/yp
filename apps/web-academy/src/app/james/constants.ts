@@ -250,7 +250,7 @@ export const OFFER = {
 
   cta: {
     label: "JOIN THE CHALLENGE — $88",
-    href: "https://academy.youthperformance.com/programs/barefoot-reset",
+    href: "https://app.youthperformance.com/programs/barefoot-reset",
     subtext: "Secure my spot & start building my foundation",
   },
 
@@ -276,7 +276,7 @@ export const FINAL_CTA = {
 
   primaryCTA: {
     label: "JOIN THE CHALLENGE — $88",
-    href: "https://academy.youthperformance.com/programs/barefoot-reset",
+    href: "https://app.youthperformance.com/programs/barefoot-reset",
     subtext: "Secure my spot & start building my foundation",
   },
 

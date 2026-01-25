@@ -23,10 +23,19 @@ export type {
 	VerificationTier,
 	JumpResult,
 	XLensErrorCode,
-	XLensWebConfig
+	XLensWebConfig,
+	UserCalibration,
+	SetupGuidance
 } from './types';
 
-export { XLensError } from './types';
+export {
+	XLensError,
+	DEFAULT_SETUP_GUIDANCE,
+	feetInchesToTotalInches,
+	totalInchesToFeetInches,
+	inchesToCm,
+	cmToInches
+} from './types';
 
 // Stores
 export {
@@ -66,3 +75,8 @@ export {
 	isIOSSafari,
 	isWeChatBrowser
 } from './utils/compatibility';
+
+// Components
+// TODO: Re-enable after fixing Svelte 5 type issues
+// export { default as CalibrationFrame } from './components/CalibrationFrame.svelte';
+// export type { CalibrationState, CalibrationData, BodyBounds } from './components/calibration-types';

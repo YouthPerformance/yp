@@ -81,7 +81,7 @@ apps/marketing/
 ---
 
 ### Academy (`apps/web-academy`)
-**URL:** academy.youthperformance.com
+**URL:** app.youthperformance.com
 **Platform:** Vercel
 **Framework:** Next.js 15 (App Router)
 
@@ -269,7 +269,7 @@ progress: {
 | App | Platform | Domain | Deploy Method |
 |-----|----------|--------|---------------|
 | Marketing | Cloudflare Pages | youthperformance.com | `wrangler pages deploy` |
-| Academy | Vercel | academy.youthperformance.com | Git push (auto) |
+| Academy | Vercel | app.youthperformance.com | Git push (auto) |
 | Shop | Shopify Oxygen | shop.youthperformance.com | `shopify hydrogen deploy` |
 | NeoBall | Vercel | neoball.co | Git push (auto) |
 

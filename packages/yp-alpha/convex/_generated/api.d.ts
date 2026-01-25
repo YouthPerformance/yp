@@ -35,6 +35,9 @@ import type * as progress from "../progress.js";
 import type * as seoAnalytics from "../seoAnalytics.js";
 import type * as users from "../users.js";
 import type * as waitlist from "../waitlist.js";
+import type * as xlensDebug from "../xlensDebug.js";
+import type * as xlensHttp from "../xlensHttp.js";
+import type * as xlensWeb from "../xlensWeb.js";
 
 import type {
   ApiFromModules,
@@ -70,6 +73,9 @@ declare const fullApi: ApiFromModules<{
   seoAnalytics: typeof seoAnalytics;
   users: typeof users;
   waitlist: typeof waitlist;
+  xlensDebug: typeof xlensDebug;
+  xlensHttp: typeof xlensHttp;
+  xlensWeb: typeof xlensWeb;
 }>;
 
 /**

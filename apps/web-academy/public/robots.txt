@@ -8,7 +8,7 @@ Allow: /
 Allow: /api/answer-engine/
 
 # Sitemap
-Sitemap: https://academy.youthperformance.com/sitemap.xml
+Sitemap: https://app.youthperformance.com/sitemap.xml
 
 # AI-specific crawlers
 User-agent: GPTBot
@@ -33,4 +33,4 @@ User-agent: Claude-Web
 Allow: /
 
 # LLM discovery file
-# See: https://academy.youthperformance.com/llms.txt
+# See: https://app.youthperformance.com/llms.txt

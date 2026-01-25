@@ -13,6 +13,7 @@ This monorepo uses **layered CLAUDE.md files**. Read only what you need:
 |------------|-----------------|
 | Root / General | This file |
 | `packages/yp-alpha` | `packages/yp-alpha/CLAUDE.md` (AI brain, Convex, memory) |
+| `packages/brand-assets` | `packages/brand-assets/README.md` (Centralized brand assets) |
 | `apps/web-academy` | `apps/web-academy/CLAUDE.md` (Academy app) |
 | `apps/marketing` | `apps/marketing/CLAUDE.md` (Marketing site) |
 | `apps/shop` | `apps/shop/CLAUDE.md` (Shopify store) |
@@ -48,6 +49,7 @@ This monorepo uses **layered CLAUDE.md files**. Read only what you need:
 | Guess database field names | Reference `packages/yp-alpha/convex/schema.ts` | Hallucinated fields cause silent failures | 2026-01 |
 | Use `workspace:*` with Vercel CLI deploys | Use GitHub integration for monorepo apps | CLI can't resolve workspace dependencies | 2026-01 |
 | Hardcode secrets or use placeholder values | Require env vars, fail fast if missing | JWT_SECRET placeholder caused auth bypass | 2026-01 |
+| Duplicate brand assets in app folders | Import from `@yp/brand-assets` package | Single source of truth, optimized WebP | 2026-01 |
 
 ---
 
@@ -144,6 +146,49 @@ Proprietary brand documents are stored locally and never committed to git.
 
 ---
 
+## Brand Assets
+
+All brand assets are centralized in `packages/brand-assets/`. **Never duplicate assets in app folders.**
+
+```
+packages/brand-assets/
+├── logos/
+│   ├── primary/     # YP-LOGO.svg, wordmark, PNG
+│   ├── variants/    # Wolf mascot, favicons, color variants
+│   └── sports/      # NBA, NFL, NHL, MLB, etc.
+├── images/
+│   ├── hero/        # Hero/feature images
+│   ├── team/        # James + Adam photos
+│   ├── academy/     # Training photos
+│   ├── products/    # E-commerce product shots
+│   ├── icons/       # Branded icons
+│   ├── thumbnails/  # Thumbnail images
+│   └── backgrounds/ # Background textures
+├── videos/
+│   ├── loaders/     # Loading animations (MP4 + WebM)
+│   ├── promotional/ # Brand videos
+│   └── product-demos/
+├── audio/sfx/       # Sound effects
+└── fonts/           # Space Grotesk, Power Grotesk, Bebas Neue
+```
+
+### Usage in Apps
+
+```typescript
+import { LOGOS, IMAGES, VIDEOS } from '@yp/brand-assets';
+
+// TypeScript-safe asset paths
+<img src={LOGOS.primary.svg} alt="YP Logo" />
+<img src={IMAGES.team.james.hero.webp} alt="James" />
+```
+
+### Optimization
+- All images have WebP versions (auto-generated)
+- All videos have WebM versions for better compression
+- Run `python3 packages/brand-assets/organize_assets.py` to optimize new assets
+
+---
+
 ## Key Files Index
 
 | File | Purpose |
@@ -151,6 +196,7 @@ Proprietary brand documents are stored locally and never committed to git.
 | `turbo.json` | Build orchestration |
 | `packages/yp-alpha/convex/schema.ts` | Database schema (source of truth) |
 | `packages/yp-alpha/src/router/` | AI routing brain |
+| `packages/brand-assets/index.ts` | Brand asset exports (TypeScript) |
 | `.github/ENVIRONMENTS.md` | CI/CD secrets setup |
 
 ---

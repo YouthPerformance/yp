@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: ["/images/james/jamesjimmyside.webp"],
   },
   alternates: {
-    canonical: "https://academy.youthperformance.com/james",
+    canonical: "https://app.youthperformance.com/james",
   },
 };
 
@@ -52,7 +52,7 @@ const jsonLd = {
   jobTitle: "Movement Specialist & Foot Performance Coach",
   description:
     "James Scott is the Movement Scientist behind Weak Feet Don't Eat. Trainer of Jimmy Butler, NFL athletes, and global icons. Creator of the Barefoot Reset methodology.",
-  url: "https://academy.youthperformance.com/james",
+  url: "https://app.youthperformance.com/james",
   sameAs: ["https://instagram.com/weakfeetdonteat", "https://twitter.com/weakfeetdonteat"],
   worksFor: {
     "@type": "Organization",

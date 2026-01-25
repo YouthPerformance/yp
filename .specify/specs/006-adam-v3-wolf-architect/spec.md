@@ -5,7 +5,7 @@
 > **Status:** Planning
 > **Created:** 2026-01-11
 > **Author:** Mike + Claude (Wolf Pack Protocol)
-> **Target URL:** `academy.youthperformance.com/adam`
+> **Target URL:** `app.youthperformance.com/adam`
 > **Prerequisite:** v2.5 must ship first (add remaining sections + Wolf Mode)
 
 ---

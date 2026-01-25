@@ -354,7 +354,7 @@ VITE_CLERK_PUBLISHABLE_KEY=
 ```bash
 # ADD THESE
 BETTER_AUTH_SECRET=          # openssl rand -base64 32
-SITE_URL=https://academy.youthperformance.com
+SITE_URL=https://app.youthperformance.com
 
 # For Email OTP (Postmark already configured)
 POSTMARK_API_KEY=            # Already have: 96c9d8ce-...

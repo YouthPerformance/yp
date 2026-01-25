@@ -32,7 +32,7 @@
 ```bash
 # Auth (BetterAuth - migrated from Clerk Jan 2026)
 BETTER_AUTH_SECRET=             # Random 32+ char string
-NEXT_PUBLIC_SITE_URL=           # e.g., http://localhost:3003 or https://academy.youthperformance.com
+NEXT_PUBLIC_SITE_URL=           # e.g., http://localhost:3003 or https://app.youthperformance.com
 
 # OAuth (optional)
 GOOGLE_CLIENT_ID=
@@ -94,7 +94,7 @@ CONVEX_DEPLOYMENT=
 ### Vercel (Academy)
 Set in Vercel Dashboard > Project > Settings > Environment Variables:
 - `BETTER_AUTH_SECRET` (required - session signing)
-- `NEXT_PUBLIC_SITE_URL` (required - e.g., https://academy.youthperformance.com)
+- `NEXT_PUBLIC_SITE_URL` (required - e.g., https://app.youthperformance.com)
 - `NEXT_PUBLIC_CONVEX_URL`
 - `CONVEX_DEPLOYMENT`
 - `STRIPE_SECRET_KEY`

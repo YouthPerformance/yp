@@ -48,7 +48,7 @@ All notable changes to the YP platform.
 
 ### Deployed
 - Marketing site to Cloudflare Pages (yp-landing)
-- Academy live at academy.youthperformance.com
+- Academy live at app.youthperformance.com
 - Shop live at shop.youthperformance.com
 
 ---
@@ -56,7 +56,7 @@ All notable changes to the YP platform.
 ## [2025-12-31] - Academy DNS Configuration
 
 ### Added
-- Configured academy.youthperformance.com DNS via Cloudflare
+- Configured app.youthperformance.com DNS via Cloudflare
 - SSL certificate provisioned
 
 ### Fixed

@@ -47,7 +47,7 @@ export default function InviteCodePage() {
     const shareData = {
       title: "Wolf Pack Training",
       text: `Join me on Wolf Pack! Use code: ${code}`,
-      url: `https://academy.youthperformance.com/code?c=${code}`,
+      url: `https://app.youthperformance.com/code?c=${code}`,
     };
 
     if (navigator.share) {
@@ -71,7 +71,7 @@ export default function InviteCodePage() {
   // Generate QR code URL (using a free QR API)
   const qrUrl = code
     ? `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-        `https://academy.youthperformance.com/code?c=${code}`,
+        `https://app.youthperformance.com/code?c=${code}`,
       )}`
     : "";
 

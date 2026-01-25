@@ -1,15 +1,18 @@
+// ═══════════════════════════════════════════════════════════
 // MeetWolf - Elite Wolf Coach Profile Editor
 // E10-7: Create editable AI coach profile based on user inputs
+// NOTE: Marketing site preview only - full functionality in app
+// ═══════════════════════════════════════════════════════════
 
-import { useUser } from "@clerk/clerk-react";
-import { useMutation, useQuery } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../convex/_generated/api";
 import { Button, Card } from "../components/ui";
 import { generateWolfPrompt } from "../config/interestPills";
 import { useOnboarding } from "../context/OnboardingContext";
 import analytics, { EVENTS } from "../lib/analytics";
+
+// App URL for redirects
+const APP_URL = import.meta.env.VITE_APP_URL || "https://app.youthperformance.com";
 
 // Lightning bolt icon
 const LightningIcon = ({ className = "w-4 h-4" }) => (
@@ -20,13 +23,7 @@ const LightningIcon = ({ className = "w-4 h-4" }) => (
 
 function MeetWolf() {
   const navigate = useNavigate();
-  const { user } = useUser();
   const { data } = useOnboarding();
-
-  // Convex queries and mutations
-  const email = user?.primaryEmailAddress?.emailAddress;
-  const profile = useQuery(api.users.getByEmail, email ? { email } : "skip");
-  const updateWolfPromptMutation = useMutation(api.users.updateWolfPrompt);
 
   // Generate initial prompt from onboarding data
   const initialPrompt = generateWolfPrompt({
@@ -38,12 +35,8 @@ function MeetWolf() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load saved prompt from profile if available
-  useEffect(() => {
-    if (profile?.wolfPrompt) {
-      setPrompt(profile.wolfPrompt);
-    }
-  }, [profile]);
+  // Note: Profile loading happens in the main app after login
+  // Marketing site just previews the generated prompt
 
   // Track page view
   useEffect(() => {
@@ -59,23 +52,14 @@ function MeetWolf() {
       prompt_length: prompt.length,
     });
 
-    try {
-      // Save to Convex if we have a profile
-      if (profile?._id) {
-        await updateWolfPromptMutation({
-          profileId: profile._id,
-          wolfPrompt: prompt,
-        });
-      }
-    } catch (err) {
-      console.error("Error saving wolf prompt:", err);
-    }
+    // Note: Actual profile saving happens in the main app after login
+    // Marketing site just stores in onboarding context for preview
 
     setIsSaving(false);
     setIsEditing(false);
 
-    // Navigate to chat
-    navigate("/wolf-chat");
+    // Redirect to app for full experience
+    window.location.href = `${APP_URL}/wolf-chat`;
   };
 
   const handleReset = () => {
@@ -225,7 +209,7 @@ function MeetWolf() {
             variant="secondary"
             size="lg"
             fullWidth
-            onClick={() => navigate("/settings")}
+            onClick={() => window.location.href = `${APP_URL}/profile`}
             className="border-cyan-500/20 hover:border-cyan-500/40"
           >
             Configure Later in Settings

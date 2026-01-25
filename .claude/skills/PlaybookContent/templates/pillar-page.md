@@ -244,7 +244,7 @@ programBadge: "[Related Program Name]™"
   title="Start the [Program Name] Today"
   description="Get the complete [X]-Day [Program] in the Playbook app. Video demos, daily schedules, and progress tracking."
   buttonText="Get the Program"
-  buttonUrl="https://academy.youthperformance.com/programs/[slug]"
+  buttonUrl="https://app.youthperformance.com/programs/[slug]"
 />
 ```
 

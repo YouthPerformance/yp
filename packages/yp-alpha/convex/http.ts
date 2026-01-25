@@ -6,7 +6,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { httpRouter } from "convex/server";
-import { internal } from "./_generated/api";
+import { internal, api } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 
 const http = httpRouter();
@@ -129,6 +129,356 @@ http.route({
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
+  }),
+});
+
+// ─────────────────────────────────────────────────────────────
+// xLENS WEB SDK ENDPOINTS
+// HTTP API for xlens-web (browser-based jump capture)
+// ─────────────────────────────────────────────────────────────
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Content-Type": "application/json",
+};
+
+// CORS preflight handler
+http.route({
+  path: "/xlens/session",
+  method: "OPTIONS",
+  handler: httpAction(async () => {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }),
+});
+
+// Create xLENS session (demo mode - creates temp user if needed)
+http.route({
+  path: "/xlens/session",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      const body = await request.json();
+      const { deviceId } = body as { deviceId?: string };
+
+      // Generate session nonce
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let nonceDisplay = "";
+      const bytes = new Uint8Array(8);
+      crypto.getRandomValues(bytes);
+      for (let i = 0; i < 8; i++) {
+        nonceDisplay += chars[bytes[i] % chars.length];
+      }
+
+      // Generate full nonce
+      const nonceBytes = new Uint8Array(16);
+      crypto.getRandomValues(nonceBytes);
+      const nonce = btoa(String.fromCharCode(...nonceBytes));
+
+      const now = Date.now();
+      const expiresAt = now + 120 * 1000; // 120 seconds
+
+      // For demo mode, we create a lightweight session without requiring a jumpUser
+      // Store session directly
+      const sessionId = await ctx.runMutation(internal.xlensHttp.createDemoSession, {
+        nonce,
+        nonceDisplay,
+        expiresAt,
+        deviceId: deviceId || "web-" + Math.random().toString(36).substr(2, 9),
+      });
+
+      return new Response(
+        JSON.stringify({
+          sessionId,
+          nonce,
+          nonceDisplay,
+          expiresAt,
+          expiresInMs: 120 * 1000,
+        }),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    } catch (e) {
+      console.error("[xLENS] Session creation failed:", e);
+      return new Response(
+        JSON.stringify({ error: String(e) }),
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
+  }),
+});
+
+// Get session status
+http.route({
+  path: "/xlens/session/status",
+  method: "OPTIONS",
+  handler: httpAction(async () => {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }),
+});
+
+http.route({
+  path: "/xlens/session/status",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      const body = await request.json();
+      const { sessionId } = body as { sessionId: string };
+
+      const session = await ctx.runQuery(internal.xlensHttp.getSession, { sessionId });
+
+      if (!session) {
+        return new Response(
+          JSON.stringify({ valid: false, reason: "Session not found" }),
+          { status: 200, headers: CORS_HEADERS }
+        );
+      }
+
+      const now = Date.now();
+      if (now > session.expiresAt) {
+        return new Response(
+          JSON.stringify({ valid: false, reason: "Session expired" }),
+          { status: 200, headers: CORS_HEADERS }
+        );
+      }
+
+      if (session.used) {
+        return new Response(
+          JSON.stringify({ valid: false, reason: "Session already used" }),
+          { status: 200, headers: CORS_HEADERS }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          valid: true,
+          nonceDisplay: session.nonceDisplay,
+          expiresAt: session.expiresAt,
+          remainingMs: session.expiresAt - now,
+        }),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    } catch (e) {
+      console.error("[xLENS] Session status failed:", e);
+      return new Response(
+        JSON.stringify({ error: String(e) }),
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
+  }),
+});
+
+// ─────────────────────────────────────────────────────────────
+// xLENS UPLOAD: Generate upload URL for video
+// ─────────────────────────────────────────────────────────────
+http.route({
+  path: "/xlens/upload",
+  method: "OPTIONS",
+  handler: httpAction(async () => {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }),
+});
+
+http.route({
+  path: "/xlens/upload",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      const body = await request.json();
+      const { sessionId } = body as { sessionId: string };
+
+      // Verify session exists and is valid
+      const session = await ctx.runQuery(internal.xlensHttp.getSession, { sessionId });
+      if (!session) {
+        return new Response(
+          JSON.stringify({ error: "Session not found" }),
+          { status: 404, headers: CORS_HEADERS }
+        );
+      }
+
+      if (session.used) {
+        return new Response(
+          JSON.stringify({ error: "Session already used" }),
+          { status: 400, headers: CORS_HEADERS }
+        );
+      }
+
+      // Generate Convex storage upload URL
+      const uploadUrl = await ctx.storage.generateUploadUrl();
+
+      return new Response(
+        JSON.stringify({
+          uploadUrl,
+          sessionId,
+        }),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    } catch (e) {
+      console.error("[xLENS] Upload URL generation failed:", e);
+      return new Response(
+        JSON.stringify({ error: String(e) }),
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
+  }),
+});
+
+// ─────────────────────────────────────────────────────────────
+// xLENS SUBMIT: Submit jump for verification
+// ─────────────────────────────────────────────────────────────
+http.route({
+  path: "/xlens/submit",
+  method: "OPTIONS",
+  handler: httpAction(async () => {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }),
+});
+
+http.route({
+  path: "/xlens/submit",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      const body = await request.json();
+      const { sessionId, storageId, deviceId, durationMs, fps, userHeightInches } = body as {
+        sessionId: string;
+        storageId: string;
+        deviceId: string;
+        durationMs: number;
+        fps: number;
+        userHeightInches?: number;
+      };
+
+      // Verify session
+      const session = await ctx.runQuery(internal.xlensHttp.getSession, { sessionId });
+      if (!session) {
+        return new Response(
+          JSON.stringify({ error: "Session not found" }),
+          { status: 404, headers: CORS_HEADERS }
+        );
+      }
+
+      if (session.used) {
+        return new Response(
+          JSON.stringify({ error: "Session already used" }),
+          { status: 400, headers: CORS_HEADERS }
+        );
+      }
+
+      // Create jump record with optional height calibration
+      const result = await ctx.runMutation(internal.xlensHttp.createWebJump, {
+        sessionId,
+        storageId,
+        deviceId,
+        durationMs,
+        fps,
+        nonce: session.nonce,
+        nonceDisplay: session.nonceDisplay,
+        userHeightInches,
+      });
+
+      // Schedule AI analysis with height calibration (async)
+      await ctx.scheduler.runAfter(0, internal.xlensHttp.analyzeJump, {
+        jumpId: result.jumpId,
+        storageId,
+        userHeightInches,
+      });
+
+      return new Response(
+        JSON.stringify({
+          jumpId: result.jumpId,
+          status: "processing",
+          message: "Jump submitted for analysis",
+        }),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    } catch (e) {
+      console.error("[xLENS] Submit failed:", e);
+      return new Response(
+        JSON.stringify({ error: String(e) }),
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
+  }),
+});
+
+// ─────────────────────────────────────────────────────────────
+// xLENS RESULT: Get jump result
+// ─────────────────────────────────────────────────────────────
+http.route({
+  path: "/xlens/result",
+  method: "OPTIONS",
+  handler: httpAction(async () => {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }),
+});
+
+http.route({
+  path: "/xlens/result",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    try {
+      const body = await request.json();
+      const { jumpId } = body as { jumpId: string };
+
+      const jump = await ctx.runQuery(internal.xlensHttp.getJump, { jumpId });
+
+      if (!jump) {
+        return new Response(
+          JSON.stringify({ error: "Jump not found" }),
+          { status: 404, headers: CORS_HEADERS }
+        );
+      }
+
+      // Get video URL if available
+      let videoUrl = null;
+      if (jump.storageId) {
+        videoUrl = await ctx.storage.getUrl(jump.storageId);
+      }
+
+      return new Response(
+        JSON.stringify({
+          jumpId: jump._id,
+          status: jump.status,
+          heightInches: jump.heightInches,
+          heightCm: jump.heightInches ? jump.heightInches * 2.54 : null,
+          verificationTier: jump.verificationTier,
+          videoUrl,
+          processedAt: jump.processedAt,
+          flags: jump.flags,
+        }),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    } catch (e) {
+      console.error("[xLENS] Get result failed:", e);
+      return new Response(
+        JSON.stringify({ error: String(e) }),
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
+  }),
+});
+
+// ─────────────────────────────────────────────────────────────
+// xLENS DEBUG: Get recent jumps (for debugging)
+// ─────────────────────────────────────────────────────────────
+http.route({
+  path: "/xlens/debug/jumps",
+  method: "GET",
+  handler: httpAction(async (ctx) => {
+    try {
+      const jumps = await ctx.runQuery(api.xlensDebug.getRecentJumps, {});
+      return new Response(
+        JSON.stringify(jumps, null, 2),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    } catch (e) {
+      console.error("[xLENS] Debug query failed:", e);
+      return new Response(
+        JSON.stringify({ error: String(e) }),
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
   }),
 });
 

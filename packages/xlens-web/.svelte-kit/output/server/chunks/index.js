@@ -1,7 +1,7 @@
-import { a as safe_equals, b as equals, e as escape_html } from "./escaping.js";
+import { e as escape_html, b as set_ssr_context, a as ssr_context, p as push$1, c as pop$1 } from "./context.js";
 import { i as is_primitive, g as get_type, D as DevalueError, a as is_plain_object, e as enumerable_symbols, s as stringify_key, b as stringify_string, c as escaped, B as BROWSER } from "./utils.js";
 import { r as run_all, b as deferred, o as object_prototype, c as array_prototype, g as get_descriptor, e as get_prototype_of, i as is_array, f as is_extensible, h as index_of, n as noop } from "./utils3.js";
-import { b as set_ssr_context, a as ssr_context, p as push$1, c as pop$1 } from "./context.js";
+import { a as safe_equals, e as equals } from "./equality.js";
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$";
 const unsafe_chars = /[<\b\f\n\r\t\0\u2028\u2029]/g;
 const reserved = /^(?:do|if|in|for|int|let|new|try|var|byte|case|char|else|enum|goto|long|this|void|with|await|break|catch|class|const|final|float|short|super|throw|while|yield|delete|double|export|import|native|return|switch|throws|typeof|boolean|default|extends|finally|package|private|abstract|continue|debugger|function|volatile|interface|protected|transient|implements|instanceof|synchronized)$/;
@@ -110,7 +110,7 @@ function uneval(value, replacer) {
   Array.from(counts).filter((entry) => entry[1] > 1).sort((a, b) => b[1] - a[1]).forEach((entry, i) => {
     names.set(entry[0], get_name(i));
   });
-  function stringify(thing) {
+  function stringify2(thing) {
     if (names.has(thing)) {
       return names.get(thing);
     }
@@ -125,7 +125,7 @@ function uneval(value, replacer) {
       case "Number":
       case "String":
       case "Boolean":
-        return `Object(${stringify(thing.valueOf())})`;
+        return `Object(${stringify2(thing.valueOf())})`;
       case "RegExp":
         return `new RegExp(${stringify_string(thing.source)}, "${thing.flags}")`;
       case "Date":
@@ -138,14 +138,14 @@ function uneval(value, replacer) {
         const members = (
           /** @type {any[]} */
           thing.map(
-            (v, i) => i in thing ? stringify(v) : ""
+            (v, i) => i in thing ? stringify2(v) : ""
           )
         );
         const tail = thing.length === 0 || thing.length - 1 in thing ? "" : ",";
         return `[${members.join(",")}${tail}]`;
       case "Set":
       case "Map":
-        return `new ${type}([${Array.from(thing).map(stringify).join(",")}])`;
+        return `new ${type}([${Array.from(thing).map(stringify2).join(",")}])`;
       case "Int8Array":
       case "Uint8Array":
       case "Uint8ClampedArray":
@@ -162,7 +162,7 @@ function uneval(value, replacer) {
           const array = new thing.constructor(thing.buffer);
           str2 += `([${array}])`;
         } else {
-          str2 += `([${stringify(thing.buffer)}])`;
+          str2 += `([${stringify2(thing.buffer)}])`;
         }
         const a = thing.byteOffset;
         const b = a + thing.byteLength;
@@ -187,7 +187,7 @@ function uneval(value, replacer) {
         return `${type}.from(${stringify_string(thing.toString())})`;
       default:
         const keys2 = Object.keys(thing);
-        const obj = keys2.map((key) => `${safe_key(key)}:${stringify(thing[key])}`).join(",");
+        const obj = keys2.map((key) => `${safe_key(key)}:${stringify2(thing[key])}`).join(",");
         const proto = Object.getPrototypeOf(thing);
         if (proto === null) {
           return keys2.length > 0 ? `{${obj},__proto__:null}` : `{__proto__:null}`;
@@ -195,7 +195,7 @@ function uneval(value, replacer) {
         return `{${obj}}`;
     }
   }
-  const str = stringify(value);
+  const str = stringify2(value);
   if (names.size) {
     const params = [];
     const statements = [];
@@ -218,7 +218,7 @@ function uneval(value, replacer) {
         case "Number":
         case "String":
         case "Boolean":
-          values.push(`Object(${stringify(thing.valueOf())})`);
+          values.push(`Object(${stringify2(thing.valueOf())})`);
           break;
         case "RegExp":
           values.push(thing.toString());
@@ -229,19 +229,19 @@ function uneval(value, replacer) {
         case "Array":
           values.push(`Array(${thing.length})`);
           thing.forEach((v, i) => {
-            statements.push(`${name}[${i}]=${stringify(v)}`);
+            statements.push(`${name}[${i}]=${stringify2(v)}`);
           });
           break;
         case "Set":
           values.push(`new Set`);
           statements.push(
-            `${name}.${Array.from(thing).map((v) => `add(${stringify(v)})`).join(".")}`
+            `${name}.${Array.from(thing).map((v) => `add(${stringify2(v)})`).join(".")}`
           );
           break;
         case "Map":
           values.push(`new Map`);
           statements.push(
-            `${name}.${Array.from(thing).map(([k, v]) => `set(${stringify(k)}, ${stringify(v)})`).join(".")}`
+            `${name}.${Array.from(thing).map(([k, v]) => `set(${stringify2(k)}, ${stringify2(v)})`).join(".")}`
           );
           break;
         case "ArrayBuffer":
@@ -255,7 +255,7 @@ function uneval(value, replacer) {
           );
           Object.keys(thing).forEach((key) => {
             statements.push(
-              `${name}${safe_prop(key)}=${stringify(thing[key])}`
+              `${name}${safe_prop(key)}=${stringify2(thing[key])}`
             );
           });
       }
@@ -2933,6 +2933,13 @@ function attributes(attrs, css_hash, classes, styles, flags = 0) {
   }
   return attr_str;
 }
+function stringify(value) {
+  return typeof value === "string" ? value : value == null ? "" : value + "";
+}
+function attr_class(value, hash, directives) {
+  var result = to_class(value, hash, directives);
+  return result ? ` class="${escape_html(result, true)}"` : "";
+}
 function store_get(store_values, store_name, store) {
   if (store_name in store_values && store_values[store_name][0] === store) {
     return store_values[store_name][2];
@@ -2951,6 +2958,12 @@ function unsubscribe_stores(store_values) {
   for (const store_name in store_values) {
     store_values[store_name][1]();
   }
+}
+function ensure_array_like(array_like_or_iterator) {
+  if (array_like_or_iterator) {
+    return array_like_or_iterator.length !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
+  }
+  return [];
 }
 export {
   store_get as $,
@@ -2983,6 +2996,10 @@ export {
   head as _,
   HYDRATION_END as a,
   unsubscribe_stores as a0,
+  ensure_array_like as a1,
+  attr_class as a2,
+  attr as a3,
+  stringify as a4,
   HYDRATION_START as b,
   HYDRATION_START_ELSE as c,
   get as d,

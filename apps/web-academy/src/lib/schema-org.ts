@@ -11,7 +11,9 @@
  * - Organization: For YouthPerformance branding
  */
 
-const SITE_URL = "https://academy.youthperformance.com";
+import { APP_URL } from "@/lib/env";
+
+const SITE_URL = APP_URL;
 const ORG_NAME = "YouthPerformance Academy";
 const ORG_LOGO = `${SITE_URL}/logo.png`;
 

@@ -379,7 +379,7 @@ export const getQnAPairs = query({
       authors.filter(Boolean).map((a) => [a!._id, a!])
     );
 
-    const SITE_URL = "https://academy.youthperformance.com";
+    const SITE_URL = "https://app.youthperformance.com";
 
     return qnas.map((qna) => {
       const author = authorMap.get(qna.authorId);

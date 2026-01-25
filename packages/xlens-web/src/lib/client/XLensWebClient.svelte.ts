@@ -12,18 +12,16 @@ import type {
 	UploadProgress,
 	SubmissionResult,
 	JumpResult,
-	WebProofPayload
+	UserCalibration
 } from '$lib/types';
 import { XLensError } from '$lib/types';
 import { CameraManager } from '$lib/capture/CameraManager.svelte';
 import { MotionCapture, serializeSamples } from '$lib/capture/MotionCapture';
 import { WebCodecsEncoder } from '$lib/capture/WebCodecsEncoder';
 import { MediaRecorderFallback } from '$lib/capture/MediaRecorderFallback';
-import { getOrCreateKey } from '$lib/crypto/KeyStorage';
-import { generateProof } from '$lib/crypto/ProofGenerator';
 import { sha256, sha256String } from '$lib/crypto/WebCryptoSigner';
-import { TusUploader, SimpleFetchUploader } from '$lib/upload/TusUploader';
-import { checkCompatibility, getDeviceInfo } from '$lib/utils/compatibility';
+import { TusUploader } from '$lib/upload/TusUploader';
+import { checkCompatibility } from '$lib/utils/compatibility';
 
 // ─────────────────────────────────────────────────────────────────
 // Client Class
@@ -37,6 +35,7 @@ export class XLensWebClient {
 	error = $state<XLensError | null>(null);
 	uploadProgress = $state<UploadProgress | null>(null);
 	recordingDuration = $state(0);
+	calibration = $state<UserCalibration | null>(null);
 
 	// Configuration
 	private config: XLensWebConfig;
@@ -49,7 +48,6 @@ export class XLensWebClient {
 	private encoder: WebCodecsEncoder | null = null;
 	private fallbackRecorder: MediaRecorderFallback | null = null;
 	private tusUploader: TusUploader;
-	private fetchUploader: SimpleFetchUploader;
 
 	// Capture state
 	private useWebCodecs = false;
@@ -59,14 +57,69 @@ export class XLensWebClient {
 
 	constructor(config: XLensWebConfig) {
 		this.config = config;
-		this.convexUrl = config.convexUrl;
-		this.userId = config.userId;
+		// Convert .convex.cloud URL to .convex.site for HTTP endpoints
+		this.convexUrl = config.convexUrl.replace('.convex.cloud', '.convex.site');
+		// Auto-generate anonymous ID if not provided
+		this.userId = config.userId || this.generateAnonId();
 
 		// Initialize components
 		this.camera = new CameraManager({ frameRate: 60 });
 		this.motion = new MotionCapture();
 		this.tusUploader = new TusUploader();
-		this.fetchUploader = new SimpleFetchUploader();
+
+		// Load calibration from sessionStorage if available
+		this.loadCalibration();
+	}
+
+	/**
+	 * Load calibration data from sessionStorage
+	 */
+	private loadCalibration(): void {
+		if (typeof sessionStorage === 'undefined') return;
+
+		try {
+			const stored = sessionStorage.getItem('xlens_calibration');
+			if (stored) {
+				this.calibration = JSON.parse(stored);
+				console.log('[xLENS] Loaded calibration:', this.calibration);
+			}
+		} catch (e) {
+			console.warn('[xLENS] Failed to load calibration:', e);
+		}
+	}
+
+	/**
+	 * Set calibration data manually
+	 */
+	setCalibration(calibration: UserCalibration): void {
+		this.calibration = calibration;
+		if (typeof sessionStorage !== 'undefined') {
+			sessionStorage.setItem('xlens_calibration', JSON.stringify(calibration));
+		}
+	}
+
+	/**
+	 * Get current calibration
+	 */
+	getCalibration(): UserCalibration | null {
+		return this.calibration;
+	}
+
+	/**
+	 * Generate anonymous user ID (persisted in localStorage)
+	 */
+	private generateAnonId(): string {
+		const storageKey = 'xlens_anon_id';
+		let anonId = typeof localStorage !== 'undefined' ? localStorage.getItem(storageKey) : null;
+
+		if (!anonId) {
+			anonId = `anon_${crypto.randomUUID()}`;
+			if (typeof localStorage !== 'undefined') {
+				localStorage.setItem(storageKey, anonId);
+			}
+		}
+
+		return anonId;
 	}
 
 	// ─────────────────────────────────────────────────────────────
@@ -129,15 +182,9 @@ export class XLensWebClient {
 		this.setState('preparing_session');
 
 		try {
-			// Get or create device key
-			const deviceKey = await getOrCreateKey(this.userId);
-
-			// Create session via Convex
-			const response = await this.callConvex('sessions:create', {
-				userId: this.userId,
-				deviceKeyId: deviceKey.keyId,
-				publicKey: deviceKey.publicKey,
-				platform: 'web'
+			// Create session via HTTP endpoint (demo mode)
+			const response = await this.callXLensHttp('/xlens/session', {
+				deviceId: this.userId
 			});
 
 			const session: Session = {
@@ -145,7 +192,7 @@ export class XLensWebClient {
 				nonce: response.nonce,
 				nonceDisplay: response.nonceDisplay,
 				expiresAt: new Date(response.expiresAt),
-				deviceKeyId: deviceKey.keyId
+				deviceKeyId: 'web-demo'
 			};
 
 			this.session = session;
@@ -283,41 +330,40 @@ export class XLensWebClient {
 		this.setState('uploading');
 
 		try {
-			// Get device key
-			const deviceKey = await getOrCreateKey(this.userId);
-
-			// Generate proof
-			const proof = await generateProof(this.session, capture, deviceKey);
-
-			// Get upload URL from Convex
-			const uploadAuth = await this.callConvex('uploads:getDirectUploadUrl', {
+			// Step 1: Get upload URL from Convex
+			const uploadAuth = await this.callXLensHttp('/xlens/upload', {
 				sessionId: this.session.id
 			});
 
-			// Upload video using TUS
-			const streamId = await this.tusUploader.uploadVideo(
-				capture.videoData,
-				uploadAuth.tusUrl,
-				(progress) => {
-					this.uploadProgress = progress;
-					this.config.onProgress?.(progress);
-				}
-			);
+			// Step 2: Upload video to Convex Storage
+			const videoBlob = new Blob([capture.videoData.buffer as ArrayBuffer], { type: 'video/mp4' });
+			const uploadResponse = await fetch(uploadAuth.uploadUrl, {
+				method: 'POST',
+				body: videoBlob
+			});
 
-			// Upload sensor data
-			const sensorJson = serializeSamples(capture.sensorData);
-			await this.fetchUploader.upload(
-				new TextEncoder().encode(sensorJson),
-				uploadAuth.sensorUploadUrl,
-				'application/json'
-			);
+			if (!uploadResponse.ok) {
+				throw new XLensError('UPLOAD_FAILED', 'Video upload failed');
+			}
 
-			// Submit to Convex
-			const result = await this.callConvex('jumps:submit', {
+			const { storageId } = await uploadResponse.json();
+
+			// Update progress
+			this.uploadProgress = {
+				phase: 'video',
+				bytesUploaded: capture.videoData.length,
+				bytesTotal: capture.videoData.length,
+				percentage: 100
+			};
+
+			// Step 3: Submit jump for analysis (with calibration if available)
+			const result = await this.callXLensHttp('/xlens/submit', {
 				sessionId: this.session.id,
-				userId: this.userId,
-				videoStreamId: streamId,
-				proof: proof
+				storageId,
+				deviceId: this.userId,
+				durationMs: capture.endedAtMs - capture.startedAtMs,
+				fps: capture.fps,
+				userHeightInches: this.calibration?.heightInches
 			});
 
 			this.setState('submitted');
@@ -325,8 +371,8 @@ export class XLensWebClient {
 			return {
 				jumpId: result.jumpId,
 				status: result.status,
-				verificationTier: result.verificationTier,
-				message: result.message
+				verificationTier: 'bronze',
+				message: result.message || 'Jump submitted for analysis'
 			};
 		} catch (err) {
 			this.handleError(err, 'Submission failed');
@@ -338,21 +384,21 @@ export class XLensWebClient {
 	 * Get jump result by ID
 	 */
 	async getJumpResult(jumpId: string): Promise<JumpResult> {
-		const result = await this.callConvex('jumps:get', { jumpId });
+		const result = await this.callXLensHttp('/xlens/result', { jumpId });
 
 		const jumpResult: JumpResult = {
-			jumpId: result._id,
-			userId: result.userId,
+			jumpId: result.jumpId,
+			userId: this.userId,
 			status: result.status,
 			verificationTier: result.verificationTier,
 			height: result.heightInches
 				? {
 						inches: result.heightInches,
-						centimeters: result.heightInches * 2.54
+						centimeters: result.heightCm || result.heightInches * 2.54
 					}
 				: undefined,
 			videoUrl: result.videoUrl,
-			thumbnailUrl: result.thumbnailUrl,
+			thumbnailUrl: undefined,
 			processedAt: result.processedAt ? new Date(result.processedAt) : undefined,
 			flags: result.flags
 		};
@@ -476,19 +522,21 @@ export class XLensWebClient {
 		}
 	}
 
-	private async callConvex(functionPath: string, args: Record<string, unknown>): Promise<any> {
-		// Simple HTTP API call to Convex
-		// In production, use the Convex client library
-		const response = await fetch(`${this.convexUrl}/api/mutation/${functionPath}`, {
+	/**
+	 * Call xLENS HTTP endpoint
+	 */
+	private async callXLensHttp(path: string, body: Record<string, unknown>): Promise<any> {
+		const response = await fetch(`${this.convexUrl}${path}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ args })
+			body: JSON.stringify(body)
 		});
 
 		if (!response.ok) {
-			throw new XLensError('NETWORK_ERROR', `Convex call failed: ${response.statusText}`);
+			const errorText = await response.text();
+			throw new XLensError('NETWORK_ERROR', `xLENS API call failed: ${errorText}`);
 		}
 
 		return response.json();

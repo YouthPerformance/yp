@@ -168,7 +168,7 @@ When to progress: [Specific criteria - e.g., "When you can complete 3 sets of 10
   title="Get the Full [Program Name]"
   description="This drill is part of the [X]-Day [Program]. Get video demos, daily schedules, and progress tracking."
   buttonText="Start Training"
-  buttonUrl="https://academy.youthperformance.com/programs/[slug]"
+  buttonUrl="https://app.youthperformance.com/programs/[slug]"
 />
 ```
 

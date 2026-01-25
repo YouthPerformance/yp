@@ -560,7 +560,7 @@ export default function JamesScott() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://academy.youthperformance.com/programs/barefoot-reset"
+                href="https://app.youthperformance.com/programs/barefoot-reset"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-cyan-500 text-black font-bold text-lg hover:bg-cyan-400 transition-colors shadow-[0_0_40px_rgba(0,246,224,0.3)]"
