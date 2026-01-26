@@ -9,13 +9,25 @@
 		formatTimeRemaining
 	} from '$lib';
 	import type { UserCalibration } from '$lib/types';
+	import {
+		PoseLandmarker,
+		FilesetResolver,
+		DrawingUtils,
+		type PoseLandmarkerResult
+	} from '@mediapipe/tasks-vision';
 
 	// Client state
 	let client = $state<XLensWebClient | null>(null);
 	let videoElement = $state<HTMLVideoElement | null>(null);
+	let canvasElement = $state<HTMLCanvasElement | null>(null);
 	let sessionTimer: ReturnType<typeof setInterval> | null = null;
 	let sessionTimeRemaining = $state(120);
 	let needsUserGesture = $state(true);
+
+	// MediaPipe state
+	let poseLandmarker = $state<PoseLandmarker | null>(null);
+	let poseAnimationId: number | null = null;
+	let showSkeleton = $state(true);
 
 	// Calibration state
 	let isCalibrated = $state(true);
@@ -34,6 +46,186 @@
 	// Debug info
 	let debugInfo = $state('');
 	let convexUrl = $state('');
+
+	// Neon glow color (#00f6e0 = yp-cyan)
+	const NEON_COLOR = '#00f6e0';
+	const NEON_GLOW_COLOR = 'rgba(0, 246, 224, 0.6)';
+
+	// MediaPipe pose connections for skeleton
+	const POSE_CONNECTIONS = [
+		// Face
+		[0, 1], [1, 2], [2, 3], [3, 7], [0, 4], [4, 5], [5, 6], [6, 8],
+		// Torso
+		[9, 10], [11, 12], [11, 23], [12, 24], [23, 24],
+		// Left arm
+		[11, 13], [13, 15], [15, 17], [15, 19], [15, 21], [17, 19],
+		// Right arm
+		[12, 14], [14, 16], [16, 18], [16, 20], [16, 22], [18, 20],
+		// Left leg
+		[23, 25], [25, 27], [27, 29], [27, 31], [29, 31],
+		// Right leg
+		[24, 26], [26, 28], [28, 30], [28, 32], [30, 32]
+	];
+
+	async function initPoseLandmarker() {
+		try {
+			const vision = await FilesetResolver.forVisionTasks(
+				'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+			);
+			poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+				baseOptions: {
+					modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task',
+					delegate: 'GPU'
+				},
+				runningMode: 'VIDEO',
+				numPoses: 1
+			});
+			console.log('[xLENS] PoseLandmarker initialized');
+		} catch (e) {
+			console.error('[xLENS] Failed to init PoseLandmarker:', e);
+		}
+	}
+
+	function drawNeonSkeleton(results: PoseLandmarkerResult) {
+		if (!canvasElement || !videoElement) return;
+
+		const ctx = canvasElement.getContext('2d');
+		if (!ctx) return;
+
+		// Match canvas size to video
+		canvasElement.width = videoElement.videoWidth;
+		canvasElement.height = videoElement.videoHeight;
+
+		// Clear canvas
+		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+		if (!results.landmarks || results.landmarks.length === 0) return;
+
+		const landmarks = results.landmarks[0];
+
+		// Draw connections (skeleton lines) with neon glow
+		ctx.save();
+
+		// Outer glow layer
+		ctx.shadowColor = NEON_COLOR;
+		ctx.shadowBlur = 20;
+		ctx.strokeStyle = NEON_GLOW_COLOR;
+		ctx.lineWidth = 8;
+		ctx.lineCap = 'round';
+		ctx.lineJoin = 'round';
+
+		for (const [start, end] of POSE_CONNECTIONS) {
+			const startLandmark = landmarks[start];
+			const endLandmark = landmarks[end];
+
+			if (startLandmark && endLandmark &&
+				startLandmark.visibility > 0.5 && endLandmark.visibility > 0.5) {
+				ctx.beginPath();
+				ctx.moveTo(
+					startLandmark.x * canvasElement.width,
+					startLandmark.y * canvasElement.height
+				);
+				ctx.lineTo(
+					endLandmark.x * canvasElement.width,
+					endLandmark.y * canvasElement.height
+				);
+				ctx.stroke();
+			}
+		}
+
+		// Inner bright line
+		ctx.shadowBlur = 10;
+		ctx.strokeStyle = NEON_COLOR;
+		ctx.lineWidth = 3;
+
+		for (const [start, end] of POSE_CONNECTIONS) {
+			const startLandmark = landmarks[start];
+			const endLandmark = landmarks[end];
+
+			if (startLandmark && endLandmark &&
+				startLandmark.visibility > 0.5 && endLandmark.visibility > 0.5) {
+				ctx.beginPath();
+				ctx.moveTo(
+					startLandmark.x * canvasElement.width,
+					startLandmark.y * canvasElement.height
+				);
+				ctx.lineTo(
+					endLandmark.x * canvasElement.width,
+					endLandmark.y * canvasElement.height
+				);
+				ctx.stroke();
+			}
+		}
+
+		// Draw joint points with neon glow
+		ctx.shadowBlur = 15;
+		ctx.fillStyle = NEON_COLOR;
+
+		for (const landmark of landmarks) {
+			if (landmark.visibility > 0.5) {
+				ctx.beginPath();
+				ctx.arc(
+					landmark.x * canvasElement.width,
+					landmark.y * canvasElement.height,
+					6,
+					0,
+					2 * Math.PI
+				);
+				ctx.fill();
+			}
+		}
+
+		// White center for joints
+		ctx.shadowBlur = 0;
+		ctx.fillStyle = '#ffffff';
+
+		for (const landmark of landmarks) {
+			if (landmark.visibility > 0.5) {
+				ctx.beginPath();
+				ctx.arc(
+					landmark.x * canvasElement.width,
+					landmark.y * canvasElement.height,
+					2,
+					0,
+					2 * Math.PI
+				);
+				ctx.fill();
+			}
+		}
+
+		ctx.restore();
+	}
+
+	function runPoseDetection() {
+		if (!poseLandmarker || !videoElement || !showSkeleton) {
+			poseAnimationId = requestAnimationFrame(runPoseDetection);
+			return;
+		}
+
+		if (videoElement.readyState >= 2) {
+			const results = poseLandmarker.detectForVideo(videoElement, performance.now());
+			drawNeonSkeleton(results);
+		}
+
+		poseAnimationId = requestAnimationFrame(runPoseDetection);
+	}
+
+	function startPoseDetection() {
+		if (poseAnimationId === null) {
+			runPoseDetection();
+		}
+	}
+
+	function stopPoseDetection() {
+		if (poseAnimationId !== null) {
+			cancelAnimationFrame(poseAnimationId);
+			poseAnimationId = null;
+		}
+		if (canvasElement) {
+			const ctx = canvasElement.getContext('2d');
+			ctx?.clearRect(0, 0, canvasElement.width, canvasElement.height);
+		}
+	}
 
 	// Initialize on mount
 	onMount(async () => {
@@ -54,6 +246,9 @@
 				return;
 			}
 
+			// Initialize MediaPipe PoseLandmarker
+			await initPoseLandmarker();
+
 			debugInfo = 'Tap "Start Camera" below';
 		} catch (e) {
 			debugInfo = `Error: ${e instanceof Error ? e.message : String(e)}`;
@@ -63,6 +258,8 @@
 
 	onDestroy(() => {
 		if (sessionTimer) clearInterval(sessionTimer);
+		stopPoseDetection();
+		poseLandmarker?.close();
 		client?.reset();
 	});
 
@@ -89,6 +286,9 @@
 			debugInfo = 'Creating session...';
 			await client.createSession();
 			debugInfo = 'Ready! Tap record when ready to jump';
+
+			// Start skeleton pose detection
+			startPoseDetection();
 
 			sessionTimer = setInterval(() => {
 				sessionTimeRemaining = Math.max(0, client?.getSessionTimeRemaining() ?? 0);
@@ -130,6 +330,13 @@
 		class="absolute inset-0 w-full h-full object-cover video-preview"
 	></video>
 
+	<!-- Skeleton Overlay Canvas -->
+	<canvas
+		bind:this={canvasElement}
+		class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+		style="z-index: 5;"
+	></canvas>
+
 	<!-- Overlay Container -->
 	<div class="absolute inset-0 flex flex-col">
 		<!-- Top Bar -->
@@ -141,8 +348,21 @@
 				</svg>
 			</button>
 
-			<!-- xLENS Badge -->
-			<div class="font-bebas text-lg tracking-wider text-yp-cyan/80">xLENS</div>
+			<!-- xLENS Badge + Skeleton Toggle -->
+			<div class="flex items-center gap-3">
+				<div class="font-bebas text-lg tracking-wider text-yp-cyan/80">xLENS</div>
+				{#if session && poseLandmarker}
+					<button
+						onclick={() => showSkeleton = !showSkeleton}
+						aria-label="Toggle skeleton"
+						class="p-1.5 rounded-full transition-all {showSkeleton ? 'bg-yp-cyan/20 text-yp-cyan' : 'bg-white/10 text-white/40'}"
+					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+						</svg>
+					</button>
+				{/if}
+			</div>
 
 			<!-- Session Timer -->
 			{#if session && clientState !== 'capturing'}
