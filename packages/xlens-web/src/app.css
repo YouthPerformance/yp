@@ -332,3 +332,278 @@ html, body {
 .shadow-glow-cyan-strong {
 	box-shadow: 0 0 30px rgba(0, 246, 224, 0.5), 0 0 60px rgba(0, 246, 224, 0.2);
 }
+
+/* ─────────────────────────────────────────────────────────
+   GEMINI GLOW - Perimeter Wave Effect
+   ───────────────────────────────────────────────────────── */
+
+.gemini-glow-container {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 100;
+	overflow: hidden;
+}
+
+/* The racing border glow */
+.gemini-perimeter {
+	position: absolute;
+	inset: 0;
+	border-radius: 0;
+}
+
+.gemini-perimeter::before {
+	content: '';
+	position: absolute;
+	inset: -2px;
+	background: conic-gradient(
+		from var(--gemini-angle, 0deg),
+		transparent 0deg,
+		transparent 60deg,
+		#00f6e0 120deg,
+		#00f6e0 180deg,
+		transparent 240deg,
+		transparent 360deg
+	);
+	animation: gemini-spin 1.5s linear infinite;
+	filter: blur(4px);
+}
+
+.gemini-perimeter::after {
+	content: '';
+	position: absolute;
+	inset: -1px;
+	background: conic-gradient(
+		from var(--gemini-angle, 0deg),
+		transparent 0deg,
+		transparent 90deg,
+		#00f6e0 135deg,
+		#00f6e0 180deg,
+		transparent 225deg,
+		transparent 360deg
+	);
+	animation: gemini-spin 1.5s linear infinite;
+}
+
+@keyframes gemini-spin {
+	from { --gemini-angle: 0deg; }
+	to { --gemini-angle: 360deg; }
+}
+
+/* Fallback for browsers without @property */
+@supports not (background: conic-gradient(from 0deg, red, blue)) {
+	.gemini-perimeter::before,
+	.gemini-perimeter::after {
+		animation: gemini-spin-fallback 1.5s linear infinite;
+		background: linear-gradient(90deg, transparent, #00f6e0, transparent);
+	}
+
+	@keyframes gemini-spin-fallback {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+}
+
+/* Inner glow effect */
+.gemini-inner-glow {
+	position: absolute;
+	inset: 0;
+	box-shadow: inset 0 0 60px rgba(0, 246, 224, 0.2);
+	animation: gemini-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gemini-pulse {
+	0%, 100% {
+		box-shadow: inset 0 0 60px rgba(0, 246, 224, 0.15);
+	}
+	50% {
+		box-shadow: inset 0 0 100px rgba(0, 246, 224, 0.3);
+	}
+}
+
+/* The snap-in effect when result arrives */
+.gemini-snap {
+	animation: gemini-snap-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes gemini-snap-in {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(0.95);
+		box-shadow: inset 0 0 200px rgba(0, 246, 224, 0.8);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.5);
+		box-shadow: inset 0 0 300px rgba(0, 246, 224, 1);
+	}
+}
+
+/* Corner accent lights */
+.gemini-corner {
+	position: absolute;
+	width: 80px;
+	height: 80px;
+	opacity: 0.8;
+}
+
+.gemini-corner-tl {
+	top: 0;
+	left: 0;
+	background: radial-gradient(ellipse at top left, rgba(0, 246, 224, 0.4), transparent 70%);
+}
+
+.gemini-corner-tr {
+	top: 0;
+	right: 0;
+	background: radial-gradient(ellipse at top right, rgba(0, 246, 224, 0.4), transparent 70%);
+}
+
+.gemini-corner-bl {
+	bottom: 0;
+	left: 0;
+	background: radial-gradient(ellipse at bottom left, rgba(0, 246, 224, 0.4), transparent 70%);
+}
+
+.gemini-corner-br {
+	bottom: 0;
+	right: 0;
+	background: radial-gradient(ellipse at bottom right, rgba(0, 246, 224, 0.4), transparent 70%);
+}
+
+/* Scanning line effect */
+.gemini-scan-line {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(
+		90deg,
+		transparent 0%,
+		rgba(0, 246, 224, 0.3) 20%,
+		#00f6e0 50%,
+		rgba(0, 246, 224, 0.3) 80%,
+		transparent 100%
+	);
+	box-shadow: 0 0 20px #00f6e0, 0 0 40px rgba(0, 246, 224, 0.5);
+	animation: scan-vertical 2s ease-in-out infinite;
+}
+
+@keyframes scan-vertical {
+	0%, 100% { top: 10%; opacity: 0; }
+	10% { opacity: 1; }
+	90% { opacity: 1; }
+	100% { top: 90%; opacity: 0; }
+}
+
+/* Result reveal animation */
+.result-reveal {
+	animation: result-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes result-pop {
+	0% {
+		opacity: 0;
+		transform: scale(0.5);
+		filter: blur(20px);
+	}
+	60% {
+		opacity: 1;
+		transform: scale(1.1);
+		filter: blur(0);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+		filter: blur(0);
+	}
+}
+
+/* ─────────────────────────────────────────────────────────
+   SKELETON OVERLAY METRICS
+   ───────────────────────────────────────────────────────── */
+
+.skeleton-metric {
+	font-family: 'SF Mono', 'Monaco', monospace;
+	font-size: 0.65rem;
+	color: #00f6e0;
+	text-shadow: 0 0 8px rgba(0, 246, 224, 0.8);
+	background: rgba(0, 0, 0, 0.6);
+	padding: 2px 6px;
+	border-radius: 4px;
+	border: 1px solid rgba(0, 246, 224, 0.3);
+}
+
+.skeleton-angle {
+	font-family: 'SF Mono', 'Monaco', monospace;
+	font-size: 0.75rem;
+	color: #00f6e0;
+	text-shadow: 0 0 10px rgba(0, 246, 224, 0.9);
+}
+
+.skeleton-phase {
+	font-family: 'Bebas Neue', Impact, sans-serif;
+	font-size: 1.25rem;
+	letter-spacing: 0.15em;
+	color: #00f6e0;
+	text-shadow: 0 0 15px rgba(0, 246, 224, 0.8), 0 0 30px rgba(0, 246, 224, 0.4);
+	animation: phase-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes phase-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.7; }
+}
+
+/* Velocity vector arrow */
+.velocity-vector {
+	stroke: #00f6e0;
+	stroke-width: 2;
+	fill: none;
+	filter: drop-shadow(0 0 4px rgba(0, 246, 224, 0.8));
+}
+
+/* Height marker line */
+.height-marker {
+	stroke: rgba(0, 246, 224, 0.5);
+	stroke-width: 1;
+	stroke-dasharray: 8, 4;
+}
+
+.height-marker-label {
+	font-family: 'SF Mono', 'Monaco', monospace;
+	font-size: 0.875rem;
+	fill: #00f6e0;
+	filter: drop-shadow(0 0 6px rgba(0, 246, 224, 0.8));
+}
+
+/* Ghost trail effect */
+.skeleton-ghost {
+	opacity: 0.15;
+	filter: blur(2px);
+}
+
+/* G-Force meter */
+.gforce-meter {
+	font-family: 'Bebas Neue', Impact, sans-serif;
+	background: rgba(0, 0, 0, 0.7);
+	border: 1px solid rgba(0, 246, 224, 0.4);
+	border-radius: 8px;
+	padding: 4px 12px;
+}
+
+.gforce-value {
+	font-size: 1.5rem;
+	color: #00f6e0;
+	text-shadow: 0 0 10px rgba(0, 246, 224, 0.8);
+}
+
+.gforce-label {
+	font-size: 0.75rem;
+	color: rgba(255, 255, 255, 0.5);
+	letter-spacing: 0.1em;
+}

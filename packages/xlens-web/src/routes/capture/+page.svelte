@@ -28,6 +28,16 @@
 	let poseLandmarker = $state<PoseLandmarker | null>(null);
 	let poseAnimationId: number | null = null;
 	let showSkeleton = $state(true);
+	let showMetrics = $state(true);
+
+	// Metrics tracking
+	let kneeAngle = $state(0);
+	let hipHeight = $state(0);
+	let baselineHipHeight = $state(0);
+	let jumpPhase = $state<'READY' | 'LOAD' | 'EXPLODE' | 'FLIGHT' | 'LAND'>('READY');
+	let peakJumpHeight = $state(0);
+	let previousHipY = $state(0);
+	let velocity = $state(0);
 
 	// Calibration state
 	let isCalibrated = $state(true);
@@ -66,6 +76,58 @@
 		// Right leg
 		[24, 26], [26, 28], [28, 30], [28, 32], [30, 32]
 	];
+
+	// Calculate angle between three points
+	function calculateAngle(
+		a: { x: number; y: number },
+		b: { x: number; y: number },
+		c: { x: number; y: number }
+	): number {
+		const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+		let angle = Math.abs(radians * 180 / Math.PI);
+		if (angle > 180) angle = 360 - angle;
+		return angle;
+	}
+
+	// Detect jump phase based on hip position and velocity
+	function detectJumpPhase(currentHipY: number, prevHipY: number): 'READY' | 'LOAD' | 'EXPLODE' | 'FLIGHT' | 'LAND' {
+		const verticalVelocity = prevHipY - currentHipY; // Positive = moving up
+		velocity = verticalVelocity * 100; // Scale for display
+
+		// Set baseline on first detection
+		if (baselineHipHeight === 0) {
+			baselineHipHeight = currentHipY;
+			return 'READY';
+		}
+
+		const heightDiff = baselineHipHeight - currentHipY;
+
+		// Loading (crouching down)
+		if (heightDiff < -0.02 && verticalVelocity < 0) {
+			return 'LOAD';
+		}
+
+		// Exploding (rapid upward movement)
+		if (verticalVelocity > 0.015) {
+			return 'EXPLODE';
+		}
+
+		// Flight (above baseline, moving slowly)
+		if (heightDiff > 0.03 && Math.abs(verticalVelocity) < 0.01) {
+			// Track peak height
+			if (heightDiff > peakJumpHeight) {
+				peakJumpHeight = heightDiff;
+			}
+			return 'FLIGHT';
+		}
+
+		// Landing (coming down)
+		if (verticalVelocity < -0.01 && heightDiff > 0) {
+			return 'LAND';
+		}
+
+		return 'READY';
+	}
 
 	async function initPoseLandmarker() {
 		try {
@@ -193,6 +255,43 @@
 			}
 		}
 
+		// Calculate and display metrics
+		if (showMetrics) {
+			// Key landmark indices: 23=left hip, 24=right hip, 25=left knee, 26=right knee, 27=left ankle, 28=right ankle
+			const leftHip = landmarks[23];
+			const rightHip = landmarks[24];
+			const leftKnee = landmarks[25];
+			const rightKnee = landmarks[26];
+			const leftAnkle = landmarks[27];
+			const rightAnkle = landmarks[28];
+
+			// Calculate knee angle (using right leg as primary)
+			if (rightHip?.visibility > 0.5 && rightKnee?.visibility > 0.5 && rightAnkle?.visibility > 0.5) {
+				kneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
+
+				// Draw knee angle arc and label
+				const kneeX = rightKnee.x * canvasElement.width;
+				const kneeY = rightKnee.y * canvasElement.height;
+
+				// Angle label
+				ctx.save();
+				ctx.shadowColor = NEON_COLOR;
+				ctx.shadowBlur = 8;
+				ctx.font = 'bold 14px "SF Mono", Monaco, monospace';
+				ctx.fillStyle = NEON_COLOR;
+				ctx.fillText(`${Math.round(kneeAngle)}°`, kneeX + 15, kneeY - 10);
+				ctx.restore();
+			}
+
+			// Calculate hip height and detect jump phase
+			if (leftHip?.visibility > 0.5 && rightHip?.visibility > 0.5) {
+				const avgHipY = (leftHip.y + rightHip.y) / 2;
+				jumpPhase = detectJumpPhase(avgHipY, previousHipY);
+				previousHipY = avgHipY;
+				hipHeight = avgHipY;
+			}
+		}
+
 		ctx.restore();
 	}
 
@@ -305,6 +404,10 @@
 
 	async function startRecording() {
 		if (!client) return;
+		// Reset metrics for new recording
+		peakJumpHeight = 0;
+		baselineHipHeight = 0;
+		jumpPhase = 'READY';
 		await client.startCapture();
 	}
 
@@ -337,6 +440,53 @@
 		style="z-index: 5;"
 	></canvas>
 
+	<!-- Metrics HUD Overlay -->
+	{#if showSkeleton && showMetrics && session && clientState !== 'idle'}
+		<div class="absolute top-20 left-4 right-4 pointer-events-none" style="z-index: 10;">
+			<div class="flex justify-between items-start">
+				<!-- Left side metrics -->
+				<div class="space-y-2">
+					<!-- Phase indicator -->
+					<div class="glass-card px-3 py-2 inline-block">
+						<div class="text-[10px] text-white/40 tracking-wider mb-1">PHASE</div>
+						<div class="skeleton-phase text-lg">{jumpPhase}</div>
+					</div>
+
+					<!-- Knee angle -->
+					{#if kneeAngle > 0}
+						<div class="glass-card px-3 py-2 inline-block">
+							<div class="text-[10px] text-white/40 tracking-wider mb-1">KNEE</div>
+							<div class="text-xl font-mono text-yp-cyan glow-text">{Math.round(kneeAngle)}°</div>
+						</div>
+					{/if}
+				</div>
+
+				<!-- Right side metrics -->
+				<div class="space-y-2 text-right">
+					<!-- Velocity -->
+					{#if Math.abs(velocity) > 0.5}
+						<div class="glass-card px-3 py-2 inline-block">
+							<div class="text-[10px] text-white/40 tracking-wider mb-1">VELOCITY</div>
+							<div class="text-lg font-mono {velocity > 0 ? 'text-green-400' : 'text-red-400'}">
+								{velocity > 0 ? '↑' : '↓'} {Math.abs(velocity).toFixed(1)}
+							</div>
+						</div>
+					{/if}
+
+					<!-- Peak height during recording -->
+					{#if clientState === 'capturing' && peakJumpHeight > 0.02}
+						<div class="glass-card px-3 py-2 inline-block">
+							<div class="text-[10px] text-white/40 tracking-wider mb-1">PEAK</div>
+							<div class="text-xl font-mono text-yp-cyan glow-text">
+								{(peakJumpHeight * 100).toFixed(0)}
+							</div>
+						</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+	{/if}
+
 	<!-- Overlay Container -->
 	<div class="absolute inset-0 flex flex-col">
 		<!-- Top Bar -->
@@ -348,10 +498,11 @@
 				</svg>
 			</button>
 
-			<!-- xLENS Badge + Skeleton Toggle -->
-			<div class="flex items-center gap-3">
+			<!-- xLENS Badge + Toggles -->
+			<div class="flex items-center gap-2">
 				<div class="font-bebas text-lg tracking-wider text-yp-cyan/80">xLENS</div>
 				{#if session && poseLandmarker}
+					<!-- Skeleton toggle -->
 					<button
 						onclick={() => showSkeleton = !showSkeleton}
 						aria-label="Toggle skeleton"
@@ -359,6 +510,17 @@
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+						</svg>
+					</button>
+					<!-- Metrics toggle -->
+					<button
+						onclick={() => showMetrics = !showMetrics}
+						aria-label="Toggle metrics"
+						class="p-1.5 rounded-full transition-all {showMetrics && showSkeleton ? 'bg-yp-cyan/20 text-yp-cyan' : 'bg-white/10 text-white/40'}"
+						disabled={!showSkeleton}
+					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
 						</svg>
 					</button>
 				{/if}

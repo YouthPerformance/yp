@@ -15,6 +15,22 @@
 	let pollInterval: ReturnType<typeof setInterval> | null = null;
 	let convexUrl = '';
 
+	// Animation states
+	let showGeminiGlow = $state(true);
+	let showResultReveal = $state(false);
+	let snapAnimation = $state(false);
+
+	// Scanning messages that cycle
+	const scanMessages = [
+		'Analyzing Biomechanics...',
+		'Detecting Jump Phases...',
+		'Calculating Vertical...',
+		'Measuring Peak Height...',
+		'Processing Motion Data...'
+	];
+	let currentMessageIndex = $state(0);
+	let messageInterval: ReturnType<typeof setInterval> | null = null;
+
 	// Fetch result on mount
 	onMount(() => {
 		if (!browser) return;
@@ -22,6 +38,11 @@
 		// Get Convex URL and convert to HTTP endpoint
 		const cloudUrl = import.meta.env.VITE_CONVEX_URL || '';
 		convexUrl = cloudUrl.replace('.convex.cloud', '.convex.site');
+
+		// Cycle scanning messages
+		messageInterval = setInterval(() => {
+			currentMessageIndex = (currentMessageIndex + 1) % scanMessages.length;
+		}, 2000);
 
 		// Start polling immediately
 		pollInterval = setInterval(async () => {
@@ -33,6 +54,7 @@
 
 		return () => {
 			if (pollInterval) clearInterval(pollInterval);
+			if (messageInterval) clearInterval(messageInterval);
 		};
 	});
 
@@ -68,6 +90,21 @@
 					if (pollInterval) {
 						clearInterval(pollInterval);
 						pollInterval = null;
+					}
+					if (messageInterval) {
+						clearInterval(messageInterval);
+						messageInterval = null;
+					}
+
+					// Trigger the snap animation then reveal
+					if (data.status === 'complete' && showGeminiGlow) {
+						snapAnimation = true;
+						setTimeout(() => {
+							showGeminiGlow = false;
+							showResultReveal = true;
+						}, 600); // Match snap animation duration
+					} else {
+						showGeminiGlow = false;
 					}
 				}
 			} else {
@@ -134,6 +171,26 @@
 </script>
 
 <div class="min-h-screen p-6 relative overflow-hidden">
+	<!-- Gemini Glow Effect (during processing) -->
+	{#if (result?.status === 'processing' || loading) && showGeminiGlow}
+		<div class="gemini-glow-container" class:gemini-snap={snapAnimation}>
+			<!-- Racing perimeter glow -->
+			<div class="gemini-perimeter"></div>
+
+			<!-- Inner pulse -->
+			<div class="gemini-inner-glow"></div>
+
+			<!-- Corner accents -->
+			<div class="gemini-corner gemini-corner-tl"></div>
+			<div class="gemini-corner gemini-corner-tr"></div>
+			<div class="gemini-corner gemini-corner-bl"></div>
+			<div class="gemini-corner gemini-corner-br"></div>
+
+			<!-- Scanning line -->
+			<div class="gemini-scan-line"></div>
+		</div>
+	{/if}
+
 	<!-- Background Effects -->
 	<div class="absolute inset-0 pointer-events-none">
 		<div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-yp-cyan/5 rounded-full blur-[120px]"></div>
@@ -194,7 +251,7 @@
 				<div class="p-8">
 					<!-- Height Display -->
 					{#if result.height}
-						<div class="text-center mb-8">
+						<div class="text-center mb-8" class:result-reveal={showResultReveal}>
 							<div class="result-number">
 								{result.height.inches.toFixed(1)}
 							</div>
@@ -204,14 +261,37 @@
 							</div>
 						</div>
 					{:else if result.status === 'processing'}
-						<div class="text-center mb-8 py-4">
-							<div class="w-20 h-20 relative mx-auto mb-6">
-								<div class="absolute inset-0 rounded-full border-2 border-yp-cyan/20"></div>
-								<div class="absolute inset-0 rounded-full border-2 border-transparent border-t-yp-cyan animate-spin"></div>
-								<div class="absolute inset-2 rounded-full bg-yp-cyan/5"></div>
+						<div class="text-center mb-8 py-8">
+							<!-- Pulsing scan icon -->
+							<div class="w-24 h-24 relative mx-auto mb-8">
+								<div class="absolute inset-0 rounded-full border-2 border-yp-cyan/30"></div>
+								<div class="absolute inset-0 rounded-full border-2 border-transparent border-t-yp-cyan animate-spin" style="animation-duration: 1s;"></div>
+								<div class="absolute inset-2 rounded-full border border-yp-cyan/20"></div>
+								<div class="absolute inset-4 rounded-full bg-yp-cyan/10 animate-pulse"></div>
+								<!-- Center icon -->
+								<div class="absolute inset-0 flex items-center justify-center">
+									<svg class="w-10 h-10 text-yp-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+									</svg>
+								</div>
 							</div>
-							<div class="font-bebas text-3xl tracking-wide text-white mb-2">ANALYZING...</div>
-							<div class="text-sm text-white/50">AI is measuring your vertical</div>
+
+							<!-- Cycling message -->
+							<div class="font-bebas text-2xl tracking-widest text-yp-cyan mb-3 glow-text">
+								{scanMessages[currentMessageIndex].toUpperCase()}
+							</div>
+
+							<!-- Sub-message -->
+							<div class="text-sm text-white/40 tracking-wide">
+								xLENS AI Processing
+							</div>
+
+							<!-- Fake progress dots -->
+							<div class="flex items-center justify-center gap-2 mt-6">
+								<div class="w-2 h-2 rounded-full bg-yp-cyan animate-pulse" style="animation-delay: 0ms;"></div>
+								<div class="w-2 h-2 rounded-full bg-yp-cyan animate-pulse" style="animation-delay: 200ms;"></div>
+								<div class="w-2 h-2 rounded-full bg-yp-cyan animate-pulse" style="animation-delay: 400ms;"></div>
+							</div>
 						</div>
 					{:else if result.status === 'failed'}
 						<div class="text-center mb-8 py-4">
