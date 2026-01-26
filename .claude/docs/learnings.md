@@ -214,4 +214,71 @@ npx convex env set GOOGLE_AI_API_KEY "your-key"
 
 ---
 
-*Last updated: 2026-01-23*
+## MediaPipe Pose Detection
+
+### Setup with Svelte 5
+
+```svelte
+<script lang="ts">
+import {
+  PoseLandmarker,
+  FilesetResolver,
+  type PoseLandmarkerResult
+} from '@mediapipe/tasks-vision';
+
+let poseLandmarker = $state<PoseLandmarker | null>(null);
+let poseAnimationId: number | null = null;
+
+async function initPoseLandmarker() {
+  const vision = await FilesetResolver.forVisionTasks(
+    'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+  );
+  poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+    baseOptions: {
+      modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task',
+      delegate: 'GPU'
+    },
+    runningMode: 'VIDEO',
+    numPoses: 1
+  });
+}
+
+function runPoseDetection() {
+  if (!poseLandmarker || !videoElement) {
+    poseAnimationId = requestAnimationFrame(runPoseDetection);
+    return;
+  }
+
+  if (videoElement.readyState >= 2) {
+    const results = poseLandmarker.detectForVideo(videoElement, performance.now());
+    drawSkeleton(results);
+  }
+
+  poseAnimationId = requestAnimationFrame(runPoseDetection);
+}
+</script>
+```
+
+### Neon Glow Effect
+
+Use canvas `shadowBlur` for glow:
+
+```typescript
+const NEON_COLOR = '#00f6e0';
+
+ctx.shadowColor = NEON_COLOR;
+ctx.shadowBlur = 20;
+ctx.strokeStyle = NEON_COLOR;
+ctx.lineWidth = 3;
+```
+
+### Key Points
+
+- Use `pose_landmarker_lite` for mobile performance
+- `delegate: 'GPU'` for hardware acceleration
+- `runningMode: 'VIDEO'` for real-time detection
+- Always cleanup: `cancelAnimationFrame(poseAnimationId)` and `poseLandmarker.close()`
+
+---
+
+*Last updated: 2026-01-25*
