@@ -21,12 +21,12 @@
 				/>
 			</div>
 			
-			<!-- xLENS Title -->
+			<!-- YP JUMP Title -->
 			<h1 class="font-bebas text-6xl tracking-wider text-gradient mb-2">
-				xLENS
+				YP JUMP
 			</h1>
 			<p class="text-white/50 text-sm tracking-widest uppercase">
-				AI-Verified Jump Measurement
+				AI-Verified Measurement
 			</p>
 		</div>
 

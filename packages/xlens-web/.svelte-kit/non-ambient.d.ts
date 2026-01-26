@@ -40,6 +40,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/" | "/capture" | "/capture/" | "/result" | "/result/" | `/result/${string}` & {} | `/result/${string}/` & {} | "/setup" | "/setup/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): string & {};
+		Asset(): "/YP-LOGO.svg" | "/loadernew.mp4" | "/loadernew.webm" | string & {};
 	}
 }

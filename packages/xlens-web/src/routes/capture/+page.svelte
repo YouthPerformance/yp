@@ -437,7 +437,7 @@
 	<canvas
 		bind:this={canvasElement}
 		class="absolute inset-0 w-full h-full object-cover pointer-events-none"
-		style="z-index: 5;"
+		style="z-index: 5; transform: scaleX(-1);"
 	></canvas>
 
 	<!-- Metrics HUD Overlay -->
@@ -498,9 +498,9 @@
 				</svg>
 			</button>
 
-			<!-- xLENS Badge + Toggles -->
+			<!-- YP JUMP Badge + Toggles -->
 			<div class="flex items-center gap-2">
-				<div class="font-bebas text-lg tracking-wider text-yp-cyan/80">xLENS</div>
+				<div class="font-bebas text-lg tracking-wider text-yp-cyan/80">YP JUMP</div>
 				{#if session && poseLandmarker}
 					<!-- Skeleton toggle -->
 					<button

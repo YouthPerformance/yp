@@ -283,7 +283,7 @@
 
 							<!-- Sub-message -->
 							<div class="text-sm text-white/40 tracking-wide">
-								xLENS AI Processing
+								YP JUMP AI Processing
 							</div>
 
 							<!-- Fake progress dots -->

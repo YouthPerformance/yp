@@ -71,6 +71,7 @@ declare module '$env/static/private' {
 	export const PAGER: string;
 	export const npm_package_devDependencies_svelte: string;
 	export const TMUX: string;
+	export const npm_package_dependencies__mediapipe_tasks_vision: string;
 	export const _CE_CONDA: string;
 	export const LSCOLORS: string;
 	export const npm_config_frozen_lockfile: string;
@@ -209,6 +210,7 @@ declare module '$env/dynamic/private' {
 		PAGER: string;
 		npm_package_devDependencies_svelte: string;
 		TMUX: string;
+		npm_package_dependencies__mediapipe_tasks_vision: string;
 		_CE_CONDA: string;
 		LSCOLORS: string;
 		npm_config_frozen_lockfile: string;

@@ -50,8 +50,8 @@
 </script>
 
 <svelte:head>
-	<title>xLENS - AI-Verified Jump Measurement | Youth Performance</title>
-	<meta name="description" content="Measure your vertical jump with AI-powered precision. Record, analyze, and track your athletic performance with xLENS by Youth Performance." />
+	<title>YP JUMP - AI-Verified Jump Measurement | Youth Performance</title>
+	<meta name="description" content="Measure your vertical jump with AI-powered precision. Record, analyze, and track your athletic performance with YP JUMP." />
 	<meta name="theme-color" content="#0a0a0a" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -93,10 +93,10 @@
 		<!-- Brand -->
 		<div class="text-center">
 			<div class="font-bebas text-4xl tracking-[0.2em] text-yp-cyan glow-text mb-2">
-				xLENS
+				YP JUMP
 			</div>
 			<div class="text-white/40 text-sm tracking-wider">
-				BY YOUTH PERFORMANCE
+				AI-VERIFIED MEASUREMENT
 			</div>
 		</div>
 
