@@ -42,6 +42,7 @@ const PUBLIC_PREFIXES = [
   "/playbook", // Playbook modules - public content
   "/parent", // Parent onboarding flow - no auth required
   "/handoff", // Baton pass handoff routes
+  "/basketball", // SEO content pages - public
 ];
 
 function isPublicRoute(pathname: string): boolean {
