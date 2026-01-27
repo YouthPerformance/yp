@@ -1,14 +1,8 @@
-import { useEffect, useRef, useState, Suspense, lazy, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { BetaBadge } from "@yp/ui";
 import { track, EVENTS } from "../lib/analytics";
 import YPLoader from "../components/YPLoader";
 import "./LP.css";
-
-// Lazy load Spline for better initial page load
-const Spline = lazy(() => import('@splinetool/react-spline'));
-
-// 3D Obsidian Wolf - Spline scene URL (.splinecode for React component)
-const WOLF_SPLINE_URL = "https://prod.spline.design/PGI70x0SHCCIPlZ1/scene.splinecode";
 
 // Convex HTTP API for lead capture (uses yp-alpha backend)
 const CONVEX_URL = import.meta.env.VITE_CONVEX_URL || "https://wry-cuttlefish-942.convex.cloud";
@@ -151,9 +145,6 @@ export default function LP() {
   // Pack status state (starts with defaults, fetches real data)
   const [packStatus, setPackStatus] = useState(DEFAULT_PACK_STATUS);
   const [packStatusLoaded, setPackStatusLoaded] = useState(false);
-
-  // 3D Wolf state
-  const [wolfLoaded, setWolfLoaded] = useState(false);
 
   // Content reveal state (triggered after loader completes)
   const [showContent, setShowContent] = useState(false);
@@ -658,37 +649,6 @@ export default function LP() {
             <span className="lp-header-spots">{spotsLeft} spots left</span>
           </div>
         </header>
-
-        {/* 3D Obsidian Wolf - Top Layer, Between Logo and Hero */}
-        <div
-          className="lp-wolf-container"
-          style={{
-            transform: `translateX(-50%) rotateY(${(mousePos.x - 0.5) * 45}deg) rotateX(${(0.5 - mousePos.y) * 25}deg)`,
-          }}
-        >
-          {/* Loading placeholder */}
-          {!wolfLoaded && (
-            <div className="lp-wolf-loading">
-              <div className="lp-wolf-pulse" />
-            </div>
-          )}
-          {/* Spline React Component - much lighter than iframe */}
-          <Suspense fallback={null}>
-            <Spline
-              scene={WOLF_SPLINE_URL}
-              onLoad={() => setWolfLoaded(true)}
-              className={`lp-wolf-spline ${wolfLoaded ? 'loaded' : ''}`}
-              style={{
-                width: '100%',
-                height: '100%',
-                background: 'transparent',
-                opacity: wolfLoaded ? 1 : 0,
-                transition: 'opacity 0.8s ease-out',
-                pointerEvents: 'none', // Disable direct Spline interaction
-              }}
-            />
-          </Suspense>
-        </div>
 
         {/* Main Content */}
         <main className="lp-main">
