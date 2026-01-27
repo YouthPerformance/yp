@@ -29,7 +29,7 @@ export class GeminiVisualGenerator {
 
   constructor(apiKey: string) {
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
   }
 
   async generateVisual(page: {
@@ -95,7 +95,22 @@ Rules:
         // Rate limiting for Gemini
         await new Promise(resolve => setTimeout(resolve, 500));
       } catch (error) {
-        console.error(`   ❌ Visual generation failed for ${page.id}:`, error);
+        console.error(`   ⚠️ Visual generation failed for ${page.id}, using placeholder`);
+        // Create placeholder visual for manual filling later
+        const placeholder: VisualAsset = {
+          type: page.content_type === 'qa' ? 'comparison_table' : 'drill_flow',
+          title: `[PLACEHOLDER] ${page.title}`,
+          data: {
+            _placeholder: true,
+            _error: error instanceof Error ? error.message : String(error),
+            _page_id: page.id,
+            _page_title: page.title,
+            _content_type: page.content_type,
+            _instructions: 'Fill this visual manually or regenerate with higher API quota',
+          },
+          generated_at: new Date().toISOString(),
+        };
+        results.set(page.id, placeholder);
       }
     }
 
@@ -114,14 +129,25 @@ export async function addVisualsToPages(
   const visuals = await generator.batchGenerate(pages as any);
 
   // Write visuals to each page's JSON
+  let placeholderCount = 0;
   for (const page of pages) {
     const visual = visuals.get(page.id);
     if (visual) {
       // Add visual to page data
       (page as any).visual_asset = visual;
-      console.log(`   ✅ ${page.slug} → ${visual.type}`);
+      const isPlaceholder = visual.data?._placeholder === true;
+      if (isPlaceholder) {
+        placeholderCount++;
+        console.log(`   📝 ${page.slug} → PLACEHOLDER (fill later)`);
+      } else {
+        console.log(`   ✅ ${page.slug} → ${visual.type}`);
+      }
     }
   }
 
-  console.log(`\n✅ Generated ${visuals.size}/${pages.length} visuals`);
+  const generatedCount = visuals.size - placeholderCount;
+  console.log(`\n✅ Generated ${generatedCount}/${pages.length} visuals`);
+  if (placeholderCount > 0) {
+    console.log(`📝 ${placeholderCount} placeholders created (fill manually later)`);
+  }
 }
