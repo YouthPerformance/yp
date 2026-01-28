@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "pnpm install --filter=@yp/web-academy --filter=@yp/alpha --filter=@yp/brand-assets",
-  "buildCommand": "cp -r packages/brand-assets apps/web-academy/public/brand-assets && pnpm turbo build --filter=@yp/web-academy"
+  "buildCommand": "cp -r ../../packages/brand-assets ./public/brand-assets && pnpm turbo build --filter=@yp/web-academy"
 }
