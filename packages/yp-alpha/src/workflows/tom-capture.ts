@@ -133,9 +133,16 @@ Questions: Requests for information, clarifications`,
 
     if (classification.requiresResponse && source === "whatsapp") {
       responseMessage = await step.run("generate-response", async (): Promise<string> => {
-        const { generateStructured } = await import("../ai/structured");
-        const { buildTomSystemPrompt } = await import("../tom/voice");
+        // Check for greeting first - return onboarding message
+        const { getGreetingResponse, buildTomSystemPrompt } = await import("../tom/voice");
+        const greetingResponse = getGreetingResponse(userId as TomUserId, content);
 
+        if (greetingResponse) {
+          return greetingResponse;
+        }
+
+        // Not a greeting - generate contextual response
+        const { generateStructured } = await import("../ai/structured");
         const systemPrompt = buildTomSystemPrompt(userId as TomUserId, content);
 
         const response = await generateStructured(

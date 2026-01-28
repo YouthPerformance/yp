@@ -266,6 +266,114 @@ export function getAllTomVoices(): TomVoice[] {
 }
 
 // ─────────────────────────────────────────────────────────────
+// GREETING DETECTION & ONBOARDING
+// ─────────────────────────────────────────────────────────────
+
+const GREETING_PATTERNS = [
+  /^hi\s*(tom)?$/i,
+  /^hey\s*(tom)?$/i,
+  /^hello\s*(tom)?$/i,
+  /^yo\s*(tom)?$/i,
+  /^what('s| is) up\s*(tom)?$/i,
+  /^sup\s*(tom)?$/i,
+  /^tom$/i,
+];
+
+/**
+ * Check if message is a simple greeting
+ */
+export function isGreeting(message: string): boolean {
+  const trimmed = message.trim();
+  return GREETING_PATTERNS.some((p) => p.test(trimmed));
+}
+
+/**
+ * Onboarding/greeting responses per user
+ */
+export const GREETING_RESPONSES: Record<TomUserId, string> = {
+  mike: `Hey Boss! 👋 Tom here, your Chief of Staff.
+
+Here's what I can do for you:
+
+📋 *Quick Capture*
+Just tell me tasks, notes, or ideas—I'll file them.
+
+🎯 *Blockers First*
+Ask "what's blocking?" for a status check.
+
+📊 *The Radar*
+Ask "how's the team?" for a pulse on James/Adam/Annie.
+
+🌅 *Morning Briefing*
+I'll send you priorities at 6am daily.
+
+What's on your mind?`,
+
+  james: `Hey Legend! 👋 Tom here, your creative ops partner.
+
+Here's what I can do for you:
+
+🎨 *Product Visualization*
+Describe an invention—I'll sketch it with Gemini.
+"Sketch a rubber grip for ankle bands"
+
+📚 *Research Digest*
+Send me papers/studies—I'll summarize for Dad Coach + Pro audiences.
+
+💡 *Idea Capture*
+Brain dump anytime—I'll organize and file it.
+
+🌅 *Morning Briefing*
+Priorities + calendar at 6am daily.
+
+What are we building today?`,
+
+  adam: `What's good, Director! 👋 Tom here, running point on your empire.
+
+Here's what I can do for you:
+
+🔥 *Trend Pulse*
+Ask "what's trending?" for NBA/basketball content opportunities.
+
+📱 *Content Calendar*
+Track your drops and course schedule.
+
+🏀 *Empire Check*
+Ask about Neo Ball sales, trainer updates, brand metrics.
+
+🌅 *Morning Briefing*
+Trends + priorities at 6am daily.
+
+What's the play?`,
+
+  annie: `Hey Shield! 👋 Tom here, your ops backup.
+
+Here's what I can do for you:
+
+✍️ *Apple-Style Responses*
+Send me a customer situation—I'll draft a premium reply.
+
+📋 *Policy Writer*
+I can rewrite any policy in YP Voice.
+
+🛡️ *Issue Triage*
+Forward problems—I'll only escalate the critical ones.
+
+🌅 *Morning Briefing*
+Priorities + any overnight issues at 6am daily.
+
+How can we wow someone today?`,
+};
+
+/**
+ * Get greeting response for user (returns null if not a greeting)
+ */
+export function getGreetingResponse(userId: TomUserId, message: string): string | null {
+  if (!isGreeting(message)) return null;
+  return GREETING_RESPONSES[userId];
+}
+
+// ─────────────────────────────────────────────────────────────
 // EXAMPLE OUTPUTS (For Reference)
 // ─────────────────────────────────────────────────────────────
 
