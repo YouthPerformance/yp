@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════
-// ADMIN LAYOUT
-// Simple layout for admin pages (no BottomNav)
+// ADMIN LAYOUT - SERVER COMPONENT
+// Wraps admin routes - Voice Command Center, etc.
+// Force dynamic to avoid SSG issues with Convex hooks
 // ═══════════════════════════════════════════════════════════
 
 import { AdminLayoutClient } from "./layout-client";

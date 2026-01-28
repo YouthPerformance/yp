@@ -35,10 +35,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://app.youthperforman
 const ANSWER_ENGINE_CONVEX_URL = "https://impressive-lynx-636.convex.cloud";
 const client = new ConvexHttpClient(ANSWER_ENGINE_CONVEX_URL);
 
-// OpenAI for query embeddings
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// OpenAI for query embeddings (lazy initialization to avoid build errors)
+let _openai: OpenAI | null = null;
+const getOpenAI = () => {
+  if (!_openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OPENAI_API_KEY environment variable is required");
+    }
+    _openai = new OpenAI({ apiKey });
+  }
+  return _openai;
+};
 
 const EMBEDDING_MODEL = "text-embedding-3-small";
 const EMBEDDING_DIMENSIONS = 1536;
@@ -98,7 +106,7 @@ interface ArticleResult {
  * Generate embedding for a search query
  */
 async function embedQuery(query: string): Promise<number[]> {
-  const response = await openai.embeddings.create({
+  const response = await getOpenAI().embeddings.create({
     model: EMBEDDING_MODEL,
     input: query,
     dimensions: EMBEDDING_DIMENSIONS,

@@ -64,7 +64,7 @@ export const triggerReanalysis = action({
 // ─────────────────────────────────────────────────────────────────
 export const reanalyzeTestVideos = action({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<unknown> => {
     // Jump configurations with corrected heights
     // Based on Convex data inspection:
     // Row 1: 8:37 PM - Subject 1 (6'2" = 74") - mock height was 22.7"

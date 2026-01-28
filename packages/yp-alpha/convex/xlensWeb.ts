@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { v } from "convex/values";
-import { mutation, query, action, internalMutation, internalAction } from "./_generated/server";
+import { mutation, query, action, internalMutation, internalAction, internalQuery } from "./_generated/server";
 import { internal, api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 
@@ -64,13 +64,15 @@ export const createWebJump = mutation({
 
     // Create jump record
     const jumpId = await ctx.db.insert("xlensWebJumps", {
-      sessionId: sessionIdTyped,
+      sessionId: sessionIdTyped as unknown as string,
       deviceId: args.deviceId,
-      videoStorageId: args.videoStorageId,
-      sensorStorageId,
+      storageId: args.videoStorageId as unknown as string,
+      durationMs: 0, // Will be updated after analysis
+      fps: 30, // Default fps
+      nonce: session.nonce || "",
+      nonceDisplay: session.nonceDisplay || "",
       verificationTier: "measured", // Start as measured, upgrade after analysis
       status: "processing",
-      proofPayload: args.proofPayload,
       createdAt: now,
     });
 
@@ -105,8 +107,8 @@ export const getWebJump = query({
 
     // Get video URL
     let videoUrl: string | null = null;
-    if (jump.videoStorageId) {
-      videoUrl = await ctx.storage.getUrl(jump.videoStorageId);
+    if (jump.storageId) {
+      videoUrl = await ctx.storage.getUrl(jump.storageId);
     }
 
     return {
@@ -114,12 +116,10 @@ export const getWebJump = query({
       status: jump.status,
       verificationTier: jump.verificationTier,
       heightInches: jump.heightInches,
-      heightCm: jump.heightCm,
-      flightTimeMs: jump.flightTimeMs,
-      aiAnalysis: jump.aiAnalysis,
       videoUrl,
       createdAt: jump.createdAt,
       processedAt: jump.processedAt,
+      flags: jump.flags,
     };
   },
 });
@@ -140,12 +140,12 @@ export const analyzeJump = internalAction({
         jumpId: args.jumpId,
       });
 
-      if (!jump || !jump.videoStorageId) {
+      if (!jump || !jump.storageId) {
         throw new Error("Jump or video not found");
       }
 
       // Get video URL for Gemini
-      const videoUrl = await ctx.storage.getUrl(jump.videoStorageId);
+      const videoUrl = await ctx.storage.getUrl(jump.storageId);
       if (!videoUrl) {
         throw new Error("Could not get video URL");
       }
@@ -210,7 +210,7 @@ export const analyzeJump = internalAction({
 // ─────────────────────────────────────────────────────────────────
 // INTERNAL: Get Jump
 // ─────────────────────────────────────────────────────────────────
-export const getJumpInternal = query({
+export const getJumpInternal = internalQuery({
   args: {
     jumpId: v.id("xlensWebJumps"),
   },
@@ -251,12 +251,10 @@ export const updateJumpAnalysis = internalMutation({
   handler: async (ctx, args) => {
     await ctx.db.patch(args.jumpId, {
       heightInches: args.heightInches,
-      heightCm: args.heightCm,
-      flightTimeMs: args.flightTimeMs,
       verificationTier: args.verificationTier,
-      aiAnalysis: args.aiAnalysis,
       status: args.status,
       processedAt: Date.now(),
+      flags: args.aiAnalysis?.issues,
     });
   },
 });

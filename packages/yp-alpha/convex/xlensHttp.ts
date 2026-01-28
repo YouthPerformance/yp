@@ -163,7 +163,7 @@ export const analyzeJump = internalAction({
         // Use Gemini 3 Flash for video analysis with height calibration
         const geminiResult = await analyzeWithGemini(
           videoUrl,
-          jump.nonceDisplay,
+          (jump as { nonceDisplay?: string }).nonceDisplay || "",
           apiKey,
           args.userHeightInches
         );
@@ -519,9 +519,13 @@ export const reanalyzeJump = internalAction({
     console.log(`[xLENS] Re-analyzing jump ${args.jumpId} with corrected height: ${args.userHeightInches}"`);
 
     // Run analysis with corrected height
+    const storageId = (jump as { storageId?: string }).storageId;
+    if (!storageId) {
+      throw new Error(`Jump ${args.jumpId} has no storageId`);
+    }
     await ctx.runAction(internal.xlensHttp.analyzeJump, {
       jumpId: args.jumpId,
-      storageId: jump.storageId,
+      storageId,
       userHeightInches: args.userHeightInches,
     });
   },
@@ -571,7 +575,7 @@ export const updateJumpResult = internalMutation({
   },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.jumpId as any, {
-      heightInches: args.heightInches,
+      heightInches: args.heightInches ?? undefined,
       verificationTier: args.verificationTier,
       flags: args.flags,
       status: args.status,
