@@ -5,7 +5,14 @@
  * content generation and AI interactions.
  */
 
-export type ExpertId = "JAMES" | "ADAM" | "YP" | "TEAM_YP";
+/** Content expert IDs (athlete-facing) */
+export type ContentExpertId = "JAMES" | "ADAM" | "YP" | "TEAM_YP";
+
+/** COS expert IDs (internal team) */
+export type COSExpertId = "MIKE_COS" | "JAMES_COS" | "ADAM_COS" | "ANNIE_COS";
+
+/** All expert IDs */
+export type ExpertId = ContentExpertId | COSExpertId;
 
 export type ContentDomain =
   | "barefoot-training"
@@ -85,6 +92,26 @@ export interface ExpertVoice {
     url: string;
   };
 }
+
+/**
+ * Chief of Staff Voice Profile
+ * Extended voice profile for Tom COS instances
+ */
+export interface COSVoice extends Omit<ExpertVoice, "domains" | "credentials" | "defaultCTA"> {
+  /** Special tools this COS can trigger */
+  specialTools?: (
+    | "PRODUCT_VISUALIZATION"
+    | "TREND_SEARCH"
+    | "RESEARCH_DIGEST"
+    | "POLICY_DRAFT"
+    | "EXECUTIVE_SUMMARY"
+  )[];
+}
+
+/**
+ * Tom User ID type
+ */
+export type TomUserId = "mike" | "james" | "adam" | "annie";
 
 /**
  * Content generation request for a specific expert

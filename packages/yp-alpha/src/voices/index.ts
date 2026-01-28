@@ -5,27 +5,51 @@
  * domain, topic, and explicit assignment.
  */
 
+// Content Expert Voices (athlete-facing)
 export { adamHarringtonVoice } from "./adam-harrington";
 export { jamesScottVoice } from "./james-scott";
 export { preLaunchContentPlan, teamYPCategories, teamYPVoice } from "./team-yp";
-export * from "./types";
 export { ypBrandVoice } from "./yp-brand";
+
+// COS Voices (internal team - Tom)
+export { mikeDiCOSVoice } from "./mike-di-cos";
+export { jamesScottCOSVoice } from "./james-scott-cos";
+export { adamHarringtonCOSVoice } from "./adam-harrington-cos";
+export { annieOpsCOSVoice } from "./annie-ops-cos";
+
+// Types
+export * from "./types";
 
 import { adamHarringtonVoice } from "./adam-harrington";
 import { jamesScottVoice } from "./james-scott";
 import { teamYPVoice } from "./team-yp";
-import type { ContentDomain, ExpertId, ExpertVoice } from "./types";
 import { ypBrandVoice } from "./yp-brand";
+import { mikeDiCOSVoice } from "./mike-di-cos";
+import { jamesScottCOSVoice } from "./james-scott-cos";
+import { adamHarringtonCOSVoice } from "./adam-harrington-cos";
+import { annieOpsCOSVoice } from "./annie-ops-cos";
+import type { ContentDomain, ContentExpertId, COSExpertId, COSVoice, ExpertId, ExpertVoice } from "./types";
 
 // ─────────────────────────────────────────────────────────────
-// VOICE REGISTRY
+// CONTENT EXPERT VOICE REGISTRY (Athlete-facing)
 // ─────────────────────────────────────────────────────────────
 
-export const expertVoices: Record<ExpertId, ExpertVoice> = {
+export const expertVoices: Record<ContentExpertId, ExpertVoice> = {
   JAMES: jamesScottVoice,
   ADAM: adamHarringtonVoice,
   YP: ypBrandVoice,
   TEAM_YP: teamYPVoice,
+};
+
+// ─────────────────────────────────────────────────────────────
+// COS VOICE REGISTRY (Internal team - Tom)
+// ─────────────────────────────────────────────────────────────
+
+export const cosVoices: Record<COSExpertId, COSVoice> = {
+  MIKE_COS: mikeDiCOSVoice,
+  JAMES_COS: jamesScottCOSVoice,
+  ADAM_COS: adamHarringtonCOSVoice,
+  ANNIE_COS: annieOpsCOSVoice,
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -36,7 +60,7 @@ export const expertVoices: Record<ExpertId, ExpertVoice> = {
  * Maps content domains to their primary expert owner.
  * Used for automatic expert assignment when not explicitly specified.
  */
-export const domainOwnership: Record<ContentDomain, ExpertId> = {
+export const domainOwnership: Record<ContentDomain, ContentExpertId> = {
   // James Scott domains
   "barefoot-training": "JAMES",
   "speed-agility": "JAMES",
@@ -56,16 +80,30 @@ export const domainOwnership: Record<ContentDomain, ExpertId> = {
 // ─────────────────────────────────────────────────────────────
 
 /**
- * Get the expert voice for a given expert ID
+ * Get the content expert voice for a given expert ID
  */
-export function getVoice(expertId: ExpertId): ExpertVoice {
+export function getVoice(expertId: ContentExpertId): ExpertVoice {
   return expertVoices[expertId];
+}
+
+/**
+ * Get the COS voice for a given COS expert ID
+ */
+export function getCOSVoice(expertId: COSExpertId): COSVoice {
+  return cosVoices[expertId];
+}
+
+/**
+ * Check if an expert ID is a COS voice
+ */
+export function isCOSExpertId(expertId: ExpertId): expertId is COSExpertId {
+  return expertId.endsWith("_COS");
 }
 
 /**
  * Get the appropriate expert for a content domain
  */
-export function getExpertForDomain(domain: ContentDomain): ExpertId {
+export function getExpertForDomain(domain: ContentDomain): ContentExpertId {
   return domainOwnership[domain] || "YP";
 }
 
@@ -80,7 +118,7 @@ export function getVoiceForDomain(domain: ContentDomain): ExpertVoice {
 /**
  * Determine the best expert for a topic based on keywords
  */
-export function inferExpertFromTopic(topic: string): ExpertId {
+export function inferExpertFromTopic(topic: string): ContentExpertId {
   const topicLower = topic.toLowerCase();
 
   // James Scott indicators

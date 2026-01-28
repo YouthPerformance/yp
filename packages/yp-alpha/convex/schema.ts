@@ -465,10 +465,17 @@ export default defineSchema({
     score: v.number(), // 1-10 (1=Critical, 10=Elite)
     notes: v.optional(v.string()), // Context: "Rolled ankle at practice 12/28"
     lastUpdated: v.number(),
+    // Vector embedding for semantic search (1536 dimensions for text-embedding-3-small)
+    embedding: v.optional(v.array(v.float64())),
   })
     .index("by_user", ["userId"])
     .index("by_user_key", ["userId", "key"])
-    .index("by_user_category", ["userId", "category"]),
+    .index("by_user_category", ["userId", "category"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["userId", "category"],
+    }),
 
   // ─────────────────────────────────────────────────────────────
   // CORRELATIONS TABLE (The Graph Edges)
@@ -511,10 +518,17 @@ export default defineSchema({
     extractedAt: v.number(),
     processed: v.boolean(), // Has it been distilled into athlete_nodes?
     sourceMessage: v.optional(v.string()), // Original user message
+    // Vector embedding for semantic search
+    embedding: v.optional(v.array(v.float64())),
   })
     .index("by_user", ["userId"])
     .index("by_user_type", ["userId", "memoryType"])
-    .index("by_unprocessed", ["userId", "processed"]),
+    .index("by_unprocessed", ["userId", "processed"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["userId", "memoryType"],
+    }),
 
   // ─────────────────────────────────────────────────────────────
   // TRAINING CONTENT TABLE (RAG Knowledge Base)
@@ -539,9 +553,12 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_category", ["category"])
-    .index("by_slug", ["slug"]),
-  // Note: Vector index added separately when embeddings are ready
-  // .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 })
+    .index("by_slug", ["slug"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["category"],
+    }),
 
   // ═══════════════════════════════════════════════════════════
   // GPT UPLINK - CONTENT MULTIPLEXER
@@ -850,6 +867,20 @@ export default defineSchema({
     promptTokens: v.optional(v.number()),
     completionTokens: v.optional(v.number()),
 
+    // ═══════════════════════════════════════════════════════════
+    // VOICE COMMAND CENTER ADDITIONS
+    // Auto-scoring and routing for expert review
+    // ═══════════════════════════════════════════════════════════
+
+    // Voice compliance score (0-100) - computed by AI
+    voiceComplianceScore: v.optional(v.number()),
+
+    // Approval tier based on score: green (auto-approve), yellow (review), red (reject)
+    approvalTier: v.optional(v.union(v.literal("green"), v.literal("yellow"), v.literal("red"))),
+
+    // Whether this content requires a spot check (random sampling of green tier)
+    spotCheckRequired: v.optional(v.boolean()),
+
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -860,7 +891,8 @@ export default defineSchema({
     .index("by_author_status", ["author", "status"])
     .index("by_category", ["category"])
     .index("by_content_type", ["contentType"])
-    .index("by_created", ["createdAt"]),
+    .index("by_created", ["createdAt"])
+    .index("by_approval_tier", ["approvalTier", "status"]),
 
   // ─────────────────────────────────────────────────────────────
   // EXPERT VOICE EXAMPLES TABLE
@@ -894,6 +926,51 @@ export default defineSchema({
     .index("by_expert", ["expert"])
     .index("by_expert_type", ["expert", "exampleType"])
     .index("by_expert_category", ["expert", "category"]),
+
+  // ─────────────────────────────────────────────────────────────
+  // VOICE LEARNINGS TABLE
+  // THE MOAT: Every voice edit becomes training data
+  // Captures before/after text + voice instruction for future self-editing
+  // ─────────────────────────────────────────────────────────────
+  voice_learnings: defineTable({
+    // Who made the edit
+    expert: v.union(v.literal("JAMES"), v.literal("ADAM")),
+
+    // What they edited
+    contentType: v.string(), // "pillar", "topic", "qa", "drill"
+    category: v.string(), // "basketball", "barefoot", etc.
+
+    // The edit itself
+    originalText: v.string(), // What the AI wrote
+    voiceInstruction: v.string(), // What they said (transcript)
+    correctedText: v.string(), // What it became after edit
+
+    // Audio storage (for future voice cloning/analysis)
+    audioStorageId: v.optional(v.id("_storage")),
+    audioDurationMs: v.optional(v.number()),
+
+    // Context around the edit
+    selectedContext: v.optional(v.string()), // Surrounding paragraphs
+
+    // Content reference
+    contentId: v.optional(v.id("playbook_content")),
+
+    // Pattern extraction (computed/enriched later)
+    editPattern: v.optional(v.string()), // "simplify", "add_example", "tone_shift", etc.
+    confidence: v.optional(v.number()), // 0-1 how reliable this example is
+
+    // Did they accept the AI's suggested edit?
+    applied: v.boolean(),
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_expert", ["expert"])
+    .index("by_expert_category", ["expert", "category"])
+    .index("by_expert_content_type", ["expert", "contentType"])
+    .index("by_pattern", ["editPattern"])
+    .index("by_applied", ["applied"])
+    .index("by_created", ["createdAt"]),
 
   // ═══════════════════════════════════════════════════════════════
   // ANSWER ENGINE - THE WIKIPEDIA OF YOUTH SPORTS
@@ -1484,12 +1561,12 @@ export default defineSchema({
   // ─────────────────────────────────────────────────────────────────
   agent_tasks: defineTable({
     // Identity
-    taskId: v.string(), // Unique identifier (nanoid)
-    title: v.string(), // Short task name
+    taskId: v.optional(v.string()), // Unique identifier (nanoid)
+    title: v.optional(v.string()), // Short task name
     description: v.optional(v.string()), // Detailed description
 
     // Categorization
-    domain: v.string(), // "seo", "content", "dev", "ops"
+    domain: v.optional(v.string()), // "seo", "content", "dev", "ops"
     project: v.optional(v.string()), // "gap-miner", "wolfgrow", etc.
 
     // Status workflow
@@ -1502,10 +1579,10 @@ export default defineSchema({
     ),
 
     // Priority (lower = higher priority)
-    priority: v.number(), // 1=critical, 2=high, 3=normal, 4=low
+    priority: v.optional(v.number()), // 1=critical, 2=high, 3=normal, 4=low
 
     // Ownership
-    createdBy: v.string(), // Agent session ID or "human"
+    createdBy: v.optional(v.string()), // Agent session ID or "human"
     assignedTo: v.optional(v.string()), // Agent session ID currently working
     completedBy: v.optional(v.string()),
 
@@ -1532,6 +1609,11 @@ export default defineSchema({
 
     // TTL for auto-cleanup (optional)
     expiresAt: v.optional(v.number()),
+
+    // Legacy fields (for backwards compatibility)
+    city: v.optional(v.string()),
+    sport: v.optional(v.string()),
+    type: v.optional(v.string()),
   })
     .index("by_task_id", ["taskId"])
     .index("by_status", ["status"])
@@ -1572,4 +1654,202 @@ export default defineSchema({
     .index("by_agent", ["agentId"])
     .index("by_domain", ["domain", "createdAt"])
     .index("by_level", ["level", "createdAt"]),
+
+  // ═══════════════════════════════════════════════════════════════
+  // TOM CHIEF OF STAFF SYSTEM (VIP SECTION)
+  // Internal team AI assistant - prefixed with tom_
+  // Logical separation from athlete-facing data
+  // ═══════════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_LOGS: Every WhatsApp message from internal team
+  // ─────────────────────────────────────────────────────────────────
+  tom_logs: defineTable({
+    userId: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    content: v.string(),
+    direction: v.union(v.literal("inbound"), v.literal("outbound")),
+    intent: v.optional(v.string()), // "PRODUCT_VISUALIZATION", "TREND_SEARCH", etc.
+    sentiment: v.optional(v.string()), // "Frustrated", "Hype", "Neutral"
+    personalityMode: v.optional(v.string()), // "jarvis", "robbins", "lasso"
+    whatsappMessageId: v.optional(v.string()),
+    timestamp: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_timestamp", ["timestamp"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_CONTEXTS: Brain for each team member
+  // Persistent context files (active_context, backlog, daily_log)
+  // ─────────────────────────────────────────────────────────────────
+  tom_contexts: defineTable({
+    userId: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    contextType: v.union(
+      v.literal("active_context"),
+      v.literal("backlog"),
+      v.literal("daily_log"),
+      v.literal("preferences")
+    ),
+    content: v.string(),
+    lastUpdatedAt: v.number(),
+    lastUpdatedBy: v.union(v.literal("tom"), v.literal("user")),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_type", ["userId", "contextType"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_TASKS: Queue for Clawdbot/Mac Mini execution
+  // Tasks that require external tool execution
+  // ─────────────────────────────────────────────────────────────────
+  tom_tasks: defineTable({
+    task: v.string(),
+    description: v.optional(v.string()),
+    assignedTo: v.string(), // "CLAWDBOT_MAC_MINI", "TOM", "MIKE"
+    requestedBy: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("in_progress"),
+      v.literal("completed"),
+      v.literal("failed")
+    ),
+    result: v.optional(v.string()), // PDF link, output, etc.
+    createdAt: v.number(),
+    completedAt: v.optional(v.number()),
+  })
+    .index("by_status", ["status"])
+    .index("by_assigned", ["assignedTo", "status"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_BRIEFINGS: Morning and weekly briefings
+  // Generated summaries delivered via WhatsApp/email
+  // ─────────────────────────────────────────────────────────────────
+  tom_briefings: defineTable({
+    userId: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    date: v.string(), // ISO date: "2026-01-28"
+    briefingType: v.union(v.literal("morning"), v.literal("weekly")),
+    content: v.string(), // Formatted for WhatsApp
+    sections: v.object({
+      priorities: v.string(),
+      blockers: v.string(),
+      calendar: v.string(),
+      insights: v.string(),
+    }),
+    deliveredAt: v.optional(v.number()),
+    deliveryMethod: v.optional(v.union(v.literal("email"), v.literal("whatsapp"))),
+    generatedAt: v.number(),
+  })
+    .index("by_user_date", ["userId", "date"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_CAPTURES: Quick capture items from WhatsApp/voice
+  // Raw inputs before classification and routing
+  // ─────────────────────────────────────────────────────────────────
+  tom_captures: defineTable({
+    userId: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    content: v.string(),
+    source: v.union(v.literal("voice"), v.literal("text"), v.literal("whatsapp")),
+    classifiedAs: v.optional(
+      v.union(
+        v.literal("task"),
+        v.literal("note"),
+        v.literal("idea"),
+        v.literal("question")
+      )
+    ),
+    routed: v.boolean(),
+    routedTo: v.optional(v.string()), // "backlog", "daily_log", "PRODUCT_VISUALIZATION"
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_unrouted", ["userId", "routed"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_KNOWLEDGE: Google Drive/Notion sync for RAG
+  // Synced documents with optional embeddings
+  // ─────────────────────────────────────────────────────────────────
+  tom_knowledge: defineTable({
+    userId: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    sourceType: v.union(
+      v.literal("google_drive"),
+      v.literal("notion"),
+      v.literal("manual")
+    ),
+    sourceId: v.string(), // External document ID
+    title: v.string(),
+    content: v.string(),
+    summary: v.optional(v.string()),
+    embedding: v.optional(v.array(v.float64())),
+    lastSyncedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_source", ["userId", "sourceType", "sourceId"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["userId"],
+    }),
+
+  // ─────────────────────────────────────────────────────────────────
+  // TOM_USERS: Team member configuration
+  // Voice profiles, WhatsApp numbers, preferences
+  // ─────────────────────────────────────────────────────────────────
+  tom_users: defineTable({
+    userId: v.union(
+      v.literal("mike"),
+      v.literal("james"),
+      v.literal("adam"),
+      v.literal("annie")
+    ),
+    email: v.string(),
+    displayName: v.string(),
+    voiceProfileId: v.string(), // "MIKE_COS", "JAMES_COS", etc.
+    whatsappNumber: v.optional(v.string()),
+    preferences: v.object({
+      briefingTime: v.string(), // "06:00"
+      briefingTimezone: v.string(), // "America/New_York"
+      deliveryMethod: v.union(v.literal("email"), v.literal("whatsapp")),
+    }),
+    googleIntegration: v.optional(
+      v.object({
+        connected: v.boolean(),
+        accessToken: v.optional(v.string()),
+        refreshToken: v.optional(v.string()),
+        tokenExpiresAt: v.optional(v.number()),
+        driveRootFolderId: v.optional(v.string()),
+        calendarId: v.optional(v.string()),
+      })
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_user_id", ["userId"])
+    .index("by_whatsapp", ["whatsappNumber"]),
 });

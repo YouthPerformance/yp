@@ -35,6 +35,8 @@ const PUBLIC_PREFIXES = [
   "/api/auth", // BetterAuth API routes
   "/api/email", // OTP email sending
   "/api/content", // Content iteration API
+  "/api/whatsapp", // WhatsApp webhook - Tom COS
+  "/api/webhooks", // Stripe and other webhooks
   "/legal",
   "/admin", // Admin dashboard (temporary - add proper admin auth later)
   "/dev", // Dev test routes (remove before production)
