@@ -31,12 +31,21 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
 
+  // Debug: Log what we received vs what we expect
+  console.log("[WhatsApp] Verification attempt:", {
+    mode,
+    receivedToken: token,
+    expectedToken: WHATSAPP_VERIFY_TOKEN ? `set (${WHATSAPP_VERIFY_TOKEN.length} chars)` : "NOT SET",
+    challenge: challenge?.substring(0, 20),
+    tokenMatch: token === WHATSAPP_VERIFY_TOKEN,
+  });
+
   if (mode === "subscribe" && token === WHATSAPP_VERIFY_TOKEN) {
-    console.log("[WhatsApp] Webhook verified");
+    console.log("[WhatsApp] Webhook verified successfully");
     return new NextResponse(challenge, { status: 200 });
   }
 
-  console.warn("[WhatsApp] Webhook verification failed");
+  console.warn("[WhatsApp] Webhook verification failed - token mismatch or wrong mode");
   return new NextResponse("Forbidden", { status: 403 });
 }
 
