@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 export interface SEOPage {
+  id?: string;
   slug: string;
   title: string;
   meta_description: string;
@@ -17,7 +18,7 @@ export interface SEOPage {
   secondary_expert?: string;
   generated_at: string;
   has_neoball_cta: boolean;
-  knowledge_graph: {
+  knowledge_graph?: {
     type?: string;
     parent_pillar?: string;
     spokes?: string[];
@@ -27,6 +28,9 @@ export interface SEOPage {
     consolidates?: string[];
     cross_links?: string[];
     hierarchy?: Record<string, unknown>;
+  };
+  visual_asset?: {
+    data?: Record<string, unknown>;
   };
 }
 
