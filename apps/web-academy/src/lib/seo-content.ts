@@ -31,6 +31,7 @@ export interface SEOPage {
   };
   visual_asset?: {
     data?: Record<string, unknown>;
+    generated_at?: string;
   };
 }
 
