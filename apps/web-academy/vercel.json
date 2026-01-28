@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "installCommand": "pnpm install --filter=@yp/web-academy",
+  "installCommand": "pnpm install --filter=@yp/web-academy --filter=@yp/alpha",
   "buildCommand": "pnpm turbo build --filter=@yp/web-academy"
 }
