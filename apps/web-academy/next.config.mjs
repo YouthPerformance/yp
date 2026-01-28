@@ -41,6 +41,9 @@ const nextConfig = {
     root: monorepoRoot,
   },
   outputFileTracingRoot: monorepoRoot,
+  outputFileTracingIncludes: {
+    "/**": ["../../packages/brand-assets/**"],
+  },
 
   // ─────────────────────────────────────────────────────────
   // EXPERIMENTAL FEATURES
