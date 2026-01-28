@@ -64,7 +64,43 @@
       "import": "./dist/voices/index.mjs",
       "require": "./dist/voices/index.js"
     },
-    "./convex/playbook": "./convex/playbook.ts"
+    "./observability": {
+      "types": "./dist/observability/index.d.ts",
+      "import": "./dist/observability/index.mjs",
+      "require": "./dist/observability/index.js"
+    },
+    "./workflows": {
+      "types": "./dist/workflows/index.d.ts",
+      "import": "./dist/workflows/index.mjs",
+      "require": "./dist/workflows/index.js"
+    },
+    "./ai": {
+      "types": "./dist/ai/index.d.ts",
+      "import": "./dist/ai/index.mjs",
+      "require": "./dist/ai/index.js"
+    },
+    "./tools": {
+      "types": "./dist/tools/index.d.ts",
+      "import": "./dist/tools/index.mjs",
+      "require": "./dist/tools/index.js"
+    },
+    "./evals": {
+      "types": "./dist/evals/index.d.ts",
+      "import": "./dist/evals/index.mjs",
+      "require": "./dist/evals/index.js"
+    },
+    "./critic": {
+      "types": "./dist/critic/index.d.ts",
+      "import": "./dist/critic/index.mjs",
+      "require": "./dist/critic/index.js"
+    },
+    "./convex/playbook": "./convex/playbook.ts",
+    "./convex/tom": "./convex/tom.ts",
+    "./tom": {
+      "types": "./dist/tom/index.d.ts",
+      "import": "./dist/tom/index.mjs",
+      "require": "./dist/tom/index.js"
+    }
   },
   "scripts": {
     "build": "tsup",
@@ -76,11 +112,18 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.0.0",
+    "@ai-sdk/openai": "^1.0.0",
+    "@ai-sdk/provider": "^3.0.5",
     "@anthropic-ai/sdk": "^0.33.0",
     "@convex-dev/better-auth": "^0.10.9",
+    "@langfuse/client": "^4.0.0",
+    "@langfuse/tracing": "^4.0.0",
+    "ai": "^6.0.0",
     "better-auth": "^1.4.10",
     "better-sqlite3": "^12.5.0",
     "convex": "^1.31.6",
+    "inngest": "^3.0.0",
     "nanoid": "^5.1.6",
     "zod": "^3.23.0"
   },
