@@ -1,8 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "ignoreCommand": "npx turbo-ignore",
-  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
-  "buildCommand": "cd ../.. && pnpm turbo build --filter=@yp/web-academy",
-  "outputDirectory": ".next"
+  "installCommand": "pnpm install --filter=@yp/web-academy",
+  "buildCommand": "pnpm turbo build --filter=@yp/web-academy"
 }
