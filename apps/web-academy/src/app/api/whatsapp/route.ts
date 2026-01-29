@@ -47,34 +47,29 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
 
-  // Verify webhook signature
-  // TODO: Re-enable once correct App Secret is configured
-  // The App Secret is found in Meta Developer Console → App Settings → Basic → App Secret
-  // const signature = req.headers.get("x-hub-signature-256");
-  // if (WHATSAPP_APP_SECRET && WHATSAPP_APP_SECRET !== WHATSAPP_VERIFY_TOKEN) {
-  //   const isValid = await verifyWebhookSignature(rawBody, signature, WHATSAPP_APP_SECRET);
-  //   if (!isValid) {
-  //     console.error("[WhatsApp] Invalid webhook signature");
-  //     return new NextResponse("Invalid signature", { status: 401 });
-  //   }
-  // }
-  console.log("[WhatsApp] Signature verification skipped (configure WHATSAPP_APP_SECRET)");
+  console.log("[WhatsApp] POST received, body length:", rawBody.length);
 
   try {
     const body = JSON.parse(rawBody);
+    console.log("[WhatsApp] Parsed body:", JSON.stringify(body, null, 2).substring(0, 500));
 
     // Process messages
+    let messagesProcessed = 0;
     for (const entry of body.entry || []) {
       for (const change of entry.changes || []) {
+        console.log("[WhatsApp] Change field:", change.field);
         if (change.field === "messages") {
           const messages = change.value?.messages || [];
+          console.log("[WhatsApp] Messages count:", messages.length);
           for (const message of messages) {
             await handleIncomingMessage(message, change.value);
+            messagesProcessed++;
           }
         }
       }
     }
 
+    console.log("[WhatsApp] Messages processed:", messagesProcessed);
     return new NextResponse("OK", { status: 200 });
   } catch (error) {
     console.error("[WhatsApp] Error processing webhook:", error);
