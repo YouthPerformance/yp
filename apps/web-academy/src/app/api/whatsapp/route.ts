@@ -46,7 +46,20 @@ export async function GET(req: NextRequest) {
   }
 
   console.warn("[WhatsApp] Webhook verification failed - token mismatch or wrong mode");
-  return new NextResponse("Forbidden", { status: 403 });
+  // Temporary debug response - remove after fixing
+  return new NextResponse(
+    JSON.stringify({
+      error: "Forbidden",
+      debug: {
+        mode,
+        receivedToken: token,
+        expectedTokenSet: !!WHATSAPP_VERIFY_TOKEN,
+        expectedTokenLength: WHATSAPP_VERIFY_TOKEN?.length || 0,
+        tokenMatch: token === WHATSAPP_VERIFY_TOKEN,
+      },
+    }),
+    { status: 403, headers: { "Content-Type": "application/json" } }
+  );
 }
 
 // ─────────────────────────────────────────────────────────────
