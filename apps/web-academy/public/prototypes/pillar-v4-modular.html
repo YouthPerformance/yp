@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V4: Card-Heavy/Modular — Silent Training</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wolf-cyan': '#00F6E0',
+            'wolf-gold': '#FFD700',
+            'card-bg': '#0c0c0c',
+            'card-border': '#1a1a1a',
+          },
+          fontFamily: {
+            'bebas': ['Bebas Neue', 'sans-serif'],
+            'inter': ['Inter', 'sans-serif'],
+            'mono': ['Space Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050505;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .font-mono { font-family: 'Space Mono', monospace; }
+
+    /* Modular card system */
+    .card-module {
+      background: linear-gradient(135deg, #0c0c0c 0%, #080808 100%);
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    .card-module:hover {
+      border-color: rgba(0,246,224,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    .card-accent {
+      background: linear-gradient(135deg, rgba(0,246,224,0.08) 0%, rgba(0,0,0,0.4) 100%);
+      border: 1px solid rgba(0,246,224,0.25);
+    }
+    .card-accent:hover {
+      border-color: rgba(0,246,224,0.5);
+    }
+
+    .card-warning {
+      background: linear-gradient(135deg, rgba(255,100,100,0.05) 0%, rgba(0,0,0,0.4) 100%);
+      border: 1px solid rgba(255,100,100,0.2);
+    }
+
+    .card-gold {
+      background: linear-gradient(135deg, rgba(255,215,0,0.08) 0%, rgba(0,0,0,0.4) 100%);
+      border: 1px solid rgba(255,215,0,0.25);
+    }
+
+    .action-btn {
+      background: linear-gradient(135deg, #00F6E0 0%, #00c4b8 100%);
+      box-shadow: 0 4px 20px rgba(0,246,224,0.3);
+      transition: all 0.3s ease;
+    }
+    .action-btn:hover {
+      box-shadow: 0 6px 30px rgba(0,246,224,0.5);
+      transform: translateY(-2px);
+    }
+
+    .outline-btn {
+      border: 2px solid #00F6E0;
+      color: #00F6E0;
+      transition: all 0.3s ease;
+    }
+    .outline-btn:hover {
+      background: rgba(0,246,224,0.1);
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .video-module {
+      aspect-ratio: 9/16;
+      background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%);
+      border: 1px solid #222;
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s ease;
+    }
+    .chip:hover, .chip.active {
+      background: rgba(0,246,224,0.1);
+      border-color: rgba(0,246,224,0.5);
+      color: #00F6E0;
+    }
+
+    .drill-module {
+      background: #0a0a0a;
+      border: 1px solid #1a1a1a;
+      transition: all 0.3s ease;
+    }
+    .drill-module:hover {
+      border-color: rgba(0,246,224,0.4);
+    }
+
+    .play-overlay {
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .drill-module:hover .play-overlay {
+      opacity: 1;
+    }
+
+    .masonry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    @media (min-width: 1024px) {
+      .masonry-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .db-indicator {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- HEADER -->
+  <header class="px-6 py-4 border-b border-white/5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <span class="font-bebas text-2xl">YP</span>
+        <span class="text-white/20">/</span>
+        <span class="font-mono text-sm text-white/60">silent-training</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="tag px-3 py-1 rounded-full text-xs text-green-400">Live</span>
+        <span class="text-xs text-white/40">Jan 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO: Card Grid Layout -->
+  <section class="px-6 py-12">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Breadcrumb -->
+      <div class="text-sm text-white/40 mb-6">
+        <span>Home</span> / <span>Basketball</span> / <span class="text-white">Silent Training</span>
+      </div>
+
+      <!-- Main Hero Grid -->
+      <div class="grid lg:grid-cols-3 gap-6">
+
+        <!-- Left Column: Title Card + Action Card -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Title Card -->
+          <div class="card-module p-8">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="tag px-3 py-1 rounded-full text-xs uppercase tracking-wider text-wolf-cyan">Complete Guide</span>
+              <span class="tag px-3 py-1 rounded-full text-xs text-white/60">12 Drills</span>
+            </div>
+            <h1 class="font-bebas text-5xl lg:text-6xl tracking-wide leading-none mb-4">
+              SILENT BASKETBALL TRAINING
+            </h1>
+            <p class="text-lg text-white/60 leading-relaxed max-w-2xl">
+              Master dribbling at home without disturbing anyone. The definitive protocol for indoor skill development.
+            </p>
+          </div>
+
+          <!-- Action Card -->
+          <div class="card-accent p-6 rounded-2xl">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+              <div class="flex gap-4">
+                <button class="action-btn px-8 py-4 rounded-xl font-bold text-black">
+                  Build My Silent Plan
+                </button>
+                <button class="outline-btn px-6 py-4 rounded-xl font-medium">
+                  Start Drill →
+                </button>
+              </div>
+              <div class="flex gap-6">
+                <div class="text-center">
+                  <div class="font-bebas text-2xl text-wolf-cyan db-indicator">&lt;40dB</div>
+                  <div class="text-xs text-white/40">Noise Level</div>
+                </div>
+                <div class="text-center">
+                  <div class="font-bebas text-2xl">15min</div>
+                  <div class="text-xs text-white/40">Daily Stack</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Video + Author -->
+        <div class="space-y-6">
+          <!-- Video Card -->
+          <div class="card-module overflow-hidden">
+            <div class="video-module relative">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-16 h-16 rounded-full bg-white/10 border border-white/30 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="absolute bottom-4 right-4">
+                <span class="bg-wolf-cyan/20 border border-wolf-cyan/50 px-2 py-1 rounded text-xs text-wolf-cyan font-mono">
+                  &lt;40dB
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Author Card -->
+          <div class="card-module p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-wolf-cyan/20 flex items-center justify-center text-xl">🏀</div>
+              <div>
+                <div class="font-medium">Adam Harrington</div>
+                <div class="text-sm text-white/50">NBA Skills Coach</div>
+              </div>
+              <div class="ml-auto">
+                <span class="text-xs text-green-400">✓ Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL INJECTION CARD -->
+  <section class="px-6 py-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="card-accent p-6 lg:p-8 rounded-2xl">
+        <h2 class="font-bebas text-2xl tracking-wider mb-6">BUILD YOUR SILENT SESSION</h2>
+
+        <div class="grid md:grid-cols-4 gap-6">
+          <div>
+            <label class="text-xs text-wolf-cyan uppercase tracking-wider block mb-3">Duration</label>
+            <div class="flex gap-2">
+              <button class="chip px-4 py-2 rounded-lg text-sm flex-1">10m</button>
+              <button class="chip active px-4 py-2 rounded-lg text-sm flex-1">20m</button>
+              <button class="chip px-4 py-2 rounded-lg text-sm flex-1">30m</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-wolf-cyan uppercase tracking-wider block mb-3">Floor</label>
+            <div class="flex gap-2">
+              <button class="chip active px-4 py-2 rounded-lg text-sm flex-1">Carpet</button>
+              <button class="chip px-4 py-2 rounded-lg text-sm flex-1">Wood</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-wolf-cyan uppercase tracking-wider block mb-3">Noise</label>
+            <div class="flex gap-2">
+              <button class="chip active px-4 py-2 rounded-lg text-sm flex-1">Whisper</button>
+              <button class="chip px-4 py-2 rounded-lg text-sm flex-1">Normal</button>
+            </div>
+          </div>
+          <div class="flex items-end">
+            <button class="action-btn w-full py-3 rounded-lg font-semibold text-black">
+              Generate →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY INTEL: Bento Grid -->
+  <section class="px-6 py-12">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="font-bebas text-3xl tracking-wider mb-8">KEY INTEL</h2>
+
+      <div class="masonry-grid">
+        <!-- Objective Card (2 columns) -->
+        <div class="card-accent p-6 rounded-2xl lg:col-span-2">
+          <div class="text-wolf-cyan text-xs tracking-widest uppercase mb-3">01. The Objective</div>
+          <p class="text-xl font-medium">Fingertip control, not palm force. Zero floor impact.</p>
+        </div>
+
+        <!-- Avoid Card -->
+        <div class="card-warning p-6 rounded-2xl">
+          <div class="text-red-400 text-xs tracking-widest uppercase mb-3">⚠ Avoid</div>
+          <ul class="text-white/70 text-sm space-y-2">
+            <li>• Slapping the ball</li>
+            <li>• Standing upright</li>
+            <li>• Eyes on ball</li>
+          </ul>
+        </div>
+
+        <!-- Daily Max Card -->
+        <div class="card-gold p-6 rounded-2xl text-center">
+          <div class="text-wolf-gold text-xs tracking-widest uppercase mb-2">Daily Max</div>
+          <div class="text-5xl font-bebas text-wolf-gold">15</div>
+          <div class="text-xs text-white/50">Minutes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRILL LIBRARY: Card Grid -->
+  <section class="px-6 py-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="font-bebas text-3xl tracking-wider">DRILL INVENTORY</h2>
+        <div class="flex gap-2">
+          <button class="chip active px-4 py-2 rounded-full text-sm">All</button>
+          <button class="chip px-4 py-2 rounded-full text-sm">No Hoop</button>
+          <button class="chip px-4 py-2 rounded-full text-sm">Seated</button>
+          <button class="chip px-4 py-2 rounded-full text-sm">Two Ball</button>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Drill Card 1 -->
+        <div class="drill-module rounded-2xl overflow-hidden group">
+          <div class="aspect-video relative bg-gradient-to-b from-white/5 to-transparent">
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-wolf-cyan flex items-center justify-center">
+                <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3">
+              <span class="bg-black/60 px-2 py-1 rounded text-xs text-wolf-cyan font-mono">3m</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bebas text-lg tracking-wide mb-1">Stationary Pound</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-white/50">Beginner</span>
+              <span class="text-xs text-wolf-cyan font-mono db-indicator">&lt;35dB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill Card 2 -->
+        <div class="drill-module rounded-2xl overflow-hidden group">
+          <div class="aspect-video relative bg-gradient-to-b from-white/5 to-transparent">
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-wolf-cyan flex items-center justify-center">
+                <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3">
+              <span class="bg-black/60 px-2 py-1 rounded text-xs text-wolf-cyan font-mono">4m</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bebas text-lg tracking-wide mb-1">Pocket Dribble</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-white/50">Intermediate</span>
+              <span class="text-xs text-wolf-cyan font-mono db-indicator">&lt;38dB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill Card 3 -->
+        <div class="drill-module rounded-2xl overflow-hidden group">
+          <div class="aspect-video relative bg-gradient-to-b from-white/5 to-transparent">
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-wolf-cyan flex items-center justify-center">
+                <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3">
+              <span class="bg-black/60 px-2 py-1 rounded text-xs text-wolf-cyan font-mono">5m</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bebas text-lg tracking-wide mb-1">Seated Wiper</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-white/50">Intermediate</span>
+              <span class="text-xs text-wolf-cyan font-mono db-indicator">&lt;40dB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill Card 4 -->
+        <div class="drill-module rounded-2xl overflow-hidden group">
+          <div class="aspect-video relative bg-gradient-to-b from-white/5 to-transparent">
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-wolf-cyan flex items-center justify-center">
+                <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3">
+              <span class="bg-black/60 px-2 py-1 rounded text-xs text-wolf-gold font-mono">6m</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bebas text-lg tracking-wide mb-1">Figure 8 Flow</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-white/50">Advanced</span>
+              <span class="text-xs text-wolf-gold font-mono db-indicator">&lt;45dB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View All -->
+      <div class="mt-8 text-center">
+        <button class="outline-btn px-8 py-3 rounded-xl font-medium">
+          View All 12 Drills →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="px-6 py-16 border-t border-white/5">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-4 gap-8">
+        <!-- CTA Card -->
+        <div class="lg:col-span-2">
+          <div class="card-accent p-8 rounded-2xl">
+            <h2 class="font-bebas text-3xl tracking-wider mb-4">READY TO START?</h2>
+            <p class="text-white/60 mb-6">Build your personalized silent training protocol.</p>
+            <button class="action-btn px-10 py-4 rounded-xl font-bold text-black">
+              Build Your Silent Plan →
+            </button>
+          </div>
+        </div>
+
+        <!-- Related -->
+        <div>
+          <h3 class="font-bebas text-lg tracking-wider mb-4">Related Pillars</h3>
+          <ul class="space-y-3 text-sm">
+            <li><a href="#" class="text-wolf-cyan hover:underline">Shooting Mechanics</a></li>
+            <li><a href="#" class="text-wolf-cyan hover:underline">NeoBall Blueprint</a></li>
+            <li><a href="#" class="text-wolf-cyan hover:underline">Home Training Guide</a></li>
+          </ul>
+        </div>
+
+        <!-- For Machines -->
+        <div>
+          <h3 class="font-bebas text-lg tracking-wider mb-4">For Machines</h3>
+          <ul class="space-y-3 text-sm text-white/40">
+            <li><a href="#" class="hover:text-white/60">/llms.txt</a></li>
+            <li><a href="#" class="hover:text-white/60">/sitemap.xml</a></li>
+            <li><a href="#" class="hover:text-white/60">/api/pillars</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-white/5 text-sm text-white/30">
+        © 2026 YouthPerformance
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

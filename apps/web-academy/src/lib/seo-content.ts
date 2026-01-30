@@ -4,6 +4,58 @@
 // Run: pnpm tsx scripts/generate-seo-pages.ts to regenerate
 // ═══════════════════════════════════════════════════════════
 
+// ─────────────────────────────────────────────────────────────
+// V7 PILLAR TYPES
+// ─────────────────────────────────────────────────────────────
+
+export interface DrillData {
+  slug: string;
+  title: string;
+  duration: string;
+  noiseLevel: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  status?: "complete" | "in-progress" | "locked";
+  progress?: number;
+  xp?: number;
+  thumbnail?: string;
+}
+
+export interface MistakeFix {
+  if: string;
+  cause: string;
+  fix: string;
+  drillLink?: string;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface IntelCard {
+  type: "objective" | "avoid" | "tip" | "safety";
+  emoji: string;
+  title: string;
+  content: string;
+}
+
+export interface ProgressionNode {
+  id: string;
+  title: string;
+  status: "complete" | "current" | "locked";
+  criteria?: string;
+}
+
+export interface PillarMetrics {
+  noiseLevel: string;
+  drillCount: number;
+  dailyCap: string;
+}
+
+// ─────────────────────────────────────────────────────────────
+// SEO PAGE INTERFACE
+// ─────────────────────────────────────────────────────────────
+
 export interface SEOPage {
   id?: string;
   slug: string;
@@ -33,6 +85,16 @@ export interface SEOPage {
     data?: Record<string, unknown>;
     generated_at?: string;
   };
+
+  // V7 Pillar Page Additions
+  metrics?: PillarMetrics;
+  drills?: DrillData[];
+  takeaways?: string[];
+  mistakes?: MistakeFix[];
+  faq?: FAQItem[];
+  safety?: string[];
+  intel?: IntelCard[];
+  progression?: ProgressionNode[];
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -116,6 +178,39 @@ export function getExpert(expertId: string) {
   return EXPERTS[expertId as keyof typeof EXPERTS];
 }
 
+// ─────────────────────────────────────────────────────────────
+// TOC TYPES
+// ─────────────────────────────────────────────────────────────
+
+export interface TocItem {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+export interface MarkdownWithTocResult {
+  html: string;
+  toc: TocItem[];
+  wordCount: number;
+}
+
+// ─────────────────────────────────────────────────────────────
+// SLUGIFY HELPER
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Convert text to URL-friendly slug
+ */
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "") // Remove non-word chars
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/--+/g, "-") // Replace multiple - with single -
+    .replace(/^-+/, "") // Trim - from start
+    .replace(/-+$/, ""); // Trim - from end
+}
+
 /**
  * Convert markdown content to basic HTML
  */
@@ -179,4 +274,132 @@ export function markdownToHtml(content: string): string {
   }).join("\n");
 
   return html;
+}
+
+/**
+ * Convert markdown content to HTML with TOC extraction
+ * - Generates unique IDs for H2/H3 headings (slugified)
+ * - Extracts TOC array: { id, text, level }[]
+ * - Adds hover-reveal anchor links to headings
+ * - Returns word count for reading time calculation
+ * - Adds scroll-mt-24 class for fixed header offset
+ */
+export function markdownToHtmlWithToc(content: string): MarkdownWithTocResult {
+  const toc: TocItem[] = [];
+  const usedIds = new Set<string>();
+  let html = content;
+
+  // Calculate word count (strip markdown syntax first)
+  const plainText = content
+    .replace(/^#{1,6}\s+/gm, "") // Remove heading markers
+    .replace(/\*\*|__/g, "") // Remove bold
+    .replace(/\*|_/g, "") // Remove italic
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // Extract link text
+    .replace(/\|/g, " ") // Replace table pipes
+    .replace(/-{3,}/g, "") // Remove hr
+    .replace(/\n+/g, " "); // Normalize whitespace
+  const wordCount = plainText.split(/\s+/).filter(Boolean).length;
+
+  /**
+   * Generate unique ID from heading text
+   */
+  function getUniqueId(text: string): string {
+    let baseId = slugify(text);
+    let id = baseId;
+    let counter = 1;
+
+    while (usedIds.has(id)) {
+      id = `${baseId}-${counter}`;
+      counter++;
+    }
+
+    usedIds.add(id);
+    return id;
+  }
+
+  // Process H3 headings (before H2 to avoid partial matches)
+  html = html.replace(/^### (.*$)/gim, (match, headingText) => {
+    const text = headingText.trim();
+    const id = getUniqueId(text);
+    toc.push({ id, text, level: 3 });
+
+    return `<h3 id="${id}" class="group text-xl font-bebas tracking-wider mt-8 mb-4 text-white scroll-mt-24">
+      <a href="#${id}" class="anchor-link opacity-0 group-hover:opacity-100 transition-opacity mr-2 text-accent-primary" aria-hidden="true">#</a>
+      ${text}
+    </h3>`;
+  });
+
+  // Process H2 headings
+  html = html.replace(/^## (.*$)/gim, (match, headingText) => {
+    const text = headingText.trim();
+    const id = getUniqueId(text);
+    toc.push({ id, text, level: 2 });
+
+    return `<h2 id="${id}" class="group text-2xl md:text-3xl font-bebas tracking-wider mt-12 mb-6 text-white scroll-mt-24">
+      <a href="#${id}" class="anchor-link opacity-0 group-hover:opacity-100 transition-opacity mr-2 text-accent-primary" aria-hidden="true">#</a>
+      ${text}
+    </h2>`;
+  });
+
+  // Bold
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>');
+
+  // Italic
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-accent-primary hover:underline">$1</a>');
+
+  // Tables - match header row, separator row, and body rows
+  html = html.replace(/\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n?)+)/g, (match, header, body) => {
+    const headerCells = header.split("|").filter(Boolean).map((cell: string) =>
+      `<th class="px-4 py-2 border border-white/10 text-left font-semibold text-white">${cell.trim()}</th>`
+    ).join("");
+
+    const rows = body.trim().split("\n").map((row: string) => {
+      const cells = row.split("|").filter(Boolean).map((cell: string) =>
+        `<td class="px-4 py-2 border border-white/10 text-text-secondary">${cell.trim()}</td>`
+      ).join("");
+      return `<tr>${cells}</tr>`;
+    }).join("");
+
+    return `<div class="overflow-x-auto mb-6"><table class="w-full border-collapse"><thead><tr>${headerCells}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  });
+
+  // Unordered lists (handle consecutive lines)
+  html = html.replace(/(^- .+$\n?)+/gm, (match) => {
+    const items = match.trim().split("\n").map(line => {
+      const text = line.replace(/^- /, "");
+      return `<li class="ml-6 mb-2 text-text-secondary list-disc">${text}</li>`;
+    }).join("");
+    return `<ul class="mb-6">${items}</ul>`;
+  });
+
+  // Numbered lists
+  html = html.replace(/(^\d+\. .+$\n?)+/gm, (match) => {
+    const items = match.trim().split("\n").map(line => {
+      const text = line.replace(/^\d+\. /, "");
+      return `<li class="ml-6 mb-2 text-text-secondary">${text}</li>`;
+    }).join("");
+    return `<ol class="mb-6 list-decimal">${items}</ol>`;
+  });
+
+  // Paragraphs - wrap lines that aren't already HTML
+  html = html.split("\n\n").map(block => {
+    const trimmed = block.trim();
+    if (trimmed && !trimmed.startsWith("<") && !trimmed.startsWith("#") && !trimmed.startsWith("|")) {
+      return `<p class="mb-4 text-text-secondary leading-relaxed">${trimmed}</p>`;
+    }
+    return trimmed;
+  }).join("\n");
+
+  // Sort TOC by order of appearance (already in order from regex replacements)
+  // Re-order by sorting based on position in original content
+  const sortedToc = toc.sort((a, b) => {
+    const posA = content.indexOf(a.text);
+    const posB = content.indexOf(b.text);
+    return posA - posB;
+  });
+
+  return { html, toc: sortedToc, wordCount };
 }

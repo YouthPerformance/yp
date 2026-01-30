@@ -3,6 +3,8 @@
    Barefoot Reset - YP Design System v2
    ═══════════════════════════════════════════════════════════ */
 
+@import '../styles/pillar-tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -88,6 +90,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {
@@ -243,6 +253,21 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Scroll margin for fixed header offset */
+  .scroll-mt-24 {
+    scroll-margin-top: 6rem; /* 96px - accounts for fixed header */
+  }
+
+  /* Anchor link styles */
+  .anchor-link {
+    text-decoration: none;
+    font-weight: normal;
+  }
+
+  .anchor-link:hover {
+    text-decoration: none;
   }
 
   /* Text gradient */

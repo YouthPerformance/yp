@@ -45,6 +45,9 @@ const PUBLIC_PREFIXES = [
   "/parent", // Parent onboarding flow - no auth required
   "/handoff", // Baton pass handoff routes
   "/basketball", // SEO content pages - public
+  "/preview", // Preview routes for testing - temporary
+  "/drills", // Drill pages - public for SEO
+  "/coaches", // Coach pages - public for SEO
 ];
 
 function isPublicRoute(pathname: string): boolean {

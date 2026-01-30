@@ -1,0 +1,263 @@
+{
+  "nodes": {
+    "unicorn_effects": {
+      "name": "Unicorn Effects",
+      "description": "Visual operations applied to layers in Unicorn Studio",
+      "children": {
+        "filters": {
+          "definition": "Color-based effects: tint, contrast, saturation, color grading",
+          "code_equivalent": "Fragment shader color operations or post-processing passes",
+          "example_prompts": [
+            "Add a warm color grade to this hero section",
+            "Apply a desaturated filter effect like Unicorn's filters"
+          ]
+        },
+        "distortion": {
+          "definition": "Warping/displacing pixels or vertices: waves, noise, refraction",
+          "code_equivalent": "Displacement shaders in GLSL/TSL or post-processing",
+          "example_prompts": [
+            "Create a wave distortion effect on scroll",
+            "Add noise-based displacement to this image"
+          ]
+        },
+        "blur": {
+          "definition": "Softening or streaking content: Gaussian, directional, zoom, bokeh",
+          "code_equivalent": "Multi-pass Gaussian blur nodes in post-processing",
+          "example_prompts": [
+            "Add a zoom blur effect on hover",
+            "Create a bokeh-style background blur"
+          ]
+        },
+        "lighting": {
+          "definition": "Simulated lights, glow, highlights, rim light effects",
+          "code_equivalent": "PBR lighting or custom BRDF in Three.js materials",
+          "example_prompts": [
+            "Add a rim glow effect to this 3D object",
+            "Create directional lighting with soft highlights"
+          ]
+        },
+        "stylize": {
+          "definition": "Non-photoreal looks: halftone, posterize, grain, glitch, edge detection",
+          "code_equivalent": "Custom fragment shaders or post-processing effects",
+          "example_prompts": [
+            "Apply a halftone effect like print media",
+            "Add glitch distortion triggered by scroll"
+          ]
+        },
+        "custom": {
+          "definition": "User-defined shaders authored inside Unicorn's custom category",
+          "code_equivalent": "GLSL/TSL shader extensions",
+          "example_prompts": [
+            "Replicate this custom Unicorn shader in Three.js",
+            "Extend the default effect with custom GLSL"
+          ]
+        }
+      }
+    },
+    "webgl_rendering": {
+      "name": "WebGL Rendering",
+      "description": "Core rendering concepts for browser-based 3D",
+      "children": {
+        "webgl": {
+          "definition": "Browser graphics API for GPU-accelerated 2D/3D rendering",
+          "unicorn_relation": "Unicorn scenes and Three.js content both render via WebGL"
+        },
+        "webgpu": {
+          "definition": "Next-gen GPU API with better compute and performance",
+          "unicorn_relation": "Used with TSL/node-based systems for advanced 3D or particle effects"
+        },
+        "render_loop": {
+          "definition": "Continuous function that updates and renders each frame",
+          "unicorn_relation": "Often synced with scroll or time for interactive experiences"
+        },
+        "post_processing": {
+          "definition": "Extra render passes after main scene: bloom, DOF, color grading",
+          "unicorn_relation": "Mimics Unicorn filter/stylize effects in code"
+        },
+        "render_pass": {
+          "definition": "Single draw/processing step; multiple can be chained",
+          "unicorn_relation": "Blur → grayscale → vignette pipeline"
+        }
+      }
+    },
+    "threejs_scene": {
+      "name": "Three.js Scene",
+      "description": "Core Three.js scene graph concepts",
+      "children": {
+        "scene": {
+          "definition": "Container for objects, lights, and cameras"
+        },
+        "camera": {
+          "definition": "Defines viewpoint: position, FOV, projection",
+          "example_prompts": ["Animate camera on scroll", "Create perspective camera with 75 FOV"]
+        },
+        "mesh": {
+          "definition": "Geometry + Material instance to be rendered"
+        },
+        "geometry": {
+          "definition": "Vertex data: positions, normals, UVs"
+        },
+        "material": {
+          "definition": "Surface appearance: color, texture, reflectivity, shading model"
+        },
+        "texture": {
+          "definition": "2D image or data map: color, normal, roughness, AO"
+        },
+        "environment_map": {
+          "definition": "Cubemap or equirect for reflections and IBL"
+        }
+      }
+    },
+    "lighting_types": {
+      "name": "Lighting Types",
+      "description": "Three.js light sources",
+      "children": {
+        "ambient_light": {
+          "definition": "Uniform light, no direction, no shadows; base fill",
+          "example_prompts": ["Add subtle ambient fill light"]
+        },
+        "directional_light": {
+          "definition": "Parallel rays like sunlight; can cast shadows",
+          "example_prompts": ["Create directional key light for hero"]
+        },
+        "point_light": {
+          "definition": "Emanates from point in all directions; intensity falloff",
+          "example_prompts": ["Add point light for localized glow"]
+        },
+        "spot_light": {
+          "definition": "Cone-shaped with angle and penumbra; focused highlights",
+          "example_prompts": ["Create spotlight effect for product showcase"]
+        },
+        "hemisphere_light": {
+          "definition": "Gradient from sky to ground color; outdoor ambient",
+          "example_prompts": ["Add hemisphere light for natural outdoor feel"]
+        }
+      }
+    },
+    "shader_types": {
+      "name": "Shader Types",
+      "description": "GPU programs for rendering",
+      "children": {
+        "vertex_shader": {
+          "definition": "Positions vertices, can deform geometry: waves, wobble, displacement",
+          "example_prompts": [
+            "Create vertex displacement for wave effect",
+            "Add noise-based vertex deformation"
+          ]
+        },
+        "fragment_shader": {
+          "definition": "Computes final pixel color: lighting, shading, effects",
+          "example_prompts": [
+            "Write fragment shader for gradient effect",
+            "Add cel-shading in fragment shader"
+          ]
+        },
+        "compute_shader": {
+          "definition": "General-purpose GPU compute for particles, simulations",
+          "example_prompts": ["Use compute shader for particle system"]
+        }
+      }
+    },
+    "shader_patterns": {
+      "name": "Shader Effect Patterns",
+      "description": "Common shader techniques",
+      "children": {
+        "gaussian_blur": {
+          "definition": "Double render-pass blur to soften or create glow",
+          "example_prompts": ["Add Gaussian blur post-processing"]
+        },
+        "fresnel": {
+          "definition": "View-angle rim highlight for glow/outline effects",
+          "example_prompts": ["Add Fresnel rim glow to edges"]
+        },
+        "cel_shading": {
+          "definition": "Quantized lighting bands for anime/comic look",
+          "example_prompts": ["Apply cel-shading to character model"]
+        },
+        "displacement_mapping": {
+          "definition": "Texture or math moves vertices for waves, ripples",
+          "example_prompts": ["Create displacement map for terrain"]
+        },
+        "pbr": {
+          "definition": "Physically-based: baseColor, metalness, roughness, normal, AO",
+          "example_prompts": ["Set up PBR material with roughness map"]
+        }
+      }
+    },
+    "scroll_interaction": {
+      "name": "Scroll & Interaction",
+      "description": "GSAP, Lenis, and scroll-driven animation",
+      "children": {
+        "gsap": {
+          "definition": "JS animation library for timelines and tweens",
+          "example_prompts": [
+            "Animate camera position with GSAP",
+            "Create GSAP timeline for section reveals"
+          ]
+        },
+        "scrolltrigger": {
+          "definition": "GSAP plugin linking scroll position to animation progress",
+          "example_prompts": [
+            "Trigger animation at 50% scroll",
+            "Scrub timeline based on scroll position"
+          ]
+        },
+        "lenis": {
+          "definition": "Smooth scroll library feeding delta to GSAP and render loop",
+          "example_prompts": [
+            "Set up Lenis for buttery scroll",
+            "Sync Lenis with Three.js render loop"
+          ]
+        },
+        "scroll_driven_camera": {
+          "definition": "Camera position/rotation/FOV updated by scroll progress",
+          "example_prompts": [
+            "Move camera through scene on scroll",
+            "Rotate camera 360° across page scroll"
+          ]
+        },
+        "scroll_parallax": {
+          "definition": "Foreground/background move at different scroll speeds",
+          "example_prompts": ["Add parallax depth to hero layers"]
+        }
+      }
+    },
+    "integration_patterns": {
+      "name": "Integration Patterns",
+      "description": "How to use Unicorn with code stacks",
+      "children": {
+        "unicorn_embed": {
+          "definition": "Export Unicorn scene as lightweight embed for Framer/Webflow/custom sites",
+          "example_prompts": [
+            "Embed Unicorn scene in Next.js",
+            "Add Unicorn SDK to React project"
+          ]
+        },
+        "unicorn_to_threejs": {
+          "definition": "Replicate Unicorn effect logic in custom Three.js/R3F code",
+          "example_prompts": [
+            "Convert Unicorn distortion to Three.js shader",
+            "Mirror Unicorn lighting in R3F"
+          ]
+        },
+        "hybrid_stack": {
+          "definition": "Unicorn for 2D FX layer, Three.js for deep 3D environments",
+          "example_prompts": [
+            "Layer Unicorn effects over Three.js scene",
+            "Use Unicorn for UI, Three.js for 3D product"
+          ]
+        }
+      }
+    }
+  },
+  "languages": {
+    "glsl": {
+      "name": "GLSL",
+      "definition": "C-like language for WebGL shaders"
+    },
+    "tsl": {
+      "name": "TSL",
+      "definition": "Node-based system generating shaders for WebGPU"
+    }
+  }
+}

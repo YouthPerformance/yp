@@ -18,7 +18,15 @@
     "machine:mine": "tsx tools/machine-sprint/cli.ts mine",
     "machine:opps": "tsx tools/machine-sprint/cli.ts opps",
     "machine:generate": "tsx tools/machine-sprint/cli.ts generate",
-    "machine:run": "tsx tools/machine-sprint/cli.ts run"
+    "machine:run": "tsx tools/machine-sprint/cli.ts run",
+    "machine:graph": "tsx tools/machine-sprint/cli.ts graph",
+    "machine:parallel": "tsx tools/machine-sprint/parallel-clusters.ts",
+    "machine:parallel:dry": "tsx tools/machine-sprint/parallel-clusters.ts --dry-run",
+    "am:report": "tsx tools/machine-sprint/am-dashboard.ts",
+    "am:dashboard": "tsx tools/machine-sprint/am-dashboard.ts",
+    "op:parallel": "op run --env-file=.env.1password -- pnpm machine:parallel",
+    "op:run": "op run --env-file=.env.1password -- pnpm machine:run",
+    "op:graph": "op run --env-file=.env.1password -- pnpm machine:graph"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.33.0",

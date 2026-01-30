@@ -1852,4 +1852,566 @@ export default defineSchema({
   })
     .index("by_user_id", ["userId"])
     .index("by_whatsapp", ["whatsappNumber"]),
+
+  // ═══════════════════════════════════════════════════════════════
+  // PARENT OS - SPORTS FAMILY SCHEDULING
+  // "We don't show your schedule. We run it."
+  // ═══════════════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_PACKS: Family units (the "Wolf Pack")
+  // Each pack has parents + athletes
+  // ─────────────────────────────────────────────────────────────────
+  pos_packs: defineTable({
+    // Identity
+    name: v.string(), // "The Smith Family"
+
+    // Home base (for travel time calculations)
+    homeAddress: v.optional(v.string()),
+    homeLatLng: v.optional(
+      v.object({
+        lat: v.number(),
+        lng: v.number(),
+      })
+    ),
+
+    // Preferences
+    defaultPrepTime: v.number(), // Minutes (default: 30)
+    defaultArrivalBuffer: v.number(), // Minutes (default: 10)
+    timezone: v.string(), // "America/Denver"
+
+    // Protected family times (block from conflicts)
+    protectedTimes: v.array(
+      v.object({
+        name: v.string(), // "Sunday mornings"
+        dayOfWeek: v.number(), // 0=Sunday, 6=Saturday
+        startTime: v.string(), // "08:00"
+        endTime: v.string(), // "12:00"
+      })
+    ),
+
+    // Subscription
+    subscriptionTier: v.union(
+      v.literal("free"),
+      v.literal("pro"),
+      v.literal("family")
+    ),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_created", ["createdAt"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_PACK_MEMBERS: Parents/guardians in a pack
+  // Links to existing users table when available
+  // ─────────────────────────────────────────────────────────────────
+  pos_pack_members: defineTable({
+    packId: v.id("pos_packs"),
+
+    // Identity
+    name: v.string(),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+
+    // Role
+    role: v.union(
+      v.literal("owner"),
+      v.literal("parent"),
+      v.literal("guardian"),
+      v.literal("caregiver")
+    ),
+
+    // Capabilities
+    canDrive: v.boolean(),
+    maxPassengers: v.optional(v.number()), // For carpools
+    vehicleDescription: v.optional(v.string()), // "Silver Honda Odyssey"
+
+    // Notifications
+    receivesAlerts: v.boolean(),
+    preferredChannel: v.union(
+      v.literal("push"),
+      v.literal("sms"),
+      v.literal("email")
+    ),
+
+    // Link to YP user (if registered)
+    userId: v.optional(v.id("users")),
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_email", ["email"])
+    .index("by_user", ["userId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_ATHLETES: Kids in a pack
+  // Links to YP users for training integration
+  // ─────────────────────────────────────────────────────────────────
+  pos_athletes: defineTable({
+    packId: v.id("pos_packs"),
+
+    // Identity
+    name: v.string(),
+    nickname: v.optional(v.string()), // "Jake" vs "Jacob"
+    birthYear: v.number(),
+    age: v.number(), // Computed from birthYear
+
+    // Sports (for filtering/display)
+    sports: v.array(v.string()), // ["soccer", "basketball"]
+    primarySport: v.optional(v.string()),
+
+    // Display
+    avatarColor: v.string(), // For calendar swimlane color
+
+    // Link to YP user (if registered for training)
+    userId: v.optional(v.id("users")),
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_user", ["userId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_EVENT_SOURCES: Connected calendars and team apps
+  // Google Calendar, TeamSnap, ICS feeds, etc.
+  // ─────────────────────────────────────────────────────────────────
+  pos_event_sources: defineTable({
+    packId: v.id("pos_packs"),
+
+    // Source type
+    sourceType: v.union(
+      v.literal("google_calendar"),
+      v.literal("apple_calendar"),
+      v.literal("outlook"),
+      v.literal("teamsnap"),
+      v.literal("sportsengine"),
+      v.literal("gamechanger"),
+      v.literal("ics_feed"),
+      v.literal("manual")
+    ),
+
+    // Display
+    name: v.string(), // "Jake's Soccer (TeamSnap)"
+    color: v.optional(v.string()), // Hex color for events
+
+    // Which athlete(s) this source is for
+    athleteIds: v.array(v.id("pos_athletes")),
+
+    // OAuth tokens (encrypted in practice)
+    accessToken: v.optional(v.string()),
+    refreshToken: v.optional(v.string()),
+    tokenExpiresAt: v.optional(v.number()),
+
+    // For ICS feeds
+    icsUrl: v.optional(v.string()),
+
+    // Sync status
+    lastSyncAt: v.optional(v.number()),
+    lastSyncStatus: v.union(
+      v.literal("success"),
+      v.literal("failed"),
+      v.literal("pending"),
+      v.literal("never")
+    ),
+    lastSyncError: v.optional(v.string()),
+
+    // Settings
+    syncEnabled: v.boolean(),
+    autoSyncInterval: v.number(), // Minutes (default: 240 = 4 hours)
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_type", ["sourceType"])
+    .index("by_last_sync", ["lastSyncAt"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_EVENTS: Aggregated events from all sources
+  // Canonical event records with computed fields
+  // ─────────────────────────────────────────────────────────────────
+  pos_events: defineTable({
+    packId: v.id("pos_packs"),
+    sourceId: v.id("pos_event_sources"),
+
+    // Which athlete(s) this event is for
+    athleteIds: v.array(v.id("pos_athletes")),
+
+    // Event details
+    title: v.string(),
+    description: v.optional(v.string()),
+    eventType: v.union(
+      v.literal("practice"),
+      v.literal("game"),
+      v.literal("tournament"),
+      v.literal("meeting"),
+      v.literal("other")
+    ),
+
+    // Timing
+    startTime: v.number(), // Unix timestamp
+    endTime: v.number(),
+    allDay: v.boolean(),
+
+    // Location
+    location: v.optional(v.string()),
+    locationLatLng: v.optional(
+      v.object({
+        lat: v.number(),
+        lng: v.number(),
+      })
+    ),
+
+    // Computed travel info (from home)
+    travelTimeMinutes: v.optional(v.number()),
+    travelDistanceMiles: v.optional(v.number()),
+
+    // Computed prep/arrival
+    prepStartTime: v.optional(v.number()), // startTime - prepTime - travelTime
+    leaveTime: v.optional(v.number()), // startTime - travelTime - arrivalBuffer
+
+    // Driver assignment
+    assignedDriverId: v.optional(v.id("pos_pack_members")),
+    driverStatus: v.union(
+      v.literal("unassigned"),
+      v.literal("assigned"),
+      v.literal("confirmed"),
+      v.literal("carpool_requested"),
+      v.literal("carpool_confirmed")
+    ),
+
+    // External reference
+    externalEventId: v.optional(v.string()), // ID from source system
+
+    // Sync tracking
+    lastSyncAt: v.number(),
+    sourceChecksum: v.optional(v.string()), // For change detection
+
+    // Status
+    status: v.union(
+      v.literal("scheduled"),
+      v.literal("cancelled"),
+      v.literal("completed")
+    ),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_source", ["sourceId"])
+    .index("by_athlete", ["athleteIds"])
+    .index("by_pack_date", ["packId", "startTime"])
+    .index("by_external_id", ["externalEventId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_CONFLICTS: Detected scheduling conflicts
+  // The core value prop - what competitors don't solve
+  // ─────────────────────────────────────────────────────────────────
+  pos_conflicts: defineTable({
+    packId: v.id("pos_packs"),
+
+    // Conflicting events
+    eventIds: v.array(v.id("pos_events")),
+
+    // Conflict type
+    conflictType: v.union(
+      v.literal("time_overlap"), // Same time, different places
+      v.literal("travel_impossible"), // Not enough time to get there
+      v.literal("driver_unavailable"), // No one can drive
+      v.literal("protected_time") // Conflicts with family time
+    ),
+
+    // Severity
+    severity: v.union(
+      v.literal("critical"), // Impossible to attend both
+      v.literal("warning"), // Tight but possible
+      v.literal("info") // FYI, might be an issue
+    ),
+
+    // AI-generated solutions (ranked)
+    suggestedSolutions: v.array(
+      v.object({
+        rank: v.number(), // 1 = best
+        solutionType: v.union(
+          v.literal("split_drivers"), // Each parent takes one kid
+          v.literal("carpool_request"), // Ask another family
+          v.literal("reschedule"), // Ask coach to move
+          v.literal("skip_event"), // Mark unavailable
+          v.literal("manual") // User figures it out
+        ),
+        description: v.string(),
+        // For carpool suggestions
+        suggestedFamilyId: v.optional(v.string()),
+        // For reschedule suggestions
+        suggestedNewTime: v.optional(v.number()),
+        // Pre-composed message
+        draftMessage: v.optional(v.string()),
+      })
+    ),
+
+    // Resolution status
+    status: v.union(
+      v.literal("unresolved"),
+      v.literal("in_progress"),
+      v.literal("resolved"),
+      v.literal("dismissed")
+    ),
+
+    // Resolution details
+    resolvedBy: v.optional(v.id("pos_pack_members")),
+    resolvedAt: v.optional(v.number()),
+    resolutionType: v.optional(v.string()),
+    resolutionNotes: v.optional(v.string()),
+
+    // Timestamps
+    detectedAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_status", ["status"])
+    .index("by_pack_status", ["packId", "status"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_CARPOOL_REQUESTS: Carpool coordination
+  // Network effects - families helping families
+  // ─────────────────────────────────────────────────────────────────
+  pos_carpool_requests: defineTable({
+    // Requesting pack
+    requestingPackId: v.id("pos_packs"),
+    requestingMemberId: v.id("pos_pack_members"),
+
+    // Event context
+    eventId: v.id("pos_events"),
+
+    // Request type
+    requestType: v.union(
+      v.literal("need_ride"), // Need someone to take my kid
+      v.literal("offering_ride") // I can take extra kids
+    ),
+
+    // For offers: how many seats available
+    seatsAvailable: v.optional(v.number()),
+
+    // Which athlete needs the ride
+    athleteId: v.id("pos_athletes"),
+
+    // Direction (some need just one way)
+    direction: v.union(
+      v.literal("to_event"),
+      v.literal("from_event"),
+      v.literal("both")
+    ),
+
+    // Target family (if direct request vs open)
+    targetPackId: v.optional(v.id("pos_packs")),
+
+    // Message
+    message: v.optional(v.string()),
+
+    // Status
+    status: v.union(
+      v.literal("pending"),
+      v.literal("accepted"),
+      v.literal("declined"),
+      v.literal("cancelled"),
+      v.literal("expired")
+    ),
+
+    // Response
+    respondedByPackId: v.optional(v.id("pos_packs")),
+    respondedByMemberId: v.optional(v.id("pos_pack_members")),
+    respondedAt: v.optional(v.number()),
+    responseMessage: v.optional(v.string()),
+
+    // Timestamps
+    createdAt: v.number(),
+    expiresAt: v.optional(v.number()),
+  })
+    .index("by_requesting_pack", ["requestingPackId"])
+    .index("by_event", ["eventId"])
+    .index("by_status", ["status"])
+    .index("by_target_pack", ["targetPackId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_CARPOOL_CONNECTIONS: Trusted carpool families
+  // "We carpool with the Martinez family"
+  // ─────────────────────────────────────────────────────────────────
+  pos_carpool_connections: defineTable({
+    packId: v.id("pos_packs"),
+    connectedPackId: v.id("pos_packs"),
+
+    // Trust level
+    trustLevel: v.union(
+      v.literal("trusted"), // Full carpool partner
+      v.literal("occasional"), // Sometimes
+      v.literal("pending") // Requested but not confirmed
+    ),
+
+    // Stats
+    ridesGiven: v.number(),
+    ridesReceived: v.number(),
+
+    // Contact preferences
+    preferredContactMethod: v.optional(v.string()),
+
+    // Timestamps
+    connectedAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_connected_pack", ["connectedPackId"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_FEES: Fee tracking and reminders
+  // "What did we already pay?"
+  // ─────────────────────────────────────────────────────────────────
+  pos_fees: defineTable({
+    packId: v.id("pos_packs"),
+
+    // What athlete(s) this fee is for
+    athleteIds: v.array(v.id("pos_athletes")),
+
+    // Fee details
+    title: v.string(), // "Spring Soccer Registration"
+    description: v.optional(v.string()),
+    amount: v.number(), // In cents
+    currency: v.string(), // "USD"
+
+    // Categorization
+    category: v.union(
+      v.literal("registration"),
+      v.literal("tournament"),
+      v.literal("equipment"),
+      v.literal("travel"),
+      v.literal("other")
+    ),
+
+    // Timing
+    dueDate: v.number(),
+
+    // Status
+    status: v.union(
+      v.literal("upcoming"),
+      v.literal("due_soon"), // Within 7 days
+      v.literal("overdue"),
+      v.literal("paid"),
+      v.literal("cancelled")
+    ),
+
+    // Payment tracking
+    paidAt: v.optional(v.number()),
+    paidAmount: v.optional(v.number()),
+    paymentMethod: v.optional(v.string()),
+    receiptUrl: v.optional(v.string()),
+
+    // Reminders
+    remindersSent: v.number(),
+    nextReminderAt: v.optional(v.number()),
+
+    // Source (if imported from team app)
+    sourceId: v.optional(v.id("pos_event_sources")),
+    externalFeeId: v.optional(v.string()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_status", ["status"])
+    .index("by_due_date", ["dueDate"])
+    .index("by_pack_status", ["packId", "status"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_WELLNESS: Weekly load tracking
+  // Prevents overuse injuries
+  // ─────────────────────────────────────────────────────────────────
+  pos_wellness: defineTable({
+    packId: v.id("pos_packs"),
+    athleteId: v.id("pos_athletes"),
+
+    // Week identifier
+    weekStart: v.number(), // Monday of the week (timestamp)
+
+    // Computed stats
+    totalEvents: v.number(),
+    totalPractices: v.number(),
+    totalGames: v.number(),
+    totalHours: v.number(),
+
+    // Load assessment
+    loadLevel: v.union(
+      v.literal("low"), // < 50% of recommended
+      v.literal("balanced"), // 50-80%
+      v.literal("high"), // 80-100%
+      v.literal("excessive") // > 100%
+    ),
+    loadPercent: v.number(), // 0-150
+
+    // Warnings
+    warnings: v.array(v.string()), // ["3 games in 4 days", "No rest day"]
+
+    // Family time check
+    protectedTimeConflicts: v.number(),
+
+    // Timestamps
+    calculatedAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_athlete", ["athleteId"])
+    .index("by_athlete_week", ["athleteId", "weekStart"]),
+
+  // ─────────────────────────────────────────────────────────────────
+  // POS_NOTIFICATIONS: Push notification queue
+  // Prep reminders, conflict alerts, carpool updates
+  // ─────────────────────────────────────────────────────────────────
+  pos_notifications: defineTable({
+    packId: v.id("pos_packs"),
+    memberId: v.id("pos_pack_members"),
+
+    // Notification type
+    notificationType: v.union(
+      v.literal("conflict_detected"),
+      v.literal("schedule_change"),
+      v.literal("prep_reminder"),
+      v.literal("carpool_request"),
+      v.literal("carpool_response"),
+      v.literal("fee_reminder"),
+      v.literal("wellness_alert")
+    ),
+
+    // Content
+    title: v.string(),
+    body: v.string(),
+
+    // Related entities
+    eventId: v.optional(v.id("pos_events")),
+    conflictId: v.optional(v.id("pos_conflicts")),
+    carpoolRequestId: v.optional(v.id("pos_carpool_requests")),
+    feeId: v.optional(v.id("pos_fees")),
+
+    // Delivery status
+    status: v.union(
+      v.literal("pending"),
+      v.literal("sent"),
+      v.literal("delivered"),
+      v.literal("read"),
+      v.literal("failed")
+    ),
+
+    // Scheduling
+    scheduledFor: v.number(),
+    sentAt: v.optional(v.number()),
+    readAt: v.optional(v.number()),
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_pack", ["packId"])
+    .index("by_member", ["memberId"])
+    .index("by_status", ["status"])
+    .index("by_scheduled", ["scheduledFor"]),
 });

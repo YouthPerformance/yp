@@ -24,6 +24,7 @@ export { TakeawaysList, type TakeawaysListProps } from "./TakeawaysList";
 export { MistakesFixes, type MistakeFix, type MistakesFixesProps } from "./MistakesFixes";
 export { FAQAccordion, type FAQItem, type FAQAccordionProps } from "./FAQAccordion";
 export { SafetyBox, type SafetyBoxProps } from "./SafetyBox";
+export { ResearchBrief, type Citation, type ResearchBriefProps } from "./ResearchBrief";
 
 // Footer + Navigation
 export { PillarFooter, type RelatedPillar, type PillarFooterProps } from "./PillarFooter";

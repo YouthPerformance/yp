@@ -1,0 +1,309 @@
+/* ═══════════════════════════════════════════════════════════
+   V3.1 DRILL PAGE DESIGN TOKENS
+   Extension of pillar-tokens.css for drill detail pages
+   "Skill Injector" - Mobile-first, dual-audience optimized
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   DRILL-SPECIFIC DIMENSIONS
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Step Numbers */
+  --drill-step-number-size: 48px;
+  --drill-step-number-size-mobile: 40px;
+  --drill-step-connector-width: 2px;
+
+  /* Cue Cards */
+  --drill-cue-card-width: 160px;
+  --drill-cue-card-height: 120px;
+  --drill-cue-card-gap: 12px;
+
+  /* Unlock Condition */
+  --drill-unlock-icon-size: 24px;
+  --drill-unlock-badge-height: 48px;
+
+  /* Quick Facts Strip */
+  --drill-fact-item-min-width: 100px;
+  --drill-fact-item-height: 72px;
+
+  /* Benchmarks Table */
+  --drill-benchmark-row-height: 48px;
+
+  /* Progression Cards */
+  --drill-progression-card-width: 140px;
+  --drill-progression-arrow-size: 24px;
+
+  /* Sticky Bar */
+  --drill-sticky-bar-height: 64px;
+  --drill-sticky-bar-height-mobile: 56px;
+
+  /* ─────────────────────────────────────────────────────────────
+     DRILL STATUS COLORS
+     ───────────────────────────────────────────────────────────── */
+
+  /* Step Status */
+  --drill-step-active: var(--pillar-brand-cyan);
+  --drill-step-complete: var(--pillar-status-success);
+  --drill-step-pending: var(--pillar-text-dim);
+
+  /* Cue Colors */
+  --drill-cue-do: var(--pillar-status-success);
+  --drill-cue-do-bg: rgba(0, 255, 136, 0.08);
+  --drill-cue-dont: var(--pillar-status-danger);
+  --drill-cue-dont-bg: rgba(255, 71, 87, 0.08);
+  --drill-cue-focus: var(--pillar-brand-cyan);
+  --drill-cue-focus-bg: rgba(0, 246, 224, 0.08);
+
+  /* Mistake Colors */
+  --drill-mistake-if: var(--pillar-status-warning);
+  --drill-mistake-cause: var(--pillar-text-secondary);
+  --drill-mistake-fix: var(--pillar-brand-cyan);
+
+  /* Intensity Levels */
+  --drill-intensity-low: #22C55E;
+  --drill-intensity-medium: #EAB308;
+  --drill-intensity-high: #EF4444;
+
+  /* ─────────────────────────────────────────────────────────────
+     DRILL TYPOGRAPHY
+     ───────────────────────────────────────────────────────────── */
+
+  /* Step Number Font */
+  --drill-step-font-size: 24px;
+  --drill-step-font-weight: 700;
+
+  /* Quick Scan Labels */
+  --drill-label-font-size: 10px;
+  --drill-label-letter-spacing: 2px;
+
+  /* Definition Text */
+  --drill-definition-font-size: 18px;
+  --drill-definition-line-height: 1.6;
+  --drill-definition-max-width: 600px;
+
+  /* ─────────────────────────────────────────────────────────────
+     DRILL ANIMATIONS
+     ───────────────────────────────────────────────────────────── */
+
+  /* Holographic scan effect */
+  --drill-scan-duration: 2s;
+  --drill-scan-delay: 0.1s;
+
+  /* Unlock pulse */
+  --drill-unlock-pulse-duration: 2s;
+  --drill-unlock-pulse-scale: 1.05;
+
+  /* Sticky bar morph */
+  --drill-sticky-morph-duration: 300ms;
+
+  /* ─────────────────────────────────────────────────────────────
+     DRILL SPACING OVERRIDES
+     ───────────────────────────────────────────────────────────── */
+
+  /* Hero Overlay */
+  --drill-hero-padding-bottom: 120px;
+  --drill-hero-padding-bottom-mobile: 100px;
+
+  /* Section Gaps */
+  --drill-section-gap: 48px;
+  --drill-section-gap-mobile: 32px;
+
+  /* Step Grid */
+  --drill-step-gap: 24px;
+  --drill-step-content-gap: 16px;
+
+  /* ─────────────────────────────────────────────────────────────
+     DRILL BREAKPOINTS (Mobile-first viewport priorities)
+     ───────────────────────────────────────────────────────────── */
+
+  /* Above the fold on 375px: Hero + Action Row + Definition */
+  --drill-hero-min-height: 100vh;
+  --drill-hero-min-height-dvh: 100dvh;
+
+  /* Scroll hint visibility threshold */
+  --drill-scroll-hint-opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DRILL PAGE BASE STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+.drill-page {
+  font-family: var(--pillar-font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--pillar-text-primary);
+  background: var(--pillar-surface-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LAYER SEPARATION (TRAIN vs GUIDE)
+   ───────────────────────────────────────────────────────────── */
+
+/* GUIDE layer - always visible, SEO-critical content */
+[data-layer="guide"] {
+  /* Content is always in DOM for crawlers */
+}
+
+/* TRAIN layer - interactive, JS-dependent features */
+[data-layer="train"] {
+  /* Enhanced for athletes when JS loads */
+}
+
+/* Graceful degradation - if JS fails, GUIDE layer remains functional */
+.no-js [data-layer="train"] {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DRILL TAGS
+   ───────────────────────────────────────────────────────────── */
+
+.drill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pillar-space-1);
+  padding: var(--pillar-space-1) var(--pillar-space-3);
+  background: var(--pillar-surface-raised);
+  border: 1px solid var(--pillar-border-subtle);
+  border-radius: 100px;
+  font-family: var(--pillar-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--pillar-text-secondary);
+  white-space: nowrap;
+}
+
+.drill-tag--silent {
+  background: rgba(124, 22, 255, 0.15);
+  border-color: rgba(124, 22, 255, 0.3);
+  color: var(--pillar-brand-purple);
+}
+
+.drill-tag--indoor {
+  background: rgba(0, 246, 224, 0.1);
+  border-color: rgba(0, 246, 224, 0.2);
+  color: var(--pillar-brand-cyan);
+}
+
+.drill-tag--beginner {
+  background: rgba(0, 255, 136, 0.1);
+  border-color: rgba(0, 255, 136, 0.2);
+  color: var(--pillar-status-success);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HOLOGRAPHIC SCAN EFFECT
+   ───────────────────────────────────────────────────────────── */
+
+@keyframes drill-scan {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.drill-scan-item {
+  animation: drill-scan var(--drill-scan-duration) var(--pillar-ease-out) forwards;
+  animation-delay: calc(var(--scan-index, 0) * var(--drill-scan-delay));
+  opacity: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   UNLOCK PULSE ANIMATION
+   ───────────────────────────────────────────────────────────── */
+
+@keyframes drill-unlock-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 255, 136, 0);
+    transform: scale(var(--drill-unlock-pulse-scale));
+  }
+}
+
+.drill-unlock-badge {
+  animation: drill-unlock-pulse var(--drill-unlock-pulse-duration) ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STICKY BAR MORPHING
+   ───────────────────────────────────────────────────────────── */
+
+.drill-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--drill-sticky-bar-height);
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--pillar-border-subtle);
+  transform: translateY(100%);
+  transition: transform var(--drill-sticky-morph-duration) var(--pillar-ease-out);
+}
+
+.drill-sticky-bar--visible {
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE ADJUSTMENTS
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  :root {
+    --drill-step-number-size: var(--drill-step-number-size-mobile);
+    --drill-section-gap: var(--drill-section-gap-mobile);
+    --drill-hero-padding-bottom: var(--drill-hero-padding-bottom-mobile);
+    --drill-sticky-bar-height: var(--drill-sticky-bar-height-mobile);
+  }
+
+  .drill-tag {
+    font-size: 10px;
+    padding: var(--pillar-space-1) var(--pillar-space-2);
+  }
+}
+
+/* Small mobile (375px and below) */
+@media (max-width: 375px) {
+  .drill-cue-cards {
+    flex-direction: column;
+  }
+
+  .drill-cue-card {
+    width: 100%;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PRINT STYLES (Ensure GUIDE layer prints correctly)
+   ───────────────────────────────────────────────────────────── */
+
+@media print {
+  [data-layer="train"] {
+    display: none !important;
+  }
+
+  .drill-sticky-bar {
+    display: none !important;
+  }
+
+  .drill-page {
+    background: white;
+    color: black;
+  }
+}

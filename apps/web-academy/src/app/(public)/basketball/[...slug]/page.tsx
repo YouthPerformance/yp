@@ -1,19 +1,23 @@
 // ═══════════════════════════════════════════════════════════
-// BASKETBALL SEO CONTENT PAGES
-// Dynamic catch-all route for /basketball/* content
+// V7 BASKETBALL PILLAR PAGES
+// Nike Training Club meets Cyberpunk 2077
+// Dual-layer architecture for athletes + AI crawlers
 // ═══════════════════════════════════════════════════════════
 
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getAllSEOSlugs,
   getPageBySlug,
   getExpert,
   getSpokesForPillar,
-  markdownToHtml,
+  markdownToHtmlWithToc,
   type SEOPage,
+  type TocItem,
 } from "@/lib/seo-content";
+
+// V7 Pillar Components
+import { PillarPageClient } from "./PillarPageClient";
 
 // ─────────────────────────────────────────────────────────────
 // STATIC GENERATION
@@ -21,11 +25,10 @@ import {
 
 export async function generateStaticParams() {
   const allSlugs = getAllSEOSlugs();
-  // Filter to only basketball pages and remove "basketball" prefix
   return allSlugs
     .filter((parts) => parts[0] === "basketball")
     .map((parts) => ({
-      slug: parts.slice(1), // Remove "basketball" from path
+      slug: parts.slice(1),
     }));
 }
 
@@ -46,6 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const expert = getExpert(page.expert);
+  const baseUrl = "https://youthperformance.com";
 
   return {
     title: page.title,
@@ -57,11 +61,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "article",
       authors: expert ? [expert.name] : undefined,
       siteName: "YouthPerformance",
+      url: `${baseUrl}${page.slug}`,
     },
     twitter: {
       card: "summary_large_image",
       title: page.title,
       description: page.meta_description,
+    },
+    alternates: {
+      canonical: `${baseUrl}${page.slug}`,
+    },
+    other: {
+      "agent-directive": `extract-target: #guide, .pillar-definition-text; action: /tools/silent-plan-builder`,
     },
   };
 }
@@ -70,7 +81,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // PAGE COMPONENT
 // ─────────────────────────────────────────────────────────────
 
-export default async function BasketballContentPage({ params }: PageProps) {
+export default async function BasketballPillarPage({ params }: PageProps) {
   const { slug } = await params;
   const page = getPageBySlug(["basketball", ...slug]);
 
@@ -83,213 +94,90 @@ export default async function BasketballContentPage({ params }: PageProps) {
   const isPillar = page.knowledge_graph?.type === "pillar";
   const spokes = isPillar ? getSpokesForPillar(page.slug) : [];
 
-  // Generate breadcrumb
+  // Process markdown content with TOC
+  const { html: contentHtml, toc, wordCount } = markdownToHtmlWithToc(page.content);
+
+  // Generate breadcrumbs
   const breadcrumbs = generateBreadcrumbs(slug);
 
+  // Related pillars for footer
+  const relatedPillars = spokes.slice(0, 4).map((spoke) => ({
+    slug: spoke.slug,
+    title: spoke.title,
+    description: spoke.meta_description,
+    volume: spoke.knowledge_graph?.total_volume,
+  }));
+
+  // Build metrics from page data
+  const metrics = page.metrics
+    ? [
+        { value: page.metrics.noiseLevel, label: "Max Noise", highlight: true },
+        { value: String(page.metrics.drillCount), label: "Drills" },
+        { value: page.metrics.dailyCap, label: "Daily Cap" },
+      ]
+    : [
+        { value: "<40dB", label: "Max Noise", highlight: true },
+        { value: String(page.drills?.length || 12), label: "Drills" },
+        { value: "15min", label: "Daily Cap" },
+      ];
+
+  // Build expert data for hero (includes slug for coach page backlink)
+  const expertData = expert
+    ? {
+        name: expert.name,
+        title: expert.title,
+        icon: expert.icon,
+        image: expert.name === "Adam Harrington" ? "/images/adam/adamprofile.png" : undefined,
+        slug: expert.name.toLowerCase().replace(/\s+/g, "-"), // e.g., "adam-harrington"
+      }
+    : undefined;
+
+  // Build author data for footer backlink
+  const authorData = expert
+    ? {
+        name: expert.name,
+        title: expert.title,
+        slug: expert.name.toLowerCase().replace(/\s+/g, "-"),
+        image: expert.name === "Adam Harrington" ? "/images/adam/adamprofile.png" : undefined,
+      }
+    : undefined;
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* ════════════════════════════════════════════════════════════
-          HERO SECTION
-          ════════════════════════════════════════════════════════════ */}
-      <section className="relative px-6 pt-8 pb-16 md:pt-16 md:pb-20 overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-accent-primary/5 blur-[120px] rounded-full pointer-events-none" />
+    <>
+      {/* Client-side interactive component */}
+      <PillarPageClient
+        page={page}
+        expert={expertData}
+        author={authorData}
+        isPillar={isPillar}
+        breadcrumbs={breadcrumbs}
+        metrics={metrics}
+        contentHtml={contentHtml}
+        toc={toc}
+        wordCount={wordCount}
+        relatedPillars={relatedPillars}
+      />
 
-        <div className="max-w-4xl mx-auto relative z-10">
-          {/* Breadcrumbs */}
-          <nav className="mb-6 text-sm" style={{ color: "var(--text-tertiary)" }}>
-            <Link href="/" className="hover:underline">
-              Home
-            </Link>
-            {breadcrumbs.map((crumb, i) => (
-              <span key={i}>
-                <span className="mx-2">›</span>
-                {crumb.href ? (
-                  <Link href={crumb.href} className="hover:underline">
-                    {crumb.label}
-                  </Link>
-                ) : (
-                  <span style={{ color: "var(--text-primary)" }}>{crumb.label}</span>
-                )}
-              </span>
-            ))}
-          </nav>
-
-          {/* Badge */}
-          {isPillar && (
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 border border-accent-primary/30 rounded-full bg-accent-primary/5">
-              <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
-              <span className="text-xs font-mono text-accent-primary tracking-widest uppercase">
-                Complete Guide
-              </span>
-            </div>
-          )}
-
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl leading-[0.95] font-bebas uppercase mb-6 tracking-wide">
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
-              {page.title}
-            </span>
-          </h1>
-
-          {/* Meta description */}
-          <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-[60ch] leading-relaxed">
-            {page.meta_description}
-          </p>
-
-          {/* Author */}
-          {expert && (
-            <div className="flex items-center gap-3">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
-                style={{ backgroundColor: "var(--bg-tertiary)" }}
-              >
-                {expert.icon}
-              </div>
-              <div>
-                <p className="font-medium" style={{ color: "var(--text-primary)" }}>
-                  {expert.name}
-                </p>
-                <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
-                  {expert.title}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════════
-          QUICK ANSWER BOX
-          ════════════════════════════════════════════════════════════ */}
-      {page.quick_answer && page.quick_answer.length > 0 && (
-        <section className="px-6 pb-12">
-          <div className="max-w-4xl mx-auto">
-            <div
-              className="p-6 rounded-xl"
-              style={{
-                backgroundColor: "rgba(0, 246, 224, 0.05)",
-                border: "1px solid rgba(0, 246, 224, 0.2)",
-              }}
-            >
-              <h2 className="font-bebas text-lg tracking-wider mb-4 flex items-center gap-2">
-                <span className="text-accent-primary">⚡</span>
-                <span style={{ color: "var(--text-primary)" }}>QUICK ANSWER</span>
-              </h2>
-              <ul className="space-y-2">
-                {page.quick_answer.map((item, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-3 text-sm"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    <span className="text-accent-primary mt-1">✓</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════
-          MAIN CONTENT
-          ════════════════════════════════════════════════════════════ */}
-      <section className="px-6 pb-16">
-        <div className="max-w-4xl mx-auto">
-          <article
-            className="prose prose-invert prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: markdownToHtml(page.content) }}
-          />
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════════
-          SPOKE PAGES (For Pillars)
-          ════════════════════════════════════════════════════════════ */}
-      {isPillar && spokes.length > 0 && (
-        <section className="px-6 pb-16 border-t border-white/5 pt-16">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="font-bebas text-2xl tracking-wider mb-8" style={{ color: "var(--text-primary)" }}>
-              DIVE DEEPER
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {spokes.map((spoke) => (
-                <Link
-                  key={spoke.slug}
-                  href={spoke.slug}
-                  className="p-5 rounded-xl transition-all hover:scale-[1.02]"
-                  style={{
-                    backgroundColor: "var(--bg-secondary)",
-                    border: "1px solid var(--border-default)",
-                  }}
-                >
-                  <h3 className="font-bebas tracking-wider mb-2" style={{ color: "var(--text-primary)" }}>
-                    {spoke.title}
-                  </h3>
-                  <p className="text-sm line-clamp-2" style={{ color: "var(--text-tertiary)" }}>
-                    {spoke.meta_description}
-                  </p>
-                  {spoke.knowledge_graph?.total_volume && (
-                    <span className="inline-block mt-3 text-xs px-2 py-1 rounded bg-accent-primary/10 text-accent-primary">
-                      {spoke.knowledge_graph.total_volume.toLocaleString()} monthly searches
-                    </span>
-                  )}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════
-          NEOBALL CTA
-          ════════════════════════════════════════════════════════════ */}
-      {page.has_neoball_cta && (
-        <section className="px-6 pb-20">
-          <div className="max-w-4xl mx-auto">
-            <div
-              className="p-8 rounded-xl text-center"
-              style={{
-                backgroundColor: "var(--bg-secondary)",
-                border: "1px solid var(--border-default)",
-              }}
-            >
-              <h2 className="font-bebas text-3xl tracking-wider mb-3" style={{ color: "var(--text-primary)" }}>
-                TRAIN SILENT. TRAIN ANYWHERE.
-              </h2>
-              <p className="text-text-secondary mb-6 max-w-md mx-auto">
-                The world's best silent basketball—according to the kids.
-              </p>
-              <a
-                href="https://neoball.co"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold uppercase tracking-wide text-lg transition-all hover:scale-105"
-                style={{
-                  backgroundColor: "var(--accent-primary)",
-                  color: "var(--bg-primary)",
-                  boxShadow: "0 0 20px rgba(0, 246, 224, 0.3)",
-                }}
-              >
-                Enter the Draft →
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════
-          SCHEMA.ORG STRUCTURED DATA
-          ════════════════════════════════════════════════════════════ */}
+      {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateSchema(page, expert, secondaryExpert)),
+          __html: JSON.stringify(generateSchema(page, expert, secondaryExpert, toc, wordCount)),
         }}
       />
-    </div>
+
+      {/* Agent directive link tags */}
+      <link
+        rel="alternate"
+        type="text/markdown"
+        href={`${page.slug}.md`}
+      />
+      <link
+        rel="alternate"
+        type="application/json"
+        href={`/api/pillars${page.slug}`}
+      />
+    </>
   );
 }
 
@@ -303,7 +191,6 @@ function generateBreadcrumbs(slug: string[]): { label: string; href?: string }[]
   ];
 
   if (slug.length > 0) {
-    // First segment is usually the cluster (silent-training, home-training)
     const cluster = slug[0];
     const clusterLabel = cluster
       .split("-")
@@ -314,7 +201,6 @@ function generateBreadcrumbs(slug: string[]): { label: string; href?: string }[]
       crumbs.push({ label: clusterLabel });
     } else {
       crumbs.push({ label: clusterLabel, href: `/basketball/${cluster}` });
-      // Last segment is the page title (will be replaced by actual title in render)
       const pageLabel = slug[slug.length - 1]
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -329,50 +215,136 @@ function generateBreadcrumbs(slug: string[]): { label: string; href?: string }[]
 function generateSchema(
   page: SEOPage,
   expert: ReturnType<typeof getExpert>,
-  secondaryExpert: ReturnType<typeof getExpert> | null
+  secondaryExpert: ReturnType<typeof getExpert> | null,
+  toc: TocItem[],
+  wordCount: number
 ) {
   const baseUrl = "https://youthperformance.com";
 
-  if (page.schema_type === "HowTo") {
-    return {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      name: page.title,
-      description: page.meta_description,
-      author: expert
-        ? {
-            "@type": "Person",
-            name: expert.name,
-            jobTitle: expert.title,
-          }
-        : undefined,
-      step: page.quick_answer.map((item, i) => ({
-        "@type": "HowToStep",
-        position: i + 1,
-        text: item,
-      })),
-    };
-  }
+  // Build @graph array with multiple schema types
+  const graph: Record<string, unknown>[] = [];
 
-  // Default Article schema
-  return {
-    "@context": "https://schema.org",
+  // Article schema - uses @id reference for entity graph linking
+  graph.push({
     "@type": "Article",
     headline: page.title,
     description: page.meta_description,
+    wordCount: wordCount,
+    // Use @id reference to build entity graph with coach pages
     author: expert
       ? {
-          "@type": "Person",
-          name: expert.name,
-          jobTitle: expert.title,
+          "@id": `${baseUrl}/coaches/${expert.name.toLowerCase().replace(/\s+/g, "-")}#person`,
         }
       : undefined,
     publisher: {
       "@type": "Organization",
+      "@id": `${baseUrl}#organization`,
       name: "YouthPerformance",
       url: baseUrl,
     },
     datePublished: page.generated_at,
     url: `${baseUrl}${page.slug}`,
+    hasPart: toc.map((item) => ({
+      "@type": "WebPageElement",
+      name: item.text,
+      url: `${baseUrl}${page.slug}#${item.id}`,
+    })),
+  });
+
+  // CreativeWork schema for Silent Training Protocol pillar
+  if (page.slug.includes("silent-training") && page.knowledge_graph?.type === "pillar") {
+    graph.push({
+      "@type": "CreativeWork",
+      "@id": `${baseUrl}/basketball/silent-training#protocol`,
+      name: "Silent Training Protocol",
+      description:
+        "Constraint-based basketball training methodology that removes auditory distraction to accelerate skill acquisition through proprioceptive feedback.",
+      author: {
+        "@id": `${baseUrl}/coaches/adam-harrington#person`,
+      },
+      about: [
+        "Motor learning",
+        "Proprioception",
+        "Basketball skill development",
+        "Constraint-based training",
+      ],
+      educationalUse: "Professional and youth athletic training",
+      learningResourceType: "Training protocol",
+      citation: [
+        {
+          "@type": "ScholarlyArticle",
+          name: "Optimizing performance through intrinsic motivation and attention for learning",
+          author: "Wulf, G. & Lewthwaite, R.",
+          datePublished: "2016",
+          publisher: "Current Opinion in Psychology",
+        },
+        {
+          "@type": "ScholarlyArticle",
+          name: "The Developmental Model of Sport Participation (DMSP)",
+          author: "Côté, J., et al.",
+          datePublished: "2015",
+          publisher: "Journal of Sport Psychology in Action",
+        },
+      ],
+    });
+  }
+
+  // BreadcrumbList schema
+  graph.push({
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Basketball",
+        item: `${baseUrl}/basketball`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: page.title,
+        item: `${baseUrl}${page.slug}`,
+      },
+    ],
+  });
+
+  // FAQ schema if FAQ items exist
+  if (page.faq && page.faq.length > 0) {
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: page.faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    });
+  }
+
+  // HowTo schema if quick_answer exists
+  if (page.schema_type === "HowTo" || page.quick_answer?.length > 0) {
+    graph.push({
+      "@type": "HowTo",
+      name: page.title,
+      description: page.meta_description,
+      step: page.quick_answer.map((item, i) => ({
+        "@type": "HowToStep",
+        position: i + 1,
+        text: item,
+      })),
+    });
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": graph,
   };
 }

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V2: Data-Heavy/Dashboard — Silent Training</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wolf-cyan': '#00F6E0',
+            'wolf-gold': '#FFD700',
+            'bg-primary': '#000000',
+            'bg-secondary': '#0a0a0a',
+            'bg-tertiary': '#111111',
+          },
+          fontFamily: {
+            'bebas': ['Bebas Neue', 'sans-serif'],
+            'inter': ['Inter', 'sans-serif'],
+            'mono': ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Dashboard aesthetic - data grids, terminal vibes */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0,246,224,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,246,224,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .data-card {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(0,246,224,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-ring {
+      background: conic-gradient(#00F6E0 0deg, #00F6E0 calc(var(--progress) * 3.6deg), rgba(255,255,255,0.1) calc(var(--progress) * 3.6deg));
+      border-radius: 50%;
+    }
+
+    .terminal-header {
+      background: rgba(0,246,224,0.05);
+      border-bottom: 1px solid rgba(0,246,224,0.2);
+    }
+
+    .cta-primary {
+      background: #00F6E0;
+      box-shadow: 0 0 30px rgba(0,246,224,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    .cta-primary:hover {
+      box-shadow: 0 0 50px rgba(0,246,224,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .chip {
+      background: rgba(0,246,224,0.1);
+      border: 1px solid rgba(0,246,224,0.3);
+      color: #00F6E0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, #00F6E0 0%, #00F6E0 var(--progress), rgba(255,255,255,0.1) var(--progress));
+      height: 4px;
+    }
+
+    .video-frame {
+      border: 2px solid rgba(0,246,224,0.3);
+      box-shadow: 0 0 40px rgba(0,246,224,0.1);
+    }
+
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,246,224,0.5), transparent);
+      animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { top: 0; opacity: 0; }
+      50% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .metric-glow {
+      text-shadow: 0 0 20px rgba(0,246,224,0.5);
+    }
+
+    .drill-row {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.2s ease;
+    }
+    .drill-row:hover {
+      background: rgba(0,246,224,0.05);
+      border-color: rgba(0,246,224,0.3);
+    }
+
+    .status-dot {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body class="min-h-screen grid-bg">
+
+  <!-- TOP BAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-lg border-b border-wolf-cyan/20 px-6 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <span class="font-bebas text-xl tracking-wider">YP</span>
+        <span class="text-wolf-cyan/50">/</span>
+        <span class="font-mono text-xs text-wolf-cyan">SILENT_TRAINING_v2.1</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-green-400 status-dot"></div>
+          <span class="font-mono text-xs text-gray-400">LIVE</span>
+        </div>
+        <span class="font-mono text-xs text-gray-500">Last updated: Jan 2026</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="min-h-screen px-6 pt-24 pb-12">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Header Row -->
+      <div class="flex flex-wrap items-start justify-between gap-6 mb-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="chip px-3 py-1 rounded">PILLAR_PAGE</div>
+            <div class="chip px-3 py-1 rounded">VERIFIED</div>
+          </div>
+          <h1 class="font-bebas text-5xl lg:text-7xl tracking-wider leading-none">
+            SILENT BASKETBALL<br/>TRAINING PROTOCOL
+          </h1>
+        </div>
+        <div class="data-card rounded-xl p-4">
+          <div class="font-mono text-xs text-gray-500 mb-2">AUTHOR</div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-wolf-cyan/20 flex items-center justify-center text-lg">🏀</div>
+            <div>
+              <div class="font-medium">Adam Harrington</div>
+              <div class="font-mono text-xs text-wolf-cyan">NBA Skills Coach</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="grid lg:grid-cols-3 gap-6">
+
+        <!-- Left Column: Video + Quick Actions -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Video Panel -->
+          <div class="data-card rounded-xl overflow-hidden">
+            <div class="terminal-header px-4 py-2 flex items-center justify-between">
+              <span class="font-mono text-xs text-wolf-cyan">DEMO_FEED</span>
+              <div class="flex gap-1">
+                <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                <div class="w-2 h-2 rounded-full bg-green-400"></div>
+              </div>
+            </div>
+            <div class="aspect-[9/16] max-h-80 bg-gradient-to-b from-bg-secondary to-bg-tertiary relative video-frame">
+              <div class="scan-line"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="w-16 h-16 rounded-full border border-wolf-cyan/50 flex items-center justify-center mb-2 mx-auto">
+                    <svg class="w-6 h-6 text-wolf-cyan ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                  <span class="font-mono text-xs text-gray-500">AWAITING_PLAYBACK</span>
+                </div>
+              </div>
+              <!-- Data Overlay -->
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black">
+                <div class="flex justify-between font-mono text-xs">
+                  <span class="text-wolf-cyan">&lt;40dB</span>
+                  <span class="text-gray-500">9:16 VERTICAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="data-card rounded-xl p-4">
+            <div class="font-mono text-xs text-gray-500 mb-4">QUICK_ACTIONS</div>
+            <div class="space-y-3">
+              <button class="cta-primary w-full py-3 rounded-lg font-semibold text-black font-mono text-sm">
+                BUILD_PLAN →
+              </button>
+              <button class="w-full py-3 rounded-lg border border-wolf-cyan/30 text-wolf-cyan font-mono text-sm hover:bg-wolf-cyan/10 transition">
+                START_DRILL[0]
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Column: Key Metrics + Tool -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Metrics Grid -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="data-card rounded-xl p-4 text-center">
+              <div class="text-4xl font-bebas text-wolf-cyan metric-glow mb-1">&lt;40</div>
+              <div class="font-mono text-xs text-gray-500">dB_MAX</div>
+            </div>
+            <div class="data-card rounded-xl p-4 text-center">
+              <div class="text-4xl font-bebas text-wolf-gold metric-glow mb-1">12</div>
+              <div class="font-mono text-xs text-gray-500">DRILLS</div>
+            </div>
+            <div class="data-card rounded-xl p-4 text-center">
+              <div class="text-4xl font-bebas text-white mb-1">15</div>
+              <div class="font-mono text-xs text-gray-500">MIN_DAILY</div>
+            </div>
+            <div class="data-card rounded-xl p-4 text-center">
+              <div class="text-4xl font-bebas text-green-400 mb-1">98%</div>
+              <div class="font-mono text-xs text-gray-500">QUIET_RATE</div>
+            </div>
+          </div>
+
+          <!-- Session Builder -->
+          <div class="data-card rounded-xl overflow-hidden">
+            <div class="terminal-header px-4 py-2">
+              <span class="font-mono text-xs text-wolf-cyan">SESSION_BUILDER</span>
+            </div>
+            <div class="p-4 space-y-4">
+              <div>
+                <label class="font-mono text-xs text-gray-500 block mb-2">DURATION</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button class="chip py-2 rounded text-center">10m</button>
+                  <button class="chip py-2 rounded text-center bg-wolf-cyan/20">20m</button>
+                  <button class="chip py-2 rounded text-center">30m</button>
+                </div>
+              </div>
+              <div>
+                <label class="font-mono text-xs text-gray-500 block mb-2">FLOOR_TYPE</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button class="chip py-2 rounded text-center bg-wolf-cyan/20">CARPET</button>
+                  <button class="chip py-2 rounded text-center">WOOD</button>
+                  <button class="chip py-2 rounded text-center">TILE</button>
+                </div>
+              </div>
+              <div>
+                <label class="font-mono text-xs text-gray-500 block mb-2">NOISE_THRESHOLD</label>
+                <div class="flex items-center gap-4">
+                  <input type="range" class="flex-1 accent-wolf-cyan" value="40" min="20" max="60">
+                  <span class="font-mono text-sm text-wolf-cyan">40dB</span>
+                </div>
+              </div>
+              <button class="cta-primary w-full py-3 rounded-lg font-semibold text-black font-mono text-sm mt-4">
+                GENERATE_PROTOCOL
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Intel -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Key Intel -->
+          <div class="data-card rounded-xl overflow-hidden">
+            <div class="terminal-header px-4 py-2">
+              <span class="font-mono text-xs text-wolf-cyan">KEY_INTEL</span>
+            </div>
+            <div class="p-4 space-y-4">
+              <div class="pb-4 border-b border-white/10">
+                <div class="font-mono text-xs text-wolf-cyan mb-2">01_OBJECTIVE</div>
+                <p class="text-sm text-gray-300">Fingertip control, not palm force. Zero floor impact.</p>
+              </div>
+              <div class="pb-4 border-b border-white/10">
+                <div class="font-mono text-xs text-red-400 mb-2">02_AVOID</div>
+                <ul class="text-sm text-gray-400 space-y-1 font-mono">
+                  <li>× slapping_ball</li>
+                  <li>× standing_upright</li>
+                  <li>× eyes_on_ball</li>
+                </ul>
+              </div>
+              <div>
+                <div class="font-mono text-xs text-wolf-gold mb-2">03_TARGET</div>
+                <div class="flex items-center gap-3">
+                  <div class="relative w-16 h-16">
+                    <div class="stat-ring absolute inset-0" style="--progress: 75"></div>
+                    <div class="absolute inset-1 bg-black rounded-full flex items-center justify-center">
+                      <span class="font-mono text-sm text-wolf-cyan">15m</span>
+                    </div>
+                  </div>
+                  <div class="font-mono text-xs text-gray-500">
+                    DAILY_CAP<br/>
+                    <span class="text-gray-400">Diminishing returns past this.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRILL INVENTORY -->
+  <section class="px-6 py-12 border-t border-wolf-cyan/10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <h2 class="font-bebas text-3xl tracking-wider">DRILL_INVENTORY</h2>
+          <span class="font-mono text-xs text-gray-500">[12 ITEMS]</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="chip px-3 py-1 rounded bg-wolf-cyan/20">ALL</button>
+          <button class="chip px-3 py-1 rounded">NO_HOOP</button>
+          <button class="chip px-3 py-1 rounded">SEATED</button>
+          <button class="chip px-3 py-1 rounded">ADVANCED</button>
+        </div>
+      </div>
+
+      <!-- Table Style Drill List -->
+      <div class="data-card rounded-xl overflow-hidden">
+        <div class="terminal-header px-6 py-3 grid grid-cols-12 gap-4 font-mono text-xs text-gray-500">
+          <div class="col-span-1">#</div>
+          <div class="col-span-4">NAME</div>
+          <div class="col-span-2">DURATION</div>
+          <div class="col-span-2">dB_LEVEL</div>
+          <div class="col-span-2">DIFFICULTY</div>
+          <div class="col-span-1"></div>
+        </div>
+
+        <div class="drill-row px-6 py-4 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-1 font-mono text-wolf-cyan">01</div>
+          <div class="col-span-4 font-medium">Stationary Pound</div>
+          <div class="col-span-2 font-mono text-sm text-gray-400">3:00</div>
+          <div class="col-span-2 font-mono text-sm text-wolf-cyan">&lt;35dB</div>
+          <div class="col-span-2">
+            <div class="progress-bar rounded" style="--progress: 30%"></div>
+          </div>
+          <div class="col-span-1 text-right">
+            <button class="text-wolf-cyan hover:text-white">→</button>
+          </div>
+        </div>
+
+        <div class="drill-row px-6 py-4 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-1 font-mono text-wolf-cyan">02</div>
+          <div class="col-span-4 font-medium">Pocket Dribble</div>
+          <div class="col-span-2 font-mono text-sm text-gray-400">4:00</div>
+          <div class="col-span-2 font-mono text-sm text-wolf-cyan">&lt;38dB</div>
+          <div class="col-span-2">
+            <div class="progress-bar rounded" style="--progress: 50%"></div>
+          </div>
+          <div class="col-span-1 text-right">
+            <button class="text-wolf-cyan hover:text-white">→</button>
+          </div>
+        </div>
+
+        <div class="drill-row px-6 py-4 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-1 font-mono text-wolf-cyan">03</div>
+          <div class="col-span-4 font-medium">Seated Wiper</div>
+          <div class="col-span-2 font-mono text-sm text-gray-400">5:00</div>
+          <div class="col-span-2 font-mono text-sm text-wolf-cyan">&lt;40dB</div>
+          <div class="col-span-2">
+            <div class="progress-bar rounded" style="--progress: 60%"></div>
+          </div>
+          <div class="col-span-1 text-right">
+            <button class="text-wolf-cyan hover:text-white">→</button>
+          </div>
+        </div>
+
+        <div class="drill-row px-6 py-4 grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-1 font-mono text-wolf-cyan">04</div>
+          <div class="col-span-4 font-medium">Figure 8 Flow</div>
+          <div class="col-span-2 font-mono text-sm text-gray-400">4:00</div>
+          <div class="col-span-2 font-mono text-sm text-wolf-gold">&lt;45dB</div>
+          <div class="col-span-2">
+            <div class="progress-bar rounded" style="--progress: 75%"></div>
+          </div>
+          <div class="col-span-1 text-right">
+            <button class="text-wolf-cyan hover:text-white">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="px-6 py-12 border-t border-wolf-cyan/10">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <div class="font-mono text-xs text-gray-500 mb-4">EXECUTE</div>
+          <button class="cta-primary px-8 py-3 rounded-lg font-semibold text-black font-mono text-sm">
+            BUILD_SILENT_PLAN →
+          </button>
+        </div>
+        <div>
+          <div class="font-mono text-xs text-gray-500 mb-4">RELATED_PILLARS</div>
+          <div class="space-y-2 font-mono text-sm">
+            <a href="#" class="block text-wolf-cyan hover:underline">/shooting_mechanics</a>
+            <a href="#" class="block text-wolf-cyan hover:underline">/neoball_blueprint</a>
+            <a href="#" class="block text-wolf-cyan hover:underline">/home_training</a>
+          </div>
+        </div>
+        <div>
+          <div class="font-mono text-xs text-gray-500 mb-4">FOR_MACHINES</div>
+          <div class="space-y-2 font-mono text-xs text-gray-600">
+            <a href="#" class="block hover:text-gray-400">/llms.txt</a>
+            <a href="#" class="block hover:text-gray-400">/sitemap.xml</a>
+            <a href="#" class="block hover:text-gray-400">/api/pillars</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 pt-6 border-t border-white/5 font-mono text-xs text-gray-600">
+        © 2026 YouthPerformance · Protocol v2.1
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

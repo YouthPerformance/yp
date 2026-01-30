@@ -13,8 +13,16 @@ export interface RelatedPillar {
   volume?: number;
 }
 
+export interface Author {
+  name: string;
+  title: string;
+  slug: string; // Coach page slug for backlink
+  image?: string;
+}
+
 export interface PillarFooterProps {
   relatedPillars?: RelatedPillar[];
+  author?: Author;
   showAIDisclosure?: boolean;
   showMachineAccess?: boolean;
   pageSlug?: string;
@@ -28,6 +36,7 @@ export interface PillarFooterProps {
 
 export function PillarFooter({
   relatedPillars = [],
+  author,
   showAIDisclosure = true,
   showMachineAccess = true,
   pageSlug = "",
@@ -36,6 +45,25 @@ export function PillarFooter({
   return (
     <footer className={`pillar-footer ${className}`}>
       <div className="pillar-container">
+        {/* Author Attribution - Links to coach page for entity backlink */}
+        {author && (
+          <section className="author-section">
+            <Link href={`/coaches/${author.slug}`} className="author-card">
+              {author.image && (
+                <div className="author-image">
+                  <img src={author.image} alt={author.name} />
+                </div>
+              )}
+              <div className="author-info">
+                <span className="author-label">Written by</span>
+                <span className="author-name">{author.name}</span>
+                <span className="author-title">{author.title}</span>
+              </div>
+              <span className="author-arrow">→</span>
+            </Link>
+          </section>
+        )}
+
         {/* Related Pillars */}
         {relatedPillars.length > 0 && (
           <section className="related-section">
@@ -135,6 +163,79 @@ export function PillarFooter({
           padding: var(--pillar-space-12) 0 var(--pillar-space-8);
           border-top: 1px solid var(--pillar-border-subtle);
           background: var(--pillar-surface-card);
+        }
+
+        /* Author Attribution */
+        .author-section {
+          margin-bottom: var(--pillar-space-10);
+        }
+
+        .author-card {
+          display: flex;
+          align-items: center;
+          gap: var(--pillar-space-4);
+          padding: var(--pillar-space-5);
+          background: var(--pillar-surface-raised);
+          border: 1px solid var(--pillar-border-subtle);
+          border-radius: 12px;
+          text-decoration: none;
+          transition: all var(--pillar-duration-normal) var(--pillar-ease-out);
+        }
+
+        .author-card:hover {
+          border-color: var(--pillar-brand-cyan);
+          transform: translateY(-2px);
+        }
+
+        .author-image {
+          width: 64px;
+          height: 64px;
+          border-radius: 50%;
+          overflow: hidden;
+          flex-shrink: 0;
+          border: 2px solid var(--pillar-brand-cyan-dim);
+        }
+
+        .author-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .author-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          flex-grow: 1;
+        }
+
+        .author-label {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: var(--pillar-text-dim);
+        }
+
+        .author-name {
+          font-family: var(--pillar-font-display);
+          font-size: 18px;
+          color: var(--pillar-text-primary);
+        }
+
+        .author-title {
+          font-size: 13px;
+          color: var(--pillar-text-muted);
+        }
+
+        .author-arrow {
+          font-size: 20px;
+          color: var(--pillar-brand-cyan);
+          opacity: 0;
+          transition: opacity var(--pillar-duration-fast);
+        }
+
+        .author-card:hover .author-arrow {
+          opacity: 1;
         }
 
         .related-section {

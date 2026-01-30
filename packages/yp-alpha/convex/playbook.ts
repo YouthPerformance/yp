@@ -191,6 +191,66 @@ export const requestChanges = mutation({
 });
 
 /**
+ * Update playbook content (comprehensive update for Command Center)
+ * Handles body, status, and approval tier updates
+ */
+export const updatePlaybookContent = mutation({
+  args: {
+    id: v.id("playbook_content"),
+    title: v.optional(v.string()),
+    body: v.optional(v.string()),
+    status: v.optional(v.union(
+      v.literal("DRAFT"),
+      v.literal("IN_REVIEW"),
+      v.literal("CHANGES_REQUESTED"),
+      v.literal("APPROVED"),
+      v.literal("PUBLISHED"),
+      v.literal("published"),
+      v.literal("rejected"),
+    )),
+    approvalTier: v.optional(v.union(v.literal("green"), v.literal("yellow"), v.literal("red"))),
+    voiceComplianceScore: v.optional(v.number()),
+    spotCheckRequired: v.optional(v.boolean()),
+    approverNotes: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db.get(args.id);
+    if (!existing) throw new Error("Content not found");
+
+    const updates: Record<string, unknown> = {
+      updatedAt: Date.now(),
+    };
+
+    if (args.title !== undefined) updates.title = args.title;
+    if (args.body !== undefined) {
+      updates.body = args.body;
+      updates.version = (existing.version || 0) + 1;
+    }
+    if (args.status !== undefined) {
+      // Normalize status to uppercase
+      const normalizedStatus = args.status === "published" ? "PUBLISHED" :
+                               args.status === "rejected" ? "CHANGES_REQUESTED" :
+                               args.status;
+      updates.status = normalizedStatus;
+
+      if (normalizedStatus === "PUBLISHED") {
+        updates.publishedAt = Date.now();
+      } else if (normalizedStatus === "APPROVED") {
+        updates.approvedAt = Date.now();
+      }
+    }
+    if (args.approvalTier !== undefined) updates.approvalTier = args.approvalTier;
+    if (args.voiceComplianceScore !== undefined) updates.voiceComplianceScore = args.voiceComplianceScore;
+    if (args.spotCheckRequired !== undefined) updates.spotCheckRequired = args.spotCheckRequired;
+    if (args.approverNotes !== undefined) updates.approverNotes = args.approverNotes;
+
+    await ctx.db.patch(args.id, updates);
+
+    return { success: true };
+  },
+});
+
+/**
  * Delete content
  */
 export const deleteContent = mutation({
@@ -443,5 +503,300 @@ export const getVoiceExamples = query({
     }
 
     return await query.order("desc").take(limit);
+  },
+});
+
+// ═══════════════════════════════════════════════════════════
+// VOICE COMMAND CENTER - LEARNING & ROUTING
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Save a voice learning (edit) for future training
+ * THE MOAT: Every voice edit becomes training data
+ */
+export const saveLearning = mutation({
+  args: {
+    expert: v.union(v.literal("JAMES"), v.literal("ADAM")),
+    contentType: v.string(),
+    category: v.string(),
+    originalText: v.string(),
+    voiceInstruction: v.string(),
+    correctedText: v.string(),
+    audioStorageId: v.optional(v.id("_storage")),
+    audioDurationMs: v.optional(v.number()),
+    selectedContext: v.optional(v.string()),
+    contentId: v.optional(v.id("playbook_content")),
+    applied: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const learningId = await ctx.db.insert("voice_learnings", {
+      expert: args.expert,
+      contentType: args.contentType,
+      category: args.category,
+      originalText: args.originalText,
+      voiceInstruction: args.voiceInstruction,
+      correctedText: args.correctedText,
+      audioStorageId: args.audioStorageId,
+      audioDurationMs: args.audioDurationMs,
+      selectedContext: args.selectedContext,
+      contentId: args.contentId,
+      applied: args.applied,
+      createdAt: Date.now(),
+    });
+
+    return { learningId };
+  },
+});
+
+/**
+ * Get similar past edits for few-shot injection
+ * Used to show the AI how this expert typically edits
+ */
+export const getSimilarLearnings = query({
+  args: {
+    expert: v.union(v.literal("JAMES"), v.literal("ADAM")),
+    category: v.string(),
+    contentType: v.optional(v.string()),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 5;
+
+    // First try to get examples from same category
+    let learnings = await ctx.db
+      .query("voice_learnings")
+      .withIndex("by_expert_category", (q) =>
+        q.eq("expert", args.expert).eq("category", args.category),
+      )
+      .filter((q) => q.eq(q.field("applied"), true))
+      .order("desc")
+      .take(limit);
+
+    // If not enough, supplement with any applied edits from this expert
+    if (learnings.length < limit) {
+      const remaining = limit - learnings.length;
+      const existingIds = new Set(learnings.map((l) => l._id));
+
+      const moreLearnings = await ctx.db
+        .query("voice_learnings")
+        .withIndex("by_expert", (q) => q.eq("expert", args.expert))
+        .filter((q) => q.eq(q.field("applied"), true))
+        .order("desc")
+        .take(remaining + learnings.length);
+
+      for (const learning of moreLearnings) {
+        if (!existingIds.has(learning._id) && learnings.length < limit) {
+          learnings.push(learning);
+        }
+      }
+    }
+
+    return learnings;
+  },
+});
+
+/**
+ * Score and route content based on voice compliance
+ * Used for auto-routing: green (auto-approve), yellow (review), red (reject)
+ */
+export const scoreAndRouteContent = mutation({
+  args: {
+    contentId: v.id("playbook_content"),
+    voiceComplianceScore: v.number(), // 0-100
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db.get(args.contentId);
+    if (!existing) throw new Error("Content not found");
+
+    // Determine tier based on score
+    let approvalTier: "green" | "yellow" | "red";
+    if (args.voiceComplianceScore >= 85) {
+      approvalTier = "green";
+    } else if (args.voiceComplianceScore >= 65) {
+      approvalTier = "yellow";
+    } else {
+      approvalTier = "red";
+    }
+
+    // Random spot check for green tier (10% of green content)
+    const spotCheckRequired = approvalTier === "green" && Math.random() < 0.1;
+
+    await ctx.db.patch(args.contentId, {
+      voiceComplianceScore: args.voiceComplianceScore,
+      approvalTier,
+      spotCheckRequired,
+      updatedAt: Date.now(),
+    });
+
+    return { approvalTier, spotCheckRequired };
+  },
+});
+
+/**
+ * List content for Command Center review
+ * Filtered by approval tier and status
+ */
+export const listContentForReview = query({
+  args: {
+    approvalTier: v.optional(v.union(v.literal("green"), v.literal("yellow"), v.literal("red"))),
+    status: v.optional(v.union(
+      v.literal("DRAFT"),
+      v.literal("IN_REVIEW"),
+      v.literal("CHANGES_REQUESTED"),
+      v.literal("APPROVED"),
+      v.literal("PUBLISHED"),
+    )),
+    limit: v.optional(v.number()),
+    cursor: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 8; // Default to 8 cards for grid
+
+    // Get all content that needs review (not published)
+    let contentQuery;
+
+    if (args.approvalTier) {
+      contentQuery = ctx.db
+        .query("playbook_content")
+        .withIndex("by_approval_tier", (q) =>
+          q.eq("approvalTier", args.approvalTier!),
+        );
+    } else if (args.status) {
+      contentQuery = ctx.db
+        .query("playbook_content")
+        .withIndex("by_status", (q) => q.eq("status", args.status!));
+    } else {
+      // Default: get all non-published content
+      contentQuery = ctx.db
+        .query("playbook_content")
+        .withIndex("by_created");
+    }
+
+    const results = await contentQuery.order("desc").take(limit + 1);
+
+    // Check if there are more results
+    const hasMore = results.length > limit;
+    const content = hasMore ? results.slice(0, limit) : results;
+
+    return {
+      content,
+      hasMore,
+      nextCursor: hasMore ? content[content.length - 1]?._id : undefined,
+    };
+  },
+});
+
+/**
+ * Get review stats for Command Center dashboard
+ */
+export const getReviewStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("playbook_content").collect();
+
+    const stats = {
+      total: all.length,
+      pending: 0,
+      today: 0,
+      byTier: {
+        green: 0,
+        yellow: 0,
+        red: 0,
+        unscored: 0,
+      },
+      byStatus: {
+        draft: 0,
+        inReview: 0,
+        changesRequested: 0,
+        approved: 0,
+        published: 0,
+      },
+    };
+
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayMs = todayStart.getTime();
+
+    for (const content of all) {
+      // Count by status
+      switch (content.status) {
+        case "DRAFT":
+          stats.byStatus.draft++;
+          stats.pending++;
+          break;
+        case "IN_REVIEW":
+          stats.byStatus.inReview++;
+          stats.pending++;
+          break;
+        case "CHANGES_REQUESTED":
+          stats.byStatus.changesRequested++;
+          stats.pending++;
+          break;
+        case "APPROVED":
+          stats.byStatus.approved++;
+          break;
+        case "PUBLISHED":
+          stats.byStatus.published++;
+          break;
+      }
+
+      // Count by tier
+      if (content.approvalTier === "green") {
+        stats.byTier.green++;
+      } else if (content.approvalTier === "yellow") {
+        stats.byTier.yellow++;
+      } else if (content.approvalTier === "red") {
+        stats.byTier.red++;
+      } else {
+        stats.byTier.unscored++;
+      }
+
+      // Count today's approved
+      if (content.approvedAt && content.approvedAt >= todayMs) {
+        stats.today++;
+      }
+    }
+
+    return stats;
+  },
+});
+
+/**
+ * Bulk update content status (for quick approve/reject)
+ */
+export const bulkUpdateStatus = mutation({
+  args: {
+    contentIds: v.array(v.id("playbook_content")),
+    status: v.union(
+      v.literal("DRAFT"),
+      v.literal("IN_REVIEW"),
+      v.literal("CHANGES_REQUESTED"),
+      v.literal("APPROVED"),
+      v.literal("PUBLISHED"),
+    ),
+    approvedBy: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+
+    for (const contentId of args.contentIds) {
+      const updates: Record<string, unknown> = {
+        status: args.status,
+        updatedAt: now,
+      };
+
+      if (args.status === "APPROVED") {
+        updates.approvedAt = now;
+        updates.approvedBy = args.approvedBy;
+      }
+
+      if (args.status === "PUBLISHED") {
+        updates.publishedAt = now;
+      }
+
+      await ctx.db.patch(contentId, updates);
+    }
+
+    return { updated: args.contentIds.length };
   },
 });

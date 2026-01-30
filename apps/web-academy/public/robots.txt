@@ -11,8 +11,14 @@ Allow: /api/answer-engine/
 Sitemap: https://app.youthperformance.com/sitemap.xml
 
 # AI-specific crawlers
-User-agent: GPTBot
+# CRITICAL: OAI-SearchBot is for ChatGPT Search visibility (separate from GPTBot training)
+User-agent: OAI-SearchBot
 Allow: /
+
+# GPTBot is for training - block to preserve content value
+# OAI-SearchBot (above) handles ChatGPT Search citations
+User-agent: GPTBot
+Disallow: /
 
 User-agent: ChatGPT-User
 Allow: /

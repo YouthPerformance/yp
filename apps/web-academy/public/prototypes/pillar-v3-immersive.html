@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V3: Video-First/Immersive — Silent Training</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wolf-cyan': '#00F6E0',
+            'wolf-gold': '#FFD700',
+          },
+          fontFamily: {
+            'bebas': ['Bebas Neue', 'sans-serif'],
+            'inter': ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+
+    /* Immersive video-first aesthetic */
+    .hero-full {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .video-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0a0a0a 0%, #000 50%, #050510 100%);
+    }
+
+    .video-overlay {
+      background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.3) 0%,
+        rgba(0,0,0,0) 30%,
+        rgba(0,0,0,0) 50%,
+        rgba(0,0,0,0.8) 80%,
+        rgba(0,0,0,0.95) 100%
+      );
+    }
+
+    .floating-ui {
+      backdrop-filter: blur(20px);
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .glow-text {
+      text-shadow: 0 0 60px rgba(0,246,224,0.3);
+    }
+
+    .cta-glow {
+      background: linear-gradient(135deg, #00F6E0 0%, #00d4c4 100%);
+      box-shadow: 0 0 60px rgba(0,246,224,0.4), 0 10px 40px rgba(0,246,224,0.3);
+      transition: all 0.4s ease;
+    }
+    .cta-glow:hover {
+      box-shadow: 0 0 80px rgba(0,246,224,0.6), 0 15px 50px rgba(0,246,224,0.4);
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    .cta-outline {
+      border: 2px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .cta-outline:hover {
+      border-color: #00F6E0;
+      background: rgba(0,246,224,0.1);
+    }
+
+    .db-badge {
+      background: rgba(0,246,224,0.15);
+      border: 1px solid rgba(0,246,224,0.4);
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,246,224,0.2); }
+      50% { box-shadow: 0 0 30px rgba(0,246,224,0.4); }
+    }
+
+    .scroll-hint {
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    .horizontal-scroll {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .snap-card {
+      scroll-snap-align: start;
+    }
+
+    .drill-card-immersive {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.3) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+    }
+    .drill-card-immersive:hover {
+      transform: scale(1.03);
+      border-color: rgba(0,246,224,0.5);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .play-btn {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+    .play-btn:hover {
+      background: #00F6E0;
+      border-color: #00F6E0;
+    }
+    .play-btn:hover svg {
+      color: #000;
+    }
+
+    .section-fade {
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.95) 20%);
+    }
+
+    .bento-glass {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+    }
+
+    .tool-card {
+      background: linear-gradient(135deg, rgba(0,246,224,0.05) 0%, rgba(0,0,0,0.3) 100%);
+      border: 1px solid rgba(0,246,224,0.2);
+    }
+
+    .chip-dark {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.2s ease;
+    }
+    .chip-dark:hover, .chip-dark.active {
+      background: rgba(0,246,224,0.15);
+      border-color: rgba(0,246,224,0.5);
+      color: #00F6E0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FULL SCREEN HERO -->
+  <section class="hero-full relative flex items-end">
+    <!-- Video Background -->
+    <div class="video-bg">
+      <!-- Placeholder for video - in production this would be a looping video -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center opacity-30">
+          <div class="w-32 h-32 rounded-full border border-white/20 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-12 h-12 text-white/50 ml-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+          <p class="text-white/30 text-sm">9:16 Mocap Demo Loop</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradient Overlay -->
+    <div class="video-overlay absolute inset-0"></div>
+
+    <!-- dB Badge - Top Right -->
+    <div class="absolute top-6 right-6 z-20">
+      <div class="db-badge px-4 py-2 rounded-full flex items-center gap-2">
+        <svg class="w-4 h-4 text-wolf-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 0112.728 0"/>
+        </svg>
+        <span class="font-bebas text-lg text-wolf-cyan tracking-wider">&lt; 40dB</span>
+      </div>
+    </div>
+
+    <!-- Trust Chip - Top Left -->
+    <div class="absolute top-6 left-6 z-20">
+      <div class="floating-ui px-4 py-2 rounded-full flex items-center gap-3">
+        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+        <span class="text-sm text-gray-300">Verified · Adam Harrington</span>
+      </div>
+    </div>
+
+    <!-- Main Content - Bottom -->
+    <div class="relative z-10 w-full px-6 pb-12 lg:pb-20">
+      <div class="max-w-5xl mx-auto">
+        <!-- Title -->
+        <h1 class="font-bebas text-6xl sm:text-7xl lg:text-9xl tracking-wide leading-none glow-text mb-6">
+          SILENT<br/>BASKETBALL<br/>TRAINING
+        </h1>
+
+        <p class="text-xl text-gray-300 max-w-xl mb-8 leading-relaxed">
+          Master dribbling at home without disturbing anyone.
+          The definitive protocol.
+        </p>
+
+        <!-- Action Row -->
+        <div class="flex flex-wrap gap-4 mb-12">
+          <button class="cta-glow px-10 py-5 rounded-2xl font-bold text-black text-lg tracking-wide">
+            Build My Silent Plan
+          </button>
+          <button class="cta-outline px-10 py-5 rounded-2xl font-semibold text-white text-lg">
+            Start First Drill →
+          </button>
+        </div>
+
+        <!-- Quick Stats Row -->
+        <div class="flex flex-wrap gap-8">
+          <div>
+            <div class="text-4xl font-bebas text-wolf-cyan">&lt;40dB</div>
+            <div class="text-xs text-gray-500 uppercase tracking-widest">Max Noise</div>
+          </div>
+          <div class="w-px h-12 bg-white/10"></div>
+          <div>
+            <div class="text-4xl font-bebas text-white">12</div>
+            <div class="text-xs text-gray-500 uppercase tracking-widest">Core Drills</div>
+          </div>
+          <div class="w-px h-12 bg-white/10"></div>
+          <div>
+            <div class="text-4xl font-bebas text-white">15min</div>
+            <div class="text-xs text-gray-500 uppercase tracking-widest">Daily Stack</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Hint -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 scroll-hint">
+        <svg class="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL INJECTION -->
+  <section class="px-6 py-20 section-fade">
+    <div class="max-w-4xl mx-auto">
+      <div class="tool-card rounded-3xl p-8 lg:p-12">
+        <h2 class="font-bebas text-3xl tracking-wider mb-8 text-center glow-text">BUILD YOUR SILENT SESSION</h2>
+
+        <div class="grid md:grid-cols-3 gap-8 mb-10">
+          <div>
+            <label class="text-xs text-wolf-cyan uppercase tracking-widest block mb-4">Duration</label>
+            <div class="flex gap-3">
+              <button class="chip-dark px-5 py-3 rounded-xl text-sm flex-1">10m</button>
+              <button class="chip-dark active px-5 py-3 rounded-xl text-sm flex-1">20m</button>
+              <button class="chip-dark px-5 py-3 rounded-xl text-sm flex-1">30m</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-wolf-cyan uppercase tracking-widest block mb-4">Floor Type</label>
+            <div class="flex gap-3">
+              <button class="chip-dark active px-5 py-3 rounded-xl text-sm flex-1">Carpet</button>
+              <button class="chip-dark px-5 py-3 rounded-xl text-sm flex-1">Wood</button>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-wolf-cyan uppercase tracking-widest block mb-4">Noise Cap</label>
+            <div class="flex gap-3">
+              <button class="chip-dark active px-5 py-3 rounded-xl text-sm flex-1">Whisper</button>
+              <button class="chip-dark px-5 py-3 rounded-xl text-sm flex-1">Normal</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="cta-glow w-full py-5 rounded-2xl font-bold text-black text-lg tracking-wide">
+          Generate Protocol →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY INTEL BENTO -->
+  <section class="px-6 py-16">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="font-bebas text-4xl tracking-wider mb-10 text-center">KEY INTEL</h2>
+
+      <div class="grid md:grid-cols-4 gap-4 lg:gap-6">
+        <div class="bento-glass rounded-2xl p-6 md:col-span-2">
+          <div class="text-wolf-cyan text-xs tracking-widest uppercase mb-4">01. The Objective</div>
+          <p class="text-2xl font-medium leading-snug">Fingertip control, not palm force. Zero floor impact.</p>
+        </div>
+        <div class="bento-glass rounded-2xl p-6">
+          <div class="text-red-400 text-xs tracking-widest uppercase mb-4">⚠ Avoid</div>
+          <ul class="text-gray-400 space-y-2">
+            <li>• Slapping the ball</li>
+            <li>• Standing upright</li>
+            <li>• Eyes on ball</li>
+          </ul>
+        </div>
+        <div class="bento-glass rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+          <div class="text-5xl font-bebas text-wolf-gold mb-2">15</div>
+          <div class="text-xs text-gray-500 uppercase tracking-widest">Min Daily Max</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HORIZONTAL DRILL CAROUSEL -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between px-6 mb-8">
+        <h2 class="font-bebas text-3xl tracking-wider">DRILL INVENTORY</h2>
+        <div class="flex gap-2">
+          <button class="chip-dark active px-4 py-2 rounded-full text-sm">All</button>
+          <button class="chip-dark px-4 py-2 rounded-full text-sm">No Hoop</button>
+          <button class="chip-dark px-4 py-2 rounded-full text-sm">Seated</button>
+        </div>
+      </div>
+
+      <!-- Horizontal Scroll Container -->
+      <div class="horizontal-scroll flex gap-6 overflow-x-auto px-6 pb-4">
+        <!-- Card 1 -->
+        <div class="snap-card min-w-[300px] lg:min-w-[350px]">
+          <div class="drill-card-immersive rounded-2xl overflow-hidden">
+            <div class="aspect-[4/5] relative bg-gradient-to-b from-gray-800 to-black">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <button class="play-btn w-16 h-16 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="absolute top-4 left-4">
+                <span class="text-wolf-cyan text-xs font-medium bg-black/50 px-2 py-1 rounded">3 min</span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black">
+                <h3 class="font-bebas text-2xl tracking-wide mb-1">Stationary Pound</h3>
+                <p class="text-gray-400 text-sm">Beginner · &lt;35dB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="snap-card min-w-[300px] lg:min-w-[350px]">
+          <div class="drill-card-immersive rounded-2xl overflow-hidden">
+            <div class="aspect-[4/5] relative bg-gradient-to-b from-gray-800 to-black">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <button class="play-btn w-16 h-16 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="absolute top-4 left-4">
+                <span class="text-wolf-cyan text-xs font-medium bg-black/50 px-2 py-1 rounded">4 min</span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black">
+                <h3 class="font-bebas text-2xl tracking-wide mb-1">Pocket Dribble</h3>
+                <p class="text-gray-400 text-sm">Intermediate · &lt;38dB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="snap-card min-w-[300px] lg:min-w-[350px]">
+          <div class="drill-card-immersive rounded-2xl overflow-hidden">
+            <div class="aspect-[4/5] relative bg-gradient-to-b from-gray-800 to-black">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <button class="play-btn w-16 h-16 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="absolute top-4 left-4">
+                <span class="text-wolf-cyan text-xs font-medium bg-black/50 px-2 py-1 rounded">5 min</span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black">
+                <h3 class="font-bebas text-2xl tracking-wide mb-1">Seated Wiper</h3>
+                <p class="text-gray-400 text-sm">Intermediate · &lt;40dB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="snap-card min-w-[300px] lg:min-w-[350px]">
+          <div class="drill-card-immersive rounded-2xl overflow-hidden">
+            <div class="aspect-[4/5] relative bg-gradient-to-b from-gray-800 to-black">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <button class="play-btn w-16 h-16 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="absolute top-4 left-4">
+                <span class="text-wolf-gold text-xs font-medium bg-black/50 px-2 py-1 rounded">6 min</span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black">
+                <h3 class="font-bebas text-2xl tracking-wide mb-1">Figure 8 Flow</h3>
+                <p class="text-gray-400 text-sm">Advanced · &lt;45dB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View All Card -->
+        <div class="snap-card min-w-[200px]">
+          <div class="h-full rounded-2xl border-2 border-dashed border-white/20 flex items-center justify-center">
+            <div class="text-center">
+              <span class="text-2xl mb-2 block">→</span>
+              <span class="text-sm text-gray-400">View All<br/>12 Drills</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <section class="px-6 py-24">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-bebas text-5xl lg:text-6xl tracking-wider mb-6 glow-text">READY TO START?</h2>
+      <p class="text-xl text-gray-400 mb-10">Build your personalized silent training protocol.</p>
+      <button class="cta-glow px-16 py-6 rounded-2xl font-bold text-black text-xl tracking-wide">
+        Build Your Silent Plan →
+      </button>
+    </div>
+  </section>
+
+  <!-- Mobile Sticky Action Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+    <div class="bg-black/95 backdrop-blur-lg border-t border-white/10 px-4 py-3 flex gap-3">
+      <button class="cta-glow flex-1 py-4 rounded-xl font-bold text-black">
+        Build Plan
+      </button>
+      <button class="cta-outline w-14 h-14 rounded-xl flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -93,7 +93,7 @@ export const getPendingTasks = query({
       .take(args.limit ?? 20);
 
     // Sort by priority (lower number = higher priority)
-    return tasks.sort((a, b) => a.priority - b.priority);
+    return tasks.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
   },
 });
 
@@ -213,7 +213,7 @@ export const claimTask = mutation({
       taskId: args.taskId,
       agentId: args.agentId,
       action: "task_claimed",
-      domain: task.domain,
+      domain: task.domain ?? "unknown",
       message: `Agent claimed task: ${task.title}`,
       level: "info",
       createdAt: now,
@@ -253,7 +253,7 @@ export const updateProgress = mutation({
       taskId: args.taskId,
       agentId: args.agentId,
       action: "progress_updated",
-      domain: task.domain,
+      domain: task.domain ?? "unknown",
       message: args.progressNotes ?? `Progress: ${args.progressPercent}%`,
       data: { percent: args.progressPercent },
       level: "debug",
@@ -296,7 +296,7 @@ export const completeTask = mutation({
       taskId: args.taskId,
       agentId: args.agentId,
       action: "task_completed",
-      domain: task.domain,
+      domain: task.domain ?? "unknown",
       message: `Completed task: ${task.title}`,
       data: args.result,
       level: "info",
@@ -355,7 +355,7 @@ export const failTask = mutation({
       taskId: args.taskId,
       agentId: args.agentId,
       action: "task_failed",
-      domain: task.domain,
+      domain: task.domain ?? "unknown",
       message: `Task failed: ${args.errorMessage}`,
       level: "error",
       createdAt: now,
@@ -393,7 +393,7 @@ export const bulkCreateTasks = mutation({
         taskId,
         title: task.title,
         description: task.description,
-        domain: task.domain,
+        domain: task.domain ?? "unknown",
         project: task.project,
         status: "pending",
         priority: task.priority ?? 3,

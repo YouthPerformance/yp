@@ -12,6 +12,7 @@ export interface Expert {
   title: string;
   icon: string;
   image?: string;
+  slug?: string; // Coach page slug for backlink (e.g., "adam-harrington")
 }
 
 export interface PillarHeroProps {
@@ -90,11 +91,23 @@ export function PillarHero({
         <span className="hero-badge-text">{noiseLevel}</span>
       </div>
 
-      {/* Trust Badge - Top Left */}
+      {/* Trust Badge - Top Left - Links to coach page for entity backlink */}
       {expert && (
         <div className="hero-floating-badge trust">
           <span className="hero-trust-dot" />
-          <span className="hero-trust-text">Verified · {expert.name}</span>
+          <span className="hero-trust-text">
+            Verified ·{" "}
+            {expert.slug ? (
+              <Link
+                href={`/coaches/${expert.slug}`}
+                className="hero-expert-link"
+              >
+                {expert.name}
+              </Link>
+            ) : (
+              expert.name
+            )}
+          </span>
         </div>
       )}
 
@@ -288,6 +301,17 @@ export function PillarHero({
 
         .hero-trust-text {
           color: var(--pillar-text-secondary);
+        }
+
+        .hero-trust-text :global(.hero-expert-link) {
+          color: var(--pillar-brand-cyan);
+          text-decoration: none;
+          transition: opacity 0.2s ease;
+        }
+
+        .hero-trust-text :global(.hero-expert-link):hover {
+          opacity: 0.8;
+          text-decoration: underline;
         }
 
         .hero-content-overlay {

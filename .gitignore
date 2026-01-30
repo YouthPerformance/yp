@@ -39,5 +39,15 @@ yarn-error.log*
 # OpenNext build output
 .open-next/
 
+# Local databases
+better-auth.db
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Temp env files
+.env.*.temp
+.env.*-temp
+
 # Private context vault (proprietary docs, brand assets)
 .claude/private/

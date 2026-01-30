@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════════════════════════
-// INDIVIDUAL DRILL PAGE
+// INDIVIDUAL DRILL PAGE - V3.1 "Skill Injector"
 // /drills/[sport]/[category]/[slug] - Full drill detail
-// Schema.org HowTo markup for rich snippets
+// Supports both V3 (new) and legacy drill formats
+// TRAIN/GUIDE layer separation for dual-audience optimization
 // ═══════════════════════════════════════════════════════════
 
 import type { Metadata } from "next";
@@ -19,6 +20,18 @@ import {
   getDrillsByCategory,
   DRILL_AUTHORS,
 } from "@/data/drills";
+import { DrillV3, generateDrillSchemaOrg } from "@/data/drills/drill-v3-types";
+import { stationaryPoundDrill } from "@/data/drills/stationary-pound";
+import { DrillPageClient } from "./DrillPageClient";
+
+// ═══════════════════════════════════════════════════════════
+// V3 DRILL REGISTRY
+// Add new V3 drills here for the enhanced experience
+// ═══════════════════════════════════════════════════════════
+const V3_DRILLS: Record<string, DrillV3> = {
+  "stationary-pound": stationaryPoundDrill,
+  // Add more V3 drills here as they are created
+};
 
 interface PageProps {
   params: Promise<{ sport: string; category: string; slug: string }>;
@@ -26,13 +39,30 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const params: { sport: string; category: string; slug: string }[] = [];
+  const slugsAdded = new Set<string>();
 
+  // Add V3 drills first
+  for (const v3Drill of Object.values(V3_DRILLS)) {
+    if (v3Drill.status === "published") {
+      params.push({
+        sport: v3Drill.sport,
+        category: v3Drill.category,
+        slug: v3Drill.slug,
+      });
+      slugsAdded.add(v3Drill.slug);
+    }
+  }
+
+  // Add legacy drills (skip if already added from V3)
   for (const sport of SPORTS) {
     const categories = CATEGORIES[sport] || [];
     for (const category of categories) {
       const drills = getDrillsByCategory(sport, category);
       for (const drill of drills) {
-        params.push({ sport, category, slug: drill.slug });
+        if (!slugsAdded.has(drill.slug)) {
+          params.push({ sport, category, slug: drill.slug });
+          slugsAdded.add(drill.slug);
+        }
       }
     }
   }
@@ -43,6 +73,38 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { sport, category, slug } = await params;
 
+  // Check for V3 drill first (enhanced metadata)
+  const v3Drill = V3_DRILLS[slug];
+  if (v3Drill && v3Drill.status === "published") {
+    return {
+      title: v3Drill.metaTitle || `${v3Drill.title} — ${v3Drill.parentPillar.title} Drill | YouthPerformance`,
+      description: v3Drill.metaDescription || v3Drill.definition,
+      keywords: v3Drill.keywords,
+      authors: [{ name: v3Drill.author.name }],
+      openGraph: {
+        title: v3Drill.title,
+        description: v3Drill.definition,
+        type: "article",
+        publishedTime: v3Drill.publishedAt,
+        modifiedTime: v3Drill.lastUpdated,
+        authors: [v3Drill.author.name],
+        images: v3Drill.videoPoster
+          ? [{ url: v3Drill.videoPoster, width: 1200, height: 630, alt: `${v3Drill.title} drill` }]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: v3Drill.title,
+        description: v3Drill.definition,
+        images: v3Drill.videoPoster ? [v3Drill.videoPoster] : undefined,
+      },
+      alternates: {
+        canonical: v3Drill.canonicalUrl,
+      },
+    };
+  }
+
+  // Legacy metadata generation
   const drill = getDrillBySlug(slug);
   if (!drill) {
     return { title: "Drill Not Found" };
@@ -85,6 +147,35 @@ export default async function DrillDetailPage({ params }: PageProps) {
   if (!(categories as readonly string[]).includes(category)) {
     notFound();
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHECK FOR V3 DRILL - Render enhanced UI if available
+  // ═══════════════════════════════════════════════════════════
+  const v3Drill = V3_DRILLS[slug];
+  if (v3Drill && v3Drill.status === "published") {
+    // Verify URL matches V3 drill data
+    if (v3Drill.sport === sport && v3Drill.category === category) {
+      const schemaOrg = generateDrillSchemaOrg(v3Drill);
+      return (
+        <>
+          {/* Schema.org JSON-LD */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(schemaOrg),
+            }}
+          />
+          {/* V3.1 Skill Injector UI */}
+          <DrillPageClient drill={v3Drill} />
+        </>
+      );
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // LEGACY DRILL RENDERING
+  // Falls back to original UI for drills without V3 data
+  // ═══════════════════════════════════════════════════════════
 
   // Get drill
   const drill = getDrillBySlug(slug);

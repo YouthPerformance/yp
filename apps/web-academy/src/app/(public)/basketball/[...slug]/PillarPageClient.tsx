@@ -17,6 +17,7 @@ import {
   MistakesFixes,
   FAQAccordion,
   SafetyBox,
+  ResearchBrief,
   PillarFooter,
   StickyBottomBar,
   StickyTOC,
@@ -39,9 +40,17 @@ import { ReadingProgressBar, BackToTop } from "@/components/seo";
 // TYPES
 // ═══════════════════════════════════════════════════════════
 
+interface Author {
+  name: string;
+  title: string;
+  slug: string;
+  image?: string;
+}
+
 interface PillarPageClientProps {
   page: SEOPage;
   expert?: Expert;
+  author?: Author;
   isPillar: boolean;
   breadcrumbs: Breadcrumb[];
   metrics: Metric[];
@@ -113,6 +122,7 @@ const DEFAULT_SAFETY = [
 export function PillarPageClient({
   page,
   expert,
+  author,
   isPillar,
   breadcrumbs,
   metrics,
@@ -297,6 +307,10 @@ export function PillarPageClient({
                   <SafetyBox notes={safety} />
                   <FAQAccordion items={faq} />
                 </div>
+
+                {/* Research Brief - Collapsed by default for clean UX */}
+                {/* Schema data remains visible to crawlers via page head */}
+                <ResearchBrief />
               </GuideSection>
             </div>
 
@@ -312,6 +326,7 @@ export function PillarPageClient({
             ════════════════════════════════════════════════════════════ */}
         <PillarFooter
           relatedPillars={relatedPillars}
+          author={author}
           showAIDisclosure={true}
           showMachineAccess={true}
           pageSlug={page.slug}

@@ -1,0 +1,877 @@
+<!--
+  Silent Training Pillar Page - Hero Variations
+  5 Distinct Approaches to Above-the-Fold Experience
+
+  Design System:
+  - Background: #000 / #030303
+  - Cyan Accent: #00F6E0
+  - Gold Accent: #FFD700
+  - Headers: Bebas Neue
+  - Body: Inter
+
+  Critical Fixes Applied:
+  1. Dead hero → Vertical video, trust chips, action CTAs
+  2. No tool injection → Session builder widget
+  3. Text walls → Key Intel Bento Grid
+  4. Generic cards → Visual drill library with filters
+-->
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     V1: MINIMAL / CLEAN
+     Philosophy: Aggressive whitespace, single focal point, whisper-quiet confidence
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<section id="v1-minimal" class="relative min-h-screen bg-black overflow-hidden">
+  <!-- Subtle grid texture -->
+  <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%2300F6E0&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20">
+
+    <!-- Trust Chips - Minimal -->
+    <div class="flex items-center gap-3 mb-12">
+      <span class="inline-flex items-center gap-2 px-3 py-1 border border-zinc-800 text-zinc-500 text-xs tracking-widest font-mono">
+        <span class="w-1.5 h-1.5 bg-[#00F6E0] rounded-full animate-pulse"></span>
+        ADAM HARRINGTON
+      </span>
+      <span class="text-zinc-700">/</span>
+      <span class="text-zinc-600 text-xs tracking-widest font-mono">20+ YEARS NBA</span>
+    </div>
+
+    <!-- Hero Split: Left Text / Right Video -->
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Left: Typography -->
+      <div class="space-y-8">
+        <h1 class="text-white leading-none">
+          <span class="block text-[clamp(3rem,8vw,7rem)] font-bold tracking-tight" style="font-family: 'Bebas Neue', sans-serif;">
+            SILENT
+          </span>
+          <span class="block text-[clamp(3rem,8vw,7rem)] font-bold tracking-tight text-[#00F6E0]" style="font-family: 'Bebas Neue', sans-serif;">
+            TRAINING
+          </span>
+        </h1>
+
+        <p class="text-zinc-400 text-lg max-w-md leading-relaxed" style="font-family: 'Inter', sans-serif;">
+          Build NBA-level shooting mechanics anywhere. No gym. No hoop. Just a ball and 4 square feet.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+          <a href="#start" class="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#00F6E0] text-black font-semibold tracking-wide transition-all hover:bg-white">
+            <span>START PROTOCOL</span>
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+          <a href="#preview" class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-zinc-800 text-zinc-400 font-medium tracking-wide transition-all hover:border-zinc-600 hover:text-white">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span>WATCH PREVIEW</span>
+          </a>
+        </div>
+
+        <!-- Micro-stats -->
+        <div class="flex items-center gap-8 pt-8 border-t border-zinc-900">
+          <div>
+            <div class="text-2xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">12</div>
+            <div class="text-xs text-zinc-600 tracking-wider">DRILLS</div>
+          </div>
+          <div class="w-px h-8 bg-zinc-800"></div>
+          <div>
+            <div class="text-2xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">4</div>
+            <div class="text-xs text-zinc-600 tracking-wider">WEEKS</div>
+          </div>
+          <div class="w-px h-8 bg-zinc-800"></div>
+          <div>
+            <div class="text-2xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">0</div>
+            <div class="text-xs text-zinc-600 tracking-wider">HOOPS NEEDED</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Vertical Video -->
+      <div class="relative">
+        <div class="relative aspect-[9/16] max-w-sm mx-auto rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950">
+          <!-- Video Placeholder -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <video
+              class="w-full h-full object-cover"
+              poster="/drills/silent-training-poster.jpg"
+              muted
+              loop
+              playsinline
+            >
+              <source src="/drills/silent-training-preview.mp4" type="video/mp4">
+            </video>
+            <!-- Play overlay -->
+            <button class="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity hover:opacity-100 opacity-80">
+              <div class="w-16 h-16 rounded-full bg-[#00F6E0] flex items-center justify-center">
+                <svg class="w-6 h-6 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </button>
+          </div>
+          <!-- Corner anchors -->
+          <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#00F6E0]"></div>
+          <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00F6E0]"></div>
+          <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#00F6E0]"></div>
+          <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#00F6E0]"></div>
+        </div>
+        <!-- Video label -->
+        <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-black border border-zinc-800 text-xs text-zinc-500 tracking-widest font-mono">
+          01:23 PREVIEW
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     V2: DATA-HEAVY / DASHBOARD
+     Philosophy: Intel briefing aesthetic, dense information, analyst mode
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<section id="v2-dashboard" class="relative min-h-screen bg-[#030303] overflow-hidden">
+  <!-- Scanline effect -->
+  <div class="absolute inset-0 pointer-events-none opacity-20" style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,246,224,0.03) 2px, rgba(0,246,224,0.03) 4px);"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+
+    <!-- Top Bar: Status + Auth -->
+    <div class="flex items-center justify-between py-4 border-b border-zinc-800/50 mb-8">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2 text-xs font-mono">
+          <span class="w-2 h-2 bg-[#00F6E0] rounded-full animate-pulse"></span>
+          <span class="text-[#00F6E0]">LIVE</span>
+        </div>
+        <div class="text-zinc-600 text-xs font-mono">PROTOCOL: SILENT-TRAINING-V3.2</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-zinc-600 text-xs font-mono">CLEARANCE: PUBLIC</span>
+        <span class="px-3 py-1 bg-[#00F6E0]/10 border border-[#00F6E0]/30 text-[#00F6E0] text-xs font-mono">ADAM HARRINGTON // NBA</span>
+      </div>
+    </div>
+
+    <!-- Main Grid: 3 Columns -->
+    <div class="grid lg:grid-cols-[1fr_300px_300px] gap-6">
+
+      <!-- Column 1: Main Intel -->
+      <div class="space-y-6">
+        <!-- Hero Title Block -->
+        <div class="p-6 border border-zinc-800 bg-zinc-900/30">
+          <div class="text-xs text-zinc-600 font-mono mb-4">// PROTOCOL DESIGNATION</div>
+          <h1 class="text-5xl font-bold text-white tracking-tight mb-4" style="font-family: 'Bebas Neue', sans-serif;">
+            SILENT TRAINING
+          </h1>
+          <p class="text-zinc-400 text-sm leading-relaxed max-w-lg">
+            Constraint-based basketball methodology. Removes auditory and environmental noise to isolate pure motor pattern development. Requires: 1 ball, 4 sq ft space.
+          </p>
+        </div>
+
+        <!-- Key Intel Bento Grid -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-4 border border-zinc-800 bg-zinc-900/20">
+            <div class="text-xs text-[#00F6E0] font-mono mb-2">DURATION</div>
+            <div class="text-3xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">4 WEEKS</div>
+            <div class="text-xs text-zinc-600 mt-1">Progressive overload structure</div>
+          </div>
+          <div class="p-4 border border-zinc-800 bg-zinc-900/20">
+            <div class="text-xs text-[#00F6E0] font-mono mb-2">DRILL COUNT</div>
+            <div class="text-3xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">12 CORE</div>
+            <div class="text-xs text-zinc-600 mt-1">+ 24 variations</div>
+          </div>
+          <div class="p-4 border border-zinc-800 bg-zinc-900/20">
+            <div class="text-xs text-[#00F6E0] font-mono mb-2">EQUIPMENT</div>
+            <div class="text-3xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">NEOBALL</div>
+            <div class="text-xs text-zinc-600 mt-1">Silent basketball (optional)</div>
+          </div>
+          <div class="p-4 border border-zinc-800 bg-zinc-900/20">
+            <div class="text-xs text-[#00F6E0] font-mono mb-2">DAILY COMMITMENT</div>
+            <div class="text-3xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">15 MIN</div>
+            <div class="text-xs text-zinc-600 mt-1">Minimum effective dose</div>
+          </div>
+        </div>
+
+        <!-- CTAs -->
+        <div class="flex gap-4">
+          <button class="flex-1 py-4 bg-[#00F6E0] text-black font-semibold tracking-wide text-sm hover:bg-white transition-colors">
+            INITIATE PROTOCOL
+          </button>
+          <button class="px-6 py-4 border border-zinc-700 text-zinc-400 font-medium text-sm hover:border-zinc-500 hover:text-white transition-colors">
+            METHODOLOGY
+          </button>
+        </div>
+      </div>
+
+      <!-- Column 2: Video Feed -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-zinc-600 font-mono">// VIDEO FEED</span>
+          <span class="text-xs text-[#00F6E0] font-mono">REC</span>
+        </div>
+        <div class="relative aspect-[9/14] bg-zinc-900 border border-zinc-800 overflow-hidden">
+          <video
+            class="w-full h-full object-cover"
+            poster="/drills/silent-preview-thumb.jpg"
+            muted
+            loop
+            playsinline
+          ></video>
+          <!-- Timestamp overlay -->
+          <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-zinc-400">DRILL_001.MP4</span>
+              <span class="text-[#00F6E0]">01:23</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-xs text-zinc-600 font-mono text-center">
+          "Remove the noise." — A. Harrington
+        </div>
+      </div>
+
+      <!-- Column 3: Session Builder Widget -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-zinc-600 font-mono">// SESSION BUILDER</span>
+          <span class="px-2 py-0.5 bg-[#FFD700]/20 border border-[#FFD700]/30 text-[#FFD700] text-[10px] font-mono">BETA</span>
+        </div>
+        <div class="border border-zinc-800 bg-zinc-900/30 p-4 space-y-4">
+          <div>
+            <label class="block text-xs text-zinc-500 font-mono mb-2">TIME AVAILABLE</label>
+            <div class="flex gap-2">
+              <button class="flex-1 py-2 border border-zinc-700 text-zinc-400 text-sm hover:border-[#00F6E0] hover:text-[#00F6E0] transition-colors">5m</button>
+              <button class="flex-1 py-2 border border-[#00F6E0] text-[#00F6E0] text-sm bg-[#00F6E0]/10">15m</button>
+              <button class="flex-1 py-2 border border-zinc-700 text-zinc-400 text-sm hover:border-[#00F6E0] hover:text-[#00F6E0] transition-colors">30m</button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs text-zinc-500 font-mono mb-2">FOCUS AREA</label>
+            <select class="w-full py-2 px-3 bg-zinc-900 border border-zinc-700 text-zinc-300 text-sm focus:border-[#00F6E0] focus:outline-none">
+              <option>Shooting Form</option>
+              <option>Ball Control</option>
+              <option>Footwork</option>
+              <option>Full Protocol</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-zinc-500 font-mono mb-2">SKILL LEVEL</label>
+            <div class="flex gap-2">
+              <button class="flex-1 py-2 border border-zinc-700 text-zinc-400 text-xs hover:border-[#00F6E0] hover:text-[#00F6E0] transition-colors">BEGINNER</button>
+              <button class="flex-1 py-2 border border-zinc-700 text-zinc-400 text-xs hover:border-[#00F6E0] hover:text-[#00F6E0] transition-colors">INTER</button>
+              <button class="flex-1 py-2 border border-[#00F6E0] text-[#00F6E0] text-xs bg-[#00F6E0]/10">ADV</button>
+            </div>
+          </div>
+          <button class="w-full py-3 bg-[#FFD700] text-black font-semibold text-sm tracking-wide hover:bg-[#FFD700]/90 transition-colors">
+            GENERATE SESSION
+          </button>
+          <div class="text-[10px] text-zinc-600 font-mono text-center">
+            AI-powered drill sequencing
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     V3: VIDEO-FIRST / IMMERSIVE
+     Philosophy: Full-bleed video, cinematic, emotion-driven
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<section id="v3-immersive" class="relative min-h-screen bg-black overflow-hidden">
+  <!-- Full-bleed background video -->
+  <div class="absolute inset-0">
+    <video
+      class="w-full h-full object-cover opacity-40"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster="/drills/silent-training-bg.jpg"
+    >
+      <source src="/drills/silent-training-ambient.mp4" type="video/mp4">
+    </video>
+    <!-- Gradient overlays -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
+  </div>
+
+  <div class="relative z-10 min-h-screen flex flex-col">
+
+    <!-- Trust bar at top -->
+    <div class="py-4 px-6 border-b border-white/5">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <img src="/people/adam-avatar.jpg" alt="Adam Harrington" class="w-10 h-10 rounded-full border-2 border-[#00F6E0]">
+          <div>
+            <div class="text-white text-sm font-medium">Adam Harrington</div>
+            <div class="text-zinc-500 text-xs">NBA/WNBA Skills Trainer • 20+ Years</div>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-4">
+          <span class="px-3 py-1 border border-zinc-700 text-zinc-400 text-xs font-mono">OKC THUNDER</span>
+          <span class="px-3 py-1 border border-zinc-700 text-zinc-400 text-xs font-mono">BROOKLYN NETS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content - centered -->
+    <div class="flex-1 flex items-center justify-center px-6">
+      <div class="text-center max-w-4xl">
+        <!-- Subtitle -->
+        <div class="inline-flex items-center gap-3 mb-8">
+          <span class="h-px w-12 bg-[#00F6E0]/50"></span>
+          <span class="text-[#00F6E0] text-sm tracking-[0.3em] font-mono">CONSTRAINT-BASED TRAINING</span>
+          <span class="h-px w-12 bg-[#00F6E0]/50"></span>
+        </div>
+
+        <!-- Hero title -->
+        <h1 class="mb-8">
+          <span class="block text-[clamp(4rem,12vw,10rem)] font-bold text-white leading-[0.9] tracking-tight" style="font-family: 'Bebas Neue', sans-serif;">
+            SILENT
+          </span>
+          <span class="block text-[clamp(4rem,12vw,10rem)] font-bold leading-[0.9] tracking-tight" style="font-family: 'Bebas Neue', sans-serif; background: linear-gradient(135deg, #00F6E0 0%, #00F6E0 50%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            TRAINING
+          </span>
+        </h1>
+
+        <!-- Tagline -->
+        <p class="text-xl md:text-2xl text-zinc-300 max-w-2xl mx-auto mb-12 leading-relaxed" style="font-family: 'Inter', sans-serif;">
+          The gym is loud. Excellence is quiet.<br>
+          <span class="text-zinc-500">Build elite mechanics anywhere.</span>
+        </p>
+
+        <!-- Video CTA -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+          <button class="group relative inline-flex items-center gap-4 px-10 py-5 bg-white text-black font-semibold tracking-wide text-lg transition-all hover:scale-105">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span>WATCH THE METHOD</span>
+            <span class="absolute -top-2 -right-2 px-2 py-0.5 bg-[#00F6E0] text-black text-xs font-mono">1:23</span>
+          </button>
+          <a href="#start" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors">
+            <span>Skip to protocol</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Trust chips -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <span class="px-4 py-2 bg-white/5 border border-white/10 text-zinc-400 text-sm backdrop-blur-sm">12 Core Drills</span>
+          <span class="px-4 py-2 bg-white/5 border border-white/10 text-zinc-400 text-sm backdrop-blur-sm">No Hoop Required</span>
+          <span class="px-4 py-2 bg-white/5 border border-white/10 text-zinc-400 text-sm backdrop-blur-sm">4 Square Feet</span>
+          <span class="px-4 py-2 bg-[#00F6E0]/10 border border-[#00F6E0]/30 text-[#00F6E0] text-sm backdrop-blur-sm">FREE ACCESS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Featured video preview strip -->
+    <div class="py-6 px-6 border-t border-white/5 bg-black/50 backdrop-blur-sm">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 overflow-x-auto pb-2">
+          <span class="text-zinc-600 text-xs font-mono shrink-0">PREVIEW:</span>
+          <div class="flex gap-3">
+            <div class="relative w-32 h-20 rounded overflow-hidden border border-white/10 shrink-0 cursor-pointer hover:border-[#00F6E0] transition-colors">
+              <img src="/drills/drill-thumb-1.jpg" alt="Drill 1" class="w-full h-full object-cover">
+              <div class="absolute bottom-1 right-1 px-1 py-0.5 bg-black/80 text-[10px] text-white font-mono">0:45</div>
+            </div>
+            <div class="relative w-32 h-20 rounded overflow-hidden border border-white/10 shrink-0 cursor-pointer hover:border-[#00F6E0] transition-colors">
+              <img src="/drills/drill-thumb-2.jpg" alt="Drill 2" class="w-full h-full object-cover">
+              <div class="absolute bottom-1 right-1 px-1 py-0.5 bg-black/80 text-[10px] text-white font-mono">1:12</div>
+            </div>
+            <div class="relative w-32 h-20 rounded overflow-hidden border border-white/10 shrink-0 cursor-pointer hover:border-[#00F6E0] transition-colors">
+              <img src="/drills/drill-thumb-3.jpg" alt="Drill 3" class="w-full h-full object-cover">
+              <div class="absolute bottom-1 right-1 px-1 py-0.5 bg-black/80 text-[10px] text-white font-mono">0:58</div>
+            </div>
+            <div class="relative w-32 h-20 rounded overflow-hidden border border-[#00F6E0]/50 shrink-0 cursor-pointer bg-[#00F6E0]/10 flex items-center justify-center">
+              <span class="text-[#00F6E0] text-xs font-mono">+9 MORE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     V4: CARD-HEAVY / MODULAR
+     Philosophy: Bento-box grid, each block self-contained, scannable
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<section id="v4-modular" class="relative min-h-screen bg-[#0a0a0a] overflow-hidden py-8 px-6">
+
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header row -->
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <div class="text-[#00F6E0] text-xs tracking-[0.3em] font-mono mb-2">PILLAR // 001</div>
+        <h1 class="text-5xl md:text-6xl font-bold text-white tracking-tight" style="font-family: 'Bebas Neue', sans-serif;">
+          SILENT TRAINING
+        </h1>
+      </div>
+      <div class="hidden md:flex items-center gap-3">
+        <span class="w-2 h-2 bg-[#00F6E0] rounded-full animate-pulse"></span>
+        <span class="text-zinc-500 text-sm font-mono">Updated Jan 2026</span>
+      </div>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="grid grid-cols-12 gap-4">
+
+      <!-- Card: Video (spans 5 cols, 2 rows) -->
+      <div class="col-span-12 md:col-span-5 row-span-2 relative rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900/50 group">
+        <div class="aspect-[4/5]">
+          <video class="w-full h-full object-cover" poster="/drills/featured-poster.jpg" muted loop playsinline></video>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6">
+          <div class="text-xs text-[#00F6E0] font-mono mb-2">FEATURED DRILL</div>
+          <div class="text-xl font-bold text-white mb-3" style="font-family: 'Bebas Neue', sans-serif;">THE FOUNDATION SET</div>
+          <button class="inline-flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-semibold hover:bg-[#00F6E0] transition-colors">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            WATCH NOW
+          </button>
+        </div>
+        <!-- Play button center -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Quick Stats (spans 4 cols) -->
+      <div class="col-span-6 md:col-span-4 p-6 rounded-xl border border-zinc-800 bg-zinc-900/30">
+        <div class="text-xs text-zinc-600 font-mono mb-4">// PROTOCOL STATS</div>
+        <div class="space-y-4">
+          <div class="flex justify-between items-baseline">
+            <span class="text-zinc-500 text-sm">Drills</span>
+            <span class="text-2xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">12</span>
+          </div>
+          <div class="h-px bg-zinc-800"></div>
+          <div class="flex justify-between items-baseline">
+            <span class="text-zinc-500 text-sm">Duration</span>
+            <span class="text-2xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">4 WKS</span>
+          </div>
+          <div class="h-px bg-zinc-800"></div>
+          <div class="flex justify-between items-baseline">
+            <span class="text-zinc-500 text-sm">Daily Time</span>
+            <span class="text-2xl font-bold text-[#00F6E0]" style="font-family: 'Bebas Neue', sans-serif;">15 MIN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Creator Badge (spans 3 cols) -->
+      <div class="col-span-6 md:col-span-3 p-6 rounded-xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-900/50">
+        <div class="text-xs text-zinc-600 font-mono mb-4">// CREATED BY</div>
+        <div class="flex items-center gap-3 mb-4">
+          <img src="/people/adam-avatar.jpg" alt="Adam Harrington" class="w-12 h-12 rounded-full border-2 border-[#00F6E0]">
+          <div>
+            <div class="text-white font-semibold">Adam Harrington</div>
+            <div class="text-zinc-500 text-xs">NBA Skills Trainer</div>
+          </div>
+        </div>
+        <a href="/coaches/adam-harrington" class="inline-flex items-center gap-1 text-[#00F6E0] text-xs font-mono hover:underline">
+          VIEW PROFILE
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Card: Description (spans 4 cols) -->
+      <div class="col-span-12 md:col-span-4 p-6 rounded-xl border border-zinc-800 bg-zinc-900/30">
+        <div class="text-xs text-zinc-600 font-mono mb-4">// METHODOLOGY</div>
+        <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+          Constraint-based training strips away environmental noise to isolate pure motor patterns. No gym, no hoop—just you, a ball, and focused repetition.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-2 py-1 bg-zinc-800 text-zinc-500 text-xs rounded">Motor Learning</span>
+          <span class="px-2 py-1 bg-zinc-800 text-zinc-500 text-xs rounded">Proprioception</span>
+          <span class="px-2 py-1 bg-zinc-800 text-zinc-500 text-xs rounded">Biomechanics</span>
+        </div>
+      </div>
+
+      <!-- Card: Equipment (spans 3 cols) -->
+      <div class="col-span-6 md:col-span-3 p-6 rounded-xl border border-[#FFD700]/30 bg-[#FFD700]/5">
+        <div class="text-xs text-[#FFD700] font-mono mb-4">// EQUIPMENT</div>
+        <div class="text-3xl font-bold text-white mb-2" style="font-family: 'Bebas Neue', sans-serif;">NEOBALL</div>
+        <p class="text-zinc-500 text-xs mb-4">Silent basketball for anywhere training</p>
+        <button class="w-full py-2 border border-[#FFD700]/50 text-[#FFD700] text-xs font-mono hover:bg-[#FFD700]/10 transition-colors">
+          GET YOURS →
+        </button>
+      </div>
+
+      <!-- Card: CTA (spans 5 cols) -->
+      <div class="col-span-12 md:col-span-5 p-6 rounded-xl border border-[#00F6E0]/30 bg-gradient-to-br from-[#00F6E0]/10 to-transparent">
+        <div class="flex items-center justify-between h-full">
+          <div>
+            <div class="text-xs text-[#00F6E0] font-mono mb-2">// BEGIN TRAINING</div>
+            <div class="text-2xl font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">START THE PROTOCOL</div>
+            <p class="text-zinc-500 text-sm mt-1">Free access • No account required</p>
+          </div>
+          <button class="px-8 py-4 bg-[#00F6E0] text-black font-semibold tracking-wide hover:bg-white transition-colors">
+            BEGIN →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drill Library Preview -->
+    <div class="mt-8">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-xs text-zinc-600 font-mono">// DRILL LIBRARY</div>
+        <div class="flex gap-2">
+          <button class="px-3 py-1 border border-[#00F6E0] text-[#00F6E0] text-xs font-mono">ALL</button>
+          <button class="px-3 py-1 border border-zinc-700 text-zinc-500 text-xs font-mono hover:border-zinc-500">SHOOTING</button>
+          <button class="px-3 py-1 border border-zinc-700 text-zinc-500 text-xs font-mono hover:border-zinc-500">HANDLES</button>
+          <button class="px-3 py-1 border border-zinc-700 text-zinc-500 text-xs font-mono hover:border-zinc-500">FOOTWORK</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div class="aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 relative group cursor-pointer">
+          <img src="/drills/thumb-01.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="absolute bottom-2 left-2 right-2">
+            <div class="text-white text-xs font-medium truncate">Set Position</div>
+            <div class="text-zinc-500 text-[10px]">0:45</div>
+          </div>
+        </div>
+        <div class="aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 relative group cursor-pointer">
+          <img src="/drills/thumb-02.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="absolute bottom-2 left-2 right-2">
+            <div class="text-white text-xs font-medium truncate">Release Point</div>
+            <div class="text-zinc-500 text-[10px]">1:02</div>
+          </div>
+        </div>
+        <div class="aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 relative group cursor-pointer">
+          <img src="/drills/thumb-03.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="absolute bottom-2 left-2 right-2">
+            <div class="text-white text-xs font-medium truncate">Balance Drill</div>
+            <div class="text-zinc-500 text-[10px]">0:58</div>
+          </div>
+        </div>
+        <div class="aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 relative group cursor-pointer">
+          <img src="/drills/thumb-04.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="absolute bottom-2 left-2 right-2">
+            <div class="text-white text-xs font-medium truncate">Follow Through</div>
+            <div class="text-zinc-500 text-[10px]">1:15</div>
+          </div>
+        </div>
+        <div class="aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 relative group cursor-pointer">
+          <img src="/drills/thumb-05.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="absolute bottom-2 left-2 right-2">
+            <div class="text-white text-xs font-medium truncate">Rhythm Sync</div>
+            <div class="text-zinc-500 text-[10px]">0:52</div>
+          </div>
+        </div>
+        <div class="aspect-square rounded-lg overflow-hidden border border-[#00F6E0]/30 bg-[#00F6E0]/5 flex items-center justify-center cursor-pointer hover:bg-[#00F6E0]/10 transition-colors">
+          <div class="text-center">
+            <div class="text-[#00F6E0] text-2xl font-bold" style="font-family: 'Bebas Neue', sans-serif;">+7</div>
+            <div class="text-[#00F6E0] text-xs font-mono">MORE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     V5: GAMIFIED / ACHIEVEMENT-FOCUSED
+     Philosophy: Progress bars, XP systems, unlock language, dopamine design
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<section id="v5-gamified" class="relative min-h-screen bg-black overflow-hidden">
+  <!-- Radial glow background -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00F6E0]/10 via-black to-black"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+
+    <!-- Level indicator bar -->
+    <div class="flex items-center justify-between mb-8 p-4 border border-zinc-800 bg-zinc-900/50 rounded-lg">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00F6E0] to-[#00F6E0]/50 flex items-center justify-center">
+            <span class="text-black font-bold text-lg" style="font-family: 'Bebas Neue', sans-serif;">ST</span>
+          </div>
+          <div>
+            <div class="text-white font-bold" style="font-family: 'Bebas Neue', sans-serif;">SILENT TRAINING</div>
+            <div class="text-zinc-500 text-xs">Protocol by Adam Harrington</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="text-right">
+          <div class="text-zinc-500 text-xs">PROTOCOL XP</div>
+          <div class="text-[#FFD700] font-bold" style="font-family: 'Bebas Neue', sans-serif;">1,250 / 5,000</div>
+        </div>
+        <div class="w-32 h-2 bg-zinc-800 rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-[#FFD700] to-[#00F6E0] rounded-full" style="width: 25%"></div>
+        </div>
+        <div class="px-3 py-1 bg-[#FFD700]/20 border border-[#FFD700]/30 text-[#FFD700] text-xs font-mono">
+          RANK: INITIATE
+        </div>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-[1fr_400px] gap-8">
+
+      <!-- Main content -->
+      <div class="space-y-8">
+
+        <!-- Hero card -->
+        <div class="relative p-8 border border-zinc-800 bg-gradient-to-br from-zinc-900/80 to-zinc-900/30 rounded-xl overflow-hidden">
+          <!-- Corner badge -->
+          <div class="absolute top-4 right-4 px-3 py-1 bg-[#00F6E0] text-black text-xs font-bold tracking-wide">
+            FREE ACCESS
+          </div>
+
+          <div class="flex items-start gap-6">
+            <!-- Video thumbnail -->
+            <div class="relative w-48 h-64 rounded-lg overflow-hidden border border-zinc-700 shrink-0">
+              <video class="w-full h-full object-cover" poster="/drills/vertical-poster.jpg" muted loop playsinline></video>
+              <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center">
+                <span class="px-2 py-0.5 bg-black/80 text-[10px] text-white font-mono rounded">PREVIEW</span>
+                <span class="text-white text-xs font-mono">1:23</span>
+              </div>
+            </div>
+
+            <div class="flex-1 space-y-4">
+              <div>
+                <div class="text-[#00F6E0] text-xs font-mono tracking-wider mb-2">PILLAR PROTOCOL</div>
+                <h1 class="text-4xl font-bold text-white tracking-tight" style="font-family: 'Bebas Neue', sans-serif;">
+                  SILENT TRAINING
+                </h1>
+              </div>
+
+              <p class="text-zinc-400 leading-relaxed">
+                Master NBA-level shooting mechanics without a gym or hoop. Constraint-based training that builds elite motor patterns through focused, silent repetition.
+              </p>
+
+              <!-- Achievement preview -->
+              <div class="flex flex-wrap gap-3">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800/50 border border-zinc-700 rounded-full">
+                  <span class="text-lg">🎯</span>
+                  <span class="text-zinc-400 text-xs">12 Drills</span>
+                </div>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800/50 border border-zinc-700 rounded-full">
+                  <span class="text-lg">⚡</span>
+                  <span class="text-zinc-400 text-xs">4 Week Program</span>
+                </div>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-800/50 border border-zinc-700 rounded-full">
+                  <span class="text-lg">🏆</span>
+                  <span class="text-zinc-400 text-xs">6 Achievements</span>
+                </div>
+              </div>
+
+              <div class="flex gap-4 pt-2">
+                <button class="px-8 py-4 bg-[#00F6E0] text-black font-bold tracking-wide text-lg hover:bg-white transition-colors" style="font-family: 'Bebas Neue', sans-serif;">
+                  START TRAINING
+                </button>
+                <button class="px-6 py-4 border border-zinc-700 text-zinc-400 font-medium hover:border-zinc-500 hover:text-white transition-colors">
+                  View Curriculum
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill progression track -->
+        <div class="p-6 border border-zinc-800 bg-zinc-900/30 rounded-xl">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <div class="text-xs text-zinc-600 font-mono mb-1">PROGRESSION TRACK</div>
+              <div class="text-lg font-bold text-white" style="font-family: 'Bebas Neue', sans-serif;">WEEK 1: FOUNDATION</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-zinc-500 text-sm">0/3 Complete</span>
+              <div class="w-24 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                <div class="h-full bg-[#00F6E0] rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drill cards -->
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="group relative p-4 border border-zinc-700 bg-zinc-900/50 rounded-lg cursor-pointer hover:border-[#00F6E0] transition-colors">
+              <div class="flex items-start justify-between mb-3">
+                <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+                  <span class="text-xl">🎯</span>
+                </div>
+                <span class="px-2 py-0.5 bg-zinc-800 text-zinc-500 text-[10px] font-mono rounded">+100 XP</span>
+              </div>
+              <div class="text-white font-semibold mb-1">Set Position</div>
+              <div class="text-zinc-500 text-xs mb-3">Master your shooting stance</div>
+              <div class="flex items-center justify-between">
+                <span class="text-zinc-600 text-xs">0:45</span>
+                <span class="text-[#00F6E0] text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">START →</span>
+              </div>
+              <!-- Lock overlay for completed state -->
+            </div>
+
+            <div class="group relative p-4 border border-zinc-800 bg-zinc-900/30 rounded-lg cursor-pointer hover:border-zinc-700 transition-colors">
+              <div class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+                <div class="text-center">
+                  <div class="text-2xl mb-1">🔒</div>
+                  <div class="text-zinc-500 text-xs">Complete "Set Position"</div>
+                </div>
+              </div>
+              <div class="flex items-start justify-between mb-3 opacity-50">
+                <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+                  <span class="text-xl">✋</span>
+                </div>
+                <span class="px-2 py-0.5 bg-zinc-800 text-zinc-500 text-[10px] font-mono rounded">+150 XP</span>
+              </div>
+              <div class="text-white font-semibold mb-1 opacity-50">Release Point</div>
+              <div class="text-zinc-500 text-xs opacity-50">Perfect your follow-through</div>
+            </div>
+
+            <div class="group relative p-4 border border-zinc-800 bg-zinc-900/30 rounded-lg cursor-pointer hover:border-zinc-700 transition-colors">
+              <div class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+                <div class="text-center">
+                  <div class="text-2xl mb-1">🔒</div>
+                  <div class="text-zinc-500 text-xs">Complete "Release Point"</div>
+                </div>
+              </div>
+              <div class="flex items-start justify-between mb-3 opacity-50">
+                <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+                  <span class="text-xl">⚖️</span>
+                </div>
+                <span class="px-2 py-0.5 bg-zinc-800 text-zinc-500 text-[10px] font-mono rounded">+150 XP</span>
+              </div>
+              <div class="text-white font-semibold mb-1 opacity-50">Balance Drill</div>
+              <div class="text-zinc-500 text-xs opacity-50">Find your center</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar: Achievements + Session Builder -->
+      <div class="space-y-6">
+
+        <!-- Quick session builder -->
+        <div class="p-6 border border-[#00F6E0]/30 bg-[#00F6E0]/5 rounded-xl">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-lg">⚡</span>
+            <span class="text-white font-bold" style="font-family: 'Bebas Neue', sans-serif;">QUICK SESSION</span>
+          </div>
+          <p class="text-zinc-400 text-sm mb-4">Generate a personalized training session based on your time and goals.</p>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs text-zinc-500 mb-1">I have...</label>
+              <div class="grid grid-cols-3 gap-2">
+                <button class="py-2 border border-zinc-700 text-zinc-400 text-sm rounded hover:border-[#00F6E0] hover:text-[#00F6E0] transition-colors">5 min</button>
+                <button class="py-2 border border-[#00F6E0] text-[#00F6E0] text-sm rounded bg-[#00F6E0]/10">15 min</button>
+                <button class="py-2 border border-zinc-700 text-zinc-400 text-sm rounded hover:border-[#00F6E0] hover:text-[#00F6E0] transition-colors">30 min</button>
+              </div>
+            </div>
+            <button class="w-full py-3 bg-[#00F6E0] text-black font-bold tracking-wide hover:bg-white transition-colors">
+              GENERATE SESSION
+            </button>
+          </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="p-6 border border-zinc-800 bg-zinc-900/30 rounded-xl">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🏆</span>
+              <span class="text-white font-bold" style="font-family: 'Bebas Neue', sans-serif;">ACHIEVEMENTS</span>
+            </div>
+            <span class="text-zinc-600 text-xs">0/6 Unlocked</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 border border-zinc-800 bg-zinc-900/50 rounded-lg opacity-60">
+              <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center grayscale">
+                <span class="text-xl">🌅</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-zinc-400 font-medium text-sm">First Light</div>
+                <div class="text-zinc-600 text-xs">Complete your first drill</div>
+              </div>
+              <div class="text-[#FFD700] text-xs font-mono">+50 XP</div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 border border-zinc-800 bg-zinc-900/50 rounded-lg opacity-60">
+              <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center grayscale">
+                <span class="text-xl">🔥</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-zinc-400 font-medium text-sm">On Fire</div>
+                <div class="text-zinc-600 text-xs">7-day training streak</div>
+              </div>
+              <div class="text-[#FFD700] text-xs font-mono">+200 XP</div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 border border-zinc-800 bg-zinc-900/50 rounded-lg opacity-60">
+              <div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center grayscale">
+                <span class="text-xl">🎓</span>
+              </div>
+              <div class="flex-1">
+                <div class="text-zinc-400 font-medium text-sm">Graduate</div>
+                <div class="text-zinc-600 text-xs">Complete Week 1</div>
+              </div>
+              <div class="text-[#FFD700] text-xs font-mono">+500 XP</div>
+            </div>
+          </div>
+
+          <a href="#all-achievements" class="block mt-4 text-center text-[#00F6E0] text-sm font-mono hover:underline">
+            View All Achievements →
+          </a>
+        </div>
+
+        <!-- Coach card -->
+        <div class="p-6 border border-zinc-800 bg-zinc-900/30 rounded-xl">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="/people/adam-avatar.jpg" alt="Adam Harrington" class="w-14 h-14 rounded-full border-2 border-[#00F6E0]">
+            <div>
+              <div class="text-white font-bold">Adam Harrington</div>
+              <div class="text-zinc-500 text-sm">NBA/WNBA Skills Trainer</div>
+            </div>
+          </div>
+          <p class="text-zinc-400 text-sm italic mb-4">
+            "Remove the noise. Focus on the signal."
+          </p>
+          <a href="/coaches/adam-harrington" class="inline-flex items-center gap-2 text-[#00F6E0] text-sm font-mono hover:underline">
+            View Full Profile
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

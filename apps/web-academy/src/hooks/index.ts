@@ -2,6 +2,7 @@
 // Hooks Barrel Export
 // ═══════════════════════════════════════════════════════════
 
+export { useActiveSection } from "./useActiveSection";
 export { useAnonymousProgress } from "./useAnonymousProgress";
 export {
   type CastCommand,
@@ -18,6 +19,7 @@ export {
   type DualVideoSyncState,
   useDualVideoSync,
 } from "./useDualVideoSync";
+export { useReadingProgress } from "./useReadingProgress";
 export {
   getLayoutType,
   type Orientation,

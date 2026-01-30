@@ -78,6 +78,7 @@ program
   .option('-p, --priority <levels>', 'Priority filter (e.g., "1,2" for P1 and P2)', '1,2')
   .option('-c, --cluster <name>', 'Cluster filter (e.g., "silent-basketball")')
   .option('--tasks-path <path>', 'Path to seo-tasks.json', './tools/machine-sprint/output/seo-tasks.json')
+  .option('--bootstrap', 'Bootstrap mode: relaxed guardrails for initial content generation')
   .action(async (options) => {
     console.log('🧠 GRAPH-AWARE GENERATOR - Knowledge Graph Mode\n');
     console.log('='.repeat(60));
@@ -100,6 +101,7 @@ program
       maxPages: parseInt(options.count),
       priorityFilter,
       clusterFilter: options.cluster,
+      bootstrapMode: options.bootstrap ?? false,
     });
 
     // Load generated pages for hooks

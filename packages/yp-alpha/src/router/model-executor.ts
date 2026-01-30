@@ -4,10 +4,20 @@
  *
  * This is the execution layer after routing.
  * Takes the route decision and runs the appropriate model.
+ *
+ * Observability: All executions are traced via Langfuse with:
+ * - Token usage and cost tracking
+ * - Voice compliance scoring
+ * - Latency metrics per model tier
  */
 
 import Anthropic from "@anthropic-ai/sdk";
 import { MODEL_CONFIG, type ModelTier, type RouteDecision } from "../config/models";
+import {
+  calculateCost,
+  startGeneration,
+  submitVoiceScore,
+} from "../observability/langfuse";
 import { logger } from "../utils/logger";
 import { voiceWrapper } from "./voice-wrapper";
 
@@ -44,6 +54,7 @@ export class ModelExecutor {
 
   /**
    * Execute the routed request
+   * Wrapped with Langfuse tracing for full observability
    */
   async execute(
     query: string,
@@ -56,6 +67,26 @@ export class ModelExecutor {
     if (routeDecision.selectedModel === "CREATIVE") {
       return this.executeCreative(query, context, startTime);
     }
+
+    const modelId = MODEL_CONFIG[routeDecision.selectedModel];
+
+    // Start Langfuse generation trace
+    const trace = startGeneration({
+      name: `wolf-execute-${routeDecision.selectedModel.toLowerCase()}`,
+      model: modelId,
+      input: {
+        query,
+        intent: routeDecision.intent,
+        sentiment: routeDecision.sentiment,
+        complexity: routeDecision.complexityScore,
+      },
+      userId: context.userId,
+      metadata: {
+        component: "model-executor",
+        tier: routeDecision.selectedModel,
+        reasoning: routeDecision.reasoning,
+      },
+    });
 
     // Build system prompt with Wolf Pack voice
     const systemPrompt = voiceWrapper.buildSystemPrompt(
@@ -71,7 +102,7 @@ export class ModelExecutor {
 
     try {
       const response = await this.anthropic.messages.create({
-        model: MODEL_CONFIG[routeDecision.selectedModel],
+        model: modelId,
         max_tokens: this.getMaxTokens(routeDecision.selectedModel),
         system: systemPrompt,
         messages,
@@ -88,6 +119,39 @@ export class ModelExecutor {
       const violations = voiceWrapper.audit(enforcedResponse);
       const voiceScore = voiceWrapper.score(enforcedResponse);
 
+      const latencyMs = Date.now() - startTime;
+      const inputTokens = response.usage.input_tokens;
+      const outputTokens = response.usage.output_tokens;
+
+      // End Langfuse trace with results
+      await trace.end({
+        output: {
+          response: enforcedResponse.substring(0, 500), // Truncate for storage
+          voiceScore,
+          violationCount: violations.length,
+        },
+        usage: {
+          promptTokens: inputTokens,
+          completionTokens: outputTokens,
+          totalTokens: inputTokens + outputTokens,
+        },
+        cost: {
+          totalCost: calculateCost(modelId, inputTokens, outputTokens),
+          currency: "USD",
+        },
+        latencyMs,
+        voiceScore,
+        voiceViolations: violations,
+      });
+
+      // Submit voice compliance score to Langfuse
+      await submitVoiceScore(
+        trace.traceId,
+        trace.observationId,
+        voiceScore,
+        violations,
+      );
+
       // Log if violations found
       if (violations.length > 0) {
         logger.warn("Voice violations detected", {
@@ -100,11 +164,11 @@ export class ModelExecutor {
 
       return {
         response: enforcedResponse,
-        model: MODEL_CONFIG[routeDecision.selectedModel],
-        latencyMs: Date.now() - startTime,
+        model: modelId,
+        latencyMs,
         tokenUsage: {
-          input: response.usage.input_tokens,
-          output: response.usage.output_tokens,
+          input: inputTokens,
+          output: outputTokens,
         },
         voiceScore,
         violations,

@@ -12,7 +12,7 @@
  */
 
 import { v } from "convex/values";
-import { query } from "../_generated/server";
+import { query, action } from "../_generated/server";
 
 /**
  * Get Athlete Context for AskYP
@@ -21,6 +21,8 @@ import { query } from "../_generated/server";
  * 1. "The Red List" - Critical nodes (score < 6) that ALWAYS matter
  * 2. "Topic Specific" - Nodes relevant to what they're asking about
  * 3. "Recent Chat" - Last conversation for continuity
+ *
+ * Note: For semantic search, use getAthleteContextSemantic action instead
  */
 export const getAthleteContext = query({
   args: {
@@ -217,5 +219,239 @@ export const getFullGraph = query({
         improving: nodes.filter((n) => n.status === "Improving").length,
       },
     };
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// SEMANTIC RETRIEVAL (Vector Search)
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Get Athlete Context using Semantic Search
+ *
+ * Enhanced version that uses vector embeddings for semantic matching.
+ * Pass a pre-computed embedding of the user query.
+ *
+ * @example
+ * ```ts
+ * // In your API route:
+ * const embedding = await generateEmbedding(userQuery);
+ * const context = await ctx.runAction(api.memory.retrieve.getAthleteContextSemantic, {
+ *   userId,
+ *   queryEmbedding: embedding.embedding,
+ * });
+ * ```
+ */
+export const getAthleteContextSemantic = action({
+  args: {
+    userId: v.string(),
+    queryEmbedding: v.array(v.float64()),
+    options: v.optional(
+      v.object({
+        nodeLimit: v.optional(v.number()),
+        memoryLimit: v.optional(v.number()),
+        contentLimit: v.optional(v.number()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const options = args.options ?? {};
+    const nodeLimit = options.nodeLimit ?? 5;
+    const memoryLimit = options.memoryLimit ?? 5;
+    const contentLimit = options.contentLimit ?? 3;
+
+    // ─────────────────────────────────────────────────────────────
+    // 1. FETCH "THE RED LIST" (Always Relevant - no vector search needed)
+    // Any body part or metric that is "Critical" (Score < 6)
+    // ─────────────────────────────────────────────────────────────
+    const criticalNodes = await ctx.runQuery(
+      // @ts-expect-error - internal query
+      "memory/retrieve:getCriticalNodes",
+      { userId: args.userId },
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // 2. SEMANTIC SEARCH - Nodes relevant to the query
+    // ─────────────────────────────────────────────────────────────
+    const semanticNodes = await ctx.vectorSearch("athlete_nodes", "by_embedding", {
+      vector: args.queryEmbedding,
+      limit: nodeLimit,
+      filter: (q) => q.eq("userId", args.userId),
+    });
+
+    // Fetch full node documents
+    const semanticNodeDocs = await Promise.all(
+      semanticNodes.map(async (result) => {
+        const node = await ctx.runQuery(
+          // @ts-expect-error - internal query
+          "memory/vector-search:getNodeById",
+          { id: result._id },
+        );
+        return { ...node, _score: result._score };
+      }),
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // 3. SEMANTIC SEARCH - Relevant memories
+    // ─────────────────────────────────────────────────────────────
+    const semanticMemories = await ctx.vectorSearch("memories", "by_embedding", {
+      vector: args.queryEmbedding,
+      limit: memoryLimit,
+      filter: (q) => q.eq("userId", args.userId),
+    });
+
+    const semanticMemoryDocs = await Promise.all(
+      semanticMemories.map(async (result) => {
+        const memory = await ctx.runQuery(
+          // @ts-expect-error - internal query
+          "memory/vector-search:getMemoryById",
+          { id: result._id },
+        );
+        return { ...memory, _score: result._score };
+      }),
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // 4. SEMANTIC SEARCH - Relevant training content
+    // ─────────────────────────────────────────────────────────────
+    const semanticContent = await ctx.vectorSearch("training_content", "by_embedding", {
+      vector: args.queryEmbedding,
+      limit: contentLimit,
+    });
+
+    const semanticContentDocs = await Promise.all(
+      semanticContent.map(async (result) => {
+        const content = await ctx.runQuery(
+          // @ts-expect-error - internal query
+          "memory/vector-search:getContentById",
+          { id: result._id },
+        );
+        return { ...content, _score: result._score };
+      }),
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // 5. FETCH RECENT CONVERSATION (Short-term memory)
+    // ─────────────────────────────────────────────────────────────
+    const recentChat = await ctx.runQuery(
+      // @ts-expect-error - internal query
+      "memory/retrieve:getRecentChat",
+      { userId: args.userId },
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // 6. FETCH RECENT CORRELATIONS
+    // ─────────────────────────────────────────────────────────────
+    const correlations = await ctx.runQuery(
+      // @ts-expect-error - internal query
+      "memory/retrieve:getCorrelations",
+      { userId: args.userId },
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // BUILD THE RETURN OBJECT
+    // ─────────────────────────────────────────────────────────────
+    return {
+      status: "success",
+
+      // Red flags - MUST be acknowledged before high-load activities
+      red_flags: criticalNodes.map((n: Record<string, unknown>) => ({
+        key: n.key,
+        status: n.status,
+        score: n.score,
+        notes: n.notes,
+        formatted: `${String(n.key).replace(/_/g, " ")} is CRITICAL - ${n.status} (Score: ${n.score}/10)`,
+      })),
+
+      // Semantically relevant context
+      semantic_context: {
+        nodes: semanticNodeDocs
+          .filter((n) => n && n.score >= 6) // Don't duplicate red flags
+          .map((n) => ({
+            key: n.key,
+            status: n.status,
+            score: n.score,
+            relevance: n._score,
+            formatted: `${String(n.key).replace(/_/g, " ")}: ${n.status} (${n.score}/10)`,
+          })),
+
+        memories: semanticMemoryDocs
+          .filter(Boolean)
+          .map((m) => ({
+            content: m.content,
+            type: m.memoryType,
+            relevance: m._score,
+          })),
+
+        training_content: semanticContentDocs
+          .filter(Boolean)
+          .map((c) => ({
+            title: c.title,
+            category: c.category,
+            text: c.text?.substring(0, 200),
+            relevance: c._score,
+          })),
+      },
+
+      // Known correlations for this athlete
+      known_correlations: correlations.map((c: Record<string, unknown>) => ({
+        from: c.fromNode,
+        to: c.toNode,
+        relationship: c.relationship,
+        strength: c.strength,
+        formatted: `${c.fromNode} ${c.relationship} ${c.toNode} (${Math.round(Number(c.strength) * 100)}% confidence)`,
+      })),
+
+      // Conversation continuity
+      last_chat_id: recentChat?._id ?? null,
+      last_chat_title: recentChat?.title ?? null,
+
+      // Summary stats
+      stats: {
+        critical_count: criticalNodes.length,
+        has_active_issues: criticalNodes.length > 0,
+        semantic_matches: {
+          nodes: semanticNodeDocs.length,
+          memories: semanticMemoryDocs.length,
+          content: semanticContentDocs.length,
+        },
+      },
+    };
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// HELPER QUERIES FOR SEMANTIC RETRIEVAL
+// ─────────────────────────────────────────────────────────────
+
+export const getCriticalNodes = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    return ctx.db
+      .query("athlete_nodes")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .filter((q) => q.lt(q.field("score"), 6))
+      .collect();
+  },
+});
+
+export const getRecentChat = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    return ctx.db
+      .query("conversations")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .order("desc")
+      .first();
+  },
+});
+
+export const getCorrelations = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    return ctx.db
+      .query("correlations")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .take(10);
   },
 });

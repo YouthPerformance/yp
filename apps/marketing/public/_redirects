@@ -1,5 +1,8 @@
 # Redirect root to LP
 / /lp 302
 
+# Proxy basketball SEO pages from web-academy
+/basketball/*  https://app.youthperformance.com/basketball/:splat  200
+
 # SPA fallback - must be last
 /* /index.html 200

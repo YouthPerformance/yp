@@ -39,20 +39,36 @@ export const tomCaptureWorkflow = inngest.createFunction(
 
     // Step 1: Store raw capture
     const captureId = await step.run("store-capture", async (): Promise<string> => {
-      // TODO: Use Convex mutation once api.tom types are generated
-      // const { ConvexHttpClient } = await import("convex/browser");
-      // const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-      // const { api } = await import("../../convex/_generated/api");
-      // return convex.mutation(api.tom.storeCapture, {...});
+      const { ConvexHttpClient } = await import("convex/browser");
+      const { api } = await import("../../convex/_generated/api");
+      const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-      console.log(`[TomCapture] Storing capture for ${userId}: ${content.substring(0, 50)}...`);
-      return `capture-${userId}-${Date.now()}`;
+      const id = await convex.mutation(api.tom.storeCapture, {
+        userId: userId as "mike" | "james" | "adam" | "annie",
+        content,
+        source,
+        routed: false,
+        createdAt: Date.now(),
+      });
+
+      console.log(`[TomCapture] Stored capture ${id} for ${userId}`);
+      return id;
     });
 
     // Step 2: Log inbound message
     await step.run("log-message", async () => {
-      // TODO: Use Convex mutation once api.tom types are generated
-      console.log(`[TomCapture] Logging inbound message from ${userId}`, { messageId });
+      const { ConvexHttpClient } = await import("convex/browser");
+      const { api } = await import("../../convex/_generated/api");
+      const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+      await convex.mutation(api.tom.logMessage, {
+        userId: userId as "mike" | "james" | "adam" | "annie",
+        content,
+        direction: "inbound",
+        whatsappMessageId: messageId,
+      });
+
+      console.log(`[TomCapture] Logged inbound message from ${userId}`);
     });
 
     // Step 3: Check for special intents (product viz, trend search, etc.)
@@ -68,8 +84,19 @@ export const tomCaptureWorkflow = inngest.createFunction(
     if (specialIntent?.handled) {
       // Special tool handled it, mark as routed
       await step.run("mark-routed-special", async () => {
-        // TODO: Use Convex mutation once api.tom types are generated
-        console.log(`[TomCapture] Marking ${captureId} as routed to ${specialIntent.tool}`);
+        const { ConvexHttpClient } = await import("convex/browser");
+        const { api } = await import("../../convex/_generated/api");
+        const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+        // captureId is already the correct type from storeCapture mutation
+        await convex.mutation(api.tom.updateCapture, {
+          captureId: captureId as never, // Type assertion needed due to dynamic import
+          routed: true,
+          routedTo: specialIntent.tool,
+          classifiedAs: "question",
+        });
+
+        console.log(`[TomCapture] Marked ${captureId} as routed to ${specialIntent.tool}`);
       });
 
       return {
@@ -97,23 +124,43 @@ Questions: Requests for information, clarifications`,
 
     // Step 5: Route to appropriate context
     await step.run("route", async () => {
-      // TODO: Use Convex mutation once api.tom types are generated
+      const { ConvexHttpClient } = await import("convex/browser");
+      const { api } = await import("../../convex/_generated/api");
+      const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
       const timestamp = new Date().toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "2-digit",
       });
 
+      const typedUserId = userId as "mike" | "james" | "adam" | "annie";
+
       switch (classification.type) {
         case "task":
-          console.log(`[TomCapture] Adding task to ${userId} backlog: ${content}`);
+          await convex.mutation(api.tom.appendToContext, {
+            userId: typedUserId,
+            contextType: "backlog",
+            content: `- [ ] ${content}`,
+          });
+          console.log(`[TomCapture] Added task to ${userId} backlog`);
           break;
 
         case "note":
-          console.log(`[TomCapture] Adding note to ${userId} daily log: [${timestamp}] ${content}`);
+          await convex.mutation(api.tom.appendToContext, {
+            userId: typedUserId,
+            contextType: "daily_log",
+            content: `[${timestamp}] ${content}`,
+          });
+          console.log(`[TomCapture] Added note to ${userId} daily log`);
           break;
 
         case "idea":
-          console.log(`[TomCapture] Adding idea to ${userId} backlog: 💡 ${content}`);
+          await convex.mutation(api.tom.appendToContext, {
+            userId: typedUserId,
+            contextType: "backlog",
+            content: `💡 ${content}`,
+          });
+          console.log(`[TomCapture] Added idea to ${userId} backlog`);
           break;
 
         case "question":
@@ -124,8 +171,19 @@ Questions: Requests for information, clarifications`,
 
     // Step 6: Update capture record
     await step.run("update-capture", async () => {
-      // TODO: Use Convex mutation once api.tom types are generated
-      console.log(`[TomCapture] Updating capture ${captureId}: routed to ${classification.type}`);
+      const { ConvexHttpClient } = await import("convex/browser");
+      const { api } = await import("../../convex/_generated/api");
+      const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+      // captureId is already the correct type from storeCapture mutation
+      await convex.mutation(api.tom.updateCapture, {
+        captureId: captureId as never, // Type assertion needed due to dynamic import
+        routed: true,
+        routedTo: classification.type,
+        classifiedAs: classification.type,
+      });
+
+      console.log(`[TomCapture] Updated capture ${captureId}: routed to ${classification.type}`);
     });
 
     // Step 7: Generate response if needed

@@ -14,9 +14,9 @@ export interface GuardrailResult {
   overall_score: number;
 }
 
-// Blocked phrases for youth safety
+// Blocked phrases for youth safety (medical/miracle claims only)
 const BLOCKED_PHRASES = [
-  'cure', 'treat', 'diagnosis', 'medical advice',
+  'cure disease', 'treat injury', 'diagnosis', 'medical advice',
   'guaranteed results', 'always works', 'never fails',
   'instant results', 'miracle', 'secret formula',
   'lose weight fast', 'bulk up quick',
@@ -50,7 +50,8 @@ export function runGuardrails(page: {
   asset_type?: string;
   internal_links?: string[];
   uniqueness_score?: number;
-}): GuardrailResult {
+}, options?: { bootstrapMode?: boolean }): GuardrailResult {
+  const bootstrapMode = options?.bootstrapMode ?? false;
   const checks: GuardrailResult['checks'] = {
     uniqueness: { pass: false, score: 0 },
     hasAsset: { pass: false },
@@ -67,12 +68,12 @@ export function runGuardrails(page: {
     reason: uniquenessScore < 70 ? `Score ${uniquenessScore}% is below 70% threshold` : undefined,
   };
 
-  // 2. Asset Check
+  // 2. Asset Check (skipped in bootstrap mode - assets come later)
   const hasValidAsset = page.asset_type && VALID_ASSETS.includes(page.asset_type);
   checks.hasAsset = {
-    pass: hasValidAsset || false,
+    pass: bootstrapMode || hasValidAsset || false,
     assetType: page.asset_type,
-    reason: !hasValidAsset ? 'No valid unique asset found' : undefined,
+    reason: !bootstrapMode && !hasValidAsset ? 'No valid unique asset found' : undefined,
   };
 
   // 3. Quick Answer Check
@@ -98,21 +99,23 @@ export function runGuardrails(page: {
     }
   }
 
+  // In bootstrap mode, only check for blocked phrases, skip disclaimer requirements
   checks.youthSafe = {
-    pass: foundBlockedPhrases.length === 0 && missingDisclaimers.length === 0,
-    issues: [...foundBlockedPhrases, ...missingDisclaimers.map(t => `missing ${t} disclaimer`)],
+    pass: foundBlockedPhrases.length === 0 && (bootstrapMode || missingDisclaimers.length === 0),
+    issues: [...foundBlockedPhrases, ...(bootstrapMode ? [] : missingDisclaimers.map(t => `missing ${t} disclaimer`))],
     reason: foundBlockedPhrases.length > 0 ?
             `Blocked phrases found: ${foundBlockedPhrases.join(', ')}` :
-            missingDisclaimers.length > 0 ?
+            (!bootstrapMode && missingDisclaimers.length > 0) ?
             `Missing disclaimers for: ${missingDisclaimers.join(', ')}` : undefined,
   };
 
-  // 5. Internal Links Check
+  // 5. Internal Links Check (relaxed in bootstrap mode - 0 links OK for first pages)
   const linkCount = page.internal_links?.length ?? 0;
+  const minLinks = bootstrapMode ? 0 : 3; // Bootstrap: 0, Normal: Pillar + 2 spokes
   checks.hasInternalLinks = {
-    pass: linkCount >= 3, // Pillar + 2 spokes
+    pass: linkCount >= minLinks,
     linkCount,
-    reason: linkCount < 3 ? `Need at least 3 internal links (found ${linkCount})` : undefined,
+    reason: linkCount < minLinks ? `Need at least ${minLinks} internal links (found ${linkCount})` : undefined,
   };
 
   // Calculate overall

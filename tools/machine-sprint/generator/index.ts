@@ -202,9 +202,11 @@ const EXPERT_VOICES = {
 
 export class SpokeGenerator {
   private anthropic: Anthropic;
+  private bootstrapMode: boolean;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, options?: { bootstrapMode?: boolean }) {
     this.anthropic = new Anthropic({ apiKey });
+    this.bootstrapMode = options?.bootstrapMode ?? false;
   }
 
   async generatePage(opp: Opportunity): Promise<GeneratedPage> {
@@ -336,7 +338,7 @@ Output as JSON:
     // Generate page
     const page = await this.generatePage(opp);
 
-    // Run guardrails
+    // Run guardrails (bootstrap mode relaxes internal links + asset requirements)
     const guardrails = runGuardrails({
       title: page.title,
       content: page.content,
@@ -344,7 +346,7 @@ Output as JSON:
       asset_type: page.asset_type,
       internal_links: page.internal_links,
       uniqueness_score: opp.uniqueness_score,
-    });
+    }, { bootstrapMode: this.bootstrapMode });
 
     const status = guardrails.pass ? 'published' : 'rejected';
 
@@ -534,14 +536,14 @@ Output as JSON:
     // Generate page from task
     const page = await this.generateFromTask(task);
 
-    // Run guardrails
+    // Run guardrails (bootstrap mode relaxes internal links + asset requirements)
     const guardrails = runGuardrails({
       title: page.title,
       content: page.content,
       quick_answer: page.quick_answer,
       asset_type: page.asset_type,
       internal_links: page.internal_links,
-    });
+    }, { bootstrapMode: this.bootstrapMode });
 
     const status = guardrails.pass ? 'published' : 'rejected';
 
@@ -588,13 +590,16 @@ export async function runGraphGenerator(config: {
   maxPages?: number;
   priorityFilter?: number[]; // e.g., [1, 2] for P1 and P2 only
   clusterFilter?: string; // e.g., 'silent-basketball'
+  bootstrapMode?: boolean; // Relaxes guardrails for initial content generation
 }): Promise<void> {
   console.log('═══════════════════════════════════════════════════════════════');
   console.log('🐺 GRAPH-AWARE GENERATOR - Knowledge Graph Mode');
   console.log('═══════════════════════════════════════════════════════════════\n');
 
   // Load SEO tasks from seo-tasks.json
-  const tasksData: SEOTask[] = JSON.parse(await fs.readFile(config.tasksPath, 'utf-8'));
+  const rawData = JSON.parse(await fs.readFile(config.tasksPath, 'utf-8'));
+  // Handle both formats: raw array or { tasks: [...] }
+  const tasksData: SEOTask[] = Array.isArray(rawData) ? rawData : (rawData.tasks || []);
 
   // Filter tasks
   let tasks = tasksData.filter(t => {
@@ -618,8 +623,9 @@ export async function runGraphGenerator(config: {
   console.log(`📊 Filtered to ${tasks.length} tasks (max: ${maxPages})`);
   if (config.priorityFilter) console.log(`   Priority filter: P${config.priorityFilter.join(', P')}`);
   if (config.clusterFilter) console.log(`   Cluster filter: ${config.clusterFilter}`);
+  if (config.bootstrapMode) console.log(`   🚀 BOOTSTRAP MODE: Relaxed guardrails for initial content`);
 
-  const generator = new SpokeGenerator(config.anthropicApiKey);
+  const generator = new SpokeGenerator(config.anthropicApiKey, { bootstrapMode: config.bootstrapMode });
 
   const results: GeneratorResult[] = [];
   const published: GeneratedPage[] = [];

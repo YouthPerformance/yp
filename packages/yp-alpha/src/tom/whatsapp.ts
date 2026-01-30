@@ -21,17 +21,24 @@ const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID!;
 
 /**
  * Get WhatsApp number for a user from database
- * TODO: Replace with Convex query once types are regenerated
+ * Falls back to environment variables if not in database
  */
 async function getUserWhatsAppNumber(userId: TomUserId): Promise<string | null> {
-  // TODO: Use Convex query once api.tom types are generated
-  // const { ConvexHttpClient } = await import("convex/browser");
-  // const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  // const { api } = await import("../../convex/_generated/api");
-  // const user = await convex.query(api.tom.getUser, { userId });
-  // return user?.whatsappNumber || null;
+  // Try to get from Convex first
+  try {
+    const { ConvexHttpClient } = await import("convex/browser");
+    const { api } = await import("../../convex/_generated/api");
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-  // Placeholder: Use environment variables for phone numbers
+    const user = await convex.query(api.tom.getUser, { userId });
+    if (user?.whatsappNumber) {
+      return user.whatsappNumber;
+    }
+  } catch (error) {
+    console.warn(`[WhatsApp] Could not fetch user from Convex:`, error);
+  }
+
+  // Fallback: Use environment variables for phone numbers
   const phoneEnvMap: Record<TomUserId, string | undefined> = {
     mike: process.env.TOM_PHONE_MIKE,
     james: process.env.TOM_PHONE_JAMES,

@@ -19,9 +19,9 @@
 // ---------------------------------------------------------------
 
 export const DEV_USER = {
-  id: "dev_user_001",
-  email: "dev@youthperformance.com",
-  name: "Dev Athlete",
+  id: "mike_admin_001",
+  email: "mike@youthperformance.com",
+  name: "Mike",
   image: "/avatars/wolf-default.png",
 };
 

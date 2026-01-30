@@ -9,6 +9,11 @@
  * - PATH A: THE GRUNT (Haiku 4.5) → Execution, data, logistics
  * - PATH B: THE WOLF (Sonnet 4.5) → Coaching, emotional support
  * - PATH C: THE ARTIST (Gemini) → Visual generation
+ *
+ * Observability: Routes are traced via Langfuse with:
+ * - Classification latency (<100ms target)
+ * - Intent/sentiment distribution analytics
+ * - Escalation patterns
  */
 
 import Anthropic from "@anthropic-ai/sdk";
@@ -20,6 +25,7 @@ import {
   type RouteDecision,
   SENTIMENT_ESCALATION,
 } from "../config/models";
+import { observe, submitScore, startGeneration } from "../observability/langfuse";
 import { logger } from "../utils/logger";
 
 /**
@@ -105,9 +111,30 @@ export class WolfRouter {
   /**
    * Route a request to the appropriate model
    * Target: <100ms classification
+   * Wrapped with Langfuse tracing for observability
    */
   async route(userQuery: string, context: UserContext): Promise<RouteDecision> {
     const startTime = Date.now();
+
+    // Start Langfuse trace for routing
+    const trace = startGeneration({
+      name: "wolf-router-classify",
+      model: MODEL_CONFIG.FAST,
+      input: {
+        query: userQuery.substring(0, 200),
+        context: {
+          durabilityScore: context.durabilityScore,
+          currentStreak: context.currentStreak,
+          injuryStatus: context.injuryStatus,
+          recentSentiment: context.recentSentiment,
+        },
+      },
+      userId: context.userId,
+      metadata: {
+        component: "wolf-router",
+        target: "<100ms",
+      },
+    });
 
     try {
       // Use Haiku 4.5 for ultra-fast classification
@@ -161,12 +188,44 @@ export class WolfRouter {
       const classification = RouteSchema.parse(toolUse.input);
       const routeDecision = this.buildDecision(classification, startTime);
 
+      const latencyMs = Date.now() - startTime;
+
+      // End Langfuse trace with results
+      await trace.end({
+        output: {
+          intent: routeDecision.intent,
+          sentiment: routeDecision.sentiment,
+          complexity: routeDecision.complexityScore,
+          selectedModel: routeDecision.selectedModel,
+          reasoning: routeDecision.reasoning,
+        },
+        usage: {
+          promptTokens: response.usage.input_tokens,
+          completionTokens: response.usage.output_tokens,
+          totalTokens: response.usage.input_tokens + response.usage.output_tokens,
+        },
+        latencyMs,
+        metadata: {
+          metTarget: latencyMs < 100,
+          escalated: SENTIMENT_ESCALATION[classification.sentiment] || false,
+        },
+      });
+
+      // Submit routing latency score
+      await submitScore({
+        traceId: trace.traceId,
+        observationId: trace.observationId,
+        name: "router-latency",
+        value: Math.min(1, 100 / latencyMs), // Higher score = faster
+        comment: `${latencyMs}ms (target: <100ms)`,
+      });
+
       // Log for analytics
       logger.info("Wolf Router Decision", {
         userId: context.userId,
         query: userQuery.substring(0, 50),
         decision: routeDecision,
-        latencyMs: Date.now() - startTime,
+        latencyMs,
       });
 
       // Store in history for pattern detection

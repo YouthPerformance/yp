@@ -7,13 +7,15 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "@yp/alpha/convex/_generated/api";
 import { triggerTomCapture } from "@yp/alpha/workflows";
-import { verifyWebhookSignature } from "@yp/alpha/tom";
 
 const WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN!;
-const WHATSAPP_APP_SECRET = process.env.WHATSAPP_APP_SECRET!;
 
-// Phone number to user ID mapping (temporary until Convex types generated)
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+// Fallback: Phone number to user ID mapping (used if not in Convex)
 const PHONE_TO_USER: Record<string, "mike" | "james" | "adam" | "annie"> = {
   [process.env.TOM_PHONE_MIKE || ""]: "mike",
   [process.env.TOM_PHONE_JAMES || ""]: "james",
@@ -112,8 +114,24 @@ async function handleIncomingMessage(
 
   console.log(`[WhatsApp] Received message from ${message.from}: ${message.text.body.substring(0, 50)}...`);
 
-  // Look up user by phone number
-  const userId = PHONE_TO_USER[message.from];
+  // Look up user by phone number - try Convex first, then fallback to env vars
+  let userId: "mike" | "james" | "adam" | "annie" | null = null;
+
+  try {
+    const user = await convex.query(api.tom.getUserByWhatsApp, {
+      whatsappNumber: message.from,
+    });
+    if (user) {
+      userId = user.userId;
+    }
+  } catch (error) {
+    console.warn(`[WhatsApp] Could not query Convex for user:`, error);
+  }
+
+  // Fallback to environment variable mapping
+  if (!userId) {
+    userId = PHONE_TO_USER[message.from] || null;
+  }
 
   if (!userId) {
     console.log(`[WhatsApp] Unknown number: ${message.from}`);
